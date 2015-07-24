@@ -1,3 +1,9 @@
+# seedbox-sync
+seedbox.ini
+
+# NetBeans
+nbproject
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
