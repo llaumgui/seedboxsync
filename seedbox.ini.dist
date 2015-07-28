@@ -28,7 +28,7 @@ part_suffix=.part
 [Local]
 wath_path=/home/bittorrent/watch
 download_path=/home/bittorent/Download/
-sqlite_path=/var/local/seedbox.sql
+sqlite_path=/var/opt/seedbox-sync/seedbox-sync.sql
 
 
 [Log]
