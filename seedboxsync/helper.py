@@ -120,7 +120,8 @@ class SeedboxDbHelper(object):
         self.cursor.execute('''INSERT INTO seedboxsync(key, value) VALUES (?, ?)''', ('db_version', '1'))
         self.cursor.execute('''CREATE TABLE torrent(id INTEGER PRIMARY KEY, name TEXT, announce TEXT, sent TIMESTAMP)''')
         self.cursor.execute('''CREATE TABLE torrent_file(id INTEGER PRIMARY KEY, torrent_id INTEGER, path TEXT, length INTEGER)''')
-        self.cursor.execute('''CREATE TABLE download(id INTEGER PRIMARY KEY, path TEXT, started TIMESTAMP, finished TIMESTAMP)''')
+        self.cursor.execute('''CREATE TABLE download(
+            id INTEGER PRIMARY KEY, path TEXT, seedbox_size INTEGER, local_size INTEGER, started TIMESTAMP, finished TIMESTAMP)''')
         self.commit()
 
     def commit(self):

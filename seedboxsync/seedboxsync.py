@@ -76,7 +76,8 @@ class SeedboxSync(object):
         config_file = None
         for location in os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'), \
                 os.path.expanduser("~"), os.path.expanduser("~/.seedboxsync"), \
-                '/etc/seedboxsync', os.environ.get('SEEDBOXSYNC_CONF'):
+                '/etc', '/etc/seedboxsync', \
+                os.environ.get('SEEDBOXSYNC_CONF'):
             try:
                 seedbox_ini = os.path.join(location, 'seedboxsync.ini')
                 if os.path.isfile(seedbox_ini):
@@ -289,7 +290,8 @@ class DownloadSync(SeedboxSync):
 
         try:
             # Start timestamp in database
-            self._db.cursor.execute('''INSERT INTO download(path, started) VALUES (?, ?)''', (filepath, datetime.datetime.now()))
+            stat = self._transport.client.stat(filepath)
+            self._db.cursor.execute('''INSERT INTO download(path, seedbox_size, started) VALUES (?, ?, ?)''', (filepath, stat.st_size, datetime.datetime.now()))
             self._db.commit()
 
             # Get file
@@ -298,12 +300,14 @@ class DownloadSync(SeedboxSync):
             self._transport.client.get(filepath, local_filepath)
 
             # Store in database
-            self._db.cursor.execute('''UPDATE download SET finished = ? WHERE id=?''', (datetime.datetime.now(), self._db.cursor.lastrowid))
+            stat = os.stat(local_filepath)
+            self._db.cursor.execute('''UPDATE download SET local_size=?, finished=? WHERE id=?''', (
+                stat.st_size, datetime.datetime.now(), self._db.cursor.lastrowid))
             self._db.commit()
         except Exception, exc:
             Helper.log_print('Upload fail: ' + str(exc), msg_type='error')
 
-    def __already_download(self, filepath):
+    def __is_already_download(self, filepath):
         """
         Get in database if file was already downloaded.
         """
@@ -337,7 +341,7 @@ class DownloadSync(SeedboxSync):
                 filepath = os.path.join(walker[0], filename)
                 if os.path.splitext(filename)[1] == self._config.get('Seedbox', 'part_suffix'):
                     Helper.log_print('Skip part file "' + filename + '"', msg_type='debug')
-                elif self.__already_download(filepath):
+                elif self.__is_already_download(filepath):
                     Helper.log_print('Skip already downloaded "' + filename + '"', msg_type='debug')
                 else:
                     self.__get_file(filepath)
