@@ -297,7 +297,10 @@ class DownloadSync(SeedboxSync):
             # Get file
             Helper.log_print('Download "' + filepath + '"', msg_type='info')
             logging.debug('Download "' + filepath + '" in "' + local_path + '"')
-            self._transport.client.get(filepath, local_filepath)
+            # get file with ".part" extension
+            local_partfilepath = local_filepath + '.part'
+            self._transport.client.get(filepath, local_partfilepath)
+            os.rename(local_partfilepath, local_filepath)
 
             # Store in database
             stat = os.stat(local_filepath)
