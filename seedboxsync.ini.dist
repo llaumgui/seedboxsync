@@ -34,11 +34,11 @@ sqlite_path=/var/opt/seedboxsync/seedboxsync.sql
 
 [Log]
 blackhole_file_path=/var/log/seedboxsync_blackhole.log
-getfinished_file_path=/var/log/seedboxsync_getfinished.log
+download_file_path=/var/log/seedboxsync_download.log
 blackhole_level=INFO
-getfinished_level=INFO
+download_level=INFO
 
 
 [PID]
-blackhole_path=/var/run/seedboxsync_syncblackhole.pid
-getfinished_path=/var/run/seedboxsync_getfinished.pid
+blackhole_path=/var/run/seedboxsync_blackhole.pid
+download_path=/var/run/seedboxsync_download.pid

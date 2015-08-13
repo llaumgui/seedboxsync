@@ -26,7 +26,15 @@ parser = argparse.ArgumentParser(description='Script for sync operations between
 group = parser.add_mutually_exclusive_group()
 group.add_argument('--blackhole', help='send torrent from the local blackhole to the seedbox blackhole',
                    action='store_true')
+group.add_argument('--lasts-torrents', help='get list of lasts torrents uploaded',
+                   default=False, const=10, nargs='?', type=int,
+                   action='store')
 group.add_argument('--download', help='download finished files from seedbox to NAS',
+                   action='store_true')
+group.add_argument('--lasts-downloads', help='get list of lasts downloads',
+                   default=False, const=10, nargs='?', type=int,
+                   action='store')
+group.add_argument('--unfinished-downloads', help='get list of unfinished downloads',
                    action='store_true')
 
 # Optionnal arguments
@@ -54,6 +62,21 @@ if __name__ == '__main__':
             exit(0)
         else:
             sync.do_sync()
+
+    elif args.lasts_torrents:
+        from seedboxsync import GetInfos
+        info = GetInfos()
+        print(info.get_lasts_torrents(args.lasts_torrents))
+
+    elif args.lasts_downloads:
+        from seedboxsync import GetInfos
+        info = GetInfos()
+        print(info.get_lasts_downloads(args.lasts_downloads))
+
+    elif args.unfinished_downloads:
+        from seedboxsync import GetInfos
+        info = GetInfos()
+        print(info.get_unfinished_downloads())
 
     else:
         parser.print_help()

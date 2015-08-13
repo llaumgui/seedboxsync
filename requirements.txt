@@ -1,2 +1,3 @@
 paramiko
 bencode
+prettytable

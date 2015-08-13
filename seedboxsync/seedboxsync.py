@@ -13,6 +13,7 @@ Main module of used by seedboxseed CLI.
 from __future__ import print_function, absolute_import
 from seedboxsync.transport import SeedboxSftpTransport
 from seedboxsync.helper import (Helper, SeedboxDbHelper)
+from prettytable import from_db_cursor
 import ConfigParser as configparser
 import logging
 import glob
@@ -36,7 +37,7 @@ class SeedboxSync(object):
         - 5: No configuration file found
     """
 
-    CONF_PREFIX = ''
+    CONF_PREFIX = None
 
     def __init__(self):
         """
@@ -267,7 +268,7 @@ class DownloadSync(SeedboxSync):
     already downloaded in a sqlite database.
     """
 
-    CONF_PREFIX = 'getfinished_'
+    CONF_PREFIX = 'download_'
 
     def __init__(self):
         """
@@ -347,3 +348,54 @@ class DownloadSync(SeedboxSync):
 
         # Remove lock file.
         self._unlock()
+
+
+#
+# GetInfos class
+#
+class GetInfos(SeedboxSync):
+    """
+    Class which get informations about sync from database.
+    """
+
+    CONF_PREFIX = 'blackhole_'
+
+    def __init__(self):
+        """
+        Constructor: initialize the blackhole synchronization.
+        """
+        # Call super class
+        super(self.__class__, self).__init__()
+
+        # Init DB
+        self._db = SeedboxDbHelper(self._db_path)
+
+    def get_lasts_torrents(self, number=10):
+        """
+        Get lasts 10 torrents from database.
+        """
+        self._db.cursor.execute('''SELECT id, name, sent FROM torrent ORDER BY sent ASC LIMIT ?''', [number])
+        prettytable = from_db_cursor(self._db.cursor)
+        self._db.close()
+
+        return prettytable
+
+    def get_lasts_downloads(self, number=10):
+        """
+        Get lasts 10 torrents from database.
+        """
+        self._db.cursor.execute('''SELECT * FROM download ORDER BY finished ASC LIMIT ?''', [number])
+        prettytable = from_db_cursor(self._db.cursor)
+        self._db.close()
+
+        return prettytable
+
+    def get_unfinished_downloads(self):
+        """
+        Get lasts 10 torrents from database.
+        """
+        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started asc''')
+        prettytable = from_db_cursor(self._db.cursor)
+        self._db.close()
+
+        return prettytable
