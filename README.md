@@ -25,7 +25,7 @@ sudo mkdir -p /opt/llaumgui
 cd /opt/llaumgui
 sudo git clone https://github.com/llaumgui/seedboxsync.git
 cd seedboxsync
-sudo chmod +x get_finished.py  blackhole.py
+sudo chmod +x seedboxsync.py
 ```
 
 * Use default configuration:
