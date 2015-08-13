@@ -1,0 +1,44 @@
+[Seedbox]
+
+# Informations about your seedbox connection
+transfer_host=my-seedbox.net
+transfer_port=22
+transfer_login=me
+transfer_password=p4sw0rd
+
+# For the moment, only sftp
+transfer_protocol=sftp
+
+# Chmod torrent after upload (false = disable)
+# Use octal notation like https://docs.python.org/2.6/library/os.html#os.chmod
+transfer_chmod=0o777
+
+# Use a tempory directory (you must create it !)
+tmp_path=/tmp
+
+# Your "watch" folder you must create it!)
+watch_path=/watch
+
+# Your finished folder you must create it!)
+finished_path=/files
+
+# Exclude part files
+part_suffix=.part
+
+
+[Local]
+wath_path=/home/bittorrent/watch
+download_path=/home/bittorent/Download/
+sqlite_path=/var/opt/seedboxsync/seedboxsync.sql
+
+
+[Log]
+blackhole_file_path=/var/log/seedboxsync_blackhole.log
+getfinished_file_path=/var/log/seedboxsync_getfinished.log
+blackhole_level=INFO
+getfinished_level=INFO
+
+
+[PID]
+blackhole_path=/var/run/seedboxsync_syncblackhole.pid
+getfinished_path=/var/run/seedboxsync_getfinished.pid
