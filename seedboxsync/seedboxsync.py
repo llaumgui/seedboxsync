@@ -372,7 +372,7 @@ class GetInfos(SeedboxSync):
 
     def get_lasts_torrents(self, number=10):
         """
-        Get lasts 10 torrents from database.
+        Get lasts "number" torrents from database.
         """
         self._db.cursor.execute('''SELECT id, name, sent FROM torrent ORDER BY sent ASC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
@@ -382,7 +382,7 @@ class GetInfos(SeedboxSync):
 
     def get_lasts_downloads(self, number=10):
         """
-        Get lasts 10 torrents from database.
+        Get lasts "number" downloads from database.
         """
         self._db.cursor.execute('''SELECT * FROM download ORDER BY finished ASC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
@@ -392,7 +392,7 @@ class GetInfos(SeedboxSync):
 
     def get_unfinished_downloads(self):
         """
-        Get lasts 10 torrents from database.
+        Get unfinished download from database.
         """
         self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started asc''')
         prettytable = from_db_cursor(self._db.cursor)
