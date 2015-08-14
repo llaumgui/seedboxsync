@@ -381,7 +381,7 @@ class GetInfos(SeedboxSync):
         """
         Get lasts "number" torrents from database.
         """
-        self._db.cursor.execute('''SELECT id, name, sent FROM torrent ORDER BY sent ASC LIMIT ?''', [number])
+        self._db.cursor.execute('''SELECT id, name, sent FROM torrent ORDER BY sent DESC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
@@ -391,7 +391,7 @@ class GetInfos(SeedboxSync):
         """
         Get lasts "number" downloads from database.
         """
-        self._db.cursor.execute('''SELECT * FROM download ORDER BY finished ASC LIMIT ?''', [number])
+        self._db.cursor.execute('''SELECT * FROM download ORDER BY finished DESC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
@@ -401,7 +401,7 @@ class GetInfos(SeedboxSync):
         """
         Get unfinished download from database.
         """
-        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started ASC''')
+        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started DESC''')
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
