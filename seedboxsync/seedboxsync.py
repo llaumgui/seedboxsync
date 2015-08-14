@@ -401,7 +401,7 @@ class GetInfos(SeedboxSync):
         """
         Get unfinished download from database.
         """
-        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started asc''')
+        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started ASC''')
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
