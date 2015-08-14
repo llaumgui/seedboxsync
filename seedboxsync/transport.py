@@ -19,7 +19,7 @@ class SeedboxSftpTransport(object):
     def __init__(self, host, login, password, port="22"):
         """Init transport and client"""
         logging.debug('Get paramiko.Transport')
-        self.__transport = paramiko.Transport(host, int(port))
+        self.__transport = paramiko.Transport((host, int(port)))
         self.__transport.connect(username=login, password=password)
         self.client = paramiko.SFTPClient.from_transport(self.__transport)
 
@@ -42,7 +42,7 @@ class SeedboxSftpTransport(object):
 
         for folder in folders:
             new_path = os.path.join(remote_path, folder)
-            for x in self.__walk(new_path):
+            for x in self.walk(new_path):
                 yield x
 
     def close(self):
