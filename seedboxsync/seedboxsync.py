@@ -285,30 +285,38 @@ class DownloadSync(SeedboxSync):
         # Local path (without seedbox folder prefix)
         filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').strip("/"), "", 1).strip("/")
         local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix)
+        local_filepath_part = local_filepath + '.part'
         local_path = os.path.dirname(local_filepath)
+
+        # Make folder tree
         Helper.mkdir_p(local_path)
 
         try:
             # Start timestamp in database
-            stat = self._transport.client.stat(filepath)
-            self._db.cursor.execute('''INSERT INTO download(path, seedbox_size, started) VALUES (?, ?, ?)''', (filepath, stat.st_size, datetime.datetime.now()))
+            seedbox_size = self._transport.client.stat(filepath).st_size
+            self._db.cursor.execute('''INSERT INTO download(path, seedbox_size, started) VALUES (?, ?, ?)''', (filepath, seedbox_size, datetime.datetime.now()))
             self._db.commit()
+            download_id = self._db.cursor.lastrowid
 
-            # Get file
+            # Get file with ".part" suffix
             Helper.log_print('Download "' + filepath + '"', msg_type='info')
-            logging.debug('Download "' + filepath + '" in "' + local_path + '"')
-            # get file with ".part" extension
-            local_partfilepath = local_filepath + '.part'
-            self._transport.client.get(filepath, local_partfilepath)
-            os.rename(local_partfilepath, local_filepath)
+            self._transport.client.get(filepath, local_filepath_part)
+            local_size = os.stat(local_filepath_part).st_size
+
+            # Test size of the downloaded file
+            if (local_size == 0) or (local_size != seedbox_size):
+                Helper.log_print('Download fail: "' + filepath + '" (' + local_size + '/' + seedbox_size + ')', msg_type='error')
+                return False
+
+            # All is good ! Remove ".part" suffix
+            os.rename(local_filepath_part, local_filepath)
 
             # Store in database
-            stat = os.stat(local_filepath)
             self._db.cursor.execute('''UPDATE download SET local_size=?, finished=? WHERE id=?''', (
-                stat.st_size, datetime.datetime.now(), self._db.cursor.lastrowid))
+                local_size, datetime.datetime.now(), download_id))
             self._db.commit()
         except Exception, exc:
-            Helper.log_print('Upload fail: ' + str(exc), msg_type='error')
+            Helper.log_print('Download fail: ' + str(exc), msg_type='error')
 
     def __is_already_download(self, filepath):
         """
@@ -391,7 +399,7 @@ class GetInfos(SeedboxSync):
         """
         Get lasts "number" downloads from database.
         """
-        self._db.cursor.execute('''SELECT * FROM download ORDER BY finished DESC LIMIT ?''', [number])
+        self._db.cursor.execute('''SELECT id, DATETIME(finished) AS finished, SUBSTR(path, -100) AS path, local_size AS size FROM download ORDER BY finished DESC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
@@ -401,7 +409,7 @@ class GetInfos(SeedboxSync):
         """
         Get unfinished download from database.
         """
-        self._db.cursor.execute('''SELECT * FROM download  WHERE finished is null ORDER BY started DESC''')
+        self._db.cursor.execute('''SELECT id, DATETIME(started) AS started, SUBSTR(path, -100) AS path, seedbox_size AS size FROM download  WHERE finished is null ORDER BY started DESC''')
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
