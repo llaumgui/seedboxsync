@@ -75,7 +75,7 @@ class SeedboxSync(object):
         """
         config_file = None
         for location in os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'), \
-                os.path.expanduser("~"), os.path.expanduser("~/.seedboxsync"), \
+                os.path.expanduser("~/.seedboxsync"), \
                 '/etc', '/etc/seedboxsync', \
                 os.environ.get('SEEDBOXSYNC_CONF'):
             try:

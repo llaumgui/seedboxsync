@@ -15,7 +15,7 @@ See requirements.txt.
 ## Installation
 
 ### With pip
-Not implemented yet...
+Work in progress, not implemented yet...
 
 ### Clone repository
 * Install script in /opt/llaumgui/seedboxsync:
@@ -28,13 +28,19 @@ cd seedboxsync
 sudo chmod +x seedboxsync.py
 ```
 
-* Use default configuration:
+
+## Configuration
+You can use the default configuration:
 
 ```bash
 sudo cp seedbox.ini.dist seedbox.ini
 ```
 
-* Edit seedbox.ini and add your parameters.
+Configuration file can be:
+* seedboxsync.ini in the root of the sources folder.
+* ~/.seedboxsync/seedboxsync.ini
+* /etc/seedboxsync.ini
+* /etc/seedboxsync/seedboxsync.ini
 
 
 ## Usage
