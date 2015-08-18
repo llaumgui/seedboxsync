@@ -26,15 +26,15 @@ parser = argparse.ArgumentParser(description='Script for sync operations between
 group = parser.add_mutually_exclusive_group()
 group.add_argument('--blackhole', help='send torrent from the local blackhole to the seedbox blackhole',
                    action='store_true')
-group.add_argument('--lasts-torrents', help='get list of lasts torrents uploaded',
+group.add_argument('-t', '--lasts-torrents', help='get list of lasts torrents uploaded',
                    default=False, const=10, nargs='?', type=int,
                    action='store')
 group.add_argument('--download', help='download finished files from seedbox to NAS',
                    action='store_true')
-group.add_argument('--lasts-downloads', help='get list of lasts downloads',
+group.add_argument('-d', '--lasts-downloads', help='get list of lasts downloads',
                    default=False, const=10, nargs='?', type=int,
                    action='store')
-group.add_argument('--unfinished-downloads', help='get list of unfinished downloads',
+group.add_argument('-u', '--unfinished-downloads', help='get list of unfinished downloads',
                    action='store_true')
 
 # Optionnal arguments
