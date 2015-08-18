@@ -8,4 +8,4 @@
 # flake8: noqa
 
 from __future__ import absolute_import
-from seedboxsync.seedboxsync import (SeedboxSync, BlackHoleSync, DownloadSync, GetInfos)
+from seedboxsync.seedboxsync import (SeedboxSync, CLI, BlackHoleSync, DownloadSync, GetInfos)
