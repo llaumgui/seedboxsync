@@ -399,7 +399,10 @@ class GetInfos(SeedboxSync):
         """
         Get lasts "number" downloads from database.
         """
-        self._db.cursor.execute('''SELECT id, DATETIME(finished) AS finished, SUBSTR(path, -100) AS path, local_size AS size FROM download ORDER BY finished DESC LIMIT ?''', [number])
+        self._db.cursor.execute('''SELECT id, DATETIME(finished) AS finished, SUBSTR(path, -100) AS path, local_size AS size
+                                   FROM download
+                                   ORDER BY finished DESC LIMIT ?''',
+                                [number])
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
@@ -409,7 +412,10 @@ class GetInfos(SeedboxSync):
         """
         Get unfinished download from database.
         """
-        self._db.cursor.execute('''SELECT id, DATETIME(started) AS started, SUBSTR(path, -100) AS path, seedbox_size AS size FROM download  WHERE finished is null ORDER BY started DESC''')
+        self._db.cursor.execute('''SELECT id, DATETIME(started) AS started, SUBSTR(path, -100) AS path, seedbox_size AS size
+                                   FROM download
+                                   WHERE finished is null
+                                   ORDER BY started DESC''')
         prettytable = from_db_cursor(self._db.cursor)
         self._db.close()
 
