@@ -66,9 +66,8 @@ You can put your configuration in:
 
 ### In command line
 ```bash
-usage: seedboxsync.py [-h] [--blackhole | --lasts-torrents [LASTS_TORRENTS] |
-                      --download | --lasts-downloads [LASTS_DOWNLOADS] |
-                      --unfinished-downloads] [-q]
+usage: seedboxsync [-h] [--blackhole | -t [LASTS_TORRENTS] | --download |
+                      -d [LASTS_DOWNLOADS] | -u] [-q]
 
 Script for sync operations between your NAS and your seedbox.
 
@@ -76,12 +75,12 @@ optional arguments:
   -h, --help            show this help message and exit
   --blackhole           send torrent from the local blackhole to the seedbox
                         blackhole
-  --lasts-torrents [LASTS_TORRENTS]
+  -t [LASTS_TORRENTS], --lasts-torrents [LASTS_TORRENTS]
                         get list of lasts torrents uploaded
   --download            download finished files from seedbox to NAS
-  --lasts-downloads [LASTS_DOWNLOADS]
+  -d [LASTS_DOWNLOADS], --lasts-downloads [LASTS_DOWNLOADS]
                         get list of lasts downloads
-  --unfinished-downloads
+  -u, --unfinished-downloads
                         get list of unfinished downloads
   -q, --quiet
 ```
