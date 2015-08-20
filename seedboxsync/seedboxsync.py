@@ -153,6 +153,7 @@ class SeedboxSync(object):
         config_file = None
         for location in os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'), \
                 os.path.expanduser("~/.seedboxsync"), \
+                '/usr/local/etc', '/usr/local/etc/seedboxsync', \
                 '/etc', '/etc/seedboxsync', \
                 os.environ.get('SEEDBOXSYNC_CONF'):
             try:
