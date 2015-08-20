@@ -1,9 +1,16 @@
 # SeedboxSync
-[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync) [![Code Climate](https://codeclimate.com/github/llaumgui/seedboxsync/badges/gpa.svg)](https://codeclimate.com/github/llaumgui/seedboxsync) [![Test Coverage](https://codeclimate.com/github/llaumgui/seedboxsync/badges/coverage.svg)](https://codeclimate.com/github/llaumgui/seedboxsync/coverage) [![GitHub version](https://badge.fury.io/gh/llaumgui%2Fseedboxsync.svg)](https://github.com/llaumgui/seedboxsync/)
+[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync) [![Code Climate](https://codeclimate.com/github/llaumgui/seedboxsync/badges/gpa.svg)](https://codeclimate.com/github/llaumgui/seedboxsync) [![PyPI version](https://badge.fury.io/py/seedboxsync.svg)](https://pypi.python.org/pypi/seedboxsync)
 
 Provides synchronization functions between your NAS and your seedbox:
-* Sync a local black hole (ie: NAS folder) with the black hole of your seedbox.
-* Download files from your Seedbox to your NAS. Store in a sqlite database the list of downloaded files to prevent download a second time.
+* Syncs a local black hole (ie: a NAS folder) with the black hole of your seedbox.
+```bash
+seedboxsync --blackhole
+```
+* Downloads files from your seedbox to your NAS. Stores the list of downloaded files in a sqlite database, to prevent to download a second time.
+```bash
+seedboxsync --download
+```
+* Also provides queries to know last torrents, last downloads, etc.
 
 __Currently, only sFTP is supported__.
 
@@ -15,7 +22,14 @@ See requirements.txt.
 ## Installation
 
 ### With pip
-Work in progress, not implemented yet...
+In root:
+```bash
+pip install seedboxsync
+```
+Or in user:
+```bash
+pip install --user seedboxsync
+```
 
 ### Clone repository
 * Install script in /opt/llaumgui/seedboxsync:
@@ -30,15 +44,20 @@ sudo chmod +x seedboxsync.py
 
 
 ## Configuration
-You can use the default configuration:
+You can use the example configuration, this file is located in:
+* /usr/local/etc/ (pip install)
+* ~/.local/etc/ (pip install in user mode)
+* /opt/llaumgui/seedboxsync (clone repository)
 
 ```bash
-sudo cp seedbox.ini.dist seedbox.ini
+sudo cp /usr/local/etc/seedbox.ini.dist /etc/seedbox.ini
 ```
 
-Configuration file can be:
+You can put your configuration in:
 * seedboxsync.ini in the root of the sources folder.
 * ~/.seedboxsync/seedboxsync.ini
+* /usr/local/etc/seedboxsync.ini
+* /usr/local/etc/seedboxsync/seedboxsync.ini
 * /etc/seedboxsync.ini
 * /etc/seedboxsync/seedboxsync.ini
 
@@ -71,10 +90,10 @@ optional arguments:
 
 ```bash
 # Sync blackhole every 2mn
-*/2 * * * * root <PATH_OF_SEEDBOXSYNC>/seedboxsync.py --blackhole
+*/2 * * * * root seedboxsync --blackhole
 
 # Download torrents finished every 15mn
-*/15 * * * * root <PATH_OF_SEEDBOXSYNC>/seedboxsync.py --download
+*/15 * * * * root seedboxsync.py --download
 ```
 
 
