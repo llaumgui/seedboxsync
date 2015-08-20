@@ -371,6 +371,10 @@ class DownloadSync(SeedboxSync):
         try:
             # Start timestamp in database
             seedbox_size = self._transport.client.stat(filepath).st_size
+            if seedbox_size == 0:
+                Helper.log_print('Empty file: "' + filepath + '" (' + str(seedbox_size) + ')', msg_type='warning')
+                return False
+
             self._db.cursor.execute('''INSERT INTO download(path, seedbox_size, started) VALUES (?, ?, ?)''', (filepath, seedbox_size, datetime.datetime.now()))
             self._db.commit()
             download_id = self._db.cursor.lastrowid
@@ -382,7 +386,7 @@ class DownloadSync(SeedboxSync):
 
             # Test size of the downloaded file
             if (local_size == 0) or (local_size != seedbox_size):
-                Helper.log_print('Download fail: "' + filepath + '" (' + local_size + '/' + seedbox_size + ')', msg_type='error')
+                Helper.log_print('Download fail: "' + filepath + '" (' + str(local_size) + '/' + str(seedbox_size) + ')', msg_type='error')
                 return False
 
             # All is good ! Remove ".part" suffix
