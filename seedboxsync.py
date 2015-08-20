@@ -11,7 +11,7 @@
 Start CLI interface.
 """
 
-from seedboxsync import CLI
+from seedboxsync import seedboxsync
 import os
 import sys
 
@@ -20,4 +20,4 @@ if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seed
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 if __name__ == '__main__':
-    cli = CLI()
+    cli = seedboxsync.CLI()
