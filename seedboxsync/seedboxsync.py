@@ -240,21 +240,11 @@ class SeedboxSync(object):
         torrent_info = Helper.get_torrent_infos(torrent_path)
 
         if torrent_info is not None:
-            files = torrent_info['info']['files']
             logging.debug('Torrent announce: "' + torrent_info['announce'] + '"')
 
             # Store torrent informations in torrent table
             self._db.cursor.execute('''INSERT INTO torrent(name, announce, sent) VALUES (?, ?, ?)''', (
                 torrent_name, torrent_info['announce'], datetime.datetime.now()))
-
-            # Store file information in torrent_file table
-            torrent_id = int(self._db.cursor.lastrowid)
-            for file in files:
-                path = os.path.join(*file['path'])
-                logging.debug('Torrent file: ' + str(torrent_id) + '" ' + path + '" ' + str(file['length']) + 'o')
-                self._db.cursor.execute('''INSERT INTO torrent_file(torrent_id, path, length) VALUES (?, ?, ?)''', (
-                    torrent_id, path, int(file['length'])))
-
             self._db.commit()
 
 
