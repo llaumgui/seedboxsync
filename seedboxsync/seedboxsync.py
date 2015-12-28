@@ -430,15 +430,18 @@ class DownloadSync(SeedboxSync):
         # Get all files
         self._transport.client.chdir(os.path.split(self._finished_path)[0])
         parent = os.path.split(self._finished_path)[1]
-        for walker in self._transport.walk(parent):
-            for filename in walker[2]:
-                filepath = os.path.join(walker[0], filename)
-                if os.path.splitext(filename)[1] == self._config.get('Seedbox', 'part_suffix'):
-                    Helper.log_print('Skip part file "' + filename + '"', msg_type='debug')
-                elif self.__is_already_download(filepath):
-                    Helper.log_print('Skip already downloaded "' + filename + '"', msg_type='debug')
-                else:
-                    self.__get_file(filepath)
+        try:
+            for walker in self._transport.walk(parent):
+                for filename in walker[2]:
+                    filepath = os.path.join(walker[0], filename)
+                    if os.path.splitext(filename)[1] == self._config.get('Seedbox', 'part_suffix'):
+                        Helper.log_print('Skip part file "' + filename + '"', msg_type='debug')
+                    elif self.__is_already_download(filepath):
+                        Helper.log_print('Skip already downloaded "' + filename + '"', msg_type='debug')
+                    else:
+                        self.__get_file(filepath)
+        except IOError as exc:
+            Helper.log_print('Connection error', msg_type='error')
 
         # Close resources
         self._transport.close()
