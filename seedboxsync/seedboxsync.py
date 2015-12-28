@@ -441,7 +441,7 @@ class DownloadSync(SeedboxSync):
                     else:
                         self.__get_file(filepath)
         except IOError as exc:
-            Helper.log_print('Connection error', msg_type='error')
+            Helper.log_print('Connection error (' + str(exc) + ')', msg_type='error')
 
         # Close resources
         self._transport.close()
