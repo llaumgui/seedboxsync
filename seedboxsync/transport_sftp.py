@@ -6,53 +6,60 @@
 # file that was distributed with this source code.
 #
 
-from abc import ABCMeta, abstractmethod
+from __future__ import absolute_import
+from seedboxsync.transport import SeedboxAbstractClient
+from stat import S_ISDIR
+import logging
+import paramiko
+import os
 
 
 #
-# SeedboxAbstractClient.
+# SeedboxSftpClient.
 #
-class SeedboxAbstractClient():
-    __metaclass__ = ABCMeta
+class SeedboxSftpClient(SeedboxAbstractClient):
+    """
+    Transport from NAS to seedbox using sFTP paramiko library.
+    """
 
-    @abstractmethod
-    def __init__(self, host, login, password, port):
-        """Init client.
+    def __init__(self, host, login, password, port="22"):
+        """
+        Init transport and client.
 
         :param str host: the host of the server
         :param str login: the login to connect on the the server
         :param str password: the password to connect on the the server
         :param str port: the port of the server
         """
-        pass
+        logging.debug('Get paramiko.Transport')
+        self.__transport = paramiko.Transport((host, int(port)))
+        self.__transport.connect(username=login, password=password)
+        self.__client = paramiko.SFTPClient.from_transport(self.__transport)
 
-    @abstractmethod
     def put(self, local_path, remote_path):
         """
-        Copy a local file (``local_path``) to the server as ``remote_path``.
+        Copy a local file (``local_path``) to the SFTP server as ``remote_path``.
 
         :param str local_path: the local file to copy
         :param str remote_path: the destination path on the server. Note
             that the filename should be included. Only specifying a directory
             must result in an error.
         """
-        pass
+        return self.__client.put(local_path, remote_path)
 
-    @abstractmethod
-    def get(self, remotep_ath, local_path):
+    def get(self, remote_path, local_path):
         """
-        Copy a remote file (``remote_path``) from the server to the local
+        Copy a remote file (``remote_path``) from the SFTP server to the local
         host as ``local_path``.
 
         :param str remote_path: the remote file to copy
         :param str local_path: the destination path on the local host
         """
-        pass
+        return self.__client.get(remote_path, local_path)
 
-    @abstractmethod
     def stat(self, filepath):
         """
-        Retrieve size about a file on the remote system.  The return
+        Retrieve informations about a file on the remote system.  The return
         value is an object whose attributes correspond to the attributes of
         Python's ``stat`` structure as returned by ``os.stat``, except that it
         contains fewer fields.  An SFTP server may return as much or as little
@@ -65,18 +72,16 @@ class SeedboxAbstractClient():
 
         :param str filepath: the filename to stat
         """
-        pass
+        return self.__client.stat(filepath)
 
-    @abstractmethod
     def chdir(self, path=None):
         """
         Change the "current directory" of this session.
 
         :param str path: new current working directory
         """
-        pass
+        return self.__client.chdir(path)
 
-    @abstractmethod
     def chmod(self, path, mode):
         """
         Change the mode (permissions) of a file. The permissions are unix-style
@@ -85,9 +90,8 @@ class SeedboxAbstractClient():
         :param str path: path of the file to change the permissions of
         :param int mode: new permissions
         """
-        pass
+        return self.__client.chmod(path, mode)
 
-    @abstractmethod
     def rename(self, old_path, new_path):
         """
         Rename a file or folder from ``old_path`` to ``new_path``.
@@ -95,11 +99,35 @@ class SeedboxAbstractClient():
         :param str old_path: existing name of the file or folder
         :param str new_path: new name for the file or folder
         """
-        pass
+        return self.__client.rename(old_path, new_path)
 
-    @abstractmethod
+    # Code from https://gist.github.com/johnfink8/2190472
+    def walk(self, remote_path):
+        """
+        Kindof a stripped down  version of os.walk, implemented for
+        sftp.  Tried running it flat without the yields, but it really
+        chokes on big directories.
+
+        :param str remote_path: the remote path to list
+        """
+        path = remote_path
+        files = []
+        folders = []
+        for f in self.__client.listdir_attr(remote_path):
+            if S_ISDIR(f.st_mode):
+                folders.append(f.filename)
+            else:
+                files.append(f.filename)
+        yield path, folders, files
+
+        for folder in folders:
+            new_path = os.path.join(remote_path, folder)
+            for x in self.walk(new_path):
+                yield x
+
     def close(self):
         """
         Close transport client.
         """
-        pass
+        logging.debug('Close paramiko.Transport client')
+        return self.__transport.close()

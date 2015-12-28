@@ -11,9 +11,9 @@ Main module of used by seedboxseed CLI.
 """
 
 from __future__ import print_function, absolute_import
-from seedboxsync.transport import SeedboxSftpTransport
 from seedboxsync.helper import (Helper, SeedboxDbHelper)
 from prettytable import from_db_cursor
+from importlib import import_module
 import ConfigParser as configparser
 import logging
 import glob
@@ -137,7 +137,7 @@ class SeedboxSync(object):
         self.__setup_logging()
 
         # Set empty transport
-        self._transport = None
+        self._transport_client = None
 
         # Set empty DB storage
         self._db = None
@@ -210,7 +210,7 @@ class SeedboxSync(object):
 
     def _check_pid(self, pid):
         """
-        Check for the existence of a unix pid
+        Check for the existence of a unix pid.
         """
         try:
             os.kill(pid, 0)
@@ -223,21 +223,43 @@ class SeedboxSync(object):
         """
         Test if task is locked by a pid file to prevent launch two time.
         """
-        if os.path.isfile(self.__lock_file) and self._check_pid(int(file(self.__lock_file, 'r').readlines()[0])):
-            Helper.log_print('Already running', msg_type='info')
-            return True
+        if os.path.isfile(self.__lock_file):
+            pid = int(file(self.__lock_file, 'r').readlines()[0])
+            if self._check_pid(pid):
+                Helper.log_print('Already running (pid=' + str(pid) + ')', msg_type='info')
+                return True
+            else:
+                Helper.log_print('Restored from a previous crash (pid=' + str(pid) + ').', msg_type='warning')
 
         return False
 
-    def _get_transport(self):
+    def _get_transport_client(self):
         """
         Init transport class. Currently only support sFTP.
         """
+        transfer_protocol = self._config.get('Seedbox', 'transfer_protocol')
+        client_class = 'Seedbox' + transfer_protocol.title() + 'Client'
+
         try:
-            return SeedboxSftpTransport(host=self._config.get('Seedbox', 'transfer_host'),
-                                        port=int(self._config.get('Seedbox', 'transfer_port')),
-                                        login=self._config.get('Seedbox', 'transfer_login'),
-                                        password=self._config.get('Seedbox', 'transfer_password'))
+            client_module = import_module('seedboxsync.transport_' + transfer_protocol)
+        except ImportError:
+            Helper.log_print('Unsupported protocole: ' + transfer_protocol, msg_type='error')
+            self._unlock()
+            exit(6)
+
+        try:
+            transfer_client = getattr(client_module, client_class)
+        except AttributeError:
+            Helper.log_print('Unsupported protocole module ! No class "' +
+                             client_class + '" in module ' + 'seedboxsync.transport_' + transfer_protocol, msg_type='error')
+            self._unlock()
+            exit(7)
+
+        try:
+            return transfer_client(host=self._config.get('Seedbox', 'transfer_host'),
+                                   port=int(self._config.get('Seedbox', 'transfer_port')),
+                                   login=self._config.get('Seedbox', 'transfer_login'),
+                                   password=self._config.get('Seedbox', 'transfer_password'))
         except Exception, exc:
             Helper.log_print('Connection fail: ' + str(exc), msg_type='error')
             self._unlock()
@@ -279,7 +301,7 @@ class BlackHoleSync(SeedboxSync):
 
     def __upload_torrent(self, torrent_path):
         """
-        Upload a single torrent
+        Upload a single torrent.
         """
 
         torrent_name = os.path.basename(torrent_path)
@@ -287,17 +309,17 @@ class BlackHoleSync(SeedboxSync):
 
         try:
             logging.debug('Upload "' + torrent_path + '" in "' + self._config.get('Seedbox', 'tmp_path') + '" directory')
-            self._transport.client.put(torrent_path,  os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name))
+            self._transport_client.put(torrent_path,  os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name))
 
             # Chmod
             if self._config.get('Seedbox', 'transfer_chmod') != "false":
                 logging.debug('Change mod in ' + self._config.get('Seedbox', 'transfer_chmod'))
-                self._transport.client.chmod(os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name),
+                self._transport_client.chmod(os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name),
                                              int(self._config.get('Seedbox', 'transfer_chmod'), 8))
 
             # Move from tmp
             logging.debug('Move from "' + self._config.get('Seedbox', 'tmp_path') + '" to "' + self._config.get('Seedbox', 'watch_path') + '"')
-            self._transport.client.rename(os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name),
+            self._transport_client.rename(os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name),
                                           os.path.join(self._config.get('Seedbox', 'watch_path'), torrent_name))
 
             # Store in DB
@@ -320,7 +342,7 @@ class BlackHoleSync(SeedboxSync):
         torrents = glob.glob(self._config.get('Local', 'wath_path') + '/*.torrent')
         if len(torrents) > 0:
             # Init transport_client
-            self._transport = self._get_transport()
+            self._transport_client = self._get_transport_client()
 
             # Init DB
             self._db = SeedboxDbHelper(self._db_path)
@@ -330,7 +352,7 @@ class BlackHoleSync(SeedboxSync):
                 self.__upload_torrent(torrent)
 
             # Close resources
-            self._transport.close()
+            self._transport_client.close()
             self._db.close()
         else:
             Helper.log_print('No torrent in "' + self._config.get('Local', 'wath_path') + '"', msg_type='info')
@@ -372,7 +394,7 @@ class DownloadSync(SeedboxSync):
 
         try:
             # Start timestamp in database
-            seedbox_size = self._transport.client.stat(filepath).st_size
+            seedbox_size = self._transport_client.stat(filepath).st_size
             if seedbox_size == 0:
                 Helper.log_print('Empty file: "' + filepath + '" (' + str(seedbox_size) + ')', msg_type='warning')
                 return False
@@ -383,7 +405,7 @@ class DownloadSync(SeedboxSync):
 
             # Get file with ".part" suffix
             Helper.log_print('Download "' + filepath + '"', msg_type='info')
-            self._transport.client.get(filepath, local_filepath_part)
+            self._transport_client.get(filepath, local_filepath_part)
             local_size = os.stat(local_filepath_part).st_size
 
             # Test size of the downloaded file
@@ -420,7 +442,7 @@ class DownloadSync(SeedboxSync):
         self._lock()
 
         # Init transport_client
-        self._transport = self._get_transport()
+        self._transport_client = self._get_transport_client()
 
         # Init DB
         self._db = SeedboxDbHelper(self._db_path)
@@ -428,10 +450,10 @@ class DownloadSync(SeedboxSync):
         Helper.log_print('Get file list in "' + self._finished_path + '"', msg_type='debug')
 
         # Get all files
-        self._transport.client.chdir(os.path.split(self._finished_path)[0])
+        self._transport_client.chdir(os.path.split(self._finished_path)[0])
         parent = os.path.split(self._finished_path)[1]
         try:
-            for walker in self._transport.walk(parent):
+            for walker in self._transport_client.walk(parent):
                 for filename in walker[2]:
                     filepath = os.path.join(walker[0], filename)
                     if os.path.splitext(filename)[1] == self._config.get('Seedbox', 'part_suffix'):
@@ -440,8 +462,8 @@ class DownloadSync(SeedboxSync):
                         Helper.log_print('Skip already downloaded "' + filename + '"', msg_type='debug')
                     else:
                         self.__get_file(filepath)
-        except IOError as exc:
-            Helper.log_print('Connection error (' + str(exc) + ')', msg_type='error')
+        except IOError:
+            Helper.log_print('Connection error.', msg_type='error')
 
         # Close resources
         self._transport.close()
