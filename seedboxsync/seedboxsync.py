@@ -208,11 +208,22 @@ class SeedboxSync(object):
         except Exception, exc:
             Helper.log_print(str(exc), msg_type='error')
 
+    def _check_pid(self, pid):
+        """
+        Check for the existence of a unix pid
+        """
+        try:
+            os.kill(pid, 0)
+        except OSError:
+            return False
+        else:
+            return True
+
     def is_locked(self):
         """
         Test if task is locked by a pid file to prevent launch two time.
         """
-        if os.path.isfile(self.__lock_file):
+        if os.path.isfile(self.__lock_file) and self._check_pid(int(file(self.__lock_file, 'r').readlines()[0])):
             Helper.log_print('Already running', msg_type='info')
             return True
 
