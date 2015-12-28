@@ -7,7 +7,7 @@
 #
 
 """
-Helper classes.
+Helper module with helper classes.
 """
 
 from __future__ import print_function
@@ -29,7 +29,9 @@ class Helper(object):
     @staticmethod
     def mkdir_p(path):
         """
-        Like a mkdir -p ;-)
+        Like a mkdir -p ;-).
+
+        :param str path: the path to create
         """
         try:
             os.makedirs(path)
@@ -44,6 +46,8 @@ class Helper(object):
     def get_torrent_infos(torrent_path):
         """
         Get information about torrent file.
+
+        :param str torrent_path: the path to the torrent file
         """
         torrent = open(torrent_path, 'r')
         torrent_info = None
@@ -69,6 +73,9 @@ class Helper(object):
     def log_print(cls, message, msg_type='info'):
         """
         Log with logging and print in console.
+
+        :param str message: the message to print and log
+        :param str msg_type: the type of message
         """
         if msg_type == 'error':
             logging.error(message)
@@ -113,7 +120,7 @@ class SeedboxDbHelper(object):
 
     def __create_db(self):
         """
-        Create initial database
+        Create initial database.
         """
         Helper.log_print('DataBase "' + self.__database + '" not exists, need to be create', msg_type='info')
         self.cursor.execute('''CREATE TABLE seedboxsync(key STRING, value STRING)''')
@@ -125,12 +132,12 @@ class SeedboxDbHelper(object):
 
     def commit(self):
         """
-        Commit transaction in database
+        Commit transaction in database.
         """
         self.__db.commit()
 
     def close(self):
         """
-        Close database connection
+        Close database connection.
         """
         self.__db.close()

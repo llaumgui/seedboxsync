@@ -6,6 +6,10 @@
 # file that was distributed with this source code.
 #
 
+"""
+Transport client using sFTP protocol.
+"""
+
 from __future__ import absolute_import
 from seedboxsync.transport import SeedboxAbstractClient
 from stat import S_ISDIR

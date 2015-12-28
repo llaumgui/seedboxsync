@@ -173,6 +173,7 @@ class SeedboxSync(object):
     def __setup_logging(self):
         """
         Set the logging instance.
+
         See: https://docs.python.org/2/library/logging.html
         """
         try:
@@ -211,6 +212,8 @@ class SeedboxSync(object):
     def _check_pid(self, pid):
         """
         Check for the existence of a unix pid.
+
+        :param int pid: the pid of the process
         """
         try:
             os.kill(pid, 0)
@@ -268,6 +271,8 @@ class SeedboxSync(object):
     def _store_torrent_infos(self, torrent_path):
         """
         Get and store information about torrent.
+
+        :param str torrent_path: the path to the torrent file
         """
         torrent_name = os.path.basename(torrent_path)
         torrent_info = Helper.get_torrent_infos(torrent_path)
@@ -302,6 +307,8 @@ class BlackHoleSync(SeedboxSync):
     def __upload_torrent(self, torrent_path):
         """
         Upload a single torrent.
+
+        :param str torrent_path: the path to the torrent file
         """
 
         torrent_name = os.path.basename(torrent_path)
@@ -382,6 +389,8 @@ class DownloadSync(SeedboxSync):
     def __get_file(self, filepath):
         """
         Download a single file.
+
+        :param str filepath: the filepath
         """
         # Local path (without seedbox folder prefix)
         filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').strip("/"), "", 1).strip("/")
@@ -426,6 +435,8 @@ class DownloadSync(SeedboxSync):
     def __is_already_download(self, filepath):
         """
         Get in database if file was already downloaded.
+
+        :param str filepath: the filepath
         """
         self._db.cursor.execute('''SELECT count(*) FROM download WHERE path=? AND finished > 0''', [filepath])
         (number_of_rows,) = self._db.cursor.fetchone()
@@ -496,6 +507,8 @@ class GetInfos(SeedboxSync):
     def get_lasts_torrents(self, number=10):
         """
         Get lasts "number" torrents from database.
+
+        :param int number: number of torrents to display
         """
         self._db.cursor.execute('''SELECT id, name, sent FROM torrent ORDER BY sent DESC LIMIT ?''', [number])
         prettytable = from_db_cursor(self._db.cursor)
@@ -506,6 +519,8 @@ class GetInfos(SeedboxSync):
     def get_lasts_downloads(self, number=10):
         """
         Get lasts "number" downloads from database.
+
+        :param int number: number of torrents to display
         """
         self._db.cursor.execute('''SELECT id, DATETIME(finished) AS finished, SUBSTR(path, -100) AS path, local_size AS size
                                    FROM download

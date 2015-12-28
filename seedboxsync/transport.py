@@ -6,6 +6,10 @@
 # file that was distributed with this source code.
 #
 
+"""
+Transport client abstract class.
+"""
+
 from abc import ABCMeta, abstractmethod
 
 
