@@ -7,4 +7,9 @@
 #
 # flake8: noqa
 
+"""
+The seedboxsync package with all SeedBoxsync modules.
+"""
+
 __version__ = '1.1.0'
+
