@@ -3,8 +3,6 @@ Welcome to SeedboxSync's documentation!
 
 .. include:: ../../DESCRIPTION.rst
 
-Official project repository avalaible on GitHub: https://github.com/llaumgui/seedboxsync
-
 .. toctree::
    :hidden:
    :maxdepth: 1
