@@ -7,3 +7,7 @@ install:
 
 script:
   - "flake8 ."
+  - travis-sphinx build
+
+after_success:
+    - travis-sphinx deploy

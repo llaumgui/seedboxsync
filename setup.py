@@ -94,7 +94,7 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'dev': ['flake8']
+        'dev': ['flake8', 'travis-sphinx']
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
