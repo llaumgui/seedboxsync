@@ -7,7 +7,7 @@
 #
 
 """
-Transport client abstract class.
+Transport client abstract class based on paramiko syntaxe.
 """
 
 from abc import ABCMeta, abstractmethod

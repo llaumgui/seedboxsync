@@ -45,7 +45,7 @@ class Helper(object):
     @staticmethod
     def get_torrent_infos(torrent_path):
         """
-        Get information about torrent file.
+        Get information about a torrent file.
 
         :param str torrent_path: the path to the torrent file
         """
@@ -72,10 +72,11 @@ class Helper(object):
     @classmethod
     def log_print(cls, message, msg_type='info'):
         """
-        Log with logging and print in console.
+        Log with logging in filesystem and print in console.
 
         :param str message: the message to print and log
-        :param str msg_type: the type of message
+        :param str msg_type: the type of message.
+            Can be error, debug, warning or info.
         """
         if msg_type == 'error':
             logging.error(message)
@@ -96,7 +97,7 @@ class Helper(object):
 #
 class SeedboxDbHelper(object):
     """
-    Store data in a sqlite database
+    Store data in a sqlite database.
     """
 
     def __init__(self, database):
