@@ -43,7 +43,7 @@ setup(
 
     description='Script for sync operations between your NAS and your seedbox',
     long_description=long_description,
-    url='https://github.com/llaumgui/seedboxsync',
+    url='https://llaumgui.github.io/seedboxsync',
 
     # Author details
     author='Guillaume Kulakowski',
