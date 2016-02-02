@@ -477,7 +477,7 @@ class DownloadSync(SeedboxSync):
             Helper.log_print('Connection error.', msg_type='error')
 
         # Close resources
-        self._transport.close()
+        self._transport_client.close()
         self._db.close()
 
         # Remove lock file.
