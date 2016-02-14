@@ -346,7 +346,7 @@ class BlackHoleSync(SeedboxSync):
         self._lock()
 
         # Get all torrents
-        torrents = glob.glob(self._config.get('Local', 'wath_path') + '/*.torrent')
+        torrents = glob.glob(self._config.get('Local', 'watch_path') + '/*.torrent')
         if len(torrents) > 0:
             # Init transport_client
             self._transport_client = self._get_transport_client()
@@ -362,7 +362,7 @@ class BlackHoleSync(SeedboxSync):
             self._transport_client.close()
             self._db.close()
         else:
-            Helper.log_print('No torrent in "' + self._config.get('Local', 'wath_path') + '"', msg_type='info')
+            Helper.log_print('No torrent in "' + self._config.get('Local', 'watch_path') + '"', msg_type='info')
 
         # Remove lock file.
         self._unlock()

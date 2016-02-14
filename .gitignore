@@ -1,12 +1,14 @@
-# seedbox-sync
+### seedbox-sync ###
 seedbox.ini
 
-# NetBeans
-nbproject
 
+# Created by https://www.gitignore.io/api/python,netbeans
+
+### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -48,6 +50,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+.hypothesis/
 
 # Translations
 *.mo
@@ -61,3 +64,16 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#Ipython Notebook
+.ipynb_checkpoints
+
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/

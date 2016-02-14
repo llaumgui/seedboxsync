@@ -1,2 +1,5 @@
 languages:
   Python: true
+
+exclude_paths:
+- docs/**/*
