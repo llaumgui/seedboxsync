@@ -1,5 +1,8 @@
 Configuration
 =============
+
+Configuration file
+------------------
 You can use the example configuration file. This file can be located in:
 
 * /usr/local/etc/ (pip install)
@@ -21,3 +24,97 @@ You can put your configuration in:
 
 .. toctree::
    :maxdepth: 2
+
+Settings
+--------
+
+Configuration about your seedbox and your BitTorrent client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* First, set informations about the connection to your Seedbox. Currently, only sftp is supported.
+
+.. code-block:: ini
+
+    [Seedbox]
+
+    # Informations about your seedbox connection
+    transfer_host=my-seedbox.net
+    transfer_port=22
+    transfer_login=me
+    transfer_password=p4sw0rd
+
+    # For the moment, only sftp
+    transfer_protocol=sftp
+
+* To prevent some issues between your transfer account and your BitTorrent client account, SeedboxSync chmod torrent file after upload.
+
+.. code-block:: ini
+
+    # Chmod torrent after upload (false = disable)
+    # Use octal notation like https://docs.python.org/2.6/library/os.html#os.chmod
+    transfer_chmod=0o777
+
+* To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (tmp_path) and move it in the watch folder after full transfert and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.
+
+.. figure::  _static/rutorrent_1.png
+   :align:   center
+
+.. code-block:: ini
+
+    # Use a tempory directory (you must create it !)
+    tmp_path=/tmp
+
+* The blackhole folder of your BitTorrent client. Only used by blackhole synchronisation.
+
+.. code-block:: ini
+
+    # Your "watch" folder you must create it!)
+    watch_path=/watch
+
+* The folder of your Bittorrent client with finished file. You can configure your client to move finished file in a specific folder.
+
+.. figure::  _static/rutorrent_2.png
+   :align:   center
+
+.. code-block:: ini
+
+    # Your finished folder you must create it!)
+    finished_path=/files
+
+* You can also specified extension to exclude from synchronisation.
+
+.. code-block:: ini
+
+    # Exclude part files
+    part_suffix=.part
+
+
+Configuration about your NAS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Configuration aboout local folders:
+    * watch_path: The local blackhole used for blackhole synchronisation.
+    * download_path: the folder where download finished torrent.
+    * sqlite_path: where to store all information about transfer (used sqlite).
+
+.. code-block:: ini
+
+    [Local]
+    watch_path=/home/bittorrent/watch
+    download_path=/home/bittorent/Download/
+    sqlite_path=/var/opt/seedboxsync/seedboxsync.sql
+
+* All informations about log and pid files:
+
+.. code-block:: ini
+
+    [Log]
+    blackhole_file_path=/var/log/seedboxsync_blackhole.log
+    download_file_path=/var/log/seedboxsync_download.log
+    blackhole_level=INFO
+    download_level=INFO
+
+
+    [PID]
+    blackhole_path=/var/run/seedboxsync_blackhole.pid
+    download_path=/var/run/seedboxsync_download.pid
