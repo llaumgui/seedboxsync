@@ -10,16 +10,19 @@
 Main module of used by seedboxseed CLI.
 """
 
-from __future__ import print_function, absolute_import
-from seedboxsync.helper import (Helper, SeedboxDbHelper)
-from prettytable import from_db_cursor
+from seedboxsync import (Helper, SeedboxDbHelper, DependencyException)
 from importlib import import_module
-import ConfigParser as configparser
+import configparser
 import logging
 import glob
 import os
 import argparse
 import datetime
+# Try to import prettytable
+try:
+    from prettytable import from_db_cursor
+except ImportError:
+    raise DependencyException('prettytable library isn\'t installed on system.')
 
 
 #
@@ -104,14 +107,6 @@ class CLI(object):
 class SeedboxSync(object):
     """
     Super class for SeedboxSync projet.
-
-    Exit code:
-        - 0: All is good
-        - 1: Import error
-        - 2: Logging error
-        - 3: Lock error
-        - 4: connection error
-        - 5: No configuration file found
     """
 
     CONF_PREFIX = None
@@ -174,7 +169,7 @@ class SeedboxSync(object):
         """
         Set the logging instance.
 
-        See: https://docs.python.org/2/library/logging.html
+        See: https://docs.python.org/3.4/library/logging.html
         """
         try:
             logging.basicConfig(format='%(asctime)s %(levelname)s %(process)d - %(message)s',
@@ -182,7 +177,7 @@ class SeedboxSync(object):
                                 level=eval('logging.' + self._config.get('Log', self.CONF_PREFIX + 'level')))
             logging.debug('Start')
             Helper.log_print('Load config from "' + self.__config_file + '"', msg_type='debug')
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print(str(exc), msg_type='error')
             exit(2)
 
@@ -195,7 +190,7 @@ class SeedboxSync(object):
             lock = open(self.__lock_file, 'w+')
             lock.write(str(os.getpid()))
             lock.close()
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print(str(exc), msg_type='error')
             exit(3)
 
@@ -206,7 +201,7 @@ class SeedboxSync(object):
         logging.debug('Unlock task by ' + self.__lock_file)
         try:
             os.remove(self.__lock_file)
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print(str(exc), msg_type='error')
 
     def _check_pid(self, pid):
@@ -227,7 +222,7 @@ class SeedboxSync(object):
         Test if task is locked by a pid file to prevent launch two time.
         """
         if os.path.isfile(self.__lock_file):
-            pid = int(file(self.__lock_file, 'r').readlines()[0])
+            pid = int(open(self.__lock_file, 'r').readlines()[0])
             if self._check_pid(pid):
                 Helper.log_print('Already running (pid=' + str(pid) + ')', msg_type='info')
                 return True
@@ -245,10 +240,14 @@ class SeedboxSync(object):
 
         try:
             client_module = import_module('seedboxsync.transport_' + transfer_protocol)
-        except ImportError:
-            Helper.log_print('Unsupported protocole: ' + transfer_protocol, msg_type='error')
+        except ImportError as exc:
+            Helper.log_print('Unsupported protocole: ' + transfer_protocol + ' (' + str(exc) + ')', msg_type='error')
             self._unlock()
             exit(6)
+        except DependencyException as exc:
+            Helper.log_print(str(exc), msg_type='error')
+            self._unlock()
+            exit(8)
 
         try:
             transfer_client = getattr(client_module, client_class)
@@ -263,7 +262,7 @@ class SeedboxSync(object):
                                    port=int(self._config.get('Seedbox', 'transfer_port')),
                                    login=self._config.get('Seedbox', 'transfer_login'),
                                    password=self._config.get('Seedbox', 'transfer_password'))
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print('Connection fail: ' + str(exc), msg_type='error')
             self._unlock()
             exit(4)
@@ -335,7 +334,7 @@ class BlackHoleSync(SeedboxSync):
             # Remove local torent
             logging.debug('Remove local torrent "' + torrent_path + '"')
             os.remove(torrent_path)
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print(str(exc), msg_type='warning')
 
     def do_sync(self):
@@ -394,7 +393,7 @@ class DownloadSync(SeedboxSync):
         """
         # Local path (without seedbox folder prefix)
         filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').strip("/"), "", 1).strip("/")
-        local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix.encode('UTF8'))
+        local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix)
         local_filepath_part = local_filepath + '.part'
         local_path = os.path.dirname(local_filepath)
 
@@ -429,7 +428,7 @@ class DownloadSync(SeedboxSync):
             self._db.cursor.execute('''UPDATE download SET local_size=?, finished=? WHERE id=?''', (
                 local_size, datetime.datetime.now(), download_id))
             self._db.commit()
-        except Exception, exc:
+        except Exception as exc:
             Helper.log_print('Download fail: ' + str(exc), msg_type='error')
 
     def __is_already_download(self, filepath):

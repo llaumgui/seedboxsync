@@ -51,7 +51,7 @@ Configuration about your seedbox and your BitTorrent client
 .. code-block:: ini
 
     # Chmod torrent after upload (false = disable)
-    # Use octal notation like https://docs.python.org/2.6/library/os.html#os.chmod
+    # Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
     transfer_chmod=0o777
 
 * To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (tmp_path) and move it in the watch folder after full transfert and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.

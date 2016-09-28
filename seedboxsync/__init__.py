@@ -9,7 +9,22 @@
 
 """
 The seedboxsync package with all SeedBoxSync modules.
+
+Exit code:
+    - 0: All is good
+    - 1: 
+    - 2: Logging error
+    - 3: Lock error
+    - 4: Transfert error
+    - 5: Configuration error
+    - 6: Unsupported protocole
+    - 7: Unsupported protocole module
+    - 8: Dependency error
 """
 
-__version__ = '1.1.1'
+__version__ = '2.0.0-alpha1'
 
+from .exceptions import DependencyException
+from .helper import Helper, SeedboxDbHelper
+from .seedboxsync import CLI
+from .transport import SeedboxAbstractClient

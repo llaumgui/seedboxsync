@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2016 Guillaume Kulakowski <guillaume@kulakowski.fr>
@@ -11,7 +11,7 @@
 Start CLI interface.
 """
 
-from seedboxsync import seedboxsync
+from seedboxsync import CLI
 import os
 import sys
 
@@ -19,5 +19,8 @@ import sys
 if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seedboxsync')):
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-if __name__ == '__main__':
-    cli = seedboxsync.CLI()
+try:
+    if __name__ == '__main__':
+        cli = CLI()
+except KeyboardInterrupt:
+    exit(0)

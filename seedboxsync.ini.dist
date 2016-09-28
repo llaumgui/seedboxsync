@@ -10,7 +10,7 @@ transfer_password=p4sw0rd
 transfer_protocol=sftp
 
 # Chmod torrent after upload (false = disable)
-# Use octal notation like https://docs.python.org/2.6/library/os.html#os.chmod
+# Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
 transfer_chmod=0o777
 
 # Use a tempory directory (you must create it !)

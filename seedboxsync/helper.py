@@ -10,12 +10,17 @@
 Helper module with helper classes.
 """
 
-from __future__ import print_function
+from seedboxsync import DependencyException
 import logging
 import os
 import errno
 import sqlite3
-import bencode
+# Try to import bencodepy
+try:
+    from bencodepy import decode_from_file as bdecode
+    from bencodepy import DecodingError
+except ImportError:
+    raise DependencyException('bencodepy library isn\'t installed on system.')
 
 
 #
@@ -49,15 +54,14 @@ class Helper(object):
 
         :param str torrent_path: the path to the torrent file
         """
-        torrent = open(torrent_path, 'r')
         torrent_info = None
 
         try:
-            torrent_info = bencode.bdecode(torrent.read())
-        except bencode.BTL.BTFailure, exc:
+            torrent_info = bdecode(torrent_path)
+        except DecodingError as exc:
             Helper.log_print('Not valid torrent: ' + str(exc), msg_type='error')
-        finally:
-            torrent.close()
+        except Exception as exc:
+            Helper.log_print('Torrent decoding error: ' + str(exc), msg_type='error')
 
         return torrent_info
 
@@ -115,7 +119,7 @@ class SeedboxDbHelper(object):
             else:
                 self.__db = sqlite3.connect(self.__database)
                 self.cursor = self.__db.cursor()
-        except sqlite3.OperationalError, exc:
+        except sqlite3.OperationalError as exc:
             Helper.log_print('SQLite fail: ' + str(exc), msg_type='error')
             exit()
 

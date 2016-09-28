@@ -10,12 +10,15 @@
 Transport client using sFTP protocol.
 """
 
-from __future__ import absolute_import
-from seedboxsync.transport import SeedboxAbstractClient
+from seedboxsync import SeedboxAbstractClient, DependencyException
 from stat import S_ISDIR
 import logging
-import paramiko
 import os
+# Try to import paramiko
+try:
+    import paramiko
+except ImportError:
+    raise DependencyException('Paramiko library isn\'t install on system.')
 
 
 #
