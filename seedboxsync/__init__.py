@@ -12,7 +12,7 @@ The seedboxsync package with all SeedBoxSync modules.
 
 Exit code:
     - 0: All is good
-    - 1: 
+    - 1:
     - 2: Logging error
     - 3: Lock error
     - 4: Transfert error
@@ -21,8 +21,6 @@ Exit code:
     - 7: Unsupported protocole module
     - 8: Dependency error
 """
-
-__version__ = '2.0.0-alpha1'
 
 from .exceptions import DependencyException
 from .helper import Helper, SeedboxDbHelper

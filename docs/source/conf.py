@@ -22,7 +22,8 @@ if os.path.exists(seedbox_path):
     sys.path.insert(0, seedbox_path)
 
 # Dynamic import of Version
-from seedboxsync.__init__ import __version__ as version
+with open(os.path.join(seedbox_path, 'VERSION'), encoding='utf-8') as f:
+    version = f.read().strip()
 
 # on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'

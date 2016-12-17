@@ -20,14 +20,14 @@ from os import path
 from pip.req import parse_requirements
 from pip.download import PipSession
 
-from seedboxsync import __version__
-
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
 with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
     long_description = f.read()
-
+# Get the version from the relevant file
+with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
+    version = f.read().strip()
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
 install_requirements = parse_requirements('requirements.txt', session=PipSession())
@@ -39,7 +39,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=__version__,
+    version=version,
 
     description='Script for sync operations between your NAS and your seedbox',
     long_description=long_description,
