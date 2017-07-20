@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2016 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2017 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -24,5 +24,6 @@ Exit code:
 
 from .exceptions import DependencyException
 from .helper import Helper, SeedboxDbHelper
-from .seedboxsync import CLI
+from .seedboxsync import BlackHoleSync, DownloadSync, GetInfos
+from .cli import CLI
 from .transport import SeedboxAbstractClient

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2016 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2017 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -13,92 +13,16 @@ Main module of used by seedboxseed CLI.
 from seedboxsync import (Helper, SeedboxDbHelper, DependencyException)
 from importlib import import_module
 import configparser
-import logging
-import glob
-import os
-import argparse
 import datetime
+import glob
+import logging
+import os
+
 # Try to import prettytable
 try:
     from prettytable import from_db_cursor
 except ImportError:
     raise DependencyException('prettytable library isn\'t installed on system.')
-
-
-#
-# CLI class
-#
-class CLI(object):
-    """
-    CLI interface.
-    """
-
-    def __init__(self):
-        """
-        CLI constructor.
-        """
-        self.__parser = argparse.ArgumentParser(description='Script for sync operations between your NAS and your seedbox.')
-
-        # Mandatories arguments
-        group = self.__parser.add_mutually_exclusive_group()
-        group.add_argument('--blackhole', help='send torrent from the local blackhole to the seedbox blackhole',
-                           action='store_true')
-        group.add_argument('-t', '--lasts-torrents', help='get list of lasts torrents uploaded',
-                           default=False, const=10, nargs='?', type=int,
-                           action='store')
-        group.add_argument('--download', help='download finished files from seedbox to NAS',
-                           action='store_true')
-        group.add_argument('-d', '--lasts-downloads', help='get list of lasts downloads',
-                           default=False, const=10, nargs='?', type=int,
-                           action='store')
-        group.add_argument('-u', '--unfinished-downloads', help='get list of unfinished downloads',
-                           action='store_true')
-
-        # Optionnal arguments
-        self.__parser.add_argument('-q', '--quiet', action='store_true')
-
-        self.__start()
-
-    def __start(self):
-        """
-        Start CLI.
-        """
-        # Parse
-        self.__args = self.__parser.parse_args()
-
-        # Set if quiet
-        os.environ["SEEDBOXSYNC_IS_QUIET"] = str(self.__args .quiet)
-
-        if self.__args.blackhole:
-            sync = BlackHoleSync()
-            if sync.is_locked():
-                exit(0)
-            else:
-                sync.do_sync()
-
-        elif self.__args.download:
-            sync = DownloadSync()
-            if sync.is_locked():
-                exit(0)
-            else:
-                sync.do_sync()
-
-        elif self.__args.lasts_torrents:
-            info = GetInfos()
-            print(info.get_lasts_torrents(self.__args.lasts_torrents))
-
-        elif self.__args.lasts_downloads:
-            info = GetInfos()
-            print(info.get_lasts_downloads(self.__args.lasts_downloads))
-
-        elif self.__args.unfinished_downloads:
-            info = GetInfos()
-            print(info.get_unfinished_downloads())
-
-        else:
-            self.__parser.print_help()
-
-        exit(0)
 
 
 #
@@ -392,7 +316,7 @@ class DownloadSync(SeedboxSync):
         :param str filepath: the filepath
         """
         # Local path (without seedbox folder prefix)
-        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').strip("/"), "", 1).strip("/")
+        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').rpartition('/')[2], "", 1).strip("/")
         local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix)
         local_filepath_part = local_filepath + '.part'
         local_path = os.path.dirname(local_filepath)

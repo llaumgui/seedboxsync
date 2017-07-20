@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'SeedboxSync'
-copyright = u'2015-2016, Guillaume Kulakowski'
+copyright = u'2015-2017, Guillaume Kulakowski'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
