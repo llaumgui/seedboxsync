@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2016 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2017 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -90,7 +90,7 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'dev': ['flake8', 'travis-sphinx']
+        'dev': ['flake8', 'travis-sphinx', 'sphinx_rtd_theme']
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
