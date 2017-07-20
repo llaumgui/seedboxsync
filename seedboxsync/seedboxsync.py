@@ -47,13 +47,20 @@ class SeedboxSync(object):
         self._config = configparser.ConfigParser()
         self._config.read(self.__config_file)
 
-        # Some path used by classes
-        self.__lock_file = self._config.get('PID', self.CONF_PREFIX + 'path')
-        self._db_path = self._config.get('Local', 'sqlite_path')
-        self._finished_path = self._config.get('Seedbox', 'finished_path')
+        try:
+            # Some path used by classes
+            self.__lock_file = self._config.get('PID', self.CONF_PREFIX + 'path')
+            self._db_path = self._config.get('Local', 'sqlite_path')
+            self._finished_path = self._config.get('Seedbox', 'finished_path')
 
-        # Load and configure logging
-        self.__setup_logging()
+            # Load and configure logging
+            self.__setup_logging()
+        except configparser.NoSectionError as exc:
+            Helper.log_print(str(exc), msg_type='error')
+            exit(5)
+        except configparser.NoOptionError as exc:
+            Helper.log_print(str(exc), msg_type='error')
+            exit(5)
 
         # Set empty transport
         self._transport_client = None
