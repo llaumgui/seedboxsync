@@ -7,8 +7,8 @@ Provides synchronization functions between your NAS and your seedbox:
 * Also provides queries to know last torrents, last downloads, etc.
 
 ## Python support
-* Python 3.4 support look at _feature/python3_ branch.
-* Legacy Python 2.7 support look at the _release/v1.x-python2_ branch.
+* Python 3.4+ support look at _develop_ branch.
+* Legacy Python 2.7 support look at the _legacy-python2_ branch.
 
 ## Requirements
 See requirements.txt.
