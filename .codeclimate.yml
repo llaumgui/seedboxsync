@@ -1,5 +1,35 @@
-languages:
-  Python: true
+engines:
+  markdownlint:
+    enabled: true
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python:
+
+  fixme:
+    enabled: true
+    config:
+      strings:
+      - FIXME
+      - BUG
+      - CUSTOM
+
+  git-legal:
+    enabled: true
+
+  pep8:
+    enabled: true
+
+  radon:
+    enabled: true
+
+ratings:
+  paths:
+  - "**.md"
+  - "requirements.txt"
+  - "**.py"
 
 exclude_paths:
-- docs/**/*
+- "docs/**/*"
