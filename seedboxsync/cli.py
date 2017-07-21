@@ -10,9 +10,10 @@
 CLI module.
 """
 
-from seedboxsync import (BlackHoleSync, DownloadSync, GetInfos)
+from seedboxsync import (BlackHoleSync, DownloadSync, GetInfos, Helper)
 import argparse
 import os
+import configparser
 
 
 #
@@ -47,7 +48,15 @@ class CLI(object):
         # Optionnal arguments
         self.__parser.add_argument('-q', '--quiet', action='store_true')
 
-        self.__start()
+        # Big try / except.
+        try:
+            self.__start()
+        except configparser.NoSectionError as exc:
+            Helper.log_print(str(exc), msg_type='error')
+            exit(5)
+        except configparser.NoOptionError as exc:
+            Helper.log_print(str(exc), msg_type='error')
+            exit(5)
 
     def __start(self):
         """

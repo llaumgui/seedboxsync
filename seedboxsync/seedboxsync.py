@@ -47,20 +47,13 @@ class SeedboxSync(object):
         self._config = configparser.ConfigParser()
         self._config.read(self.__config_file)
 
-        try:
-            # Some path used by classes
-            self.__lock_file = self._config.get('PID', self.CONF_PREFIX + 'path')
-            self._db_path = self._config.get('Local', 'sqlite_path')
-            self._finished_path = self._config.get('Seedbox', 'finished_path')
+        # Some path used by classes
+        self.__lock_file = self._config.get('PID', self.CONF_PREFIX + 'path')
+        self._db_path = self._config.get('Local', 'sqlite_path')
+        self._finished_path = self._config.get('Seedbox', 'finished_path')
 
-            # Load and configure logging
-            self.__setup_logging()
-        except configparser.NoSectionError as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(5)
-        except configparser.NoOptionError as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(5)
+        # Load and configure logging
+        self.__setup_logging()
 
         # Set empty transport
         self._transport_client = None
@@ -323,7 +316,7 @@ class DownloadSync(SeedboxSync):
         :param str filepath: the filepath
         """
         # Local path (without seedbox folder prefix)
-        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').rpartition('/')[2], "", 1).strip("/")
+        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'prefixed_path').strip("/"), "", 1).strip("/")
         local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix)
         local_filepath_part = local_filepath + '.part'
         local_path = os.path.dirname(local_filepath)
