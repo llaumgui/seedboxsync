@@ -1,7 +1,7 @@
 # SeedboxSync
 
-[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync) 
-[![Code Climate](https://codeclimate.com/github/llaumgui/seedboxsync/badges/gpa.svg)](https://codeclimate.com/github/llaumgui/seedboxsync) 
+[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync)
+[![Code Climate](https://codeclimate.com/github/llaumgui/seedboxsync/badges/gpa.svg)](https://codeclimate.com/github/llaumgui/seedboxsync)
 [![PyPI version](https://badge.fury.io/py/seedboxsync.svg)](https://pypi.python.org/pypi/seedboxsync)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Percentage of issues still open")
