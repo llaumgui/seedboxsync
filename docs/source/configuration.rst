@@ -81,6 +81,13 @@ Configuration about your seedbox and your BitTorrent client
     # Your finished folder you must create it!)
     finished_path=/files
 
+* You can remove a prefix part of the path in your synced directory.
+
+.. code-block:: ini
+
+    # Allow to remove a part of the synced path. In General, same path than "finished_path".
+    prefixed_path=/files
+
 * You can also specified extension to exclude from synchronisation.
 
 .. code-block:: ini
