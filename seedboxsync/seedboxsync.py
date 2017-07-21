@@ -393,7 +393,7 @@ class DownloadSync(SeedboxSync):
         :param str filepath: the filepath
         """
         # Local path (without seedbox folder prefix)
-        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'finished_path').strip("/"), "", 1).strip("/")
+        filepath_without_prefix = filepath.replace(self._config.get('Seedbox', 'prefixed_path').strip("/"), "", 1).strip("/")
         local_filepath = os.path.join(self._config.get('Local', 'download_path'), filepath_without_prefix.encode('UTF8'))
         local_filepath_part = local_filepath + '.part'
         local_path = os.path.dirname(local_filepath)
