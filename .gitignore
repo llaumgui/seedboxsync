@@ -70,7 +70,8 @@ target/
 
 
 ### NetBeans ###
-nbproject/private/
+nbproject
+nb-configuration.xml
 build/
 nbbuild/
 dist/
