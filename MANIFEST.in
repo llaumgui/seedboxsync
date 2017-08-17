@@ -1,1 +1,1 @@
-include DESCRIPTION.rst requirements.txt seedboxsync.ini.dist
+include DESCRIPTION.rst requirements.txt seedboxsync.ini.dist VERSION
