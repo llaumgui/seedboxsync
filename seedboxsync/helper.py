@@ -18,10 +18,9 @@ import sqlite3
 
 # Try to import bencodepy
 try:
-    from bencodepy import decode_from_file as bdecode
-    from bencodepy import DecodingError
+    from bcoding import bdecode
 except ImportError:
-    raise DependencyException('bencodepy library isn\'t installed on system.')
+    raise DependencyException('bcoding library isn\'t installed on system.')
 
 
 #
@@ -55,16 +54,17 @@ class Helper(object):
 
         :param str torrent_path: the path to the torrent file
         """
-        torrent_info = None
+        with open(torrent_path, 'rb') as torrent:
+            torrent_info = None
 
-        try:
-            torrent_info = bdecode(torrent_path)
-        except DecodingError as exc:
-            Helper.log_print('Not valid torrent: ' + str(exc), msg_type='error')
-        except Exception as exc:
-            Helper.log_print('Torrent decoding error: ' + str(exc), msg_type='error')
+            try:
+                torrent_info = bdecode(torrent.read())
+            except Exception as exc:
+                Helper.log_print('Not valid torrent: ' + str(exc), msg_type='error')
+            finally:
+                torrent.close()
 
-        return torrent_info
+            return torrent_info
 
     @classmethod
     def print(cls, *args):
