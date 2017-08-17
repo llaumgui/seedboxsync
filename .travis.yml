@@ -9,7 +9,7 @@ install:
 
 script:
   - "flake8 ."
-  - travis-sphinx build
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then travis-sphinx build; fi
 
 after_success:
-  - travis-sphinx deploy
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then travis-sphinx deploy; fi
