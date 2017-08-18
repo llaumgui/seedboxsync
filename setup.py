@@ -73,7 +73,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='seedbox sync sftp',
+    keywords='seedbox nas sync sftp',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
