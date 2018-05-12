@@ -2,7 +2,7 @@
 seedbox.ini
 
 
-# Created by https://www.gitignore.io/api/python,netbeans
+# Created by https://www.gitignore.io/api/python
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -67,14 +67,3 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
-
-
-### NetBeans ###
-nbproject
-nb-configuration.xml
-build/
-nbbuild/
-dist/
-nbdist/
-nbactions.xml
-.nb-gradle/
