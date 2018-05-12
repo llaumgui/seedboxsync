@@ -10,7 +10,8 @@
 CLI module.
 """
 
-from seedboxsync import (BlackHoleSync, DownloadSync, GetInfos, Helper)
+from seedboxsync.seedboxsync import (BlackHoleSync, DownloadSync, GetInfos)
+from seedboxsync.exceptions import (ConfigurationException, IsLockedException)
 import argparse
 import os
 import configparser
@@ -48,15 +49,13 @@ class CLI(object):
         # Optionnal arguments
         self.__parser.add_argument('-q', '--quiet', action='store_true')
 
-        # Big try / except.
+        # Start but try / catch.
         try:
             self.__start()
         except configparser.NoSectionError as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(5)
+            raise ConfigurationException(str(exc))
         except configparser.NoOptionError as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(5)
+            raise ConfigurationException(str(exc))
 
     def __start(self):
         """
@@ -66,30 +65,23 @@ class CLI(object):
         self.__args = self.__parser.parse_args()
 
         # Set if quiet
-        os.environ["SEEDBOXSYNC_IS_QUIET"] = str(self.__args .quiet)
+        os.environ["SEEDBOXSYNC_IS_QUIET"] = str(self.__args.quiet)
 
         if self.__args.blackhole:
             self.__call_blackhole_sync()
-
         elif self.__args.download:
             self.__call_download_sync()
-
         elif self.__args.lasts_torrents:
             info = GetInfos()
             print(info.get_lasts_torrents(self.__args.lasts_torrents))
-
         elif self.__args.lasts_downloads:
             info = GetInfos()
             print(info.get_lasts_downloads(self.__args.lasts_downloads))
-
         elif self.__args.unfinished_downloads:
             info = GetInfos()
             print(info.get_unfinished_downloads())
-
         else:
             self.__parser.print_help()
-
-        exit(0)
 
     def __call_download_sync(self):
         """
@@ -97,7 +89,7 @@ class CLI(object):
         """
         sync = DownloadSync()
         if sync.is_locked():
-            exit(0)
+            raise IsLockedException("SeedboxSync is locked")
         else:
             sync.do_sync()
 
@@ -108,6 +100,6 @@ class CLI(object):
 
         sync = BlackHoleSync()
         if sync.is_locked():
-            exit(0)
+            raise IsLockedException("SeedboxSync is locked")
         else:
             sync.do_sync()

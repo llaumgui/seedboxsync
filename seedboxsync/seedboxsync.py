@@ -10,7 +10,8 @@
 Main module of used by seedboxseed CLI.
 """
 
-from seedboxsync import (Helper, SeedboxDbHelper, DependencyException)
+from seedboxsync.exceptions import (ConnectionException, ConfigurationException, DependencyException, LockException, LogException, TransportProtocoleException)
+from seedboxsync.helper import (Helper, SeedboxDbHelper)
 from importlib import import_module
 import configparser
 import datetime
@@ -80,12 +81,11 @@ class SeedboxSync(object):
                 if os.path.isfile(seedbox_ini):
                     config_file = seedbox_ini
                     break
-            except:
+            except Exception as exc:
                 pass
 
         if config_file is None:
-            print('No configuration file found !')
-            exit(5)
+            raise ConfigurationException('No configuration file found !')
 
         return config_file
 
@@ -102,8 +102,7 @@ class SeedboxSync(object):
             logging.debug('Start')
             Helper.log_print('Load config from "' + self.__config_file + '"', msg_type='debug')
         except Exception as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(2)
+            raise LogException('Log error: ' + exc)
 
     def _lock(self):
         """
@@ -115,8 +114,7 @@ class SeedboxSync(object):
             lock.write(str(os.getpid()))
             lock.close()
         except Exception as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            exit(3)
+            raise LockException('Log error: ' + str(exc))
 
     def _unlock(self):
         """
@@ -126,7 +124,7 @@ class SeedboxSync(object):
         try:
             os.remove(self.__lock_file)
         except Exception as exc:
-            Helper.log_print(str(exc), msg_type='error')
+            raise LockException('Log error: ' + str(exc))
 
     def _check_pid(self, pid):
         """
@@ -165,21 +163,15 @@ class SeedboxSync(object):
         try:
             client_module = import_module('seedboxsync.transport_' + transfer_protocol)
         except ImportError as exc:
-            Helper.log_print('Unsupported protocole: ' + transfer_protocol + ' (' + str(exc) + ')', msg_type='error')
             self._unlock()
-            exit(6)
-        except DependencyException as exc:
-            Helper.log_print(str(exc), msg_type='error')
-            self._unlock()
-            exit(8)
+            raise TransportProtocoleException('Unsupported protocole: ' + transfer_protocol + ' (' + str(exc) + ')')
 
         try:
             transfer_client = getattr(client_module, client_class)
         except AttributeError:
-            Helper.log_print('Unsupported protocole module ! No class "' +
-                             client_class + '" in module ' + 'seedboxsync.transport_' + transfer_protocol, msg_type='error')
             self._unlock()
-            exit(7)
+            raise TransportProtocoleException('Unsupported protocole module ! No class "' + client_class +
+                                              '" in module ' + 'seedboxsync.transport_' + transfer_protocol)
 
         try:
             return transfer_client(host=self._config.get('Seedbox', 'transfer_host'),
@@ -187,9 +179,8 @@ class SeedboxSync(object):
                                    login=self._config.get('Seedbox', 'transfer_login'),
                                    password=self._config.get('Seedbox', 'transfer_password'))
         except Exception as exc:
-            Helper.log_print('Connection fail: ' + str(exc), msg_type='error')
             self._unlock()
-            exit(4)
+            raise ConnectionException('Connection fail: ' + str(exc))
 
     def _store_torrent_infos(self, torrent_path):
         """

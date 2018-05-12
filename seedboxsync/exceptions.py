@@ -11,5 +11,29 @@ Exception module with customs exceptions classes.
 """
 
 
+class ConnectionException(Exception):
+    pass
+
+
+class ConfigurationException(Exception):
+    pass
+
+
 class DependencyException(Exception):
+    pass
+
+
+class IsLockedException(Exception):
+        pass
+
+
+class LockException(Exception):
+    pass
+
+
+class LogException(Exception):
+    pass
+
+
+class TransportProtocoleException(Exception):
     pass

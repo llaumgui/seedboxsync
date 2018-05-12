@@ -10,7 +10,8 @@
 Transport client using sFTP protocol.
 """
 
-from seedboxsync import SeedboxAbstractClient, DependencyException
+from seedboxsync.transport import SeedboxAbstractClient
+from seedboxsync.exceptions import DependencyException
 from stat import S_ISDIR
 import logging
 import os

@@ -10,7 +10,7 @@
 Helper module with helper classes.
 """
 
-from seedboxsync import DependencyException
+from seedboxsync.exceptions import DependencyException
 import logging
 import os
 import errno
