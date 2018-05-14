@@ -88,12 +88,21 @@ Configuration about your seedbox and your BitTorrent client
     # Allow to remove a part of the synced path. In General, same path than "finished_path".
     prefixed_path=/files
 
-* You can also specified extension to exclude from synchronisation.
+* You can also specified extension used by your torrent client for downloads in progress to exclude it from synchronisation.
 
 .. code-block:: ini
 
     # Exclude part files
     part_suffix=.part
+
+* You can also exclude files from sync with regular expression.
+
+.. code-block:: ini
+
+    # Exclude pattern from sync
+    # Use re syntaxe: https://docs.python.org/3/library/re.html
+    # Example: .*missing$|^\..*\.swap$
+    exclude_syncing=
 
 
 Configuration about your NAS
@@ -107,8 +116,13 @@ Configuration about your NAS
 .. code-block:: ini
 
     [Local]
+    # Your local "watch" folder
     watch_path=/home/bittorrent/watch
+
+    # Path where download files
     download_path=/home/bittorent/Download/
+
+    # Use local sqlite database for store downloaded files
     sqlite_path=/var/opt/seedboxsync/seedboxsync.sql
 
 * All informations about log and pid files:

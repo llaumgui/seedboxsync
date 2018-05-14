@@ -18,6 +18,8 @@ import datetime
 import glob
 import logging
 import os
+import re
+import sre_constants
 
 # Try to import prettytable
 try:
@@ -359,6 +361,26 @@ class DownloadSync(SeedboxSync):
         else:
             return True
 
+    def __exclude_by_pattern(self, filepath):
+        """
+        Allow to exclude sync by pattern
+
+        :param str filepath: the filepath
+        """
+        pattern = self._config.get('Seedbox', 'exclude_syncing')
+        if pattern == "":
+            return False
+
+        try:
+            match = re.search(pattern, filepath)
+        except sre_constants.error as exc:
+            raise ConfigurationException('Bad configuration for exclude_syncing ! See the doc at https://docs.python.org/3/library/re.html')
+
+        if match is None:
+            return True
+        else:
+            return False
+
     def do_sync(self):
         """
         Do the synchronization.
@@ -385,6 +407,8 @@ class DownloadSync(SeedboxSync):
                         Helper.log_print('Skip part file "' + filename + '"', msg_type='debug')
                     elif self.__is_already_download(filepath):
                         Helper.log_print('Skip already downloaded "' + filename + '"', msg_type='debug')
+                    elif self.__exclude_by_pattern(filepath):
+                        Helper.log_print('Skip excluded by pattern "' + filename + '"', msg_type='debug')
                     else:
                         self.__get_file(filepath)
         except IOError:

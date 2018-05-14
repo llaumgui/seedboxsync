@@ -28,10 +28,20 @@ prefixed_path=/files
 # Exclude part files
 part_suffix=.part
 
+# Exclude pattern from sync
+# Use re syntaxe: https://docs.python.org/3/library/re.html
+# Example: .*missing$|^\..*\.swap$
+exclude_syncing=
+
 
 [Local]
+# Your local "watch" folder
 watch_path=/home/bittorrent/watch
+
+# Path where download files
 download_path=/home/bittorent/Download/
+
+# Use local sqlite database for store downloaded files
 sqlite_path=/var/opt/seedboxsync/seedboxsync.sql
 
 
