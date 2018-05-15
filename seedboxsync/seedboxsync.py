@@ -377,9 +377,9 @@ class DownloadSync(SeedboxSync):
             raise ConfigurationException('Bad configuration for exclude_syncing ! See the doc at https://docs.python.org/3/library/re.html')
 
         if match is None:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def do_sync(self):
         """
