@@ -1,8 +1,22 @@
 Usage
 =====
 
-In command line
----------------
+Launch SeedboxSync
+------------------
+* From a pip installation (recommended method):
+
+.. code-block:: bash
+
+    seedboxsync
+
+* From a git clone installation:
+
+.. code-block:: bash
+
+    cd /path/to/clone && seedboxsync.py
+
+Use in command line
+-------------------
 .. code-block:: bash
 
     usage: seedboxsync [-h] [--blackhole | -t [LASTS_TORRENTS] | --download | -d
@@ -23,16 +37,15 @@ In command line
                             get list of unfinished downloads
       -q, --quiet
 
-
-In crontab
-----------
+Use in crontab
+--------------
 .. code-block:: bash
 
     # Sync blackhole every 2mn
     */2 * * * * root seedboxsync --blackhole
 
     # Download torrents finished every 15mn
-    */15 * * * * root seedboxsync.py --download
+    */15 * * * * root seedboxsync --download
 
 You can also add a logrotate configuration in /etc/logrotate.d/seedboxsync:
 

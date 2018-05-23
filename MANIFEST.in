@@ -1,1 +1,9 @@
-include DESCRIPTION.rst requirements.txt seedboxsync.ini.dist VERSION
+# Include docs
+include *.md
+
+# Include sys
+Include requirements.txt
+include VERSION
+
+# Include ini example
+include seedboxsync.ini.dist

@@ -1,6 +1,22 @@
 seedboxsync package
 ===================
 
+seedboxsync.cli module
+----------------------
+
+.. automodule:: seedboxsync.cli
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+seedboxsync.exceptions module
+-----------------------------
+
+.. automodule:: seedboxsync.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 seedboxsync.helper module
 -------------------------
 
