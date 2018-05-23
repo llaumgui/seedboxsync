@@ -1,5 +1,6 @@
 # Include docs
 include *.md
+include LICENSE
 
 # Include sys
 Include requirements.txt

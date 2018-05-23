@@ -62,7 +62,7 @@ setup(
         'prettytable>=0.7.2',
     ],
     extras_require={
-        'dev': ['flake8', 'travis-sphinx', 'sphinx_rtd_theme']
+        'dev': ['tox', 'travis-sphinx', 'sphinx_rtd_theme']
     },
 
     data_files=[('etc', ['seedboxsync.ini.dist'])],

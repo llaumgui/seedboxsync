@@ -232,7 +232,7 @@ class BlackHoleSync(SeedboxSync):
 
         try:
             logging.debug('Upload "' + torrent_path + '" in "' + self._config.get('Seedbox', 'tmp_path') + '" directory')
-            self._transport_client.put(torrent_path,  os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name))
+            self._transport_client.put(torrent_path, os.path.join(self._config.get('Seedbox', 'tmp_path'), torrent_name))
 
             # Chmod
             if self._config.get('Seedbox', 'transfer_chmod') != "false":
