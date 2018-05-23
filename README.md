@@ -14,12 +14,8 @@ Provides synchronization functions between your NAS and your seedbox:
 
 ## Python support
 
-* Python 3.4+ support look at _master_ branch.
-* Legacy Python 2.7 support look at the _legacy-python2_ branch.
-
-## Requirements
-
-See requirements.txt.
+* Python 3.4+ support look at [_master_](https://github.com/llaumgui/seedboxsync/tree/master) branch.
+* Legacy Python 2.7 support look at the [_legacy-python2_](https://github.com/llaumgui/seedboxsync/tree/legacy-python2) branch.
 
 ## Full documentation
 
