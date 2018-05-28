@@ -3,7 +3,6 @@ include *.md
 include LICENSE
 
 # Include sys
-Include requirements.txt
 include VERSION
 
 # Include ini example
