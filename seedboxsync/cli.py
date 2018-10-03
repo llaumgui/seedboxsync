@@ -10,6 +10,7 @@
 CLI module.
 """
 
+from seedboxsync import __version__
 from seedboxsync.seedboxsync import (BlackHoleSync, DownloadSync, GetInfos)
 from seedboxsync.exceptions import (ConfigurationException, IsLockedException)
 import argparse
@@ -33,6 +34,8 @@ class CLI(object):
 
         # Mandatories arguments
         group = self.__parser.add_mutually_exclusive_group()
+        group.add_argument('--version', help='show seedboxsync version and exit',
+                           action='store_true')
         group.add_argument('--blackhole', help='send torrent from the local blackhole to the seedbox blackhole',
                            action='store_true')
         group.add_argument('-t', '--lasts-torrents', help='get list of lasts torrents uploaded',
@@ -80,6 +83,9 @@ class CLI(object):
         elif self.__args.unfinished_downloads:
             info = GetInfos()
             print(info.get_unfinished_downloads())
+        elif self.__args.version:
+            print(__version__)
+            exit(0)
         else:
             self.__parser.print_help()
 
