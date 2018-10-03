@@ -34,7 +34,7 @@ class CLI(object):
 
         # Mandatories arguments
         group = self.__parser.add_mutually_exclusive_group()
-        group.add_argument('--version', help='show seedboxsync version and exit',
+        group.add_argument('--version', help='show SeedboxSync version and exit',
                            action='store_true')
         group.add_argument('--blackhole', help='send torrent from the local blackhole to the seedbox blackhole',
                            action='store_true')

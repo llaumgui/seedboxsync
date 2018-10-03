@@ -9,6 +9,7 @@ include seedboxsync.ini.dist
 prune docs*
 
 # Exclude QA / GitHub, etc.
+prune *.rb
 prune *.yml
 prune .editorconfig
 prune seedboxsync.py

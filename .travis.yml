@@ -1,19 +1,28 @@
 language: python
+
 matrix:
   include:
     - python: 3.4
       env: TOXENV=py34
+      install:
+        - pip install -e ".[dev]"
+      script:
+        - tox
     - python: 3.5
       env: TOXENV=py35
+      install:
+        - pip install -e ".[dev]"
+      script:
+        - tox
     - python: 3.6
       env: TOXENV=py36
+      install:
+        - pip install -e ".[dev]"
+      script:
+        - tox
 
-install:
-  - pip install -e ".[dev]"
-
-script:
-  - tox
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then travis-sphinx build; fi
-
-after_success:
-  - if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then travis-sphinx deploy; fi
+    - language: markdown
+      script:
+        - gem install mdl
+        - cd ${TRAVIS_BUILD_DIR}
+        - mdl -s markdownlint.rb *.md
