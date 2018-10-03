@@ -20,20 +20,18 @@ from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
+import seedboxsync
 
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-# Get the version from the VERSION file
-with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
-    version = f.read().strip()
 
 # Setup part
 setup(
     name='seedboxsync',
-    version=version,
+    version=seedboxsync.__version__,
     description='Script for sync operations between your NAS and your seedbox',
     long_description=long_description,
     long_description_content_type='text/markdown',

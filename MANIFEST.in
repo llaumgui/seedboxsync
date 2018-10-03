@@ -2,9 +2,6 @@
 include *.md
 include LICENSE
 
-# Include sys
-include VERSION
-
 # Include ini example
 include seedboxsync.ini.dist
 
