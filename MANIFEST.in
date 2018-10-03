@@ -7,3 +7,12 @@ include VERSION
 
 # Include ini example
 include seedboxsync.ini.dist
+
+# Exclude doc
+prune docs*
+
+# Exclude QA / GitHub, etc.
+prune *.yml
+prune .editorconfig
+prune seedboxsync.py
+prune tox.ini
