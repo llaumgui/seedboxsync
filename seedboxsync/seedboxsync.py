@@ -100,7 +100,7 @@ class SeedboxSync(object):
         try:
             logging.basicConfig(format='%(asctime)s %(levelname)s %(process)d - %(message)s',
                                 filename=self._config.get('Log', self.CONF_PREFIX + 'file_path'),
-                                level=eval('logging.' + self._config.get('Log', self.CONF_PREFIX + 'level')))
+                                level=getattr(logging, self._config.get('Log', self.CONF_PREFIX + 'level')))
             logging.debug('Start')
             Helper.log_print('Load config from "' + self.__config_file + '"', msg_type='debug')
         except Exception as exc:
