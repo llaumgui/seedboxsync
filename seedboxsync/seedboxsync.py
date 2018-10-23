@@ -322,7 +322,6 @@ class DownloadSync(SeedboxSync):
             seedbox_size = self._transport_client.stat(filepath).st_size
             if seedbox_size == 0:
                 Helper.log_print('Empty file: "' + filepath + '" (' + str(seedbox_size) + ')', msg_type='warning')
-                return False
 
             self._db.cursor.execute('''INSERT INTO download(path, seedbox_size, started) VALUES (?, ?, ?)''', (filepath, seedbox_size, datetime.datetime.now()))
             self._db.commit()
