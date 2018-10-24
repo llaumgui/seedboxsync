@@ -1,0 +1,51 @@
+---
+name: SeedboxSync Documentation
+description: "Documentation about Python soft called SeedboxSync."
+author: "llaumgui"
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+plugins:
+ - jekyll-remote-theme
+exclude:
+ - Gemfile
+ - Gemfile.lock
+ - vendor
+remote_theme: allejo/jekyll-docs-theme
+
+# jekyll doc plugin settings
+project:
+  version: 2.0.0
+  download_url: https://github.com/llaumgui/seedboxsync/releases
+license:
+  software: GPLv2 License
+  software_url: http://opensource.org/licenses/GPL-2.0
+  docs: GPLv2 License
+  docs_url: http://opensource.org/licenses/GPL-2.0
+links:
+  header:
+    - title: GitHub
+      url: https://github.com/llaumgui/seedboxsync
+  footer:
+    - title: GitHub
+      url: https://github.com/llaumgui/seedboxsync
+    - title: Issues
+      url: https://github.com/llaumgui/seedboxsync/issues?state=open
+ui:
+  header:
+    color1: "#0288d1"
+    color2: "#01579b"
+    trianglify: true
+social:
+  github:
+    user: llaumgui
+    repo: seedboxsync
+  twitter:
+    enabled: false
+    via:
+    hash:
+    account:
+  facebook:
+    enabled: false
+    profileUrl:
