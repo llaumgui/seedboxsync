@@ -4,6 +4,8 @@ engines:
     checks:
       MD013:
         enabled: false
+      MD041:
+        enabled: false
 
   duplication:
     enabled: true

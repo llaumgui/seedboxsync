@@ -25,4 +25,4 @@ matrix:
       script:
         - gem install mdl
         - cd ${TRAVIS_BUILD_DIR}
-        - mdl -s markdownlint.rb *.md
+        - mdl -s markdownlint.rb *.md docs/*.md
