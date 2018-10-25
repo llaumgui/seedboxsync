@@ -5,6 +5,8 @@ isHome: true
 
 # SeedboxSync's documentation
 
+![](images/seedboxsync.png)
+
 Provides synchronization functions between your NAS and your seedbox:
 
 * Syncs a local black hole (ie: a NAS folder) with the black hole of your seedbox.
