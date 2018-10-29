@@ -83,7 +83,7 @@ class SeedboxSync(object):
                 if os.path.isfile(seedbox_ini):
                     config_file = seedbox_ini
                     break
-            except Exception as exc:
+            except Exception:
                 pass
 
         if config_file is None:
@@ -372,7 +372,7 @@ class DownloadSync(SeedboxSync):
 
         try:
             match = re.search(pattern, filepath)
-        except sre_constants.error as exc:
+        except sre_constants.error:
             raise ConfigurationException('Bad configuration for exclude_syncing ! See the doc at https://docs.python.org/3/library/re.html')
 
         if match is None:
