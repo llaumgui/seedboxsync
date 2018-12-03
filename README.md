@@ -1,10 +1,14 @@
 # SeedboxSync
 
-[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync)
-[![Code Climate](https://codeclimate.com/github/llaumgui/seedboxsync/badges/gpa.svg)](https://codeclimate.com/github/llaumgui/seedboxsync)
 [![PyPI version](https://badge.fury.io/py/seedboxsync.svg)](https://pypi.python.org/pypi/seedboxsync)
+[![GitHub license](https://img.shields.io/github/license/llaumgui/seedboxsync.svg)](https://github.com/llaumgui/seedboxsync/blob/master/LICENSE)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Percentage of issues still open")
+
+[![Build Status](https://travis-ci.org/llaumgui/seedboxsync.svg?branch=master)](https://travis-ci.org/llaumgui/seedboxsync)
+[![SonarCloud: Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=llaumgui:seedboxsync&metric=alert_status)](https://sonarcloud.io/dashboard?id=llaumgui:seedboxsync)
+[![SonarCloud: Bugs](https://sonarcloud.io/api/project_badges/measure?project=llaumgui:seedboxsync&metric=bugs)](https://sonarcloud.io/dashboard?id=llaumgui:seedboxsync)
+[![SonarCloud: Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=llaumgui:seedboxsync&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=llaumgui:seedboxsync)
 
 Provides synchronization functions between your NAS and your seedbox:
 

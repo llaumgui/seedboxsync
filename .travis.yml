@@ -1,21 +1,27 @@
 language: python
+git:
+  depth: 9999999
 
 matrix:
   include:
-    - python: 3.4
-      env: TOXENV=py34
+    - python: 3.6
+      env: TOXENV=py36
       install:
         - pip install -e ".[dev]"
+      addons:
+        sonarcloud:
+          organization: "llaumgui-github"
       script:
         - tox
+        - sonar-scanner
     - python: 3.5
       env: TOXENV=py35
       install:
         - pip install -e ".[dev]"
       script:
         - tox
-    - python: 3.6
-      env: TOXENV=py36
+    - python: 3.4
+      env: TOXENV=py34
       install:
         - pip install -e ".[dev]"
       script:
