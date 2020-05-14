@@ -24,7 +24,7 @@ class DependencyException(Exception):
 
 
 class IsLockedException(Exception):
-        pass
+    pass
 
 
 class LockException(Exception):
