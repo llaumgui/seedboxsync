@@ -1,8 +1,9 @@
 ---
+layout: page
+title: Installation
+description: How to install SeedboxSync
 order: 1
 ---
-
-# Installation
 
 ## With pip (recommended method)
 

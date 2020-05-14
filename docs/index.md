@@ -1,11 +1,13 @@
 ---
 layout: full
-isHome: true
+homepage: true
+disable_anchors: true
+description: Script for sync operations between your NAS and your seedbox.
 ---
 
 # SeedboxSync's documentation
 
-![](images/seedboxsync.png)
+![SeedboxSync's logo](images/seedboxsync.png)
 
 Provides synchronization functions between your NAS and your seedbox:
 

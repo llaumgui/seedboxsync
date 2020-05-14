@@ -1,8 +1,9 @@
 ---
+layout: page
+title: Usage
+description: SeedboxSync usage
 order: 3
 ---
-
-# Usage
 
 ## Launch SeedboxSync
 

@@ -43,11 +43,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: markdownlint-cli
-        if: matrix.python-version == '3.8'
-        uses: nosborn/github-action-markdown-cli@v1.1.1
-        with:
-          files: "*.md docs/*.md"
-          config_file: ".markdownlint.yaml"
-          rules: "examples/rules/custom.js"

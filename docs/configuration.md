@@ -1,8 +1,9 @@
 ---
+layout: page
+title: Configuration
+description: ~
 order: 2
 ---
-
-# Configuration
 
 ## Configuration file
 
@@ -54,7 +55,7 @@ transfer_chmod=0o777
 
 * To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (tmp\_path) and move it in the watch folder after full transfert and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.
 
-![](images/rutorrent_1.png)
+![ruTorrent settings / Downloads](images/rutorrent_1.png)
 
 ```ini
 # Use a tempory directory (you must create it !)
@@ -70,7 +71,7 @@ watch_path=/watch
 
 * The folder of your Bittorrent client with finished file. You can configure your client to move finished file in a specific folder.
 
-![](images/rutorrent_2.png)
+![ruTorrent settings / Autotools](images/rutorrent_2.png)
 
 ```ini
 # Your finished folder you must create it!)
