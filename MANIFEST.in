@@ -13,5 +13,4 @@ prune *.rb
 prune *.yml
 prune .editorconfig
 prune seedboxsync.py
-prune tox.ini
 prune sonar-project.properties

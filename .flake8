@@ -1,0 +1,5 @@
+[flake8]
+ignore = W504
+max-line-length = 160
+exclude = *.egg,build/*,docs/*
+select = E,W,F
