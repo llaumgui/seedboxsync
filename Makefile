@@ -13,12 +13,14 @@ virtualenv:
 
 test:
 	flake8 seedboxsync --count --show-source --statistics
-	python -m pytest \
+	coverage erase
+	coverage run --source=seedboxsync -m pytest \
 		-v \
-		--cov=seedboxsync \
 		--cov-report=term \
 		--cov-report=html:coverage-report \
+		--junitxml=coverage-report/pytest-report.xml \
 		tests/
+	coverage xml -i
 
 docker: clean
 	docker build -t seedboxsync:latest .

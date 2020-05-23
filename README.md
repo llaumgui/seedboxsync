@@ -1,6 +1,7 @@
 # SeedboxSync
 
 [![Python CI/CD](https://github.com/llaumgui/seedboxsync/workflows/Python%20CI/CD/badge.svg)](https://github.com/llaumgui/seedboxsync/actions?query=workflow%3A%22Python+CI%2FCD%22) [![SonarCloud: Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=llaumgui:seedboxsync&metric=alert_status)](https://sonarcloud.io/dashboard?id=llaumgui:seedboxsync)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=coverage)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=security_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync)<br />
 [![GitHub license](https://img.shields.io/github/license/llaumgui/seedboxsync.svg)](https://github.com/llaumgui/seedboxsync/blob/master/LICENSE)
 [![PyPI version](https://badge.fury.io/py/seedboxsync.svg)](https://pypi.python.org/pypi/seedboxsync)<br />
