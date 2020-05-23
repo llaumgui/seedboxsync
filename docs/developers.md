@@ -5,6 +5,8 @@ description: Usage for developers
 order: 4
 ---
 
+SeedboxSync is build with [Cement](https://builtoncement.com/) and [Peewee](http://docs.peewee-orm.com/en/latest/) from v3.
+
 ## Installation
 
 ```bash

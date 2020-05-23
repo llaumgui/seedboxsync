@@ -26,8 +26,27 @@ setup(
     author_email='guillaume@kulakowski.fr',
     url='https://llaumgui.github.io/seedboxsync/',
     license='GPL-2.0',
+
+    project_urls={
+        'Bug Reports': 'https://github.com/llaumgui/seedboxsync/issues',
+        'Source': 'https://github.com/llaumgui/seedboxsync/',
+    },
+
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: System Administrators',
+        'Topic :: Internet',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Programming Language :: Python :: 3',
+        'Environment :: Console',
+        'Natural Language :: English',
+        'Operating System :: POSIX',
+    ],
+    keywords='seedbox nas sync sftp',
+
     packages=find_packages(exclude=['ez_setup', 'tests*']),
-    package_data={'seedboxsync': ['templates/*']},
+    # data_files={'seedboxsync': ['templates/*']},
+    data_files=[('config', ['config/seedboxsync.yml.example'])],
     include_package_data=True,
     entry_points="""
         [console_scripts]
