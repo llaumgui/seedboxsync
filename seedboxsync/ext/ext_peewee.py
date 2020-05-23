@@ -59,7 +59,7 @@ def peewee_post_run_hook(app: App):
     Close database
     """
 
-    app.log.debug('Close dataBase')
+    app.log.debug('Close database')
     app._db.close()
 
 
