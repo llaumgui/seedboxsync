@@ -1,0 +1,15 @@
+# Include docs
+include *.md
+include LICENSE
+
+recursive-include *.py
+include setup.cfg
+include *.txt
+recursive-include seedboxsync/templates *
+
+# Exclude doc
+prune docs*
+
+# Exclude QA / GitHub, etc.
+prune .editorconfig
+prune sonar-project.properties

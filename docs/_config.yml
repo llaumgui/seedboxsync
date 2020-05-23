@@ -1,0 +1,94 @@
+---
+name: SeedboxSync Documentation
+description: "Script for sync operations between your NAS and your seedbox."
+author: "llaumgui"
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+plugins:
+ - jekyll-remote-theme
+exclude:
+ - Gemfile
+ - Gemfile.lock
+ - vendor
+remote_theme: allejo/jekyll-docs-theme
+
+# jekyll doc plugin settings
+project:
+  version: 2.0.1
+  download_url: https://github.com/llaumgui/seedboxsync/releases
+  download_text: Download
+license:
+  software: GPLv2 License
+  software_url: http://opensource.org/licenses/GPL-2.0
+  docs: GPLv2 License
+  docs_url: http://opensource.org/licenses/GPL-2.0
+
+links:
+  header:
+    - title: GitHub
+      icon: github
+      brand: true
+      url: https://github.com/llaumgui/seedboxsync
+    - title: LinkedIn
+      icon: linkedin
+      brand: true
+      url: https://www.linkedin.com/in/guillaumekulakowski/
+    - title: Blog
+      icon: blogger
+      brand: true
+      url: https://blog.kulakowski.fr
+  homepage:
+    - title: View on GitHub
+      icon: github
+      brand: true
+      url: https://github.com/llaumgui/seedboxsync
+  footer:
+    - title: GitHub
+      icon: github
+      brand: true
+      url: https://github.com/llaumgui/seedboxsync
+    - title: Issues
+      icon: bug
+      url: https://github.com/llaumgui/seedboxsync/issues?state=open
+
+ui:
+  mode: 'light' # 'auto', 'dark', 'light'
+  brand:
+    dark: "#00ceff"
+    light: "#5599ff"
+  border_color:
+    dark: "#5f5f5f"
+    light: "#01579b"
+  header:
+    trianglify: true
+    dark:
+      color1: "#062a48"
+      color2: "#304e67"
+    light:
+      color1: "#5599ff"
+      color2: "#01579b"
+  masthead:
+    color:
+      dark: "#fff"
+      light: "#fff"
+    align:
+      homepage: 'center'
+      page: 'left'
+
+social:
+  github:
+    user: llaumgui
+    repo: seedboxsync
+  twitter:
+    enabled: true
+    via:
+    hash:
+    account:
+  facebook:
+    enabled: false
+    profileUrl:
+
+analytics:
+  google: UA-63534466-3
