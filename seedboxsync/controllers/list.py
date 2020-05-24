@@ -6,7 +6,8 @@
 # file that was distributed with this source code.
 #
 
-from cement import Controller, ex
+import os
+from cement import Controller, fs, ex
 from ..core.dao.torrent import Torrent
 from ..core.dao.download import Download
 from peewee import fn
@@ -64,6 +65,35 @@ class List(Controller):
         data = Download.select(Download.id,
                                fn.SUBSTR(Download.path, -100).alias('path'),
                                Download.started,
-                               fn.sizeof(Download.seedbox_size).alias('size')
+                               Download.seedbox_size,
+                               fn.sizeof(Download.seedbox_size).alias('size'),
                                ).where(Download.finished == 0).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
-        self.app.render(reversed(data), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'size': 'Size'})
+
+        in_progress = []
+        part_suffix = self.app.config.get('seedbox', 'part_suffix')
+        download_path = fs.abspath(self.app.config.get('local', 'download_path'))
+
+        for torrent in data:
+            full_path = fs.join(download_path, torrent.get('path') + part_suffix)
+            try:
+                local_size = os.stat(full_path).st_size
+                progress = str(round(100 * (1 - ((torrent.get('seedbox_size') - local_size) / torrent.get('seedbox_size')))))
+            except FileNotFoundError:
+                progress = '0'
+
+            in_progress.append({
+                'id': torrent.get('id'),
+                'path': torrent.get('path'),
+                'started': torrent.get('started'),
+                'size': torrent.get('size'),
+                'progress': progress + '%'
+            })
+        self.app.render(reversed(in_progress), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'progress': 'Progress', 'size': 'Size'})
+
+    @ex(help='clean the list of files currently in download from seedbox')
+    def clean_in_progress(self):
+        """
+        List of files currently in download from seedbo
+        """
+        count = Download.delete().where(Download.finished == 0).execute()
+        self.app.print('In progress list cleaned. %s line(s) deleted' % count)
