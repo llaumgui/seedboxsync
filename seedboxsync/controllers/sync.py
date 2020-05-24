@@ -66,9 +66,10 @@ class Sync(Controller):
 
                         # Store in DB
                         torrent_info = self.app.bcoding.get_torrent_infos(torrent)
+                        torrent = Torrent.create(name=torrent_name)
                         if torrent_info is not None:
-                            Torrent.create(name=torrent_name,
-                                           announce=torrent_info['announce']).save()
+                            torrent.announce = torrent_info['announce']
+                        torrent.save()
 
                         # Remove local torent
                         self.app.log.debug('Remove local torrent "%s"' % torrent)
@@ -142,7 +143,8 @@ class Sync(Controller):
         # Local path (without seedbox folder prefix)
         filepath_without_prefix = filepath.replace(self.app.config.get('seedbox', 'prefixed_path').strip("/"), "", 1).strip("/")
         local_filepath = fs.join(self.app.config.get('local', 'download_path'), filepath_without_prefix)
-        local_filepath_part = local_filepath + '.part'
+        part_suffix = self.app.config.get('seedbox', 'part_suffix')
+        local_filepath_part = local_filepath + part_suffix
         local_path = os.path.dirname(fs.abspath(local_filepath))
 
         # Make folder tree
