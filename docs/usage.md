@@ -14,7 +14,7 @@ seedboxsync
 ## Use in command line
 
 ```bash
-usage: seedboxsync [-h] [-d] [-q] [-v] {list-downloaded,list-in-progress,list-uploaded,sync-blackhole,sync-seedbox} ...
+usage: seedboxsync [-h] [-d] [-q] [-v] {clean-in-progress,list-downloaded,list-in-progress,list-uploaded,sync-blackhole,sync-seedbox} ...
 
 Script for sync operations between your NAS and your seedbox
 
@@ -25,7 +25,8 @@ optional arguments:
   -v, --version         show program's version number and exit
 
 sub-commands:
-  {list-downloaded,list-in-progress,list-uploaded,sync-blackhole,sync-seedbox}
+  {clean-in-progress,list-downloaded,list-in-progress,list-uploaded,sync-blackhole,sync-seedbox}
+    clean-in-progress   clean the list of files currently in download from seedbox
     list-downloaded     list of lasts files downloaded from seedbox
     list-in-progress    list of files currently in download from seedbox
     list-uploaded       list of lasts torrents uploaded from blackhole
