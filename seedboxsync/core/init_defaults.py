@@ -20,6 +20,7 @@ CONFIG['seedbox']['host'] = 'my-seedbox.ltd'
 CONFIG['seedbox']['port'] = '22'
 CONFIG['seedbox']['login'] = 'me'
 CONFIG['seedbox']['password'] = 'p4sw0rd'
+CONFIG['seedbox']['timeout'] = False
 
 # For the moment, only sftp
 CONFIG['seedbox']['protocol'] = 'sftp'

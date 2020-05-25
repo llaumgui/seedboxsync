@@ -11,6 +11,7 @@ seedbox:
   # port: 22
   # login: me
   # password: p4sw0rd
+  # timeout: false
 
   ### For the moment, only sftp
   # protocol: sftp

@@ -23,7 +23,7 @@ class SftpClient(AbstractClient):
     Transport from NAS to seedbox using sFTP paramiko library.
     """
 
-    def __init__(self, host: str, login: str, password: str, port: str = "22"):
+    def __init__(self, host: str, login: str, password: str, port: str = "22", timeout: str = False):
         """
         Init transport and client.
 
@@ -31,11 +31,13 @@ class SftpClient(AbstractClient):
         :param str login: the login to connect on the the server
         :param str password: the password to connect on the the server
         :param str port: the port of the server
+        :param str timeout: the timeout for socket connection
         """
         self.__host = host
         self.__login = login
         self.__password = password
         self.__port = port
+        self.__timeout = timeout
         self.__transport = None
         self.__client = None
 
@@ -48,6 +50,12 @@ class SftpClient(AbstractClient):
             self.__transport = paramiko.Transport((self.__host, int(self.__port)))
             self.__transport.connect(username=self.__login, password=self.__password)
             self.__client = paramiko.SFTPClient.from_transport(self.__transport)
+
+            # Setup timeout
+            if self.__timeout:
+                channel = self.__client.get_channel()
+                channel.settimeout(self.__timeout)
+                LOG.debug('Timeout is set to %s' % channel.gettimeout())
 
     def put(self, local_path: str, remote_path: str):
         """

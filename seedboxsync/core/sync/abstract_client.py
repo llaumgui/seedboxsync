@@ -17,13 +17,14 @@ class AbstractClient():
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, host: str, login: str, password: str, port: str):
+    def __init__(self, host: str, login: str, password: str, port: str, timeout: str = False):
         """Init client.
 
         :param str host: the host of the server
         :param str login: the login to connect on the the server
         :param str password: the password to connect on the the server
         :param str port: the port of the server
+        :param str timeout: the timeout for socket connection
         """
         pass
 

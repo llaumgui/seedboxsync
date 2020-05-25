@@ -37,7 +37,8 @@ def sync_pre_run_hook(app: App):
         sync = transfer_client(host=app.config.get('seedbox', 'host'),
                                port=int(app.config.get('seedbox', 'port')),
                                login=app.config.get('seedbox', 'login'),
-                               password=app.config.get('seedbox', 'password'))
+                               password=app.config.get('seedbox', 'password'),
+                               timeout=app.config.get('seedbox', 'timeout'))
     except Exception as exc:
         raise ConnectionError('Connection fail: %s' % str(exc))
 
