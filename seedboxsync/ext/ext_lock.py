@@ -77,7 +77,8 @@ class Lock(object):
         :param str lock_file: the lock file path
         """
         if self.is_locked(lock_file):
-            sys.exit(self)
+            self.app.exit_code = 0
+            self.app.close()
         else:
             self.lock(lock_file)
 

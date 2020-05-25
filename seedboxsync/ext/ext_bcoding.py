@@ -32,7 +32,7 @@ class Bcoding(object):
             try:
                 torrent_info = bdecode(torrent.read())
             except Exception as exc:
-                self.app.log.error('Not valid torrent: %s' + str(exc))
+                self.app.log.error('Not valid torrent: "%s"' + str(exc))
             finally:
                 torrent.close()
 

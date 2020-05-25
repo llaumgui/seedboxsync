@@ -11,6 +11,7 @@ import glob
 import os
 import re
 import sre_constants
+from paramiko import SSHException
 from cement import Controller, ex, fs
 from ..core.dao.torrent import Torrent
 from ..core.dao.download import Download
@@ -74,8 +75,8 @@ class Sync(Controller):
                         # Remove local torent
                         self.app.log.debug('Remove local torrent "%s"' % torrent)
                         os.remove(torrent)
-                    except Exception as exc:
-                        self.app.log.warning(str(exc))
+                    except SSHException as exc:
+                        self.app.log.warning('SSH client exception > %s' % str(exc))
 
                 else:
                     self.app.log.info('Not upload torrent: "%s"' % torrent_name)
@@ -129,7 +130,7 @@ class Sync(Controller):
                         else:
                             self.app.log.info('Not download "%s"' % filepath)
         except (IOError, FileNotFoundError) as exc:
-            self.app.log.error('SeedBox sync error. "%s"' % exc)
+            self.app.log.error('SeedboxSyncError > "%s"' % exc)
 
         # Remove lock file.
         self.app.lock.unlock(lock_file)
@@ -178,7 +179,7 @@ class Sync(Controller):
             download.local_size = local_size
             download.finished = datetime.datetime.now()
             download.save()
-        except Exception as exc:
+        except SSHException as exc:
             self.app.log.error('Download fail: %s' % str(exc))
 
     def __exclude_by_pattern(self, filepath: str):

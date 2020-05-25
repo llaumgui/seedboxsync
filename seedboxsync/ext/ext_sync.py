@@ -44,7 +44,7 @@ def sync_pre_run_hook(app: App):
     app.extend('sync', sync)
 
 
-def sync_post_run_hook(app: App):
+def sync_pre_close_hook(app: App):
     """
     Extends SeedboxSync with TinyDB
 
@@ -64,4 +64,4 @@ class ConnectionError(SeedboxSyncError):
 def load(app: App):
     """Extension loader"""
     app.hook.register('pre_run', sync_pre_run_hook)
-    app.hook.register('post_run', sync_post_run_hook)
+    app.hook.register('pre_close', sync_pre_close_hook)

@@ -54,7 +54,7 @@ def peewee_post_setup_hook(app: App):
     app.extend('_db', db)
 
 
-def peewee_post_run_hook(app: App):
+def peewee_pre_close_hook(app: App):
     """
     Close database
     """
@@ -66,4 +66,4 @@ def peewee_post_run_hook(app: App):
 def load(app: App):
     """Extension loader"""
     app.hook.register('post_setup', peewee_post_setup_hook)
-    app.hook.register('post_run', peewee_post_run_hook)
+    app.hook.register('post_run', peewee_pre_close_hook)

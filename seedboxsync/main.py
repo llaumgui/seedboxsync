@@ -6,6 +6,7 @@
 # file that was distributed with this source code.
 #
 
+import signal
 from cement import App, TestApp
 from cement.core.exc import CaughtSignal
 from .core.exc import SeedboxSyncError
@@ -32,6 +33,7 @@ class SeedboxSync(App):
             'yaml',
             'colorlog',
             'tabulate',
+            'print',
             'seedboxsync.ext.ext_bcoding',
             'seedboxsync.ext.ext_peewee',
             'seedboxsync.ext.ext_lock',
@@ -59,6 +61,13 @@ class SeedboxSync(App):
 
         # register hook
         hooks = []
+
+        # catch signal
+        catch_signals = [
+            signal.SIGTERM,
+            signal.SIGINT,
+            signal.SIGHUP,
+        ]
 
 
 class SeedboxSyncTest(TestApp, SeedboxSync):
@@ -89,10 +98,16 @@ def main():
                 import traceback
                 traceback.print_exc()
 
-        except CaughtSignal as e:
+        except (CaughtSignal, KeyboardInterrupt) as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
-            print('\n%s' % e)
             app.exit_code = 0
+            if e.signum == signal.SIGTERM:
+                app.log.warning('Caught SIGTERM')
+            elif e.signum == signal.SIGINT:
+                app.log.warning('Caught SIGINT')
+            else:
+                app.log.warning('Stopped')
+            app.close()
 
 
 if __name__ == '__main__':
