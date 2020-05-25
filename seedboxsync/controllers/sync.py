@@ -81,7 +81,7 @@ class Sync(Controller):
                 else:
                     self.app.log.info('Not upload torrent: "%s"' % torrent_name)
         else:
-            self.app.log.info('No torrent in %' + self.app.config.get('local', 'watch_path'))
+            self.app.log.info('No torrent in "%s"' % self.app.config.get('local', 'watch_path'))
 
         # Remove lock file.
         self.app.lock.unlock(lock_file)
