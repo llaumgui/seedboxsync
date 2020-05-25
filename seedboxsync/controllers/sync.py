@@ -95,7 +95,7 @@ class Sync(Controller):
                     'action': 'store_true',
                     'dest': 'dry_run'}),
                    (['-o', '--only-store'],
-                   {'help': 'just store the list, no download',
+                   {'help': 'just store the list, no download. Usefull to sync from an already synchronized seedbox',
                     'action': 'store_true',
                     'dest': 'only_store'})])
     def sync_seedbox(self):
@@ -152,7 +152,8 @@ class Sync(Controller):
         local_path = os.path.dirname(fs.abspath(local_filepath))
 
         # Make folder tree
-        fs.ensure_dir_exists(local_path)
+        if not self.app.pargs.only_store:
+            fs.ensure_dir_exists(local_path)
         self.app.log.debug('Download: "%s" in "%s"' % (filepath, local_path))
 
         try:
@@ -166,17 +167,21 @@ class Sync(Controller):
             download.save()
 
             # Get file with ".part" suffix
-            self.app.log.info('Download "%s"' % filepath)
-            self.app.sync.get(filepath, local_filepath_part)
-            local_size = os.stat(local_filepath_part).st_size
+            if not self.app.pargs.only_store:
+                self.app.log.info('Download "%s"' % filepath)
+                self.app.sync.get(filepath, local_filepath_part)
+                local_size = os.stat(local_filepath_part).st_size
 
-            # Test size of the downloaded file
-            if (local_size == 0) or (local_size != seedbox_size):
-                self.app.log.error('Download fail: "%s" (%s/%s)' % (filepath, str(local_size), str(seedbox_size)))
-                return False
+                # Test size of the downloaded file
+                if (local_size == 0) or (local_size != seedbox_size):
+                    self.app.log.error('Download fail: "%s" (%s/%s)' % (filepath, str(local_size), str(seedbox_size)))
+                    return False
 
-            # All is good ! Remove ".part" suffix
-            os.rename(local_filepath_part, local_filepath)
+                # All is good ! Remove ".part" suffix
+                os.rename(local_filepath_part, local_filepath)
+            else:
+                self.app.log.info('Mark as downloaded "%s"' % filepath)
+                local_size = seedbox_size
 
             # Store in database
             download.local_size = local_size
