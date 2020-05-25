@@ -43,17 +43,17 @@ class Sync(Controller):
         torrents = glob.glob(fs.join(fs.abspath(self.app.config.get('local', 'watch_path')), '*.torrent'))
         if len(torrents) > 0:
             # Upload torrents one by one
-            for torrent in torrents:
-                torrent_name = os.path.basename(torrent)
+            for torrent_file in torrents:
+                torrent_name = os.path.basename(torrent_file)
                 if not self.app.pargs.dry_run:
                     tmp_path = self.app.config.get('seedbox', 'tmp_path')
                     watch_path = self.app.config.get('seedbox', 'watch_path')
 
                     self.app.log.info('Upload torrent: "%s"' % torrent_name)
-                    self.app.log.debug('Upload "%s" in "%s" directory' % (torrent, tmp_path))
+                    self.app.log.debug('Upload "%s" in "%s" directory' % (torrent_file, tmp_path))
 
                     try:
-                        self.app.sync.put(torrent, os.path.join(tmp_path, torrent_name))
+                        self.app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
 
                         # Chmod
                         chmod = self.app.config.get('seedbox', 'chmod')
@@ -66,15 +66,18 @@ class Sync(Controller):
                         self.app.sync.rename(os.path.join(tmp_path, torrent_name), os.path.join(watch_path, torrent_name))
 
                         # Store in DB
-                        torrent_info = self.app.bcoding.get_torrent_infos(torrent)
+                        torrent_info = self.app.bcoding.get_torrent_infos(torrent_file)
                         torrent = Torrent.create(name=torrent_name)
                         if torrent_info is not None:
                             torrent.announce = torrent_info['announce']
-                        torrent.save()
+                            torrent.save()
 
-                        # Remove local torent
-                        self.app.log.debug('Remove local torrent "%s"' % torrent)
-                        os.remove(torrent)
+                            # Remove local torent
+                            self.app.log.debug('Remove local torrent "%s"' % torrent_file)
+                            os.remove(torrent_file)
+                        else:
+                            self.app.log.warning('Rename local "%s" to .torrent.fail' % torrent_file)
+                            os.rename(torrent_file, torrent_file + '.fail')
                     except SSHException as exc:
                         self.app.log.warning('SSH client exception > %s' % str(exc))
 
