@@ -27,7 +27,7 @@ CONFIG['seedbox']['protocol'] = 'sftp'
 
 # Chmod torrent after upload (false = disable)
 # Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
-CONFIG['seedbox']['chmod'] = '0o777'
+CONFIG['seedbox']['chmod'] = False
 
 # Use a tempory directory (you must create it !)
 CONFIG['seedbox']['tmp_path'] = '/tmp'

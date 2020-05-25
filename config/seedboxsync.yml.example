@@ -18,6 +18,7 @@ seedbox:
 
   ### Chmod torrent after upload (false :  disable)
   ### Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
+  # chmod: 0o777
   # chmod: false
 
   ### Use a tempory directory (you must create it !)
