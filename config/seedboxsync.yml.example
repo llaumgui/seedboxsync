@@ -22,16 +22,13 @@ seedbox:
   # chmod: false
 
   ### Use a tempory directory (you must create it !)
-  # tmp_path: /tmp
+  # tmp_path: ./tmp
 
   ### Your "watch" folder you must create it!)
-  # watch_path: /watch
+  # watch_path: ./watch
 
   ### Your finished folder you must create it!)
-  # finished_path: /files
-
-  ### Allow to remove a part of the synced path. In General, same path than "finished_path".
-  # prefixed_path: /files
+  # finished_path: ./files
 
   ### Exclude part files
   # part_suffix: .part

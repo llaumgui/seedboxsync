@@ -79,6 +79,7 @@ class List(Controller):
                 local_size = os.stat(full_path).st_size
                 progress = str(round(100 * (1 - ((torrent.get('seedbox_size') - local_size) / torrent.get('seedbox_size')))))
             except FileNotFoundError:
+                self.app.log.warning('File not found "%s"' % full_path)
                 progress = '0'
 
             in_progress.append({

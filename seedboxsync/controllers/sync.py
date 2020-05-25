@@ -115,10 +115,8 @@ class Sync(Controller):
 
         # Get all files
         try:
-            self.app.sync.chdir(os.path.split(finished_path)[0])
-            parent = os.path.split(finished_path)[1]
-
-            for walker in self.app.sync.walk(parent):
+            self.app.sync.chdir(finished_path)
+            for walker in self.app.sync.walk(''):
                 for filename in walker[2]:
                     filepath = os.path.join(walker[0], filename)
                     if os.path.splitext(filename)[1] == part_suffix:
@@ -145,8 +143,7 @@ class Sync(Controller):
         :param str filepath: the filepath
         """
         # Local path (without seedbox folder prefix)
-        filepath_without_prefix = filepath.replace(self.app.config.get('seedbox', 'prefixed_path').strip("/"), "", 1).strip("/")
-        local_filepath = fs.join(self.app.config.get('local', 'download_path'), filepath_without_prefix)
+        local_filepath = fs.join(self.app.config.get('local', 'download_path'), filepath)
         part_suffix = self.app.config.get('seedbox', 'part_suffix')
         local_filepath_part = local_filepath + part_suffix
         local_path = os.path.dirname(fs.abspath(local_filepath))

@@ -30,16 +30,13 @@ CONFIG['seedbox']['protocol'] = 'sftp'
 CONFIG['seedbox']['chmod'] = False
 
 # Use a tempory directory (you must create it !)
-CONFIG['seedbox']['tmp_path'] = '/tmp'
+CONFIG['seedbox']['tmp_path'] = './tmp'
 
 # Your "watch" folder you must create it!)
-CONFIG['seedbox']['watch_path'] = '/watch'
+CONFIG['seedbox']['watch_path'] = './watch'
 
 # Your finished folder you must create it!)
-CONFIG['seedbox']['finished_path'] = '/files'
-
-# Allow to remove a part of the synced path. In General, same path than "finished_path".
-CONFIG['seedbox']['prefixed_path'] = '/files'
+CONFIG['seedbox']['finished_path'] = './files'
 
 # Exclude part files
 CONFIG['seedbox']['part_suffix'] = '.part'
