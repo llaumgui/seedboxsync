@@ -7,7 +7,6 @@
 #
 
 import os
-import sys
 from cement import App, fs
 from ..core.exc import SeedboxSyncError
 
@@ -34,6 +33,7 @@ class Lock(object):
         lock_file = fs.abspath(lock_file)
         self.app.log.debug('Lock task by %s' % lock_file)
         try:
+            fs.ensure_dir_exists(lock_file)
             lock = open(lock_file, 'w+')
             lock.write(str(os.getpid()))
             lock.close()
