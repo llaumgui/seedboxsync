@@ -9,10 +9,10 @@
 """
 Transport client using sFTP protocol.
 """
-
+import os
 from .abstract_client import AbstractClient
 from stat import S_ISDIR
-from cement import fs, minimal_logger
+from cement import minimal_logger
 import paramiko
 
 LOG = minimal_logger(__name__)
@@ -140,7 +140,7 @@ class SftpClient(AbstractClient):
         yield path, folders, files
 
         for folder in folders:
-            new_path = fs.join(remote_path, folder)
+            new_path = os.path.join(remote_path, folder)
             for x in self.walk(new_path):
                 yield x
 
