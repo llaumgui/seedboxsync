@@ -25,6 +25,7 @@ class Sync(Controller):
         stacked_on = 'base'
 
     @ex(help='sync torrent from blackhole to seedbox',
+        aliases=['sb'],
         arguments=[(['-d', '--dry-run'],
                    {'help': 'just list, no upload and persistence',
                     'action': 'store_true',
@@ -90,6 +91,7 @@ class Sync(Controller):
         self.app.lock.unlock(lock_file)
 
     @ex(help='sync file from seedbox',
+        aliases=['ss'],
         arguments=[(['-d', '--dry-run'],
                    {'help': 'just list, no download and persistence',
                     'action': 'store_true',

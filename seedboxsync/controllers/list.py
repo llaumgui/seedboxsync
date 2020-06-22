@@ -23,6 +23,7 @@ class List(Controller):
         stacked_on = 'base'
 
     @ex(help='list of lasts torrents uploaded from blackhole',
+        aliases=['lu'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
@@ -36,6 +37,7 @@ class List(Controller):
         self.app.render(reversed(data), headers={'id': 'Id', 'name': 'Name', 'sent': 'Sent datetime'})
 
     @ex(help='list of lasts files downloaded from seedbox',
+        aliases=['ld'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
@@ -53,6 +55,7 @@ class List(Controller):
         self.app.render(reversed(data), headers={'id': 'Id', 'finished': 'Finished', 'path': 'Path', 'size': 'Size'})
 
     @ex(help='list of files currently in download from seedbox',
+        aliases=['lip'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
