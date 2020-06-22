@@ -7,6 +7,7 @@
 #
 
 import os
+import datetime
 from cement import Controller, fs, ex
 from ..core.dao.torrent import Torrent
 from ..core.dao.download import Download
@@ -80,19 +81,22 @@ class List(Controller):
             full_path = fs.join(download_path, torrent.get('path') + part_suffix)
             try:
                 local_size = os.stat(full_path).st_size
-                progress = str(round(100 * (1 - ((torrent.get('seedbox_size') - local_size) / torrent.get('seedbox_size')))))
+                progress = round(100 * (1 - ((torrent.get('seedbox_size') - local_size) / torrent.get('seedbox_size'))))
+                eta = str(round(((datetime.datetime.now() - torrent.get('started')).total_seconds() / (progress / 100)) / 60)) + ' mn'
             except FileNotFoundError:
                 self.app.log.warning('File not found "%s"' % full_path)
-                progress = '0'
+                progress = 0
+                eta = "-"
 
             in_progress.append({
                 'id': torrent.get('id'),
                 'path': torrent.get('path'),
                 'started': torrent.get('started'),
                 'size': torrent.get('size'),
-                'progress': progress + '%'
+                'progress': str(progress) + '%',
+                'eta': eta
             })
-        self.app.render(reversed(in_progress), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'progress': 'Progress', 'size': 'Size'})
+        self.app.render(reversed(in_progress), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'progress': 'Progress', 'eta': 'ETA', 'size': 'Size'})
 
     @ex(help='clean the list of files currently in download from seedbox')
     def clean_in_progress(self):
