@@ -8,18 +8,27 @@
 
 from importlib import import_module
 from cement import App
-from ..core.exc import SeedboxSyncError
+from ..exc import SeedboxSyncError
 
 
-def sync_pre_run_hook(app: App):
+class SyncProtocoleError(SeedboxSyncError):
+    pass
+
+
+class ConnectionError(SeedboxSyncError):
+    pass
+
+
+def extend_sync(app: App):
     """
-    Extends SeedboxSync with Lock
+    Extends SeedboxSync with Sync
 
     :param App app: the Cement App object
     """
-    app.log.debug('Extending seedboxsync application with Sync')
     protocol = app.config.get('seedbox', 'protocol')
     client_class = protocol.title() + 'Client'
+
+    app.log.debug('Extending seedboxsync application with sync (%s/%s)' % (protocol, client_class))
 
     try:
         client_module = import_module('..core.sync.' + protocol + '_client', 'seedboxsync.ext')
@@ -45,24 +54,11 @@ def sync_pre_run_hook(app: App):
     app.extend('sync', sync)
 
 
-def sync_pre_close_hook(app: App):
+def close_sync(app: App):
     """
     Extends SeedboxSync with TinyDB
 
     :param App app: the Cement App object
     """
+    app.log.debug('Closing sync')
     app.sync.close()
-
-
-class SyncProtocoleError(SeedboxSyncError):
-    pass
-
-
-class ConnectionError(SeedboxSyncError):
-    pass
-
-
-def load(app: App):
-    """Extension loader"""
-    app.hook.register('pre_run', sync_pre_run_hook)
-    app.hook.register('pre_close', sync_pre_close_hook)

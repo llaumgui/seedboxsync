@@ -9,7 +9,9 @@
 import signal
 from cement import App, TestApp
 from cement.core.exc import CaughtSignal
+from .core.db import extend_db, close_db
 from .core.exc import SeedboxSyncError
+from .core.sync.sync import extend_sync, close_sync
 from .core.init_defaults import CONFIG
 from .controllers.base import Base
 from .controllers.list import List
@@ -17,7 +19,7 @@ from .controllers.sync import Sync
 
 
 class SeedboxSync(App):
-    """SeedboxSync primary application."""
+    """SeedboxSync application."""
 
     class Meta:
         label = 'seedboxsync'
@@ -35,9 +37,7 @@ class SeedboxSync(App):
             'tabulate',
             'print',
             'seedboxsync.ext.ext_bcoding',
-            'seedboxsync.ext.ext_peewee',
-            'seedboxsync.ext.ext_lock',
-            'seedboxsync.ext.ext_sync'
+            'seedboxsync.ext.ext_lock'
         ]
 
         # configuration handler
@@ -60,7 +60,16 @@ class SeedboxSync(App):
         ]
 
         # register hook
-        hooks = []
+        hooks = [
+            ('pre_run', extend_sync),
+            ('pre_close', close_sync),
+            ('post_setup', extend_db),
+            ('post_run', close_db)
+        ]
+
+        # define customs hooks
+        define_hooks = [
+        ]
 
         # catch signal
         catch_signals = [

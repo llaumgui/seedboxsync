@@ -10,20 +10,21 @@ import os
 from peewee import SqliteDatabase
 from cement import App
 from cement.utils import fs
-from ..core.dao.model import global_database_object
-from ..core.dao.seedboxsync import SeedboxSync
-from ..core.dao.download import Download
-from ..core.dao.torrent import Torrent
+from .dao.model import global_database_object
+from .dao.seedboxsync import SeedboxSync
+from .dao.download import Download
+from .dao.torrent import Torrent
 
 
-def peewee_post_setup_hook(app: App):
+def extend_db(app: App):
     """
     Extends SeedboxSync with Peewee
 
     :param App app: the Cement App object
     """
-    app.log.debug('Extending seedboxsync application with Peewee')
     db_file = fs.abspath(app.config.get('local', 'db_file'))
+
+    app.log.debug('Extending seedboxsync application with Peewee (%s)' % db_file)
 
     if not os.path.exists(db_file):
         app.log.info('DataBase "%s" not exists, need to be create' % db_file)
@@ -54,16 +55,10 @@ def peewee_post_setup_hook(app: App):
     app.extend('_db', db)
 
 
-def peewee_pre_close_hook(app: App):
+def close_db(app: App):
     """
     Close database
     """
 
     app.log.debug('Close database')
     app._db.close()
-
-
-def load(app: App):
-    """Extension loader"""
-    app.hook.register('post_setup', peewee_post_setup_hook)
-    app.hook.register('post_run', peewee_pre_close_hook)
