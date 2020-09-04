@@ -69,6 +69,8 @@ class SeedboxSync(App):
 
         # define customs hooks
         define_hooks = [
+            'ping_start_hook',
+            'ping_success_hook'
         ]
 
         # catch signal
