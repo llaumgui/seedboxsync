@@ -40,36 +40,3 @@ seedboxsync --help
 
 make test
 ```
-
-### Releasing to PyPi
-
-Before releasing to PyPi, you must configure your login credentials:
-
-**~/.pypirc**:
-
-```conf
-[pypi]
-username = YOUR_USERNAME
-password = YOUR_PASSWORD
-```
-
-Then use the included helper function via the `Makefile`:
-
-```bash
-make dist
-
-make dist-upload
-```
-
-## Deployments
-
-### Docker
-
-Included is a basic `Dockerfile` for building and distributing `SeedboxSync`,
-and can be built with the included `make` helper:
-
-```bash
-make docker
-
-docker run -it seedboxsync --help
-```

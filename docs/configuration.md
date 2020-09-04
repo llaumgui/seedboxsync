@@ -7,7 +7,7 @@ order: 2
 
 ## Configuration file
 
-You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/master/config/seedboxsync.yml.example). This file can be located in:
+You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/master/config/seedboxsync.yml.example). This example file can be located in:
 
 * /usr/local/config/ (pip install)
 * ~/.local/config/ (pip install in user privileges)
@@ -109,9 +109,9 @@ seedbox:
     exclude_syncing: .*missing$|^\..*\.sw
 ```
 
-### Configuration in you NAS
+### Configuration about your NAS
 
-Your NAS configuration is in local and parts:
+Your NAS configuration is in local and pid sections:
 
 ```yml
 #
@@ -140,4 +140,37 @@ pid:
     ### PID for seedbox downloaded sync
     download_path: ~/.config/seedboxsync/lock/download.pid
 
+```
+
+### Configuration of a ping service
+
+Ping service is called by `--ping` argument.
+
+Currently only [Healthchecks](https://github.com/healthchecks/healthchecks) ping service is supported.
+
+#### Healthchecks
+
+Add a healthchecks by sync command.
+
+```yml
+#
+# Healthchecks ping service
+#
+healthchecks:
+
+  ### sync-seedbox part
+  sync_seedbox:
+    ## Enable or disable service
+    enabled: true
+
+    ## Ping URL
+    ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
+
+  ### sync-blackhole part
+  sync_blackhole:
+    ## Enable or disable service
+    enabled: true
+
+    ## Ping URL
+    ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
 ```
