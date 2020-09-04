@@ -9,7 +9,8 @@
 from cement.utils.misc import init_defaults
 
 # setup the nested dicts
-CONFIG = init_defaults('seedboxsync', 'seedbox', 'local', 'pid')
+CONFIG = init_defaults('seedboxsync', 'seedbox', 'local', 'pid', 'healthchecks', 'healthchecks.sync_seedbox')
+
 
 #
 # Informations about your seedbox
@@ -70,3 +71,16 @@ CONFIG['pid']['blackhole_path'] = '~/.config/seedboxsync/lock/blackhole.pid'
 
 # PID for seedbox downloaded sync
 CONFIG['pid']['download_path'] = '~/.config/seedboxsync/lock/download.pid'
+
+
+#
+# Healthchecks ping service
+#
+# Enable or disable service
+CONFIG['healthchecks'] = init_defaults('sync_seedbox', 'sync_blackhole')
+CONFIG['healthchecks']['sync_seedbox']['enabled'] = False
+CONFIG['healthchecks']['sync_blackhole']['enabled'] = False
+
+# Ping URL
+CONFIG['healthchecks']['sync_seedbox']['ping_url'] = ''
+CONFIG['healthchecks']['sync_blackhole']['ping_url'] = ''

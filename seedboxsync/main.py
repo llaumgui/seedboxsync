@@ -37,7 +37,8 @@ class SeedboxSync(App):
             'tabulate',
             'print',
             'seedboxsync.ext.ext_bcoding',
-            'seedboxsync.ext.ext_lock'
+            'seedboxsync.ext.ext_lock',
+            'seedboxsync.ext.ext_healthchecks'
         ]
 
         # configuration handler

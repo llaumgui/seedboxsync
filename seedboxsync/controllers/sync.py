@@ -26,15 +26,24 @@ class Sync(Controller):
 
     @ex(help='sync torrent from blackhole to seedbox',
         aliases=['sb'],
-        arguments=[(['-d', '--dry-run'],
+        arguments=[(['--dry-run'],
                    {'help': 'just list, no upload and persistence',
                     'action': 'store_true',
-                    'dest': 'dry_run'})])
+                    'dest': 'dry_run'}),
+                   (['-p', '--ping'],
+                   {'help': 'ping a service (ie: Healthchecks) during excecution',
+                    'action': 'store_true',
+                    'dest': 'ping'})])
     def sync_blackhole(self):
         """
         Do the blackhole synchronization.
         """
         self.app.log.debug('sync_blackhole dry-run: "%s"' % self.app.pargs.dry_run)
+
+        # Call ping_start_hook
+        if self.app.pargs.ping:
+            for res in self.app.hook.run('ping_start_hook', self.app, 'sync_blackhole'):
+                pass
 
         # Create lock file.
         lock_file = self.app.config.get('pid', 'blackhole_path')
@@ -90,20 +99,35 @@ class Sync(Controller):
         # Remove lock file.
         self.app.lock.unlock(lock_file)
 
+        # Call ping_start_hook
+        if self.app.pargs.ping:
+            for res in self.app.hook.run('ping_success_hook', self.app, 'sync_blackhole'):
+                pass
+
     @ex(help='sync file from seedbox',
         aliases=['ss'],
-        arguments=[(['-d', '--dry-run'],
+        arguments=[(['--dry-run'],
                    {'help': 'just list, no download and persistence',
                     'action': 'store_true',
                     'dest': 'dry_run'}),
                    (['-o', '--only-store'],
                    {'help': 'just store the list, no download. Usefull to sync from an already synchronized seedbox',
                     'action': 'store_true',
-                    'dest': 'only_store'})])
+                    'dest': 'only_store'}),
+                   (['-p', '--ping'],
+                   {'help': 'ping a service (ie: Healthchecks) during excecution',
+                    'action': 'store_true',
+                    'dest': 'ping'})])
     def sync_seedbox(self):
         """
         Do the synchronization.
         """
+
+        # Call ping_start_hook
+        if self.app.pargs.ping:
+            for res in self.app.hook.run('ping_start_hook', self.app, 'sync_seedbox'):
+                pass
+
         self.app.log.debug('sync_blackhole dry-run: "%s"' % self.app.pargs.dry_run)
         self.app.log.debug('sync_blackhole only-store: "%s"' % self.app.pargs.only_store)
 
@@ -137,6 +161,11 @@ class Sync(Controller):
 
         # Remove lock file.
         self.app.lock.unlock(lock_file)
+
+        # Call ping_start_hook
+        if self.app.pargs.ping:
+            for res in self.app.hook.run('ping_success_hook', self.app, 'sync_seedbox'):
+                pass
 
     def __get_file(self, filepath):
         """

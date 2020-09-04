@@ -67,6 +67,28 @@ pid:
 
 
 #
+# Healthchecks ping service
+#
+healthchecks:
+
+  ### sync-seedbox part
+  sync_seedbox:
+    ## Enable or disable service
+    enabled: false
+
+    ## Ping URL
+    # ping_url:
+
+  ### sync-blackhole part
+  sync_blackhole:
+    ## Enable or disable service
+    enabled: false
+
+    ## Ping URL
+    # ping_url:
+
+
+#
 # SeedboxSync tunning
 #
 seedboxsync:
