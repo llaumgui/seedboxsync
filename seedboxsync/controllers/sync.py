@@ -132,7 +132,7 @@ class Sync(Controller):
         self.app.log.debug('sync_blackhole only-store: "%s"' % self.app.pargs.only_store)
 
         # Create lock file.
-        lock_file = self.app.config.get('pid', 'blackhole_path')
+        lock_file = self.app.config.get('pid', 'download_path')
         self.app.lock.lock_or_exit(lock_file)
 
         finished_path = self.app.config.get('seedbox', 'finished_path')
