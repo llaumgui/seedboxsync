@@ -7,7 +7,7 @@ order: 2
 
 ## Configuration file
 
-You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/master/config/seedboxsync.yml.example). This example file can be located in:
+You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/main/config/seedboxsync.yml.example). This example file can be located in:
 
 * /usr/local/config/ (pip install)
 * ~/.local/config/ (pip install in user privileges)
