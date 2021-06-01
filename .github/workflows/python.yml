@@ -3,31 +3,38 @@ name: Python CI/CD
 on:
   [push, pull_request]
 
+env:
+  pythonLastVersion: '3.9'
+
 jobs:
 
   ##############################################################################
-  # Build job
+  # Test job
   #
-  build:
+  test_python:
     runs-on: ubuntu-latest
-    name: Build and test
+    name: Test Python
 
     strategy:
-      max-parallel: 4
+      fail-fast: false
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
-
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+
+    - uses: actions/cache@v2
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}
 
     - name: Install Dependencies
       run: |
@@ -38,8 +45,24 @@ jobs:
     - name: Make all tests with make
       run: make test
 
+
+  ##############################################################################
+  # SonarCloud job
+  #
+  test_sonar:
+    needs: [
+      test_python
+    ]
+    runs-on: ubuntu-latest
+    name: SonarCloud analyse
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
     - name: SonarCloud Scan
-      if: matrix.python-version == '3.8'
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,22 +70,12 @@ jobs:
       with:
         args: >
           -Dsonar.verbose=true
-    - name: Package
-      if: matrix.python-version == '3.8'
-      run: make dist
-
-    - name: Archive package
-      if: matrix.python-version == '3.8'
-      uses: actions/upload-artifact@v2
-      with:
-        name: seedboxsync-${{ github.sha }}.tar.gz
-        path: dist/*.tar.gz
 
 
   ##############################################################################
   # Markdownlint job
   #
-  markdownlint:
+  test_markdownlint:
     runs-on: ubuntu-latest
     name: MarkdownLint
 
@@ -79,12 +92,55 @@ jobs:
 
 
   ##############################################################################
+  # SonarCloud job
+  #
+  package:
+    needs: [
+      test_python,
+      test_sonar,
+      test_markdownlint
+    ]
+    runs-on: ubuntu-latest
+    name: Build package
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ env.pythonLastVersion }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.pythonLastVersion }}
+
+    - uses: actions/cache@v2
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Package
+      run: make dist
+
+    - name: Archive package
+      uses: actions/upload-artifact@v2
+      with:
+        name: seedboxsync-${{ github.sha }}.tar.gz
+        path: dist/*.tar.gz
+
+
+  ##############################################################################
   # Realse job
   #
   release:
     needs: [
-      build,
-      markdownlint
+      package,
     ]
     runs-on: ubuntu-latest
     if: contains(github.ref, 'refs/tags/v')
@@ -97,10 +153,15 @@ jobs:
     - name: Set env
       run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:11}
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
+    - name: Set up Python ${{ env.pythonLastVersion }}
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.8'
+        python-version: ${{ env.pythonLastVersion }}
+
+    - uses: actions/cache@v2
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}
 
     - name: Install Dependencies
       run: |
