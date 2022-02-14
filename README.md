@@ -1,12 +1,16 @@
 # SeedboxSync
 
-[![Python CI/CD](https://github.com/llaumgui/seedboxsync/workflows/Python%20CI/CD/badge.svg)](https://github.com/llaumgui/seedboxsync/actions?query=workflow%3A%22Python+CI%2FCD%22) [![SonarCloud: Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=llaumgui:seedboxsync&metric=alert_status)](https://sonarcloud.io/dashboard?id=llaumgui:seedboxsync)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=coverage)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=security_rating)](https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync)<br />
-[![GitHub license](https://img.shields.io/github/license/llaumgui/seedboxsync.svg)](https://github.com/llaumgui/seedboxsync/blob/main/LICENSE)
-[![PyPI version](https://badge.fury.io/py/seedboxsync.svg)](https://pypi.python.org/pypi/seedboxsync)<br />
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/llaumgui/seedboxsync.svg)](http://isitmaintained.com/project/llaumgui/seedboxsync "Percentage of issues still open")
+[![Author][ico-twitter]][link-twitter]
+[![Build Status][ico-ghactions]][link-ghactions]
+[![Latest Version][ico-version]][link-pypi]
+[![Libraries.io dependency status for latest release][ico-dependencies]](requirements.txt)
+[![Software License][ico-license]](LICENSE)
+
+[![Quality Gate Status][ico-sonarcloud-gate]][link-sonarcloud-gate]
+[![Coverage][ico-sonarcloud-coverage]][link-sonarcloud-coverage]
+[![Maintainability Rating][ico-sonarcloud-maintainability]][link-sonarcloud-maintainability]
+[![Reliability Rating][ico-sonarcloud-reliability]][link-sonarcloud-reliability]
+[![Security Rating][ico-sonarcloud-security]][link-sonarcloud-security]
 
 Provides synchronization functions between your NAS and your seedbox:
 
@@ -21,3 +25,22 @@ See: [https://llaumgui.github.io/seedboxsync/](https://llaumgui.github.io/seedbo
 ## License
 
 Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
+
+[ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=50ABF1&logo=twitter&style=flat-square
+[link-twitter]: https://twitter.com/llaumgui
+[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/seedboxsync/Tests?style=flat-square&logo=github&label=Tests
+[link-ghactions]: https://github.com/llaumgui/seedboxsync/actions
+[ico-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
+[link-pypi]:https://pypi.org/project/seedboxsync/
+[ico-license]: https://img.shields.io/github/license/llaumgui/seedboxsync?style=flat-square
+[ico-sonarcloud-gate]: https://sonarcloud.io/api/project_badges/measure?branch=main&project=llaumgui%3Aseedboxsync&metric=alert_status
+[link-sonarcloud-gate]: https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync&branch=main
+[ico-sonarcloud-coverage]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=coverage
+[link-sonarcloud-coverage]: https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync
+[ico-sonarcloud-maintainability]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=sqale_rating
+[link-sonarcloud-maintainability]: https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync
+[ico-sonarcloud-reliability]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=reliability_rating
+[link-sonarcloud-reliability]: https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync
+[ico-sonarcloud-security]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui%3Aseedboxsync&metric=security_rating
+[link-sonarcloud-security]: https://sonarcloud.io/dashboard?id=llaumgui%3Aseedboxsync
+[ico-dependencies]: https://img.shields.io/librariesio/release/pypi/seedboxsync?style=flat-square
