@@ -1,10 +1,9 @@
-name: Python CI/CD
-
+name: Tests
 on:
   [push, pull_request]
 
 env:
-  pythonLastVersion: '3.9'
+  pythonLastVersion: '3.10'
 
 jobs:
 
@@ -18,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
 
     steps:
     - name: Git checkout
