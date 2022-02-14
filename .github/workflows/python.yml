@@ -1,5 +1,4 @@
-name: Python CI/CD
-
+name: Tests
 on:
   [push, pull_request]
 
