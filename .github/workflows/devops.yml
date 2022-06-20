@@ -1,4 +1,4 @@
-name: Tests
+name: DevOps
 on:
   [push, pull_request]
 

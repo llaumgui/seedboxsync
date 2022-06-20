@@ -28,7 +28,7 @@ Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
 
 [ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=50ABF1&logo=twitter&style=flat-square
 [link-twitter]: https://twitter.com/llaumgui
-[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/seedboxsync/Tests?style=flat-square&logo=github&label=Tests
+[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/seedboxsync/DevOps?style=flat-square&logo=github&label=DevOps
 [link-ghactions]: https://github.com/llaumgui/seedboxsync/actions
 [ico-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
 [link-pypi]:https://pypi.org/project/seedboxsync/
