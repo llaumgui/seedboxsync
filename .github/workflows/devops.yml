@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -57,7 +57,7 @@ jobs:
 
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -82,7 +82,7 @@ jobs:
     steps:
 
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: markdownlint-cli
       uses: nosborn/github-action-markdown-cli@v3.1.0
@@ -105,7 +105,7 @@ jobs:
 
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -148,7 +148,7 @@ jobs:
 
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set env
       run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
