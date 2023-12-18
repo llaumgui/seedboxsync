@@ -129,7 +129,7 @@ jobs:
       run: make dist
 
     - name: Archive package
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: seedboxsync-${{ github.sha }}.tar.gz
         path: dist/*.tar.gz
