@@ -17,13 +17,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
 
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
@@ -59,13 +59,13 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: SonarCloud Scan
       if: github.event_name != 'pull_request'
       uses: sonarsource/sonarcloud-github-action@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
@@ -107,7 +107,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: Set up Python ${{ env.pythonLastVersion }}
       uses: actions/setup-python@v5
