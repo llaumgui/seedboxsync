@@ -10,7 +10,6 @@ import datetime
 import glob
 import os
 import re
-import sre_constants
 from paramiko import SSHException
 from cement import Controller, ex, fs
 from ..core.dao.torrent import Torrent
@@ -230,7 +229,7 @@ class Sync(Controller):
 
         try:
             match = re.search(pattern, filepath)
-        except sre_constants.error:
+        except re.error:
             raise SeedboxSyncConfigurationError('Bad configuration for exclude_syncing ! See the doc at https://docs.python.org/3/library/re.html')
 
         if match is None:
