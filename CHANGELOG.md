@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 3.0.2 - Dec 18, 2023
+
+* ⬆️ Update Cement framework.
+* 📦 Fix packaging issues.
+* 📝 Add Changelog and Contributors files.
+* 💚 Fix SonarCloud.
+* 👷 Drop Python 3.7 support.
+* ⬆️ Now support Python version from 3.8 to 3.11.
+
 ## 3.0.1 - Feb 14, 2022
 
 * [Enhancement #36](https://github.com/llaumgui/seedboxsync/issues/36) Update Cement framework.
