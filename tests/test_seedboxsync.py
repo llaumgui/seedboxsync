@@ -1,6 +1,6 @@
 
-from pytest import raises
 from seedboxsync.main import SeedboxSyncTest
+
 
 def test_seedboxsync():
     # test seedboxsync without any subcommands or arguments

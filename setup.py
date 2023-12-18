@@ -19,6 +19,7 @@ f.close()
 setup(
     name='seedboxsync',
     version=VERSION,
+    python_requires='>=3.8',
     description='Script for sync operations between your NAS and your seedbox',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -28,8 +29,9 @@ setup(
     license='GPL-2.0',
 
     project_urls={
+        'Documentation': 'https://llaumgui.github.io/seedboxsync/',
         'Bug Reports': 'https://github.com/llaumgui/seedboxsync/issues',
-        'Source': 'https://github.com/llaumgui/seedboxsync/',
+        'Source': 'https://github.com/llaumgui/seedboxsync/'
     },
 
     classifiers=[
@@ -40,16 +42,25 @@ setup(
         'Programming Language :: Python :: 3',
         'Environment :: Console',
         'Natural Language :: English',
-        'Operating System :: POSIX',
+        'Operating System :: POSIX'
     ],
     keywords='seedbox nas sync sftp',
 
     packages=find_packages(exclude=['ez_setup', 'tests*']),
-    # data_files={'seedboxsync': ['templates/*']},
     data_files=[('config', ['config/seedboxsync.yml.example'])],
     include_package_data=True,
     entry_points="""
         [console_scripts]
         seedboxsync = seedboxsync.main:main
     """,
+
+    install_requires=[
+        'cement==3.0.8',
+        'pyyaml',
+        'colorlog',
+        'paramiko>=2.2.1',
+        'bcoding>=1.5',
+        'tabulate',
+        'peewee'
+    ],
 )

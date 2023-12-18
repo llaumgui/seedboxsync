@@ -1,12 +1,4 @@
-# Include docs
-include *.md
-include LICENSE
-
-recursive-include seedboxsync *.py
+recursive-include *.py
 include setup.cfg
+include README.md CHANGELOG.md LICENSE CONTRIBUTORS.md
 include *.txt
-#recursive-include seedboxsync/templates *
-
-# Include yml example
-
-recursive-include config *
