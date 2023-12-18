@@ -1,7 +1,7 @@
-.PHONY: virtualenv test test-core comply comply-fix dist dist-upload
+.PHONY: virtualenv test test-core comply comply-fix docker dist dist-upload
 
 virtualenv:
-	virtualenv --prompt '|> cement <| ' env
+	virtualenv --prompt '|> seedboxsync <| ' env
 	env/bin/pip install -r requirements-dev.txt
 	env/bin/python setup.py develop
 	@echo
@@ -18,11 +18,14 @@ comply:
 	flake8 seedboxsync/ tests/
 
 comply-fix:
-	autopep8 -ri cement/ tests/
+	autopep8 -ri seedboxsync/ tests/
 
 clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
+
+docker: dist
+	docker build -t llaumgui/seedboxsync:latest .
 
 dist: clean
 	rm -rf dist/*

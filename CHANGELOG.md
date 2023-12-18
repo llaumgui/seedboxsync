@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.2 - Dec 18, 2023
+## Next release
 
 * ⬆️ Update Cement framework.
 * 📦 Fix packaging issues.
@@ -8,6 +8,7 @@
 * 💚 Fix SonarCloud.
 * 👷 Drop Python 3.7 support.
 * ⬆️ Now support Python version from 3.8 to 3.11.
+* 👷 Add docker support and provide docker images.
 
 ## 3.0.1 - Feb 14, 2022
 

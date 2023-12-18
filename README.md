@@ -1,10 +1,13 @@
 # SeedboxSync
 
 [![Author][ico-twitter]][link-twitter]
-[![Build Status][ico-ghactions]][link-ghactions]
-[![Latest Version][ico-version]][link-pypi]
-[![Libraries.io dependency status for latest release][ico-dependencies]](requirements.txt)
 [![Software License][ico-license]](LICENSE)
+[![Build Status][ico-ghactions]][link-ghactions]
+[![Libraries.io dependency status for latest release][ico-dependencies]][link-dependencies]
+
+[![Latest Version][ico-pypi-version]][link-pypi]
+[![Docker Pull][ico-docker]][link-docker]
+[![Latest Version][ico-version]][link-docker]
 
 [![Quality Gate Status][ico-sonarcloud-gate]][link-sonarcloud-gate]
 [![Coverage][ico-sonarcloud-coverage]][link-sonarcloud-coverage]
@@ -30,9 +33,14 @@ Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
 [link-twitter]: https://twitter.com/llaumgui
 [ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/seedboxsync/devops.yml?branch=main&style=flat-square&logo=github&label=DevOps
 [link-ghactions]: https://github.com/llaumgui/seedboxsync/actions
-[ico-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
+[ico-pypi-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
 [link-pypi]:https://pypi.org/project/seedboxsync/
 [ico-license]: https://img.shields.io/github/license/llaumgui/seedboxsync?style=flat-square
+[ico-dependencies]: https://img.shields.io/librariesio/release/pypi/seedboxsync?style=flat-square
+[link-dependencies]: https://libraries.io/pypi/seedboxsync
+[ico-docker]: https://img.shields.io/docker/pulls/llaumgui/seedboxsync?color=%2496ed&logo=docker&style=flat-square
+[link-docker]: https://hub.docker.com/r/llaumgui/seedboxsync
+[ico-version]: https://img.shields.io/docker/v/llaumgui/seedboxsync?sort=semver&color=%2496ed&logo=docker&style=flat-square
 [ico-sonarcloud-gate]: https://sonarcloud.io/api/project_badges/measure?branch=main&project=llaumgui_seedboxsync&metric=alert_status
 [link-sonarcloud-gate]: https://sonarcloud.io/dashboard?id=llaumgui_seedboxsync&branch=main
 [ico-sonarcloud-coverage]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui_seedboxsync&metric=coverage
@@ -43,4 +51,3 @@ Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
 [link-sonarcloud-reliability]: https://sonarcloud.io/dashboard?id=llaumgui_seedboxsync
 [ico-sonarcloud-security]: https://sonarcloud.io/api/project_badges/measure?project=llaumgui_seedboxsync&metric=security_rating
 [link-sonarcloud-security]: https://sonarcloud.io/dashboard?id=llaumgui_seedboxsync
-[ico-dependencies]: https://img.shields.io/librariesio/release/pypi/seedboxsync?style=flat-square
