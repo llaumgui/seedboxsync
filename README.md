@@ -3,8 +3,6 @@
 [![Author][ico-twitter]][link-twitter]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-ghactions]][link-ghactions]
-[![Libraries.io dependency status for latest release][ico-dependencies]][link-dependencies]
-
 [![Latest Version][ico-pypi-version]][link-pypi]
 [![Docker Pull][ico-docker]][link-docker]
 [![Latest Version][ico-version]][link-docker]
@@ -36,8 +34,6 @@ Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
 [ico-pypi-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
 [link-pypi]:https://pypi.org/project/seedboxsync/
 [ico-license]: https://img.shields.io/github/license/llaumgui/seedboxsync?style=flat-square
-[ico-dependencies]: https://img.shields.io/librariesio/release/pypi/seedboxsync?style=flat-square
-[link-dependencies]: https://libraries.io/pypi/seedboxsync
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/seedboxsync?color=%2496ed&logo=docker&style=flat-square
 [link-docker]: https://hub.docker.com/r/llaumgui/seedboxsync
 [ico-version]: https://img.shields.io/docker/v/llaumgui/seedboxsync?sort=semver&color=%2496ed&logo=docker&style=flat-square
