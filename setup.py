@@ -55,7 +55,7 @@ setup(
     """,
 
     install_requires=[
-        'cement==3.0.8',
+        'cement==3.0.10',
         'pyyaml',
         'colorlog',
         'paramiko>=2.2.1',
