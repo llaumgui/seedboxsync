@@ -71,7 +71,7 @@ jobs:
   # SonarCloud job
   #
   test_sonar:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
     needs: [
       test_python,
       test_markdownlint,
