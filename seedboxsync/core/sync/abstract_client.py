@@ -11,15 +11,17 @@ Transport client abstract class based on paramiko syntaxe.
 """
 
 from abc import ABCMeta, abstractmethod
+from cement.core.log import LogInterface
 
 
 class AbstractClient():
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, host: str, login: str, password: str, port: str, timeout: str = False):
+    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str, timeout: str = False):
         """Init client.
 
+        :param str log: the log interface
         :param str host: the host of the server
         :param str login: the login to connect on the the server
         :param str password: the password to connect on the the server

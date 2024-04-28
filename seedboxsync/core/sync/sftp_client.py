@@ -11,11 +11,10 @@ Transport client using sFTP protocol.
 """
 import os
 from .abstract_client import AbstractClient
+from .sync import ConnectionError
 from stat import S_ISDIR
-from cement import minimal_logger
+from cement.core.log import LogInterface
 import paramiko
-
-LOG = minimal_logger(__name__)
 
 
 class SftpClient(AbstractClient):
@@ -23,16 +22,18 @@ class SftpClient(AbstractClient):
     Transport from NAS to seedbox using sFTP paramiko library.
     """
 
-    def __init__(self, host: str, login: str, password: str, port: str = "22", timeout: str = False):
+    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str = False):
         """
         Init transport and client.
 
+        :param str log: the log interface
         :param str host: the host of the server
         :param str login: the login to connect on the the server
         :param str password: the password to connect on the the server
         :param str port: the port of the server
         :param str timeout: the timeout for socket connection
         """
+        self.__log = log
         self.__host = host
         self.__login = login
         self.__password = password
@@ -46,16 +47,20 @@ class SftpClient(AbstractClient):
         Init connection if not initialized.
         """
         if self.__transport is None:
-            LOG.debug('Init paramiko.Transport')
+            self.__log.debug('Init paramiko.Transport')
             self.__transport = paramiko.Transport((self.__host, int(self.__port)))
-            self.__transport.connect(username=self.__login, password=self.__password)
+            try:
+                self.__transport.connect(username=self.__login, password=self.__password)
+            except paramiko.ssh_exception.AuthenticationException as exc:
+                raise ConnectionError('Connection fail: %s' % str(exc))
+
             self.__client = paramiko.SFTPClient.from_transport(self.__transport)
 
             # Setup timeout
             if self.__timeout:
                 channel = self.__client.get_channel()
                 channel.settimeout(self.__timeout)
-                LOG.debug('Timeout is set to %s' % channel.gettimeout())
+                self.__log.debug('Timeout is set to %s' % channel.gettimeout())
 
     def put(self, local_path: str, remote_path: str):
         """
@@ -157,5 +162,5 @@ class SftpClient(AbstractClient):
         Close transport client.
         """
         if self.__transport is not None:
-            LOG.debug('Close paramiko.Transport client')
+            self.__log.debug('Close paramiko.Transport client')
             return self.__transport.close()

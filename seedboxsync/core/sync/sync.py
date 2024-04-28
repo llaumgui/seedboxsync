@@ -43,7 +43,8 @@ def extend_sync(app: App):
             % (client_class, protocol))
 
     try:
-        sync = transfer_client(host=app.config.get('seedbox', 'host'),
+        sync = transfer_client(log=app.log,
+                               host=app.config.get('seedbox', 'host'),
                                port=int(app.config.get('seedbox', 'port')),
                                login=app.config.get('seedbox', 'login'),
                                password=app.config.get('seedbox', 'password'),
