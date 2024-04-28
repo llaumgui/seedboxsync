@@ -1,4 +1,3 @@
-
 from seedboxsync.main import SeedboxSyncTest
 
 
@@ -11,6 +10,10 @@ def test_seedboxsync():
 
 def test_seedboxsync_debug():
     # test that debug mode is functional
+    with SeedboxSyncTest() as app:
+        app.run()
+        assert app.debug is False
+
     argv = ['--debug']
     with SeedboxSyncTest(argv=argv) as app:
         app.run()

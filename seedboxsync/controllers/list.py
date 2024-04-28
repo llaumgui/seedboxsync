@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2022 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2024 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -19,18 +19,18 @@ class List(Controller):
     Controller with list concern.
     """
     class Meta:
+        help = 'all list operations'
         label = 'list'
-        stacked_type = 'embedded'
         stacked_on = 'base'
+        stacked_type = 'nested'
 
     @ex(help='list of lasts torrents uploaded from blackhole',
-        aliases=['lu'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
                      'default': 10})])
-    def list_uploaded(self):
+    def uploaded(self):
         """
         List of lasts torrents uploaded from blackhole
         """
@@ -38,13 +38,12 @@ class List(Controller):
         self.app.render(reversed(data), headers={'id': 'Id', 'name': 'Name', 'sent': 'Sent datetime'})
 
     @ex(help='list of lasts files downloaded from seedbox',
-        aliases=['ld'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
                      'default': 10})])
-    def list_downloaded(self):
+    def downloaded(self):
         """
         List of lasts torrents downloaded from seedbox
         """
@@ -56,13 +55,12 @@ class List(Controller):
         self.app.render(reversed(data), headers={'id': 'Id', 'finished': 'Finished', 'path': 'Path', 'size': 'Size'})
 
     @ex(help='list of files currently in download from seedbox',
-        aliases=['lip'],
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
                      'default': 10})])
-    def list_in_progress(self):
+    def progress(self):
         """
         List of files currently in download from seedbo
         """
@@ -97,11 +95,3 @@ class List(Controller):
                 'eta': eta
             })
         self.app.render(reversed(in_progress), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'progress': 'Progress', 'eta': 'ETA', 'size': 'Size'})
-
-    @ex(help='clean the list of files currently in download from seedbox')
-    def clean_in_progress(self):
-        """
-        List of files currently in download from seedbo
-        """
-        count = Download.delete().where(Download.finished == 0).execute()
-        self.app.print('In progress list cleaned. %s line(s) deleted' % count)

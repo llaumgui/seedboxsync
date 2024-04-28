@@ -158,7 +158,7 @@ Add a healthchecks by sync command.
 #
 healthchecks:
 
-  ### sync-seedbox part
+  ### sync seedbox part
   sync_seedbox:
     ## Enable or disable service
     enabled: true
@@ -166,7 +166,7 @@ healthchecks:
     ## Ping URL
     ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
 
-  ### sync-blackhole part
+  ### sync blackhole part
   sync_blackhole:
     ## Enable or disable service
     enabled: true

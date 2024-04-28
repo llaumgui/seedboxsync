@@ -1,4 +1,16 @@
-.PHONY: virtualenv test test-core comply comply-fix docker dist dist-upload
+.PHONY: dev test test-core comply-fix docs clean dist dist-upload docker docker-push
+
+dev:
+	docker-compose up -d
+	docker-compose exec seedboxsync pip install -r requirements-dev.txt
+	docker-compose exec seedboxsync python setup.py develop
+	docker-compose exec seedboxsync /bin/bash
+
+test: comply
+	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
+
+test-core: comply
+	python -m pytest -v --cov=seedboxsync.core --cov-report=term --cov-report=html:coverage-report --capture=sys tests/core
 
 virtualenv:
 	virtualenv --prompt '|> seedboxsync <| ' env
@@ -8,11 +20,13 @@ virtualenv:
 	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
 	@echo
 
-test: comply
-	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report tests/
-
-test-core: comply
-	python -m pytest -v --cov=seedboxsync.core --cov-report=term --cov-report=html:coverage-report tests/core
+virtualenv-windows:
+	virtualenv --prompt '|> seedboxsync <| ' env-windows
+	env-windows\\Scripts\\pip.exe install -r requirements-dev-windows.txt
+	env-windows\\Scripts\\python.exe setup.py develop
+	@echo
+	@echo "VirtualENV Setup Complete. Now run: .\env-windows\Scripts\activate.ps1"
+	@echo
 
 comply:
 	flake8 seedboxsync/ tests/
@@ -20,12 +34,18 @@ comply:
 comply-fix:
 	autopep8 -ri seedboxsync/ tests/
 
+comply-typing:
+	mypy ./seedboxsync
+
+docs:
+	python setup.py build_sphinx
+	@echo
+	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
+	@echo
+
 clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
-
-docker: dist
-	docker build -t llaumgui/seedboxsync:latest .
 
 dist: clean
 	rm -rf dist/*
@@ -34,3 +54,12 @@ dist: clean
 
 dist-upload:
 	twine upload dist/*
+
+docker:
+	docker build -t llaumgui/seedboxsync:latest .
+
+docker-push:
+	docker push llaumgui/seedboxsync:latest
+
+remove-merged-branches:
+	git branch --merged | grep -v -e 'main\|stable/*\|dev/*' | xargs git branch -d

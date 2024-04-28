@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2022 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2024 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -14,6 +14,7 @@ from .core.exc import SeedboxSyncError
 from .core.sync.sync import extend_sync, close_sync
 from .core.init_defaults import CONFIG
 from .controllers.base import Base
+from .controllers.clean import Clean
 from .controllers.list import List
 from .controllers.sync import Sync
 
@@ -48,6 +49,7 @@ class SeedboxSync(App):
         config_file_suffix = '.yml'
 
         # set the log handler
+        framework_logging = False
         log_handler = 'colorlog'
 
         # set the output handler
@@ -56,6 +58,7 @@ class SeedboxSync(App):
         # register handlers
         handlers = [
             Base,
+            Clean,
             List,
             Sync
         ]

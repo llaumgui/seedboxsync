@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2022 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2024 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
@@ -19,12 +19,12 @@ from ..core.exc import SeedboxSyncConfigurationError
 
 class Sync(Controller):
     class Meta:
+        help = 'all synchronization operations'
         label = 'sync'
-        stacked_type = 'embedded'
         stacked_on = 'base'
+        stacked_type = 'nested'
 
     @ex(help='sync torrent from blackhole to seedbox',
-        aliases=['sb'],
         arguments=[(['--dry-run'],
                    {'help': 'just list, no upload and persistence',
                     'action': 'store_true',
@@ -33,7 +33,7 @@ class Sync(Controller):
                    {'help': 'ping a service (ie: Healthchecks) during excecution',
                     'action': 'store_true',
                     'dest': 'ping'})])
-    def sync_blackhole(self):
+    def blackhole(self):
         """
         Do the blackhole synchronization.
         """
@@ -104,7 +104,6 @@ class Sync(Controller):
                 pass
 
     @ex(help='sync file from seedbox',
-        aliases=['ss'],
         arguments=[(['--dry-run'],
                    {'help': 'just list, no download and persistence',
                     'action': 'store_true',
@@ -117,7 +116,7 @@ class Sync(Controller):
                    {'help': 'ping a service (ie: Healthchecks) during excecution',
                     'action': 'store_true',
                     'dest': 'ping'})])
-    def sync_seedbox(self):
+    def seedbox(self):
         """
         Do the synchronization.
         """
