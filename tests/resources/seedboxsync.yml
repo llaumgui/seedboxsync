@@ -1,0 +1,127 @@
+### SeedboxSync Configuration Settings
+---
+
+#
+# Informations about your seedbox
+#
+seedbox:
+
+  ### Informations about your seedbox connection
+  # host: my-seedbox.ltd
+  # port: 22
+  # login: me
+  # password: p4sw0rd
+  # timeout: false
+
+  ### For the moment, only sftp
+  # protocol: sftp
+
+  ### Chmod torrent after upload (false :  disable)
+  ### Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
+  # chmod: 0o777
+  # chmod: false
+
+  ### Use a tempory directory (you must create it !)
+  # tmp_path: ./tmp
+
+  ### Your "watch" folder you must create it!)
+  # watch_path: ./watch
+
+  ### Your finished folder you must create it!)
+  # finished_path: ./files
+
+  ### Exclude part files
+  # part_suffix: .part
+
+  ### Exclude pattern from sync
+  ### Use re syntaxe: https://docs.python.org/3/library/re.html
+  ### Example: .*missing$|^\..*\.swap$
+  # exclude_syncing:
+
+
+#
+# Informations about local environment (NAS ?)
+#
+local:
+
+  ### Your local "watch" folder
+  # watch_path: ~/watch
+
+  ### Path where download files
+  # download_path: ~/Downloads/
+
+  ### Use local sqlite database for store downloaded files
+  db_file: tests/resources/seedboxsync.db
+
+
+#
+# PID and lock management to prevent several launch
+#
+pid:
+
+  ### PID for blackhole sync
+  # blackhole_path: ~/.config/seedboxsync/lock/blackhole.pid
+
+  ### PID for seedbox downloaded sync
+  # download_path: ~/.config/seedboxsync/lock/download.pid
+
+
+#
+# Healthchecks ping service
+#
+healthchecks:
+
+  ### sync seedbox part
+  sync_seedbox:
+    ## Enable or disable service
+    enabled: false
+
+    ## Ping URL
+    # ping_url:
+
+  ### sync blackhole part
+  sync_blackhole:
+    ## Enable or disable service
+    enabled: false
+
+    ## Ping URL
+    # ping_url:
+
+
+#
+# SeedboxSync tunning
+#
+seedboxsync:
+
+  ### Toggle application level debug (does not toggle framework debugging)
+  # debug: false
+
+  ### Where external (third-party) plugins are loaded from
+  # plugin_dir: /var/lib/seedboxsync/plugins/
+
+  ### Where all plugin configurations are loaded from
+  # plugin_config_dir: /etc/seedboxsync/plugins.d/
+
+  ### The log handler label
+  # log_handler: colorlog
+
+
+log.colorlog:
+
+  ### Where the log file lives (no log file by default)
+  # file: null
+
+  ### The level for which to log.  One of: info, warning, error, fatal, debug
+  # level: info
+
+  ### Whether or not to log to console
+  # to_console: true
+
+  ### Whether or not to rotate the log file when it reaches `max_bytes`
+  # rotate: false
+
+  ### Max size in bytes that a log file can grow until it is rotated.
+  # max_bytes: 512000
+
+  ### The maximun number of log files to maintain when rotating
+  # max_files: 4

@@ -15,7 +15,7 @@ from .core.sync.sync import extend_sync, close_sync
 from .core.init_defaults import CONFIG
 from .controllers.base import Base
 from .controllers.clean import Clean
-from .controllers.list import List
+from .controllers.search import Search
 from .controllers.sync import Sync
 
 
@@ -59,7 +59,7 @@ class SeedboxSync(App):
         handlers = [
             Base,
             Clean,
-            List,
+            Search,
             Sync
         ]
 
