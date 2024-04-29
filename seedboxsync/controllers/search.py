@@ -24,52 +24,88 @@ class Search(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
-    @ex(help='list of lasts torrents uploaded from blackhole',
+    @ex(help='search lasts torrents uploaded from blackhole',
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
-                     'default': 10})])
+                     'default': 10}),
+                   (['-s', '--search'],
+                    {'help': 'term to search',
+                     'action': 'store',
+                     'dest': 'term'})])
     def uploaded(self):
         """
-        List of lasts torrents uploaded from blackhole
+        Search lasts torrents uploaded from blackhole
         """
-        data = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).limit(self.app.pargs.number).order_by(Torrent.sent.desc()).dicts()
+        # Build "where" expression
+        if self.app.pargs.term:
+            where = Torrent.name.contains(self.app.pargs.term)
+        else:
+            where = ~(Torrent.id.contains('not_a_int'))
+
+        # DB query
+        data = Torrent.select(Torrent.id,
+                              Torrent.name,
+                              Torrent.sent
+                              ).where(where).limit(self.app.pargs.number).order_by(Torrent.sent.desc()).dicts()
         self.app.render(reversed(data), headers={'id': 'Id', 'name': 'Name', 'sent': 'Sent datetime'})
 
-    @ex(help='list of lasts files downloaded from seedbox',
+    @ex(help='search lasts files downloaded from seedbox',
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
-                     'default': 10})])
+                     'default': 10}),
+                   (['-s', '--search'],
+                    {'help': 'term to search',
+                     'action': 'store',
+                     'dest': 'term'})])
     def downloaded(self):
         """
-        List of lasts torrents downloaded from seedbox
+        Search lasts torrents downloaded from seedbox
         """
+        # Build "where" expression
+        if self.app.pargs.term:
+            where = (Download.finished != 0) & (Download.path.contains(self.app.pargs.term))
+        else:
+            where = Download.finished != 0
+
+        # DB query
         data = Download.select(Download.id,
                                fn.SUBSTR(Download.path, -100).alias('path'),
                                Download.finished,
                                fn.sizeof(Download.local_size).alias('size')
-                               ).where(Download.finished != 0).limit(self.app.pargs.number).order_by(Download.finished.desc()).dicts()
+                               ).where(where).limit(self.app.pargs.number).order_by(Download.finished.desc()).dicts()
         self.app.render(reversed(data), headers={'id': 'Id', 'finished': 'Finished', 'path': 'Path', 'size': 'Size'})
 
-    @ex(help='list of files currently in download from seedbox',
+    @ex(help='search files currently in download from seedbox',
         arguments=[(['-n', '--number'],
                     {'help': 'number of torrents to display',
                      'action': 'store',
                      'dest': 'number',
-                     'default': 10})])
+                     'default': 10}),
+                   (['-s', '--search'],
+                    {'help': 'term to search',
+                     'action': 'store',
+                     'dest': 'term'})])
     def progress(self):
         """
-        List of files currently in download from seedbo
+        Search files currently in download from seedbo
         """
+        # Build "where" expression
+        if self.app.pargs.term:
+            where = (Download.finished == 0) & (Download.path.contains(self.app.pargs.term))
+        else:
+            where = Download.finished == 0
+
+        # DB suery
         data = Download.select(Download.id,
                                fn.SUBSTR(Download.path, -100).alias('path'),
                                Download.started,
                                Download.seedbox_size,
                                fn.sizeof(Download.seedbox_size).alias('size'),
-                               ).where(Download.finished == 0).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
+                               ).where(where).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
 
         in_progress = []
         part_suffix = self.app.config.get('seedbox', 'part_suffix')
