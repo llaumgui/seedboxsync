@@ -9,22 +9,24 @@ order: 1
 * Run `docker` and mount your configuration.yml.
 
 ```bash
-docker run -d \
-  --volumes /data/seedboxsync/seedboxsync.yml:/config/seedboxsync.yml \
-  ghcr.io/llaumgui/seedboxsync:latest
+docker run --rm \
+  --volume /data/seedboxsync/seedboxsync.yml:/config/seedboxsync.yml \
+  --volume /data/seedboxsync/watch:/watch \
+  --volume /data/seedboxsync/download:/download \
+  ghcr.io/llaumgui/seedboxsync:latest --help
 ```
 
-With docker-compose:
+* Use a script to shortcur the call:
 
 ```bash
-  seedboxsync:
-    container_name: seedboxsync
-    image: ghcr.io/llaumgui/seedboxsync:latest
-    restart: always
-    environment:
-      TZ: 'Europe/Paris'
-    volumes:
-     - /data/seedboxsync/seedboxsync.yml:/config/seedboxsync.yml
-     - /data/seedboxsync/watch:/watch
-     - /data/seedboxsync/download:/download
+#!/bin/bash
+
+CONTAINER_NAME="ghcr.io/llaumgui/seedboxsync:latest"
+ARGV="$@"
+
+docker run --rm \
+  --volume /data/seedboxsync/seedboxsync.yml:/config/seedboxsync.yml \
+  --volume /data/seedboxsync/watch:/watch \
+  --volume /data/seedboxsync/download:/download \
+  ${CONTAINER_NAME} ${COMMAND}
 ```
