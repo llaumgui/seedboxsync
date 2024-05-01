@@ -130,7 +130,7 @@ class SftpClient(AbstractClient):
         :param str old_path: existing name of the file or folder
         :param str new_path: new name for the file or folder
         """
-        return self.__client.rename(old_path, new_path)
+        return self.__client.posix_rename(old_path, new_path)
 
     # Code from https://gist.github.com/johnfink8/2190472
     def walk(self, remote_path: str):
