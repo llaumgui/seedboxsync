@@ -2,11 +2,11 @@
 ---
 
 #
-# Informations about your seedbox
+# Information about your seedbox
 #
 seedbox:
 
-  ### Informations about your seedbox connection
+  ### Information about your seedbox connection
   # host: my-seedbox.ltd
   # port: 22
   # login: me
@@ -40,7 +40,7 @@ seedbox:
 
 
 #
-# Informations about local environment (NAS ?)
+# Information about local environment (NAS ?)
 #
 local:
 
@@ -55,7 +55,7 @@ local:
 
 
 #
-# PID and lock management to prevent several launch
+# PID and lock management to prevent several launches
 #
 pid:
 
@@ -89,7 +89,7 @@ healthchecks:
 
 
 #
-# SeedboxSync tunning
+# SeedboxSync tuning
 #
 seedboxsync:
 
@@ -123,5 +123,5 @@ log.colorlog:
   ### Max size in bytes that a log file can grow until it is rotated.
   # max_bytes: 512000
 
-  ### The maximun number of log files to maintain when rotating
+  ### The maximum number of log files to maintain when rotating
   # max_files: 4

@@ -25,18 +25,18 @@ The following demonstrates setting up and working with a development environment
 
 ```bash
 ### create a virtualenv for development
-
 make virtualenv
-
 source env/bin/activate
 
-
 ### run seedboxsync cli application
-
 seedboxsync --help
 
-
 ### run pytest / coverage
-
 make test
+
+### Build package
+make dist
+
+### Build docker image
+make docker
 ```

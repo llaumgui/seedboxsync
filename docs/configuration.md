@@ -35,7 +35,7 @@ You can put your configuration in:
 
 ### Configuration about your seedbox and your BitTorrent client
 
-* First, set informations about the connection to your Seedbox. Currently, only sftp is supported.
+* First, set information about the connection to your Seedbox. Currently, only sftp is supported.
 
 ```yml
 #
@@ -48,6 +48,7 @@ seedbox:
   port: 22
   login: me
   password: p4sw0rd
+  timeout: false
 
   ### For the moment, only sftp
   protocol: sftp
@@ -61,7 +62,7 @@ seedbox:
     chmod: false
 ```
 
-* To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (```tmp\_path```) and move it in the watch folder after full transfert and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.
+* To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (```tmp_path```) and move it in the watch folder after full transfer and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.
 
 ![ruTorrent settings / Downloads](images/rutorrent_1.png)
 
@@ -70,14 +71,14 @@ seedbox:
     tmp_path: /tmp
 ```
 
-* The blackhole folder of your BitTorrent client. Only used by blackhole synchronisation.
+* The blackhole folder of your BitTorrent client. Only used by blackhole synchronization.
 
 ```yml
     # Your "watch" folder you must create it!)
     watch_path: /watch
 ```
 
-* The folder of your Bittorrent client with finished file. You can configure your client to move finished file in a specific folder.
+* The folder of your Bittorrent client with finished file. You can configure your client to move the finished file in a specific folder.
 
 ![ruTorrent settings / Autotools](images/rutorrent_2.png)
 
@@ -93,7 +94,7 @@ seedbox:
     prefixed_path: /files
 ```
 
-* You can also specified extension used by your torrent client for downloads in progress to exclude it from synchronisation.
+* You can also specify the extension used by your torrent client for downloads in progress to exclude it from synchronisation.
 
 ```yml
     # Exclude part files
@@ -146,7 +147,7 @@ pid:
 
 Ping service is called by `--ping` argument.
 
-Currently only [Healthchecks](https://github.com/healthchecks/healthchecks) ping service is supported.
+Currently, only [Healthchecks](https://github.com/healthchecks/healthchecks) ping service is supported.
 
 #### Healthchecks
 
