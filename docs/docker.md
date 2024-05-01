@@ -28,7 +28,7 @@ docker pull ghcr.io/llaumgui/seedboxsync
 docker run --rm \
   --volume /data/seedboxsync/config:/config/seedboxsync.yml \
   --volume /data/seedboxsync/watch:/watch \
-  --volume /data/seedboxsync/download:/download \
+  --volume /data/seedboxsync/downloads:/downloads \
   ghcr.io/llaumgui/seedboxsync:latest --help
 ```
 
@@ -43,6 +43,6 @@ COMMAND="$@"
 docker run --rm \
   --volume /data/seedboxsync:/config \
   --volume /data/seedboxsync/watch:/watch \
-  --volume /data/seedboxsync/download:/download \
+  --volume /data/seedboxsync/downloads:/downloads \
   ${CONTAINER_NAME} ${COMMAND}
 ```

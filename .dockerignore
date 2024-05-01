@@ -1,2 +1,8 @@
-.github
 .git
+.github
+.pytest_cache
+.vscode
+build
+dist
+env
+seedboxsync.egg-info
