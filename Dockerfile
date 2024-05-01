@@ -13,15 +13,18 @@ COPY . /src
 RUN pip install --no-cache-dir cement && \
     # Install SeedboxSync \
     pip install --no-cache-dir . && \
-    # Better folder hierarchy \
-    mkdir ~seedboxsync/watch && \
-    mkdir ~seedboxsync/Downloads && \
-    mkdir -p ~seedboxsync/.config/seedboxsync  && \
-    cp config/seedboxsync.yml.example ~seedboxsync/.config/seedboxsync/seedboxsync.yml && \
-    chown -R seedboxsync:seedboxsync ~seedboxsync && \
-    ln -s ~seedboxsync/.config/seedboxsync /config && \
-    ln -s ~seedboxsync/watch / && \
-    ln -s ~seedboxsync/Downloads /download && \
+    # System folders \
+    mkdir /config && \
+    mkdir /download && \
+    mkdir /watch && \
+    chown -R seedboxsync:seedboxsync /config /download /watch && \
+    # Seedboxsync folders
+    mkdir ~seedboxsync/.config && \
+    ln -s /config ~seedboxsync/.config/seedboxsync && \
+    ln -s /download ~seedboxsync/Downloads && \
+    ln -s /watch ~seedboxsync/watch && \
+    cp config/seedboxsync.yml.example /config/seedboxsync.yml && \
+    chown -R seedboxsync:seedboxsync ~seedboxsync/.config && \
     # Cleanup \
     rm -rf /src
 
