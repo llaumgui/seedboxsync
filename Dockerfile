@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM python:3.12-alpine
 
 LABEL maintainer="Guillaume Kulakowski <guillaume@kulakowski.fr>"
 ENV PS1="\[\e[0;33m\]|> seedboxsync <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
