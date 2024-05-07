@@ -84,7 +84,7 @@ jobs:
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
     # https://docs.sonarsource.com/sonarqube/latest/project-administration/analysis-scope/#sonarqube-respects-ignored-files
-    - name: Remove .gitignore because: SonarQube respects ignored files
+    - name: Remove .gitignore because SonarQube respects ignored files
       run: rm .gitignore
     - uses: actions/download-artifact@v4
       with:
