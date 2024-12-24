@@ -1,6 +1,5 @@
 # SeedboxSync
 
-[![Author][ico-twitter]][link-twitter]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-ghactions]][link-ghactions]
 [![Latest Version][ico-pypi-version]][link-pypi]
@@ -27,8 +26,6 @@ See: [https://llaumgui.github.io/seedboxsync/](https://llaumgui.github.io/seedbo
 
 Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
 
-[ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=000&logo=x&style=flat-square
-[link-twitter]: https://twitter.com/llaumgui
 [ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/seedboxsync/devops.yml?branch=main&style=flat-square&logo=github&label=DevOps
 [link-ghactions]: https://github.com/llaumgui/seedboxsync/actions
 [ico-pypi-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
