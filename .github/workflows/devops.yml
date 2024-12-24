@@ -82,7 +82,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        fetch-depth: 0 # Disabling shallow clones is recommended for improving the relevancy of reporting
     # https://docs.sonarsource.com/sonarqube/latest/project-administration/analysis-scope/#sonarqube-respects-ignored-files
     - name: Remove .gitignore because SonarQube respects ignored files
       run: rm .gitignore
@@ -94,14 +94,14 @@ jobs:
         pwd
         ls -R
         cat coverage.xml
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v4.2.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.verbose=true
+      #with:
+      #  args: >
+      #    -Dsonar.verbose=true
 
 
   ##############################################################################
