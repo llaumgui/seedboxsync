@@ -8,6 +8,7 @@
 
 VERSION = (3, 1, 0, 'beta', 1)
 
+
 def get_version(version: tuple = VERSION) -> str:
     "Returns a PEP 386-compliant version number from VERSION."
     assert len(version) == 5
