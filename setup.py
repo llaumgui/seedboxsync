@@ -8,9 +8,7 @@
 #
 
 from setuptools import setup, find_packages
-from seedboxsync.core.version import get_version
-
-VERSION = get_version()
+from seedboxsync.version import get_version
 
 f = open('README.md', 'r')
 LONG_DESCRIPTION = f.read()
@@ -18,8 +16,8 @@ f.close()
 
 setup(
     name='seedboxsync',
-    version=VERSION,
-    python_requires='>=3.8',
+    version=get_version(),
+    python_requires='>=3.9',
     description='Script for sync operations between your NAS and your seedbox',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
