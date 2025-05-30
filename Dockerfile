@@ -66,6 +66,7 @@ RUN pip install --no-cache-dir wheels/* && \
     rm -rf /src
 
 # Seedboxsync folders
+COPY config/seedboxsync.yml.docker /usr/local/config/seedboxsync.yml.example
 RUN mkdir /home/seedboxsync/.config && \
     ln -s /config /home/seedboxsync/.config/seedboxsync && \
     ln -s /downloads /home/seedboxsync/Downloads && \
