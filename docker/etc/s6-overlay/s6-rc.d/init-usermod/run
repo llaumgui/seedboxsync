@@ -1,0 +1,15 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+DEFAULT_UID=1000
+DEFAULT_GID="${DEFAULT_UID}"
+
+# Change UID and GID of seedboxsync to match the host
+if [ "${PUID}" -ne "${DEFAULT_UID}" ]; then
+    usermod -o -u ${PUID} seedboxsync
+    chown seedboxsync /home/seedboxsync/ /home/seedboxsync/.config
+fi
+if [ "${PGID}" -ne "${DEFAULT_GID}" ]; then
+    groupmod -o -g ${PGID} seedboxsync
+    chgrp seedboxsync /home/seedboxsync/ /home/seedboxsync/.config
+fi

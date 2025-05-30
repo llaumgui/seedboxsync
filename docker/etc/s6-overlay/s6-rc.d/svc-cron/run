@@ -1,0 +1,4 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+exec busybox crond -f -l 0 -L /dev/stdout

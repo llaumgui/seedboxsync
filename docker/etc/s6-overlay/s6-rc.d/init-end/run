@@ -1,0 +1,15 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+echo '
+───────────────────────────────────────
+To get support, please go to:
+https://github.com/llaumgui/docker-images-php-fpm
+
+───────────────────────────────────────
+GID/UID
+───────────────────────────────────────'
+echo "
+User UID:    $(id -u seedboxsync)
+User GID:    $(id -g seedboxsync)
+───────────────────────────────────────"

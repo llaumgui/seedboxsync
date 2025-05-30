@@ -4,7 +4,7 @@ dev:
 	docker-compose up -d
 	docker-compose exec seedboxsync pip install -r requirements-dev.txt
 	docker-compose exec seedboxsync python setup.py develop
-	docker-compose exec seedboxsync /bin/bash
+	docker-compose exec seedboxsync /bin/sh
 
 test: comply
 	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
