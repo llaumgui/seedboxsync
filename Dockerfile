@@ -29,10 +29,10 @@ ENV \
     PGID=1000 \
     # Setup s6 overlay
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
-    S6_VERBOSITY=2
+    S6_VERBOSITY=1
 ARG \
     # Set version for s6 overlay \
-    ARG S6_OVERLAY_VERSION="3.2.0.2" \
+    ARG S6_OVERLAY_VERSION="3.2.1.0" \
     ARG S6_OVERLAY_ARCH="x86_64"
 
 
