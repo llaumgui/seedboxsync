@@ -2,15 +2,15 @@
 layout: full
 homepage: true
 disable_anchors: true
-description: Script for sync operations between your NAS and your seedbox.
+description: Script for synchronizing operations between your NAS and your seedbox.
 ---
 
-# SeedboxSync's documentation
+# SeedboxSync Documentation
 
-![SeedboxSync's logo](images/seedboxsync.png)
+![SeedboxSync logo](images/seedboxsync.png)
 
-Provides synchronization functions between your NAS and your seedbox:
+**SeedboxSync** provides powerful synchronization features between your NAS and your seedbox:
 
-* Syncs a local blackhole (ie: a NAS folder) with the blackhole of your seedbox.
-* Downloads files from your seedbox to your NAS. Stores the list of downloaded files in a sqlite database, to prevent to download a second time.
-* Also provides queries to know last torrents, last downloads, etc.
+* Synchronizes a local blackhole (e.g., a NAS folder) with the blackhole directory on your seedbox.
+* Downloads files from your seedbox to your NAS, maintaining a record of downloaded files in a SQLite database to prevent duplicate downloads.
+* Offers queries to retrieve information such as recent torrents, latest downloads, and more.

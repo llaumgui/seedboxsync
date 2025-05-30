@@ -5,12 +5,6 @@ description: SeedboxSync usage
 order: 3
 ---
 
-## Launch SeedboxSync
-
-```bash
-seedboxsync
-```
-
 ## Use in command line
 
 ```bash
@@ -33,7 +27,39 @@ sub-commands:
 Usage: seedboxsync sync blackhole --dry-run
 ```
 
+* Sync blackhole:
+
+```bash
+seedboxsync sync blackhole
+```
+
+* Sync seedbox:
+
+```bash
+seedboxsync sync seedbox
+```
+
+* List 20 last torrents downloaded from seedbox:
+
+```bash
+seedboxsync search downloaded -n 20
+```
+
+* List 20 last torrents uploaded to seedbox:
+
+```bash
+seedboxsync search uploaded -n 20
+```
+
+* List download in progress:
+
+```bash
+seedboxsync search progress
+```
+
 ## Use in crontab
+
+> ⚠ **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.
 
 ```bash
 # Sync blackhole every 2mn

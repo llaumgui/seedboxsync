@@ -7,151 +7,143 @@ order: 2
 
 ## Configuration file
 
-You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/main/config/seedboxsync.yml.example). This example file can be located in:
+### Docker way
 
-* /usr/local/config/ (pip install)
-* ~/.local/config/ (pip install in user privileges)
+> ⚠ **Warning:** This is the recommended way.
+
+The configuration file should be placed in `/conf`.
+
+### Other ways
+
+> ⚠ **Warning:** Docker is the recommended method.
+
+You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/main/config/seedboxsync.yml.example).
+This example file can be located in:
+
+* `/usr/local/config/` (pip install)
+* `~/.local/config/` (pip install with user privileges)
+
+To create your configuration directory and copy the example file:
 
 ```bash
-mkdir ~/.config/seedboxsync
+mkdir -p ~/.config/seedboxsync
 cp ~/.local/config/seedboxsync.yml.example ~/.config/seedboxsync/seedboxsync.yml
 ```
 
-or
+Or for a global configuration:
 
 ```bash
-sudo mkdir /etc/seedboxsync
+sudo mkdir -p /etc/seedboxsync
 sudo cp /usr/local/config/seedboxsync.yml.example /etc/seedboxsync/seedboxsync.yml
 ```
 
-You can put your configuration in:
+Supported configuration file locations:
 
-* /etc/seedboxsync/seedboxsync.yml
-* ~/.config/seedboxsync/seedboxsync.yml
-* ~/.seedboxsync/config/seedboxsync.yml
-* ~/.seedboxsync.yml
+* `/etc/seedboxsync/seedboxsync.yml`
+* `~/.config/seedboxsync/seedboxsync.yml`
+* `~/.seedboxsync/config/seedboxsync.yml`
+* `~/.seedboxsync.yml`
 
 ## Settings
 
-### Configuration about your seedbox and your BitTorrent client
+### Seedbox and BitTorrent client configuration
 
-* First, set information about the connection to your Seedbox. Currently, only sftp is supported.
+First, set the connection information for your seedbox.
+Currently, only SFTP is supported.
 
 ```yml
 #
-# Informations about your seedbox
+# Information about your seedbox
 #
 seedbox:
 
-  ### Informations about your seedbox connection
+  ### Connection information
   host: my-seedbox.ltd
   port: 22
   login: me
   password: p4sw0rd
   timeout: false
 
-  ### For the moment, only sftp
+  ### Only 'sftp' is supported for now
   protocol: sftp
+
+  ### Chmod torrent after upload (set to false to disable)
+  ### Use octal notation, e.g. 0o644
+  chmod: false
+
+  ### Use a temporary directory for incomplete transfers (must be created manually)
+  tmp_path: /tmp
+
+  ### Your BitTorrent client's "watch" folder (must be created manually)
+  watch_path: /watch
+
+  ### The folder where your BitTorrent client puts finished files
+  finished_path: /files
+
+  ### Remove a prefix from the synced path (usually the same as "finished_path")
+  prefixed_path: /files
+
+  ### Exclude files with this suffix (e.g. incomplete downloads)
+  part_suffix: .part
+
+  ### Exclude files from sync using a regular expression (Python re syntax)
+  ### Example: .*missing$|^\..*\.sw
+  exclude_syncing: .*missing$|^\..*\.sw
 ```
 
-* To prevent some issues between your transfer account and your BitTorrent client account, SeedboxSync chmod torrent file after upload.
+**Notes:**
 
-```yml
-    ### Chmod torrent after upload (false :  disable)
-    ### Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
-    chmod: false
-```
-
-* To prevent that your BitTorrent client watch (and use) an incomplete torrent file, SeedboxSync transfer torrent file in a tmp directory (```tmp_path```) and move it in the watch folder after full transfer and chmod. The tmp folder must also be used in your BitTorrent client to download unfinished torrent.
+* To avoid permission issues between your transfer account and your BitTorrent client account, SeedboxSync can chmod the torrent file after upload.
+* To prevent your BitTorrent client from watching (and using) an incomplete torrent file, SeedboxSync first transfers the torrent file to a temporary directory (`tmp_path`). Once the transfer and chmod are complete, the file is moved to the watch folder.
+  The temporary folder must also be configured in your BitTorrent client for unfinished torrents.
 
 ![ruTorrent settings / Downloads](images/rutorrent_1.png)
 
-```yml
-    # Use a tempory directory (you must create it !)
-    tmp_path: /tmp
-```
-
-* The blackhole folder of your BitTorrent client. Only used by blackhole synchronization.
-
-```yml
-    # Your "watch" folder you must create it!)
-    watch_path: /watch
-```
-
-* The folder of your Bittorrent client with finished file. You can configure your client to move the finished file in a specific folder.
+* The `watch_path` is your BitTorrent client's "blackhole" or "watch" folder, used for blackhole synchronization.
+* The `finished_path` is the folder where your BitTorrent client moves completed downloads. You can configure your client to use a specific folder for finished files.
 
 ![ruTorrent settings / Autotools](images/rutorrent_2.png)
 
-```yml
-    # Your finished folder you must create it!)
-    finished_path: /files
-```
+### NAS / Local configuration
 
-* You can remove a prefix part of the path in your synced directory.
-
-```yml
-    # Allow to remove a part of the synced path. In General, same path than "finished_path".
-    prefixed_path: /files
-```
-
-* You can also specify the extension used by your torrent client for downloads in progress to exclude it from synchronisation.
-
-```yml
-    # Exclude part files
-    part_suffix: .part
-```
-
-* You can also exclude files from sync with regular expression.
-
-```yml
-    # Exclude pattern from sync
-    # Use re syntaxe: https://docs.python.org/3/library/re.html
-    # Example: .*missing$|^\..*\.sw
-    exclude_syncing: .*missing$|^\..*\.sw
-```
-
-### Configuration about your NAS
-
-Your NAS configuration is in local and pid sections:
+Your NAS configuration is defined in the `local` and `pid` sections:
 
 ```yml
 #
-# Informations about local environment (NAS ?)
+# Information about the local environment (NAS, etc.)
 #
 local:
 
   ### Your local "watch" folder
   watch_path: ~/watch
 
-  ### Path where download files
+  ### Path where files are downloaded
   download_path: ~/Downloads/
 
-  ### Use local sqlite database for store downloaded files
+  ### Path to the local SQLite database for tracking downloaded files
   db_file: ~/.config/seedboxsync/seedboxsync.db
 
 
 #
-# PID and lock management to prevent several launch
+# PID and lock management to prevent multiple instances
 #
 pid:
 
-    ### PID for blackhole sync
-    blackhole_path: ~/.config/seedboxsync/lock/blackhole.pid
+  ### PID file for blackhole sync
+  blackhole_path: ~/.config/seedboxsync/lock/blackhole.pid
 
-    ### PID for seedbox downloaded sync
-    download_path: ~/.config/seedboxsync/lock/download.pid
-
+  ### PID file for seedbox download sync
+  download_path: ~/.config/seedboxsync/lock/download.pid
 ```
 
-### Configuration of a ping service
+### Ping service configuration
 
-Ping service is called by `--ping` argument.
-
-Currently, only [Healthchecks](https://github.com/healthchecks/healthchecks) ping service is supported.
+The ping service is triggered by the `--ping` argument.
+Currently, only [Healthchecks](https://github.com/healthchecks/healthchecks) is supported.
 
 #### Healthchecks
 
-Add a healthchecks by sync command.
+Add a Healthchecks configuration for each sync command:
 
 ```yml
 #
@@ -159,17 +151,17 @@ Add a healthchecks by sync command.
 #
 healthchecks:
 
-  ### sync seedbox part
+  ### Sync seedbox part
   sync_seedbox:
-    ## Enable or disable service
+    ### Enable or disable the service
     enabled: true
 
-    ## Ping URL
+    # Ping URL
     ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
 
-  ### sync blackhole part
+  ### Sync blackhole part
   sync_blackhole:
-    ## Enable or disable service
+    ## Enable or disable the service
     enabled: true
 
     ## Ping URL

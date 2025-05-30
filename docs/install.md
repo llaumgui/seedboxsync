@@ -5,20 +5,24 @@ description: How to install SeedboxSync
 order: 1
 ---
 
+## With docker
+
+> ⚠ **Warning:** This is the recommended method.
+
+See [documentation](https://llaumgui.github.io/seedboxsync/docker.html).
+
 ## With pip
 
-In root:
+> ⚠ **Warning:** Docker is the recommended method.
 
-```bash
-pip install seedboxsync
-```
-
-Or with simple user privileges:
+With simple user privileges:
 
 ```bash
 pip install --user seedboxsync
 ```
 
-## With docker
+Or in root:
 
-See [documentation](https://llaumgui.github.io/seedboxsync/docker.html).
+```bash
+pip install seedboxsync
+```
