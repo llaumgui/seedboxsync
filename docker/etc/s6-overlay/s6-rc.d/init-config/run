@@ -1,0 +1,27 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+CONFIG_PATH="/config/seedboxsync.yml"
+EXAMPLE_PATH="/usr/local/config/seedboxsync.yml.example"
+OWNER="seedboxsync"
+GROUP="seedboxsync"
+
+echo '
+───────────────────────────────────────
+Auto config
+───────────────────────────────────────'
+
+# Check if the config file already exists
+if [ -f "$CONFIG_PATH" ]; then
+    echo "The file $CONFIG_PATH already exists."
+else
+    echo "The file $CONFIG_PATH is missing, copying the example..."
+    cp "$EXAMPLE_PATH" "$CONFIG_PATH"
+
+    # Set ownership to user and group 'seedboxsync'
+    chown "$OWNER:$GROUP" "$CONFIG_PATH"
+
+    echo "File copied and ownership set to $OWNER:$GROUP."
+fi
+
+echo '───────────────────────────────────────'
