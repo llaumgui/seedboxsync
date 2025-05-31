@@ -2,13 +2,20 @@
 
 ## Next release
 
+* Todo
+
+## 3.1.0 - May 30, 2025
+
+> ⚠ **Warning:** Docker is now the recommended method.
+
+* 👷 Add docker support and provide docker images.
 * ⬆️ Update Cement framework.
 * 📦 Fix packaging issues.
 * 📝 Add Changelog and Contributors files.
 * 💚 Fix SonarCloud.
 * 👷 Drop Python 3.7 support.
-* ⬆️ Now support Python version from 3.8 to 3.11.
-* 👷 Add docker support and provide docker images.
+* 👷 Drop Python 3.8 support.
+* ⬆️ Now support Python version from 3.9 to 3.13.
 
 ## 3.0.1 - Feb 14, 2022
 

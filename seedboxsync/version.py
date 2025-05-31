@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2024 Guillaume Kulakowski <guillaume@kulakowski.fr>
+# Copyright (C) 2015-2025 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
 
-VERSION = (3, 1, 0, 'beta', 1)
+VERSION = (3, 1, 0, 'final', 0)  # Change on seedboxsync/version.py, seedboxsync/core/version.py, and doc
 
 
 def get_version(version: tuple = VERSION) -> str:
