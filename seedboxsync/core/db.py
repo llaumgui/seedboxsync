@@ -16,6 +16,19 @@ from .dao.download import Download
 from .dao.torrent import Torrent
 
 
+def sizeof(num, suffix='B'):
+    """
+    Convert in human readable units.
+
+    From: https://stackoverflow.com/a/1094933
+    """
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
+
+
 def extend_db(app: App):
     """
     Extends SeedboxSync with Peewee
@@ -40,17 +53,8 @@ def extend_db(app: App):
         global_database_object.initialize(db)
 
     @db.func('sizeof')
-    def sizeof(num, suffix='B'):
-        """
-        Convert in human readable units.
-
-        From: https://stackoverflow.com/a/1094933
-        """
-        for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
-            if abs(num) < 1024.0:
-                return "%3.1f%s%s" % (num, unit, suffix)
-            num /= 1024.0
-        return "%.1f%s%s" % (num, 'Yi', suffix)
+    def db_sizeof(num, suffix='B'):
+        return sizeof(num, suffix)
 
     app.extend('_db', db)
 

@@ -16,6 +16,7 @@ from .core.init_defaults import CONFIG
 from .controllers.base import Base
 from .controllers.clean import Clean
 from .controllers.search import Search
+from .controllers.stats import Stats
 from .controllers.sync import Sync
 
 
@@ -60,6 +61,7 @@ class SeedboxSync(App):
             Base,
             Clean,
             Search,
+            Stats,
             Sync
         ]
 
