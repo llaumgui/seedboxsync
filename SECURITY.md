@@ -6,6 +6,7 @@ We release patches for security vulnerabilities. Which versions are eligible rec
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 3.1.x   | :white_check_mark: |
 | 3.0.x   | :white_check_mark: |
 | 2.0.x   | :x:                |
 | 1.1.x   | :x:                |

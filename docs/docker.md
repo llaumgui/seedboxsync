@@ -55,6 +55,11 @@ docker run -d \
   ghcr.io/llaumgui/seedboxsync:latest
 ```
 
+| Docker tags  | Description                                     | Stable |
+| ------------ | ----------------------------------------------- | ------ |
+| `latest`     | Docker image based on latest release version    | ✅     |
+| `main`       | Docker image based on git main branch           | ❌     |
+
 ### Running with Docker Compose
 
 ```yaml

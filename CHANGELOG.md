@@ -2,7 +2,7 @@
 
 ## Next release
 
-* Todo
+* ✨ Allow to delete entry by id [#56](https://github.com/llaumgui/seedboxsync/issues/56)
 
 ## 3.1.0 - May 30, 2025
 
