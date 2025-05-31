@@ -22,37 +22,53 @@ class Stats(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    def __stats_by_period(self, period, header_label):
+        """
+        Generic stats by period (month or year).
+        :param period: 'month' or 'year'
+        :param header_label: Header label for rendering
+        """
+        strftime_format = "%Y-%m" if period == "month" else "%Y"
+
+        data = Download.select(
+            Download.id,
+            Download.finished,
+            fn.strftime(strftime_format, Download.finished).alias(period),
+            Download.seedbox_size,
+        ).where(Download.finished != 0).order_by(Download.finished.desc()).dicts()
+
+        tmp = {}
+        for download in data:
+            key = download[period]
+            size = download['seedbox_size']
+            if not key or not size:
+                continue
+            if key not in tmp:
+                tmp[key] = {"files": 0, "total_size": 0.0}
+            tmp[key]["files"] += 1
+            tmp[key]["total_size"] += size
+
+        stats = [
+            {
+                period: key,
+                "files": tmp[key]["files"],
+                "total_size": sizeof(tmp[key]["total_size"]),
+            }
+            for key in sorted(tmp)
+        ]
+
+        self.app.render(stats, headers={period: header_label, 'files': 'Nb files', 'total_size': 'Total size'})
+
     @ex(help='statistics by month')
     def by_month(self):
         """
         Show statistics by month.
         """
-        # DB query
-        data = Download.select(Download.id,
-                               Download.finished,
-                               fn.strftime("%Y-%m", Download.finished).alias('month'),
-                               Download.seedbox_size,
-                               ).where(Download.finished != 0).order_by(Download.finished.desc()).dicts()
-        tmp = {}
+        self.__stats_by_period('month', 'Month')
 
-        for download in data:
-            month = download['month']
-            size = download['seedbox_size']
-            if not month or not size:
-                continue
-            if month not in tmp:
-                tmp[month] = {"files": 0, "total_size": 0.0}
-
-            tmp[month]["files"] += 1
-            tmp[month]["total_size"] += size
-
-        stats = [
-            {
-                "month": month,
-                "files": tmp[month]["files"],
-                "total_size": sizeof(tmp[month]["total_size"]),
-            }
-            for month in sorted(tmp)
-        ]
-
-        self.app.render(stats, headers={'month': 'Month', 'files': 'Nb files'})
+    @ex(help='statistics by year')
+    def by_year(self):
+        """
+        Show statistics by year.
+        """
+        self.__stats_by_period('year', 'Year')

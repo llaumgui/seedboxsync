@@ -75,6 +75,12 @@ seedboxsync clean downloaded 123
 seedboxsync stats by-month
 ```
 
+* Get statistics by year:
+
+```bash
+seedboxsync stats by-year
+```
+
 ## Use in crontab
 
 > ⚠ **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.
