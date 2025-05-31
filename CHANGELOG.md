@@ -3,6 +3,8 @@
 ## Next release
 
 * ✨ Allow to delete entry by id [#56](https://github.com/llaumgui/seedboxsync/issues/56)
+* ✨ Add montly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
+* ✨ Add yearly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
 
 ## 3.1.0 - May 30, 2025
 

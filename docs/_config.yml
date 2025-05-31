@@ -16,7 +16,7 @@ remote_theme: allejo/jekyll-docs-theme
 
 # jekyll doc plugin settings
 project:
-  version: 3.1.0
+  version: 3.2.0
   download_url: https://github.com/llaumgui/seedboxsync/releases
   download_text: Download
 license:
