@@ -23,7 +23,22 @@ class Clean(Controller):
     @ex(help='clean the list of files currently in download from seedbox')
     def progress(self):
         """
-        List of files currently in download from seedbo
+        Clean the list of files currently in download from seedbox
         """
         count = Download.delete().where(Download.finished == 0).execute()
         self.app.print('In progress list cleaned. %s line(s) deleted' % count)
+
+    @ex(help='remove a downloaded file by ID to enable re-download',
+        arguments=[([],
+                    {'help': 'downloaded torrent id to remove',
+                     'action': 'store',
+                     'dest': 'id'})])
+    def downloaded(self):
+        """
+        Remove a downloaded file by ID to enable re-download
+        """
+        count = Download.delete().where(Download.id == self.app.pargs.id).execute()
+        if count == 0:
+            self.app.print('No downloaded file with id %s' % self.app.pargs.id)
+        else:
+            self.app.print('Torrent with id %s was removed' % self.app.pargs.id)

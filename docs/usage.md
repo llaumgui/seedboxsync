@@ -57,6 +57,18 @@ seedboxsync search uploaded -n 20
 seedboxsync search progress
 ```
 
+* Clean all download in progress:
+
+```bash
+seedboxsync clean progress
+```
+
+* Remove downloaded torrent with id 123 (to enable re-download):
+
+```bash
+seedboxsync clean downloaded 123
+```
+
 ## Use in crontab
 
 > ⚠ **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.

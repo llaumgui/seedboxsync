@@ -91,7 +91,7 @@ class Search(Controller):
                      'dest': 'term'})])
     def progress(self):
         """
-        Search files currently in download from seedbo
+        Search files currently in download from seedbox
         """
         # Build "where" expression
         if self.app.pargs.term:
