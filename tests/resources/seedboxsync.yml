@@ -45,7 +45,7 @@ seedbox:
 local:
 
   ### Your local "watch" folder
-  # watch_path: ~/watch
+  watch_path: tests/resources/watch
 
   ### Path where download files
   # download_path: ~/Downloads/

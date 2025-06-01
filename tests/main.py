@@ -7,7 +7,9 @@ from seedboxsync.main import SeedboxSync
 
 config_dirs = [os.getcwd() + '/tests/resources']
 db_path = config_dirs[0] + '/seedboxsync.db'
+watch_path = config_dirs[0] + '/watch'
 db_backup = db_path + '.bak'
+watch_backup = watch_path + '.bak'
 
 
 class SeedboxSyncTest(TestApp, SeedboxSync):
@@ -20,14 +22,6 @@ class SeedboxSyncTest(TestApp, SeedboxSync):
         """Return the test config directories."""
         return config_dirs
 
-    def get_db_path():
-        """Return the test database path."""
-        return db_path
-
-    def get_db_backup():
-        """Return the test database backup path."""
-        return db_backup
-
     def backup_db():
         """Backup the database."""
         shutil.copyfile(db_path, db_backup)
@@ -35,6 +29,21 @@ class SeedboxSyncTest(TestApp, SeedboxSync):
     def restore_db():
         """Restore the database from the backup."""
         shutil.move(db_backup, db_path)
+
+    def backup_and_clean_watch():
+        """Backup the watch folder and clean it."""
+        SeedboxSyncTest.backup_watch()
+        os.remove(watch_path + '/Fedora-Server-dvd-x86_64-32.torrent')
+
+    def backup_watch():
+        """Backup the watch folder."""
+        shutil.rmtree(watch_backup, ignore_errors=True)
+        shutil.copytree(watch_path, watch_backup)
+
+    def restore_watch():
+        """Restore the watch folder from the backup."""
+        shutil.rmtree(watch_path)
+        shutil.move(watch_backup, watch_path)
 
     def hash_output(output):
         """Return the MD5 hash of the output."""
