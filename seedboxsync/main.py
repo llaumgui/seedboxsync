@@ -7,7 +7,7 @@
 #
 
 import signal
-from cement import App, TestApp
+from cement import App
 from cement.core.exc import CaughtSignal
 from .core.db import extend_db, close_db
 from .core.exc import SeedboxSyncError
@@ -85,13 +85,6 @@ class SeedboxSync(App):
             signal.SIGINT,
             signal.SIGHUP,
         ]
-
-
-class SeedboxSyncTest(TestApp, SeedboxSync):
-    """A sub-class of SeedboxSync that is better suited for testing."""
-
-    class Meta:
-        label = 'seedboxsync'
 
 
 def main():
