@@ -13,6 +13,8 @@
 [![Reliability Rating][ico-sonarcloud-reliability]][link-sonarcloud-reliability]
 [![Security Rating][ico-sonarcloud-security]][link-sonarcloud-security]
 
+![SeedboxSync logo](logo/400.png)
+
 Provides synchronization functions between your NAS and your seedbox:
 
 * Syncs a local black hole (ie: a NAS folder) with the black hole of your seedbox.
