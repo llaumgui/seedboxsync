@@ -72,3 +72,27 @@ class Stats(Controller):
         Show statistics by year.
         """
         self.__stats_by_period('year', 'Year')
+
+    @ex(help='total statistics')
+    def total(self):
+        """
+        Show total statistics.
+        """
+        query = Download.select().where(Download.finished != 0)
+        total_files = query.count()
+        total_size = sum([d.seedbox_size for d in query if d.seedbox_size])
+
+        stats = [{
+            'files': total_files,
+            'total_size': sizeof(total_size),
+        }]
+
+        self.app.render(stats, headers={'files': 'Nb files', 'total_size': 'Total size'})
+
+    @ex(help='Show total statistics if no subcommand is specified')
+    def _default(self):
+        """
+        Show total statistics by default.
+        """
+        self._parser.print_help()
+        self.total()

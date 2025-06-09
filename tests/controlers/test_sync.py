@@ -20,7 +20,7 @@ def test_seedboxsync_sync():
 
 def test_seedboxsync_sync_blackhole(capsys, mock_sftp):
     """
-    Test sync command.
+    Test sync blackhole command.
     """
 
     # seedboxsync sync blackhole -h (SystemExit 0)
@@ -59,9 +59,9 @@ def test_seedboxsync_sync_blackhole(capsys, mock_sftp):
         SeedboxSyncTest.restore_watch()
 
 
-def test_seedboxsync_sync_seedbox(capsys, mock_sftp, mock_empty_download):
+def test_seedboxsync_sync_seedbox_with_empty_download(capsys, mock_sftp, mock_empty_download):
     """
-    Test sync command.
+    Test sync seedbox command.
     """
 
     # seedboxsync sync seedbox -h (SystemExit 0)

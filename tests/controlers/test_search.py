@@ -3,6 +3,9 @@ from tests.main import SeedboxSyncTest
 
 
 def test_seedboxsync_search():
+    """
+    Test search command.
+    """
 
     # seedboxsync search -h
     argv = ['search', '-h']

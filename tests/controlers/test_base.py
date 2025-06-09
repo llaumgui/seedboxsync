@@ -7,7 +7,7 @@ from seedboxsync.version import get_version
 
 def test_seedboxsync_base():
     """
-    Test clean command.
+    Test base commands.
     """
 
     help_output = "c266d92ea36b7d31088d969274639d52"

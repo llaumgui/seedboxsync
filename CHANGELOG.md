@@ -1,10 +1,13 @@
 # ChangeLog
 
-## Next release
+## Next release (3.2.0 ?) - ??? ??, 2025
 
-* ✨ Allow to delete entry by id [#56](https://github.com/llaumgui/seedboxsync/issues/56)
-* ✨ Add montly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
+* ✨ Allow to delete entry by ID [#56](https://github.com/llaumgui/seedboxsync/issues/56)
+* ✨ Add monthly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
 * ✨ Add yearly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
+* ✨ Add total stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)
+* ✅ Test coverage is up to 70%
+* 💫 New logo (thx ChatGPT)
 
 ## 3.1.0 - May 30, 2025
 

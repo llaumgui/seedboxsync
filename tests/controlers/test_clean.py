@@ -17,7 +17,7 @@ def test_seedboxsync_clean():
 
 def test_seedboxsync_clean_progress():
     """
-    Test clean command.
+    Test clean progress command.
     """
 
     # Begin: backup DB
@@ -45,7 +45,7 @@ def test_seedboxsync_clean_progress():
 
 def test_seedboxsync_clean_downloaded():
     """
-    Test clean command.
+    Test clean downloaded command.
     """
 
     # Begin: ackup DB
