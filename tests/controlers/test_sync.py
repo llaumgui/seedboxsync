@@ -1,5 +1,8 @@
 import pytest
 from tests.main import SeedboxSyncTest
+from os.path import isfile
+from seedboxsync.core.dao.torrent import Torrent
+from peewee import fn
 
 
 def test_seedboxsync_sync():
@@ -15,7 +18,7 @@ def test_seedboxsync_sync():
     assert excinfo.value.code == 0
 
 
-def test_seedboxsync_sync_blackhole(capsys):
+def test_seedboxsync_sync_blackhole(capsys, mock_sftp):
     """
     Test sync command.
     """
@@ -38,10 +41,25 @@ def test_seedboxsync_sync_blackhole(capsys):
             assert 'No torrent in ' in output
     finally:
         SeedboxSyncTest.restore_watch()
-        print()
+
+    # seedboxsync sync blackhole
+    SeedboxSyncTest.backup_watch()
+    try:
+        argv = ['sync', 'blackhole']
+        with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+            app.run()
+            output = capsys.readouterr().err
+            assert app.exit_code == 0  # No error code
+            assert SeedboxSyncTest.hash_output(output) == 'f93396c51a8ae2b40b2390aee0c1cb42'  # Message is good
+            assert not isfile(SeedboxSyncTest.get_watch_torrent_path())  # Torrent file is removed
+            uploaded = Torrent.select(fn.COUNT(Torrent.id).alias('count')).where(Torrent.name.contains('Fedora-Server-dvd-x86_64-32'))
+            count = uploaded.scalar()
+            assert count == 1  # One torrent uploaded
+    finally:
+        SeedboxSyncTest.restore_watch()
 
 
-def test_seedboxsync_sync_seedbox():
+def test_seedboxsync_sync_seedbox(capsys, mock_sftp, mock_empty_download):
     """
     Test sync command.
     """
@@ -52,3 +70,12 @@ def test_seedboxsync_sync_seedbox():
         with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
             app.run()
     assert excinfo.value.code == 0
+
+    # seedboxsync sync seedbox
+    argv = ['sync', 'seedbox']
+    with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+        app.run()
+        output = capsys.readouterr().err
+        print(output)
+        assert app.exit_code == 0  # No error code
+        assert output == ''

@@ -60,10 +60,10 @@ local:
 pid:
 
   ### PID for blackhole sync
-  # blackhole_path: ~/.config/seedboxsync/lock/blackhole.pid
+  blackhole_path: tests/resources/lock/blackhole.pid
 
   ### PID for seedbox downloaded sync
-  # download_path: ~/.config/seedboxsync/lock/download.pid
+  download_path: tests/resources/lock/download.pid
 
 
 #
