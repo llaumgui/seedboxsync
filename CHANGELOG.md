@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Next release (3.2.0 ?) - ??? ??, 2025
+## 3.2.0 - Jul 05, 2025
 
 * ✨ Allow to delete entry by ID [#56](https://github.com/llaumgui/seedboxsync/issues/56)
 * ✨ Add monthly stats [#28](https://github.com/llaumgui/seedboxsync/issues/28)

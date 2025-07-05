@@ -8,7 +8,7 @@
 
 from cement.utils.version import get_version as cement_get_version
 
-VERSION = (3, 2, 0, 'beta', 1)  # Change on seedboxsync/version.py, seedboxsync/core/version.py, and doc
+VERSION = (3, 2, 0, 'final', 0)  # Change on seedboxsync/version.py, seedboxsync/core/version.py, and doc
 
 
 def get_version(version=VERSION):
