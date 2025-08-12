@@ -20,7 +20,7 @@ jobs:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Install Dependencies
       run: pip install -r requirements-dev.txt
@@ -42,7 +42,7 @@ jobs:
     name: MarkdownLint
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: markdownlint-cli
       uses: nosborn/github-action-markdown-cli@v3.5.0
       with:
@@ -59,7 +59,7 @@ jobs:
     name: Linters for Dockerfile
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: hadolint
       uses: hadolint/hadolint-action@v3.1.0
       with:
@@ -80,7 +80,7 @@ jobs:
     name: SonarCloud analyse
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0 # Disabling shallow clones is recommended for improving the relevancy of reporting
     # https://docs.sonarsource.com/sonarqube/latest/project-administration/analysis-scope/#sonarqube-respects-ignored-files
@@ -115,7 +115,7 @@ jobs:
     name: Build package
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Set up Python ${{ env.pythonLastVersion }}
       uses: actions/setup-python@v5
       with:
@@ -143,7 +143,7 @@ jobs:
     name: Build and test docker images
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     # Extract metadata (tags, labels) for Docker
     # https://github.com/docker/metadata-action
     - name: Extract Docker metadata
@@ -189,7 +189,7 @@ jobs:
     name: Build and deploy docker images
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     # Login against 2 Docker registries except on PR
     # https://github.com/docker/login-action
     - name: Log in to Docker Hub
@@ -255,7 +255,7 @@ jobs:
     name: Release on GitHub and PyPi
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Set env
       run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
     - name: Set up Python ${{ env.pythonLastVersion }}
