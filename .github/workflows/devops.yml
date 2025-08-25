@@ -86,7 +86,7 @@ jobs:
     # https://docs.sonarsource.com/sonarqube/latest/project-administration/analysis-scope/#sonarqube-respects-ignored-files
     - name: Remove .gitignore because SonarQube respects ignored files
       run: rm .gitignore
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v5
       with:
         name: coverage-${{ env.pythonLastVersion }}
     - name: Display structure of downloaded files
