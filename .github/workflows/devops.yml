@@ -117,7 +117,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v5
     - name: Set up Python ${{ env.pythonLastVersion }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
@@ -259,7 +259,7 @@ jobs:
     - name: Set env
       run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
     - name: Set up Python ${{ env.pythonLastVersion }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
