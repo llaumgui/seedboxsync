@@ -1,8 +1,6 @@
 ---
-layout: page
 title: Usage
-description: SeedboxSync usage
-order: 3
+summary: SeedboxSync usage
 ---
 
 ## Use in command line
@@ -83,7 +81,7 @@ seedboxsync stats by-year
 
 ## Use in crontab
 
-> ⚠ **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.
+> :warning: **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.
 
 ```bash
 # Sync blackhole every 2mn

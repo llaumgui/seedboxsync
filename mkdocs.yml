@@ -1,0 +1,88 @@
+site_name: SeedboxSync Documentation
+site_url: https://llaumgui.github.io/seedboxsync/
+site_description: Project documentation of SeedboxSync / SeedboxSyncFront.
+site_author: Guillaume Kulakowski
+
+repo_url: https://github.com/llaumgui/seedboxsync/
+edit_uri: blob/master/docs/
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  language: en
+  logo: images/white.png
+  favicon: images/favicon.png
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.top
+    - navigation.path
+    - search.suggest
+    - search.highlight
+
+extra:
+  analytics:
+    provider: google
+    property: UA-63534466-3
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/llaumgui
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/guillaumekulakowski/
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/llaumgui.kulakowski.fr
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/user/llaumgui
+    - icon: fontawesome/solid/globe
+      link: https://blog.kulakowski.fr
+  generator: false
+
+nav:
+  - Home: index.md
+  - Getting started:
+    - getting-started/install.md
+    - getting-started/docker.md
+    - getting-started/configuration.md
+    - getting-started/usage.md
+  - frontend.md
+  - Advanced:
+    - advanced/development-back.md
+    - advanced/development-front.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+copyright: Copyright &copy; 2015-2025 <a href="https://blog.kulakowski.fr">Guillaume Kulakowski</a>.
