@@ -8,14 +8,14 @@
 
 from cement import Controller
 from cement.utils.version import get_version_banner
-from ..core.version import get_version
+import seedboxsync
 
 VERSION_BANNER = """
 Script for sync operations between your NAS and your seedbox
 
 SeedboxSync %s
 %s
-""" % (get_version(), get_version_banner())
+""" % (seedboxsync.__version__, get_version_banner())
 
 
 class Base(Controller):

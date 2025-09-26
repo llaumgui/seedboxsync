@@ -1,4 +1,4 @@
-.PHONY: dev test test-core comply-fix docs clean dist dist-upload docker docker-push
+.PHONY: dev test test-ci test-pytest test-pytest-xml test-core virtualenv virtualenv-windows comply comply-fix comply-typing markdownlint docs docs-serve clean dist
 
 dev:
 	docker-compose up -d
@@ -6,24 +6,29 @@ dev:
 	docker-compose exec seedboxsync python setup.py develop
 	docker-compose exec seedboxsync /bin/sh
 
-test: comply
+test: comply markdownlint test-pytest
+
+test-ci: comply test-pytest-xml
+
+test-pytest:
 	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
+
+test-pytest-xml:
+	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
 
 test-core: comply
 	python -m pytest -v --cov=seedboxsync.core --cov-report=term --cov-report=html:coverage-report --capture=sys tests/core
 
 virtualenv:
 	virtualenv --prompt '|> seedboxsync <| ' env
-	env/bin/pip install -r requirements-dev.txt
-	env/bin/python setup.py develop
+	env/bin/pip install -e ".[dev]"
 	@echo
 	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
 	@echo
 
 virtualenv-windows:
 	virtualenv --prompt '|> seedboxsync <| ' env-windows
-	env-windows\\Scripts\\pip.exe install -r requirements-dev-windows.txt
-	env-windows\\Scripts\\python.exe setup.py develop
+	env-windows\\Scripts\\pip.exe install -e ".[dev]"
 	@echo
 	@echo "VirtualENV Setup Complete. Now run: .\env-windows\Scripts\activate.ps1"
 	@echo
@@ -38,10 +43,13 @@ comply-typing:
 	mypy ./seedboxsync
 
 docs:
-	python setup.py build_sphinx
-	@echo
-	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
-	@echo
+	mkdocs build
+
+docs-serve:
+	mkdocs serve
+
+markdownlint:
+	markdownlint -c .markdownlint.yaml *.md docs/
 
 clean:
 	find . -name '*.py[co]' -delete
@@ -49,17 +57,4 @@ clean:
 
 dist: clean
 	rm -rf dist/*
-	python setup.py sdist
-	python setup.py bdist_wheel
-
-dist-upload:
-	twine upload dist/*
-
-docker:
-	docker build -t llaumgui/seedboxsync:latest .
-
-docker-push:
-	docker push llaumgui/seedboxsync:latest
-
-remove-merged-branches:
-	git branch --merged | grep -v -e 'main\|stable/*\|dev/*' | xargs git branch -d
+	flit build

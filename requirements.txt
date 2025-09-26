@@ -1,7 +1,0 @@
-cement==3.0.14
-pyyaml
-colorlog
-paramiko>=2.12
-bcoding
-tabulate
-peewee

@@ -2,7 +2,7 @@ import io
 import sys
 import pytest
 from tests.main import SeedboxSyncTest
-from seedboxsync.version import get_version
+import seedboxsync
 
 
 def test_seedboxsync_base():
@@ -49,7 +49,7 @@ def test_seedboxsync_base():
     finally:
         sys.stdout = sys.__stdout__
     output = captured_output.getvalue()
-    assert ('SeedboxSync ' + get_version()) in output
+    assert ('SeedboxSync ' + seedboxsync.__version__) in output
 
     # seedboxsync --version (SystemExit 0)
     argv = ['--version']
@@ -63,4 +63,4 @@ def test_seedboxsync_base():
     finally:
         sys.stdout = sys.__stdout__
     output = captured_output.getvalue()
-    assert ('SeedboxSync ' + get_version()) in output
+    assert ('SeedboxSync ' + seedboxsync.__version__) in output

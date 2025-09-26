@@ -17,22 +17,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
     steps:
     - name: Git checkout
       uses: actions/checkout@v5
-
     - name: Install Dependencies
-      run: pip install -r requirements-dev.txt
+      run: pip install -e ".[dev]"
     - name: Make all tests with make
-      run: |
-        make comply
-        python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
+      run: make test-ci
     - uses: actions/upload-artifact@v4
       with:
         name: coverage-${{ matrix.python-version }}
         path: coverage.xml
-
 
   ##############################################################################
   # Markdownlint
@@ -46,9 +42,8 @@ jobs:
     - name: markdownlint-cli
       uses: nosborn/github-action-markdown-cli@v3.5.0
       with:
-        files: "*.md docs/*.md"
+        files: "*.md docs/"
         config_file: ".markdownlint.yaml"
-
 
   ##############################################################################
   # Dockerfile tests
@@ -64,7 +59,6 @@ jobs:
       uses: hadolint/hadolint-action@v3.3.0
       with:
         recursive: true
-
 
   ##############################################################################
   # SonarCloud job
@@ -89,20 +83,11 @@ jobs:
     - uses: actions/download-artifact@v5
       with:
         name: coverage-${{ env.pythonLastVersion }}
-    - name: Display structure of downloaded files
-      run: |
-        pwd
-        ls -R
-        cat coverage.xml
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v6.0.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #with:
-      #  args: >
-      #    -Dsonar.verbose=true
-
 
   ##############################################################################
   # Package job
@@ -122,7 +107,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
     - name: Install Dependencies
-      run: pip install -r requirements-dev.txt
+      run: pip install -e ".[dev]"
     - name: Package
       run: make dist
     - name: Archive package
@@ -130,7 +115,6 @@ jobs:
       with:
         name: seedboxsync-${{ github.sha }}.tar.gz
         path: dist/*.tar.gz
-
 
   ##############################################################################
   # Build and tests Docker image
@@ -175,7 +159,6 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
-
 
   ##############################################################################
   # Build and deploy job (only on main)
@@ -242,7 +225,6 @@ jobs:
         cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:latest
         cache-to: type=inline
 
-
   ##############################################################################
   # Release job
   #
@@ -264,7 +246,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
     - name: Install Dependencies
-      run: pip install -r requirements-dev.txt
+      run: pip install -e ".[dev]"
     - name: Package
       run: make dist
     - name: Create GitHub release

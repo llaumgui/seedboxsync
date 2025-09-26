@@ -1,0 +1,81 @@
+[project]
+name = "seedboxsync"
+description = "Script for sync operations between your NAS and your seedbox"
+dynamic = ["version"]
+authors = [
+  { name = "Guillaume Kulakowski", email = "guillaume@kulakowski.fr" }
+]
+keywords = [
+  "seedbox",
+  "nas",
+  "sync",
+  "sftp",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: System Administrators",
+  "Topic :: Internet",
+  "Programming Language :: Python :: 3",
+  "Environment :: Console",
+  "Natural Language :: English",
+  "Operating System :: POSIX"
+]
+readme = "README.md"
+license-files = ["LICENSE"]
+license = "GPL-2.0-only"
+requires-python = ">=3.9"
+dependencies = [
+  "cement==3.0.14",
+  "pyyaml",
+  "colorlog",
+  "paramiko>=2.12",
+  "bcoding",
+  "tabulate",
+  "peewee"
+]
+
+[project.urls]
+Home = "https://llaumgui.github.io/seedboxsync/"
+Documentation = "https://llaumgui.github.io/seedboxsync/"
+Source = "https://github.com/llaumgui/seedboxsync/"
+
+[project.optional-dependencies]
+dev = [
+  "flake8",
+  "pytest-cov",
+  "coverage",
+  "twine",
+  "cement[cli]",
+  "flit",
+  "mkdocs-material",
+]
+
+[project.scripts]
+seedboxsync = "seedboxsync.main:main"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.sdist]
+include = [
+  "config/seedboxsync.yml.example",
+  "README.md",
+  "LICENSE"
+]
+exclude = [
+  ".github/**",
+  "docker/**",
+  "doc/**",
+  "logo/**",
+  "tests/**",
+  ".dockerignore",
+  ".editorconfig",
+  ".flake8",
+  ".gitignore",
+  ".hadolint.yaml",
+  ".markdownlint.yaml",
+  "Dockerfile",
+  "Makefile",
+  "sonar-project.properties",
+]
