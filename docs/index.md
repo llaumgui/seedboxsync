@@ -1,16 +1,19 @@
 ---
-layout: full
-homepage: true
-disable_anchors: true
+title: SeedboxSync documentation
 description: Script for synchronizing operations between your NAS and your seedbox.
+hide:
+  - navigation
+  - toc
 ---
 
-# SeedboxSync Documentation
+<p align="center">
+  <img alt="SeedboxSync logo" src="images/seedboxsync.png" />
+</p>
 
-![SeedboxSync logo](images/seedboxsync.png)
+**SeedboxSync** provides powerful synchronization features between your NAS and your seedbox, making torrent management seamless and automated.
 
-**SeedboxSync** provides powerful synchronization features between your NAS and your seedbox:
+Key Features:
 
-* Synchronizes a local blackhole (e.g., a NAS folder) with the blackhole directory on your seedbox.
-* Downloads files from your seedbox to your NAS, maintaining a record of downloaded files in a SQLite database to prevent duplicate downloads.
-* Offers queries to retrieve information such as recent torrents, latest downloads, and more.
+- **Local to Seedbox Sync**: Synchronize a local blackhole folder (e.g., on your NAS) with the blackhole directory on your seedbox.
+- **Seedbox to NAS Downloads**: Automatically download files from your seedbox to your NAS, keeping track of downloaded files in a SQLite database to prevent duplicates.
+- **Query & Reporting**: Retrieve information such as recent torrents, latest downloads, and other useful statistics.

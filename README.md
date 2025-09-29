@@ -13,13 +13,17 @@
 [![Reliability Rating][ico-sonarcloud-reliability]][link-sonarcloud-reliability]
 [![Security Rating][ico-sonarcloud-security]][link-sonarcloud-security]
 
-![SeedboxSync logo](logo/400.png)
+<p align="center">
+  <a href="https://llaumgui.github.io/seedboxsync/" title="Documentation"><img alt="SeedboxSync logo" src="logo/256.png" /></a>
+</p>
 
-Provides synchronization functions between your NAS and your seedbox:
+**SeedboxSync** provides powerful synchronization features between your NAS and your seedbox, making torrent management seamless and automated.
 
-* Syncs a local black hole (ie: a NAS folder) with the black hole of your seedbox.
-* Downloads files from your seedbox to your NAS. Stores the list of downloaded files in a sqlite database, to prevent to download a second time.
-* Also provides queries to know last torrents, last downloads, etc.
+Key Features:
+
+* **Local to Seedbox Sync**: Synchronize a local blackhole folder (e.g., on your NAS) with the blackhole directory on your seedbox.
+* **Seedbox to NAS Downloads**: Automatically download files from your seedbox to your NAS, keeping track of downloaded files in a SQLite database to prevent duplicates.
+* **Query & Reporting**: Retrieve information such as recent torrents, latest downloads, and other useful statistics.
 
 ## Full documentation
 

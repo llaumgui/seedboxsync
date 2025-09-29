@@ -11,7 +11,7 @@ ENV \
 
 COPY . /src
 RUN pip install --no-cache-dir cement && \
-    pip wheel --no-cache-dir --no-deps --wheel-dir /src/wheels -r requirements.txt && \
+    pip install --no-cache-dir -e .[dev] && \
     pip wheel --no-cache-dir --no-deps --wheel-dir /src/wheels .
 
 

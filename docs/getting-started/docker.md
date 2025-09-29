@@ -1,14 +1,53 @@
 ---
-layout: page
 title: Docker
-description: How to install SeedboxSync with Docker
-order: 1
+summary: How to install SeedboxSync with Docker
 ---
 
-> ⚠ **Warning:**
->
-> * Docker is the recommended installation method.
-> * This image includes [s6-overlay](https://github.com/just-containers/s6-overlay) and provides extra features.
+> :information_source: Docker is the recommended installation method. This image includes [s6-overlay](https://github.com/just-containers/s6-overlay) and provides extra features.
+
+## Installation
+
+### Running with Docker CLI
+
+To run the container using the Docker CLI:
+
+```bash
+docker run -d \
+  --name seedboxsync \
+  --volume /data/seedboxsync/config:/config \
+  --volume /data/seedboxsync/watch:/watch \
+  --volume /data/seedboxsync/downloads:/downloads \
+  -e TZ=Europe/Paris \
+  -e PUID=1000 \
+  -e PGID=100 \
+  ghcr.io/llaumgui/seedboxsync:latest
+```
+
+### Running with Docker Compose
+
+```yaml
+services:
+  seedboxsync:
+    container_name: seedboxsync
+    hostname: seedboxsync
+    image: ghcr.io/llaumgui/seedboxsync:latest
+    restart: unless-stopped
+    environment:
+      TZ: 'Europe/Paris'
+      PUID: 1000
+      PGID: 100
+    volumes:
+      - /data/seedboxsync/config:/config
+      - /data/seedboxsync/watch:/watch
+      - /data/seedboxsync/downloads:/downloads
+```
+
+### Docker tags
+
+| Tags         | Description                                     | Stable |
+| ------------ | ----------------------------------------------- | ------ |
+| `latest`     | Based on the latest release version             | ✅     |
+| `main`       | Built from the `main` branch (development)      | ❌     |
 
 ## Extra Features
 
@@ -37,49 +76,7 @@ environment:
   PGID: 100
 ```
 
-## Usage
-
-### Running with Docker CLI
-
-To run the container using the Docker CLI:
-
-```bash
-docker run -d \
-  --name seedboxsync \
-  --volume /data/seedboxsync/config:/config \
-  --volume /data/seedboxsync/watch:/watch \
-  --volume /data/seedboxsync/downloads:/downloads \
-  -e TZ=Europe/Paris \
-  -e PUID=1000 \
-  -e PGID=100 \
-  ghcr.io/llaumgui/seedboxsync:latest
-```
-
-| Docker tags  | Description                                     | Stable |
-| ------------ | ----------------------------------------------- | ------ |
-| `latest`     | Docker image based on latest release version    | ✅     |
-| `main`       | Docker image based on git main branch           | ❌     |
-
-### Running with Docker Compose
-
-```yaml
-services:
-  seedboxsync:
-    container_name: seedboxsync
-    hostname: seedboxsync
-    image: ghcr.io/llaumgui/seedboxsync:latest
-    restart: unless-stopped
-    environment:
-      TZ: 'Europe/Paris'
-      PUID: 1000
-      PGID: 100
-    volumes:
-      - /data/seedboxsync/config:/config
-      - /data/seedboxsync/watch:/watch
-      - /data/seedboxsync/downloads:/downloads
-```
-
-### All Environment Variables
+### Environment Variables
 
 | Variable   | Description                                   | Default Value |
 |------------|-----------------------------------------------|---------------|

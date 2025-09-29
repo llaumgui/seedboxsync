@@ -1,21 +1,19 @@
 ---
-layout: page
 title: Configuration
-description: ~
-order: 2
+summary: Configuration of SeedboxSync
 ---
 
 ## Configuration file
 
 ### Docker way
 
-> ⚠ **Warning:** This is the recommended way.
+> :information_source: **Recommended:** This is the recommended way.
 
 The configuration file should be placed in `/conf`.
 
 ### Other ways
 
-> ⚠ **Warning:** Docker is the recommended method.
+> :warning: **Warning:** Docker is the recommended method.
 
 You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/main/config/seedboxsync.yml.example).
 This example file can be located in:
@@ -51,7 +49,7 @@ Supported configuration file locations:
 First, set the connection information for your seedbox.
 Currently, only SFTP is supported.
 
-```yml
+```yaml
 #
 # Information about your seedbox
 #
@@ -97,18 +95,18 @@ seedbox:
 * To prevent your BitTorrent client from watching (and using) an incomplete torrent file, SeedboxSync first transfers the torrent file to a temporary directory (`tmp_path`). Once the transfer and chmod are complete, the file is moved to the watch folder.
   The temporary folder must also be configured in your BitTorrent client for unfinished torrents.
 
-![ruTorrent settings / Downloads](images/rutorrent_1.png)
+![ruTorrent settings / Downloads](../images/rutorrent_1.png)
 
 * The `watch_path` is your BitTorrent client's "blackhole" or "watch" folder, used for blackhole synchronization.
 * The `finished_path` is the folder where your BitTorrent client moves completed downloads. You can configure your client to use a specific folder for finished files.
 
-![ruTorrent settings / Autotools](images/rutorrent_2.png)
+![ruTorrent settings / Autotools](../images/rutorrent_2.png)
 
 ### NAS / Local configuration
 
 Your NAS configuration is defined in the `local` and `pid` sections:
 
-```yml
+```yaml
 #
 # Information about the local environment (NAS, etc.)
 #
@@ -145,7 +143,7 @@ Currently, only [Healthchecks](https://github.com/healthchecks/healthchecks) is 
 
 Add a Healthchecks configuration for each sync command:
 
-```yml
+```yaml
 #
 # Healthchecks ping service
 #
