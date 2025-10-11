@@ -6,12 +6,12 @@
 # file that was distributed with this source code.
 #
 
-from cement import Controller
+from cement import Controller  # type: ignore[attr-defined]
 from cement.utils.version import get_version_banner
 import seedboxsync
 
 VERSION_BANNER = """
-Script for sync operations between your NAS and your seedbox
+Script for performing sync operations between your NAS and your seedbox.
 
 SeedboxSync %s
 %s
@@ -19,24 +19,36 @@ SeedboxSync %s
 
 
 class Base(Controller):
+    """
+    Base controller for SeedboxSync CLI application.
+
+    Provides common configuration for the CLI, including:
+    - Description displayed in help messages.
+    - Epilog usage examples.
+    - Global arguments such as version banner.
+    """
+
     class Meta:
         label = 'base'
 
-        # text displayed at the top of --help output
+        # Short description displayed at the top of --help output
         description = 'Script for sync operations between your NAS and your seedbox'
 
-        # text displayed at the bottom of --help output
+        # Text displayed at the bottom of --help output
         epilog = 'Usage: seedboxsync sync blackhole --dry-run'
 
-        # controller level arguments. ex: 'seedboxsync --version'
+        # Controller-level arguments (e.g., 'seedboxsync --version')
         arguments = [
-            # add a version banner
+            # Add a version banner with -v / --version
             (['-v', '--version'],
              {'action': 'version',
               'version': VERSION_BANNER}),
         ]
 
-    def _default(self):
-        """Default action if no sub-command is passed."""
+    def _default(self) -> None:
+        """
+        Default action when no sub-command is provided.
 
-        self.app.args.print_help()
+        Prints the help message for the CLI.
+        """
+        self.app.args.print_help()  # type: ignore[attr-defined]

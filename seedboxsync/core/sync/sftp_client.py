@@ -5,33 +5,46 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-
 """
 Transport client using sFTP protocol.
 """
 import os
-from .abstract_client import AbstractClient
-from .sync import ConnectionError
+import paramiko  # type: ignore[import-untyped]
 from stat import S_ISDIR
 from cement.core.log import LogInterface
-import paramiko
+from typing import Generator, Tuple, List
+from paramiko.sftp_attr import SFTPAttributes  # type: ignore[import-untyped]
+from seedboxsync.core.sync.abstract_client import AbstractClient
+from seedboxsync.core.sync.sync import ConnectionError
 
 
 class SftpClient(AbstractClient):
     """
-    Transport from NAS to seedbox using sFTP paramiko library.
+    SFTP transport client using Paramiko.
+
+    Handles file transfers between NAS and Seedbox servers. Provides basic
+    operations such as get, put, rename, chmod, and directory traversal.
     """
+    __log: LogInterface
+    __host: str
+    __login: str
+    __password: str
+    __port: str
+    __timeout: str | bool
+    __transport = paramiko.Transport
+    __client: paramiko.SFTPClient
 
-    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str = False):
+    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str | bool = False):
         """
-        Init transport and client.
+        Initialize the SFTP client with connection parameters.
 
-        :param str log: the log interface
-        :param str host: the host of the server
-        :param str login: the login to connect on the the server
-        :param str password: the password to connect on the the server
-        :param str port: the port of the server
-        :param str timeout: the timeout for socket connection
+        Args:
+            log (LogInterface): Logger instance.
+            host (str): SFTP server hostname.
+            login (str): Username for authentication.
+            password (str): Password for authentication.
+            port (str): Server port (default: '22').
+            timeout (str | bool): Socket timeout in seconds (default: False, no timeout).
         """
         self.__log = log
         self.__host = host
@@ -40,11 +53,13 @@ class SftpClient(AbstractClient):
         self.__port = port
         self.__timeout = timeout
         self.__transport = None
-        self.__client = None
 
-    def __connect_before(self):
+    def __connect_before(self) -> None:
         """
-        Init connection if not initialized.
+        Initialize the SFTP transport and client if not already connected.
+
+        Raises:
+            ConnectionError: If authentication fails.
         """
         if self.__transport is None:
             self.__log.debug('Init paramiko.Transport')
@@ -62,84 +77,91 @@ class SftpClient(AbstractClient):
                 channel.settimeout(self.__timeout)
                 self.__log.debug('Timeout is set to %s' % channel.gettimeout())
 
-    def put(self, local_path: str, remote_path: str):
+    def put(self, local_path: str, remote_path: str) -> SFTPAttributes:
         """
-        Copy a local file (``local_path``) to the SFTP server as ``remote_path``.
+        Upload a local file to the SFTP server.
 
-        :param str local_path: the local file to copy
-        :param str remote_path: the destination path on the server. Note
-            that the filename should be included. Only specifying a directory
-            must result in an error.
+        Args:
+            local_path (str): Path to the local file.
+            remote_path (str): Destination path on the server (including filename).
+
+        Returns:
+            SFTPAttributes: Metadata of the uploaded file.
         """
         self.__connect_before()
         return self.__client.put(local_path, remote_path)
 
-    def get(self, remote_path: str, local_path: str):
+    def get(self, remote_path: str, local_path: str) -> None:
         """
-        Copy a remote file (``remote_path``) from the SFTP server to the local
-        host as ``local_path``.
+        Download a remote file from the SFTP server.
 
-        :param str remote_path: the remote file to copy
-        :param str local_path: the destination path on the local host
+        Args:
+            remote_path (str): Path of the remote file.
+            local_path (str): Destination path on the local host.
         """
         self.__connect_before()
-        return self.__client.get(remote_path, local_path)
+        self.__client.get(remote_path, local_path)
 
-    def stat(self, filepath: str):
+    def stat(self, filepath: str) -> SFTPAttributes:
         """
-        Retrieve informations about a file on the remote system.  The return
-        value is an object whose attributes correspond to the attributes of
-        Python's ``stat`` structure as returned by ``os.stat``, except that it
-        contains fewer fields.  An SFTP server may return as much or as little
-        info as it wants, so the results may vary from server to server.
+        Retrieve metadata for a remote file.
 
-        Unlike a Python `python:stat` object, the result may not be accessed as
-        a tuple.  This is mostly due to the author's slack factor.
-        The fields supported are: ``st_mode``, ``st_size``, ``st_uid``,
-        ``st_gid``, ``st_atime``, and ``st_mtime``.
+        Args:
+            filepath (str): Remote file path.
 
-        :param str filepath: the filename to stat
+        Returns:
+            SFTPAttributes: Object with attributes similar to Python's os.stat:
+                st_mode, st_size, st_uid, st_gid, st_atime, st_mtime.
         """
         self.__connect_before()
         return self.__client.stat(filepath)
 
-    def chdir(self, path: str = None):
+    def chdir(self, path: str | None = None) -> None:
         """
-        Change the "current directory" of this session.
+        Change the current working directory of the SFTP session.
 
-        :param str path: new current working directory
-        """
-        self.__connect_before()
-        return self.__client.chdir(path)
-
-    def chmod(self, path: str, mode: str):
-        """
-        Change the mode (permissions) of a file. The permissions are unix-style
-        and identical to those used by Python’s os.chmod function.
-
-        :param str path: path of the file to change the permissions of
-        :param int mode: new permissions
+        Args:
+            path (Optional[str]): Target directory. If None, no change occurs.
         """
         self.__connect_before()
-        return self.__client.chmod(path, mode)
+        self.__client.chdir(path)
 
-    def rename(self, old_path: str, new_path: str):
+    def chmod(self, path: str, mode: str) -> None:
         """
-        Rename a file or folder from ``old_path`` to ``new_path``.
+        Change the mode (permissions) of a remote file.
 
-        :param str old_path: existing name of the file or folder
-        :param str new_path: new name for the file or folder
+        Args:
+            path (str): Path of the file.
+            mode (int): Unix-style permissions (like os.chmod).
         """
-        return self.__client.posix_rename(old_path, new_path)
+        self.__connect_before()
+        self.__client.chmod(path, mode)
 
-    # Code from https://gist.github.com/johnfink8/2190472
-    def walk(self, remote_path: str):
+    def rename(self, old_path: str, new_path: str) -> None:
         """
-        Kindof a stripped down  version of os.walk, implemented for
-        sftp.  Tried running it flat without the yields, but it really
-        chokes on big directories.
+        Rename a file or directory on the remote server.
 
-        :param str remote_path: the remote path to list
+        Args:
+            old_path (str): Existing path.
+            new_path (str): New path.
+        """
+        self.__client.posix_rename(old_path, new_path)
+
+    def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:
+        """
+        Walk through remote directories, yielding paths, folders, and files.
+
+        Args:
+            remote_path (str): Remote directory to traverse.
+
+        Yields:
+            Tuple[str, List[str], List[str]]: (current_path, folders, files)
+
+        Note:
+            Simplified version of os.walk for SFTP. Efficient for large directories.
+
+        Source:
+            https://gist.github.com/johnfink8/2190472
         """
         self.__connect_before()
         path = remote_path
@@ -157,10 +179,10 @@ class SftpClient(AbstractClient):
             for x in self.walk(new_path):
                 yield x
 
-    def close(self):
+    def close(self) -> None:
         """
-        Close transport client.
+        Close the SFTP transport client and underlying connection.
         """
         if self.__transport is not None:
             self.__log.debug('Close paramiko.Transport client')
-            return self.__transport.close()
+            self.__transport.close()

@@ -6,27 +6,35 @@
 # file that was distributed with this source code.
 #
 
-from cement import Controller, ex
-from ..core.dao.download import Download
+from cement import Controller, ex  # type: ignore[attr-defined]
 from peewee import fn
-from ..core.db import sizeof
+from seedboxsync.core.dao import Download
+from seedboxsync.core.db import sizeof
 
 
 class Stats(Controller):
     """
-    Controller with statistics concern.
+    Controller for statistics operations in SeedboxSync.
+
+    Provides commands to view statistics about downloaded files,
+    aggregated by month, year, or as total counts and sizes.
     """
+
     class Meta:
         help = 'all stats operations'
         label = 'stats'
         stacked_on = 'base'
         stacked_type = 'nested'
 
-    def __stats_by_period(self, period, header_label):
+    def __stats_by_period(self, period: str, header_label: str) -> None:
         """
-        Generic stats by period (month or year).
-        :param period: 'month' or 'year'
-        :param header_label: Header label for rendering
+        Generic helper to calculate statistics by a given period.
+
+        Aggregates the number of files and total size for each month or year.
+
+        Args:
+            period (str): Either 'month' or 'year' to group statistics.
+            header_label (str): Label used for rendering the period column.
         """
         strftime_format = "%Y-%m" if period == "month" else "%Y"
 
@@ -60,23 +68,25 @@ class Stats(Controller):
         self.app.render(stats, headers={period: header_label, 'files': 'Nb files', 'total_size': 'Total size'})
 
     @ex(help='statistics by month')
-    def by_month(self):
+    def by_month(self) -> None:
         """
-        Show statistics by month.
+        Show statistics aggregated by month.
         """
         self.__stats_by_period('month', 'Month')
 
     @ex(help='statistics by year')
-    def by_year(self):
+    def by_year(self) -> None:
         """
-        Show statistics by year.
+        Show statistics aggregated by year.
         """
         self.__stats_by_period('year', 'Year')
 
     @ex(help='total statistics')
-    def total(self):
+    def total(self) -> None:
         """
-        Show total statistics.
+        Show total statistics for all completed downloads.
+
+        Displays the total number of files and the total size.
         """
         query = Download.select().where(Download.finished != 0)
         total_files = query.count()
@@ -89,10 +99,12 @@ class Stats(Controller):
 
         self.app.render(stats, headers={'files': 'Nb files', 'total_size': 'Total size'})
 
-    @ex(help='Show total statistics if no subcommand is specified')
-    def _default(self):
+    @ex(help='show total statistics if no subcommand is specified')
+    def _default(self) -> None:
         """
-        Show total statistics by default.
+        Default action when no subcommand is provided.
+
+        Prints the parser help and shows total statistics.
         """
         self._parser.print_help()
         self.total()

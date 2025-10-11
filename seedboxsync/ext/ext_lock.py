@@ -7,28 +7,33 @@
 #
 
 import os
-from cement import App, fs
-from ..core.exc import SeedboxSyncError
+from cement import App, fs  # type: ignore[attr-defined]
+from seedboxsync.core.exc import SeedboxSyncError
 
 
 class Lock(object):
     """
-    Class which manage PID file a.k.a lock file.
+    Class to manage PID files (lock files) to prevent concurrent runs.
     """
 
     def __init__(self, app: App):
         """
-        Constructor
+        Constructor for Lock.
 
-        :param App app: the Cement App object
+        Args:
+            app (App): The Cement App object.
         """
         self.app = app
 
-    def lock(self, lock_file: str):
+    def lock(self, lock_file: str) -> None:
         """
-        Lock task by a pid file to prevent launch two time.
+        Lock the task by creating a PID file.
 
-        :param str lock_file: the lock file path
+        Args:
+            lock_file (str): The lock file path.
+
+        Raises:
+            LockError: If the lock file cannot be created.
         """
         lock_file = fs.abspath(lock_file)
         self.app.log.debug('Lock task by %s' % lock_file)
@@ -40,11 +45,15 @@ class Lock(object):
         except Exception as exc:
             raise LockError('Lock error: %s' % str(exc))
 
-    def unlock(self, lock_file: str):
+    def unlock(self, lock_file: str) -> None:
         """
-        Unlock task, remove pid file.
+        Unlock the task by removing the PID file.
 
-        :param str lock_file: the lock file path
+        Args:
+            lock_file (str): The lock file path.
+
+        Raises:
+            LockError: If the lock file cannot be removed.
         """
         lock_file = fs.abspath(lock_file)
         self.app.log.debug('Unlock task by %s' % lock_file)
@@ -53,11 +62,15 @@ class Lock(object):
         except Exception as exc:
             raise LockError('Lock error: %s' % str(exc))
 
-    def is_locked(self, lock_file: str):
+    def is_locked(self, lock_file: str) -> bool:
         """
-        Test if task is locked by a pid file to prevent launch two time.
+        Check if the task is currently locked by a PID file.
 
-        :param str lock_file: the lock file path
+        Args:
+            lock_file (str): The lock file path.
+
+        Returns:
+            bool: True if the task is locked, False otherwise.
         """
         lock_file = fs.abspath(lock_file)
         if os.path.isfile(lock_file):
@@ -70,11 +83,12 @@ class Lock(object):
 
         return False
 
-    def lock_or_exit(self, lock_file: str):
+    def lock_or_exit(self, lock_file: str) -> None:
         """
-        Lock task or exit if already running.
+        Lock the task or exit if already running.
 
-        :param str lock_file: the lock file path
+        Args:
+            lock_file (str): The lock file path.
         """
         if self.is_locked(lock_file):
             self.app.exit_code = 0
@@ -82,11 +96,15 @@ class Lock(object):
         else:
             self.lock(lock_file)
 
-    def _check_pid(self, pid: int):
+    def _check_pid(self, pid: int) -> bool:
         """
-        Check for the existence of a unix pid.
+        Check if a Unix process with the given PID exists.
 
-        :param int pid: the pid of the process
+        Args:
+            pid (int): The PID to check.
+
+        Returns:
+            bool: True if the process exists, False otherwise.
         """
         try:
             os.kill(pid, 0)
@@ -97,19 +115,28 @@ class Lock(object):
 
 
 class LockError(SeedboxSyncError):
+    """
+    Exception raised for lock-related errors.
+    """
     pass
 
 
-def lock_pre_run_hook(app: App):
+def lock_pre_run_hook(app: App) -> None:
     """
-    Extends SeedboxSync with Lock
+    Post-setup hook to extend SeedboxSync with Lock support.
 
-    :param App app: the Cement App object
+    Args:
+        app (App): The Cement App object.
     """
     app.log.debug('Extending seedboxsync application with Lock')
     app.extend('lock', Lock(app))
 
 
-def load(app: App):
-    """Extension loader"""
+def load(app: App) -> None:
+    """
+    Registers the Lock pre-run hook.
+
+    Args:
+        app (App): The Cement App object.
+    """
     app.hook.register('pre_run', lock_pre_run_hook)

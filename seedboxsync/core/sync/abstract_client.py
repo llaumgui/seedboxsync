@@ -7,7 +7,10 @@
 #
 
 """
-Transport client abstract class based on paramiko syntaxe.
+Abstract transport client using paramiko-like interface.
+
+This class defines the interface that all transport clients must implement,
+providing methods for file operations and session management on a remote server.
 """
 
 from abc import ABCMeta, abstractmethod
@@ -15,95 +18,102 @@ from cement.core.log import LogInterface
 
 
 class AbstractClient():
+    """
+    Abstract base class for transport clients.
+
+    All concrete clients must implement methods to manage file transfers
+    and remote file operations.
+    """
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str, timeout: str = False):
-        """Init client.
+    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str, timeout: str | bool = False):
+        """
+        Initialize the transport client.
 
-        :param str log: the log interface
-        :param str host: the host of the server
-        :param str login: the login to connect on the the server
-        :param str password: the password to connect on the the server
-        :param str port: the port of the server
-        :param str timeout: the timeout for socket connection
+        Args:
+            log (LogInterface): The log interface for debug and info messages.
+            host (str): Hostname or IP address of the remote server.
+            login (str): Username to connect to the server.
+            password (str): Password to authenticate on the server.
+            port (str): Port of the remote server.
+            timeout (str | bool, optional): Socket connection timeout. Defaults to False.
         """
         pass
 
     @abstractmethod
-    def put(self, local_path: str, remote_path: str):
+    def put(self, local_path: str, remote_path: str) -> None:
         """
-        Copy a local file (``local_path``) to the server as ``remote_path``.
+        Upload a local file to the remote server.
 
-        :param str local_path: the local file to copy
-        :param str remote_path: the destination path on the server. Note
-            that the filename should be included. Only specifying a directory
-            must result in an error.
-        """
-        pass
-
-    @abstractmethod
-    def get(self, remotep_path: str, local_path: str):
-        """
-        Copy a remote file (``remote_path``) from the server to the local
-        host as ``local_path``.
-
-        :param str remote_path: the remote file to copy
-        :param str local_path: the destination path on the local host
+        Args:
+            local_path (str): Path to the local file to copy.
+            remote_path (str): Destination path on the server including filename.
+                               Specifying only a directory must raise an error.
         """
         pass
 
     @abstractmethod
-    def stat(self, filepath: str):
+    def get(self, remotep_path: str, local_path: str) -> None:
         """
-        Retrieve size about a file on the remote system.  The return
-        value is an object whose attributes correspond to the attributes of
-        Python's ``stat`` structure as returned by ``os.stat``, except that it
-        contains fewer fields.  An SFTP server may return as much or as little
-        info as it wants, so the results may vary from server to server.
+        Download a file from the remote server to the local host.
 
-        Unlike a Python `python:stat` object, the result may not be accessed as
-        a tuple.  This is mostly due to the author's slack factor.
-        The fields supported are: ``st_mode``, ``st_size``, ``st_uid``,
-        ``st_gid``, ``st_atime``, and ``st_mtime``.
-
-        :param str filepath: the filename to stat
+        Args:
+            remotep_path (str): Path to the remote file to copy.
+            local_path (str): Destination path on the local host.
         """
         pass
 
     @abstractmethod
-    def chdir(self, path: str = None):
+    def stat(self, filepath: str) -> None:
         """
-        Change the "current directory" of this session.
+        Retrieve metadata about a file on the remote system.
 
-        :param str path: new current working directory
+        Returns an object similar to Python's os.stat, with fewer fields.
+        Supported fields: st_mode, st_size, st_uid, st_gid, st_atime, st_mtime.
+
+        Args:
+            filepath (str): Path to the remote file.
         """
         pass
 
     @abstractmethod
-    def chmod(self, path: str, mode: str):
+    def chdir(self, path: str) -> None:
         """
-        Change the mode (permissions) of a file. The permissions are unix-style
-        and identical to those used by Python’s os.chmod function.
+        Change the current working directory on the remote session.
 
-        :param str path: path of the file to change the permissions of
-        :param int mode: new permissions
+        Args:
+            path (str, optional): New working directory path. Defaults to None.
         """
         pass
 
     @abstractmethod
-    def rename(self, old_path: str, new_path: str):
+    def chmod(self, path: str, mode: str) -> None:
         """
-        Rename a file or folder from ``old_path`` to ``new_path``.
+        Change permissions of a remote file.
 
-        :param str old_path: existing name of the file or folder
-        :param str new_path: new name for the file or folder
+        Permissions are unix-style, same as Python's os.chmod.
+
+        Args:
+            path (str): Path to the file on the remote server.
+            mode (int): New permissions to set.
         """
         pass
 
     @abstractmethod
-    def close(self):
+    def rename(self, old_path: str, new_path: str) -> None:
         """
-        Close transport client.
+        Rename a file or directory on the remote server.
+
+        Args:
+            old_path (str): Existing path of the file or folder.
+            new_path (str): New path or name for the file or folder.
+        """
+        pass
+
+    @abstractmethod
+    def close(self) -> None:
+        """
+        Close the transport session and release resources.
         """
         pass

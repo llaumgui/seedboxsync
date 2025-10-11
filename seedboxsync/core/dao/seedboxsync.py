@@ -12,7 +12,16 @@ from .model import SeedboxSyncModel
 
 class SeedboxSync(SeedboxSyncModel):
     """
-    A Data Access Object for Torrent.
+    Data Access Object (DAO) for application metadata and internal configuration.
+
+    This table stores key–value pairs used for SeedboxSync's internal state
+    management and configuration, such as locks, versioning, or runtime
+    parameters.
+
+    Attributes:
+        key (str): Unique identifier for the configuration entry.
+        value (str): Stored value associated with the key.
     """
+
     key = CharField(unique=True)
     value = TextField()

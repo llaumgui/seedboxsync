@@ -8,35 +8,49 @@
 
 import os
 import datetime
-from cement import Controller, fs, ex
-from ..core.dao.torrent import Torrent
-from ..core.dao.download import Download
+from cement import Controller, fs, ex  # type: ignore[attr-defined]
 from peewee import fn
+from seedboxsync.core.dao import Download, Torrent
 
 
 class Search(Controller):
     """
-    Controller with search concern.
+    Controller for search operations in SeedboxSync.
+
+    Provides commands to search for torrents:
+    - Recently uploaded from blackhole
+    - Recently downloaded from the seedbox
+    - Currently in progress downloads
     """
+
     class Meta:
         help = 'all search operations'
         label = 'search'
         stacked_on = 'base'
         stacked_type = 'nested'
 
-    @ex(help='search lasts torrents uploaded from blackhole',
-        arguments=[(['-n', '--number'],
-                    {'help': 'number of torrents to display',
-                     'action': 'store',
-                     'dest': 'number',
-                     'default': 10}),
-                   (['-s', '--search'],
-                    {'help': 'term to search',
-                     'action': 'store',
-                     'dest': 'term'})])
-    def uploaded(self):
+    @ex(
+        help='search last torrents uploaded from blackhole',
+        arguments=[
+            (['-n', '--number'],
+             {'help': 'number of torrents to display',
+              'action': 'store',
+              'dest': 'number',
+              'default': 10}),
+            (['-s', '--search'],
+             {'help': 'term to search',
+              'action': 'store',
+              'dest': 'term'})
+        ]
+    )
+    def uploaded(self) -> None:
         """
-        Search lasts torrents uploaded from blackhole
+        Search for the most recent torrents uploaded from blackhole.
+
+        Filters torrents by an optional search term and limits
+        the number of results displayed.
+
+        Renders a list of torrent IDs, names, and sent timestamps.
         """
         # Build "where" expression
         if self.app.pargs.term:
@@ -51,19 +65,28 @@ class Search(Controller):
                               ).where(where).limit(self.app.pargs.number).order_by(Torrent.sent.desc()).dicts()
         self.app.render(reversed(data), headers={'id': 'Id', 'name': 'Name', 'sent': 'Sent datetime'})
 
-    @ex(help='search lasts files downloaded from seedbox',
-        arguments=[(['-n', '--number'],
-                    {'help': 'number of torrents to display',
-                     'action': 'store',
-                     'dest': 'number',
-                     'default': 10}),
-                   (['-s', '--search'],
-                    {'help': 'term to search',
-                     'action': 'store',
-                     'dest': 'term'})])
-    def downloaded(self):
+    @ex(
+        help='search last files downloaded from seedbox',
+        arguments=[
+            (['-n', '--number'],
+             {'help': 'number of torrents to display',
+              'action': 'store',
+              'dest': 'number',
+              'default': 10}),
+            (['-s', '--search'],
+             {'help': 'term to search',
+              'action': 'store',
+              'dest': 'term'})
+        ]
+    )
+    def downloaded(self) -> None:
         """
-        Search lasts torrents downloaded from seedbox
+        Search for the most recent files downloaded from the seedbox.
+
+        Filters downloads by an optional search term and limits
+        the number of results displayed.
+
+        Renders a list of download IDs, paths, finished timestamps, and sizes.
         """
         # Build "where" expression
         if self.app.pargs.term:
@@ -72,26 +95,38 @@ class Search(Controller):
             where = Download.finished != 0
 
         # DB query
-        data = Download.select(Download.id,
-                               fn.SUBSTR(Download.path, -100).alias('path'),
-                               Download.finished,
-                               fn.sizeof(Download.local_size).alias('size')
-                               ).where(where).limit(self.app.pargs.number).order_by(Download.finished.desc()).dicts()
+        data = Download.select(
+            Download.id,
+            fn.SUBSTR(Download.path, -100).alias('path'),
+            Download.finished,
+            fn.sizeof(Download.local_size).alias('size')
+        ).where(where).limit(self.app.pargs.number).order_by(Download.finished.desc()).dicts()
+
         self.app.render(reversed(data), headers={'id': 'Id', 'finished': 'Finished', 'path': 'Path', 'size': 'Size'})
 
-    @ex(help='search files currently in download from seedbox',
-        arguments=[(['-n', '--number'],
-                    {'help': 'number of torrents to display',
-                     'action': 'store',
-                     'dest': 'number',
-                     'default': 10}),
-                   (['-s', '--search'],
-                    {'help': 'term to search',
-                     'action': 'store',
-                     'dest': 'term'})])
-    def progress(self):
+    @ex(
+        help='search files currently in download from seedbox',
+        arguments=[
+            (['-n', '--number'],
+             {'help': 'number of torrents to display',
+              'action': 'store',
+              'dest': 'number',
+              'default': 10}),
+            (['-s', '--search'],
+             {'help': 'term to search',
+              'action': 'store',
+              'dest': 'term'})
+        ]
+    )
+    def progress(self) -> None:
         """
-        Search files currently in download from seedbox
+        Search for files currently in download from the seedbox.
+
+        Filters in-progress downloads by an optional search term and limits
+        the number of results displayed.
+
+        Calculates local download progress and ETA, and renders a list
+        including ID, path, start time, progress percentage, ETA, and size.
         """
         # Build "where" expression
         if self.app.pargs.term:
@@ -99,13 +134,14 @@ class Search(Controller):
         else:
             where = Download.finished == 0
 
-        # DB suery
-        data = Download.select(Download.id,
-                               fn.SUBSTR(Download.path, -100).alias('path'),
-                               Download.started,
-                               Download.seedbox_size,
-                               fn.sizeof(Download.seedbox_size).alias('size'),
-                               ).where(where).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
+        # DB query
+        data = Download.select(
+            Download.id,
+            fn.SUBSTR(Download.path, -100).alias('path'),
+            Download.started,
+            Download.seedbox_size,
+            fn.sizeof(Download.seedbox_size).alias('size'),
+        ).where(where).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
 
         in_progress = []
         part_suffix = self.app.config.get('seedbox', 'part_suffix')
@@ -130,4 +166,5 @@ class Search(Controller):
                 'progress': str(progress) + '%',
                 'eta': eta
             })
+
         self.app.render(reversed(in_progress), headers={'id': 'Id', 'started': 'Started', 'path': 'Path', 'progress': 'Progress', 'eta': 'ETA', 'size': 'Size'})

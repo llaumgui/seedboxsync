@@ -38,7 +38,7 @@ def test_seedboxsync_sync_blackhole(capsys, mock_sftp):
             app.run()
             output = capsys.readouterr().err
             assert app.exit_code == 0
-            assert 'No torrent in ' in output
+            assert 'No torrent files found in ' in output
     finally:
         SeedboxSyncTest.restore_watch()
 

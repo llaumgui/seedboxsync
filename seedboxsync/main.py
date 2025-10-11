@@ -5,23 +5,20 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-
 import signal
-from cement import App
+from cement import App  # type: ignore[attr-defined]
 from cement.core.exc import CaughtSignal
-from .core.db import extend_db, close_db
-from .core.exc import SeedboxSyncError
-from .core.sync.sync import extend_sync, close_sync
-from .core.init_defaults import CONFIG
-from .controllers.base import Base
-from .controllers.clean import Clean
-from .controllers.search import Search
-from .controllers.stats import Stats
-from .controllers.sync import Sync
+from seedboxsync.core.db import extend_db, close_db
+from seedboxsync.core.exc import SeedboxSyncError
+from seedboxsync.core.sync.sync import extend_sync, close_sync
+from seedboxsync.core.init_defaults import CONFIG
+from seedboxsync.controllers import Base, Clean, Search, Stats, Sync
 
 
 class SeedboxSync(App):
-    """SeedboxSync application."""
+    """
+    SeedboxSync application.
+    """
 
     class Meta:
         label = 'seedboxsync'
@@ -87,7 +84,10 @@ class SeedboxSync(App):
         ]
 
 
-def main():
+def main() -> None:
+    """
+    Main function.
+    """
     with SeedboxSync() as app:
         try:
             app.run()
@@ -108,7 +108,7 @@ def main():
                 import traceback
                 traceback.print_exc()
 
-        except (CaughtSignal, KeyboardInterrupt) as e:
+        except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
             app.exit_code = 0
             if e.signum == signal.SIGTERM:
@@ -117,6 +117,11 @@ def main():
                 app.log.warning('Caught SIGINT')
             else:
                 app.log.warning('Stopped')
+            app.close()
+
+        except KeyboardInterrupt:
+            app.exit_code = 0
+            app.log.warning('KeyboardInterrupt received')
             app.close()
 
 

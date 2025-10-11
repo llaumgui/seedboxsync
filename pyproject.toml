@@ -23,7 +23,7 @@ classifiers = [
 readme = "README.md"
 license-files = ["LICENSE"]
 license = "GPL-2.0-only"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
   "cement==3.0.14",
   "pyyaml",
@@ -42,11 +42,13 @@ Source = "https://github.com/llaumgui/seedboxsync/"
 [project.optional-dependencies]
 dev = [
   "flake8",
+  "pytest",
   "pytest-cov",
   "coverage",
+  "flit",
+  "mypy",
   "twine",
   "cement[cli]",
-  "flit",
   "mkdocs-material",
 ]
 
@@ -79,3 +81,9 @@ exclude = [
   "Makefile",
   "sonar-project.properties",
 ]
+
+[tool.mypy]
+files = ["seedboxsync"]
+ignore_missing_imports = true
+strict = true
+show_error_codes = true

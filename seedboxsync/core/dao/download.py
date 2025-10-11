@@ -13,8 +13,13 @@ from .model import SeedboxSyncModel
 
 class Download(SeedboxSyncModel):
     """
-    A Data Access Object for Torrent.
+    Data Access Object (DAO) representing a file download.
+
+    This model stores information about a downloaded file, including its path,
+    size on the seedbox and locally, as well as timestamps indicating when
+    the download started and finished.
     """
+
     id = AutoField()
     path = TextField()
     seedbox_size = IntegerField()
@@ -22,11 +27,16 @@ class Download(SeedboxSyncModel):
     started = DateTimeField(default=datetime.datetime.now)
     finished = DateTimeField(default=0)
 
-    def is_already_download(filepath):
+    def is_already_download(filepath) -> bool:
         """
-        Get if file was already downloaded.
+        Check if a file has already been downloaded.
 
-        :param str filepath: the filepath
+        Args:
+            filepath (str): Absolute or relative path to the file.
+
+        Returns:
+            bool: True if the file was already downloaded (i.e. has a nonzero
+            ``finished`` timestamp), otherwise False.
         """
         count = Download.select().where(Download.path == filepath, Download.finished > 0).count()
         if count == 0:

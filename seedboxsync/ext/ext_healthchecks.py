@@ -6,19 +6,19 @@
 # file that was distributed with this source code.
 #
 
-from cement import App
+from cement import App  # type: ignore[attr-defined]
 import socket
 import urllib.request
 
 
-def healthchecks_ping_start_hook(app: App, sub_command: str):
+def healthchecks_ping_start_hook(app: App, sub_command: str) -> None:
     """
-    Send Healthchecks start
+    Send a start ping to Healthchecks for a given subcommand.
 
-    :param App app: the Cement App object
-    :param String sub_command: the seedboxsync subcommand
+    Args:
+        app (App): The Cement App object.
+        sub_command (str): The SeedboxSync subcommand to ping.
     """
-
     sub_command_config = app.config.get('healthchecks', sub_command)
     if sub_command_config['enabled'] is False:
         app.log.warning("Healthchecks for \"%s\" disabled by configuration" % sub_command)
@@ -33,14 +33,14 @@ def healthchecks_ping_start_hook(app: App, sub_command: str):
             pass
 
 
-def healthchecks_ping_success_hook(app: App, sub_command: str):
+def healthchecks_ping_success_hook(app: App, sub_command: str) -> None:
     """
-    Send Healthchecks success
+    Send a success ping to Healthchecks for a given subcommand.
 
-    :param App app: the Cement App object
-    :param String sub_command: the seedboxsync subcommand
+    Args:
+        app (App): The Cement App object.
+        sub_command (str): The SeedboxSync subcommand to ping.
     """
-
     sub_command_config = app.config.get('healthchecks', sub_command)
     if sub_command_config['enabled'] is False:
         app.log.warning("Healthchecks for \"%s\" disabled by configuration" % sub_command)
@@ -55,11 +55,14 @@ def healthchecks_ping_success_hook(app: App, sub_command: str):
             pass
 
 
-def healthchecks_post_setup_hook(app: App):
+def healthchecks_post_setup_hook(app: App) -> None:
     """
-    Extends SeedboxSync with Healthchecks. Use custom SeedboxSync's hooks.
+    Post-setup hook to extend SeedboxSync with Healthchecks support.
 
-    :param App app: the Cement App object
+    Registers ping hooks if the 'healthchecks' section exists in the configuration.
+
+    Args:
+        app (App): The Cement App object.
     """
     if app.config.has_section('healthchecks'):
         app.log.debug('Extending seedboxsync application with Healthchecks')
@@ -69,6 +72,11 @@ def healthchecks_post_setup_hook(app: App):
         app.log.debug('Not extending seedboxsync application with Healthchecks')
 
 
-def load(app: App):
-    """Extension loader"""
+def load(app: App) -> None:
+    """
+    Registers the Healthchecks post-setup hook.
+
+    Args:
+        app (App): The Cement App object.
+    """
     app.hook.register('post_setup', healthchecks_post_setup_hook)

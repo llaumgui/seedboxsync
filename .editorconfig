@@ -15,10 +15,6 @@ insert_final_newline = false
 indent_style = space
 indent_size = 4
 
-[*.html]
-indent_style = space
-indent_size = 4
-
 [Makefile]
 indent_style = tab
 indent_size = 4
@@ -30,7 +26,3 @@ insert_final_newline = true
 [*.py]
 indent_size = 4
 insert_final_newline = true
-
-[*.yml,*.toml]
-indent_style = space
-indent_size = 2
