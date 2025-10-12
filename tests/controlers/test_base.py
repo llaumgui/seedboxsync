@@ -1,19 +1,20 @@
 import io
 import sys
 import pytest
-from tests.main import SeedboxSyncTest
+from tests.main import SeedboxSyncTest, hash_output
 import seedboxsync
 
 
-def test_seedboxsync_base():
+def test_seedboxsync_base(tmp):
     """
     Test base commands.
     """
 
     help_output = "c266d92ea36b7d31088d969274639d52"
+    _, tmp_config_files, tmp_db_file, tmp_watch = tmp
 
     # seedboxsync
-    with SeedboxSyncTest(config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+    with SeedboxSyncTest(config_files=tmp_config_files) as app:
         captured_output = io.StringIO()
         sys.stdout = captured_output
         try:
@@ -21,7 +22,10 @@ def test_seedboxsync_base():
         finally:
             sys.stdout = sys.__stdout__
         output = captured_output.getvalue()
-        assert SeedboxSyncTest.hash_output(output) == help_output
+        assert hash_output(output) == help_output
+        # Test tmp mock
+        assert app.config['local']['db_file'] == tmp_db_file
+        assert app.config['local']['watch_path'] == tmp_watch
 
     # seedboxsync -h (SystemExit 0)
     argv = ['-h']
@@ -29,13 +33,13 @@ def test_seedboxsync_base():
     sys.stdout = captured_output
     try:
         with pytest.raises(SystemExit) as excinfo:
-            with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+            with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
                 app.run()
         assert excinfo.value.code == 0
     finally:
         sys.stdout = sys.__stdout__
     output = captured_output.getvalue()
-    assert SeedboxSyncTest.hash_output(output) == help_output
+    assert hash_output(output) == help_output
 
     # seedboxsync -v (SystemExit 0)
     argv = ['-v']
@@ -43,7 +47,7 @@ def test_seedboxsync_base():
     sys.stdout = captured_output
     try:
         with pytest.raises(SystemExit) as excinfo:
-            with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+            with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
                 app.run()
         assert excinfo.value.code == 0
     finally:
@@ -57,7 +61,7 @@ def test_seedboxsync_base():
     sys.stdout = captured_output
     try:
         with pytest.raises(SystemExit) as excinfo:
-            with SeedboxSyncTest(argv=argv, config_dirs=SeedboxSyncTest.get_config_dirs()) as app:
+            with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
                 app.run()
         assert excinfo.value.code == 0
     finally:
