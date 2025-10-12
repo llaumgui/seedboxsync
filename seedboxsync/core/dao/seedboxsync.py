@@ -7,7 +7,8 @@
 #
 
 from peewee import CharField, TextField
-from .model import SeedboxSyncModel
+from seedboxsync import __version__ as version
+from seedboxsync.core.dao import SeedboxSyncModel
 
 
 class SeedboxSync(SeedboxSyncModel):
@@ -25,3 +26,30 @@ class SeedboxSync(SeedboxSyncModel):
 
     key = CharField(unique=True)
     value = TextField()
+
+    @staticmethod
+    def get_db_version() -> str:
+        """
+        Return database model version.
+
+        Returns:
+            str: The database model version.
+        """
+        return str(SeedboxSync.select(SeedboxSync.value).where(SeedboxSync.key == 'db_version').first().value)
+
+    @staticmethod
+    def set_db_version(db_version: str) -> None:
+        """
+        Upsert database model version.
+
+        Args:
+            db_version (str): The database model version.
+        """
+        SeedboxSync.replace(key='db_version', value=db_version).execute()
+
+    @staticmethod
+    def set_version() -> None:
+        """
+        Upsert SeedboxSync version.
+        """
+        SeedboxSync.replace(key='version', value=version).execute()

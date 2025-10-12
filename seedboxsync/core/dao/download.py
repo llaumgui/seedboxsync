@@ -8,7 +8,7 @@
 
 import datetime
 from peewee import AutoField, DateTimeField, IntegerField, TextField
-from .model import SeedboxSyncModel
+from seedboxsync.core.dao import SeedboxSyncModel
 
 
 class Download(SeedboxSyncModel):
@@ -27,7 +27,8 @@ class Download(SeedboxSyncModel):
     started = DateTimeField(default=datetime.datetime.now)
     finished = DateTimeField(default=0)
 
-    def is_already_download(filepath) -> bool:
+    @staticmethod
+    def is_already_download(filepath: str) -> bool:
         """
         Check if a file has already been downloaded.
 

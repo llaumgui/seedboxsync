@@ -6,15 +6,10 @@
 # file that was distributed with this source code.
 #
 
-from peewee import Model, DatabaseProxy
-
-global_database_object: DatabaseProxy = DatabaseProxy()
+from peewee import Model
 
 
 class SeedboxSyncModel(Model):  # type: ignore[misc]
     """
     Basemodel from which all other peewee models are derived.
     """
-
-    class Meta:
-        database: DatabaseProxy = global_database_object
