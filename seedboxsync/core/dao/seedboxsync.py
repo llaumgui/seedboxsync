@@ -24,7 +24,7 @@ class SeedboxSync(SeedboxSyncModel):
         value (str): Stored value associated with the key.
     """
 
-    key = CharField(unique=True)
+    key = CharField(primary_key=True)
     value = TextField()
 
     @staticmethod
@@ -35,7 +35,7 @@ class SeedboxSync(SeedboxSyncModel):
         Returns:
             str: The database model version.
         """
-        return str(SeedboxSync.select(SeedboxSync.value).where(SeedboxSync.key == 'db_version').first().value)
+        return str(SeedboxSync.select(SeedboxSync.value).where(SeedboxSync.key == 'db_version').first().value)  # Use old style to prevent Peewee 2 databases.
 
     @staticmethod
     def set_db_version(db_version: str) -> None:

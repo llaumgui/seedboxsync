@@ -6,16 +6,18 @@
 # file that was distributed with this source code.
 #
 
+import seedboxsync
 from cement import Controller  # type: ignore[attr-defined]
 from cement.utils.version import get_version_banner
-import seedboxsync
+from seedboxsync.core.db import Database
 
 VERSION_BANNER = """
 Script for performing sync operations between your NAS and your seedbox.
 
 SeedboxSync %s
+SeedboxSync database %s
 %s
-""" % (seedboxsync.__version__, get_version_banner())
+""" % (seedboxsync.__version__, Database.DATABASE_VERSION, get_version_banner())
 
 
 class Base(Controller):

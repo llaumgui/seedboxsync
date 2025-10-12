@@ -10,7 +10,7 @@ import os
 from peewee import SqliteDatabase
 from cement import App  # type: ignore[attr-defined]
 from cement.utils import fs
-from seedboxsync.core.dao import Download, SeedboxSync, Torrent
+from seedboxsync.core.dao import Download, Lock, SeedboxSync, Torrent
 
 
 def extend_db(app: App) -> None:
@@ -26,25 +26,25 @@ def extend_db(app: App) -> None:
 
 def close_db(app: App) -> None:
     """
-    Close the database connection.
+    Close the Peewee database connection.
 
     Args:
         app (App): The Cement App object.
     """
-    app.log.debug('Close database')
+    app.log.debug('Closing database connection')
     app._db.close()  # type: ignore[attr-defined]
 
 
 def sizeof(num: float, suffix: str = 'B') -> str:
     """
-    Convert a number to human-readable units (e.g., B, KiB, MiB).
+    Convert a byte count into a human-readable string (e.g. 1.0KiB, 12.3MiB).
 
     Args:
-        num (float): The numeric value to convert.
-        suffix (str): Suffix for the value (default: 'B').
+        num (float): Value to convert.
+        suffix (str): Unit suffix (default: 'B').
 
     Returns:
-        str: Human-readable string.
+        str: Human-readable size string.
     """
     for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
         if abs(num) < 1024.0:
@@ -55,57 +55,68 @@ def sizeof(num: float, suffix: str = 'B') -> str:
 
 class Database:
     """
-    Wrapper for SQLite database using Peewee.
+    SQLite database manager for SeedboxSync.
 
-    Manages database initialization, schema creation, upgrades,
-    and registration of custom SQLite functions.
+    Handles initialization, schema creation, migrations,
+    and custom SQLite function registration.
 
     Attributes:
-        __DATABASE_VERSION (int): Current database version in code.
+        DATABASE_VERSION (int): Target database schema version.
         __app (App): Cement application instance.
-        db_file (str): Absolute path to the SQLite database file.
+        __db_file (str): Absolute path to the SQLite database file.
         db (SqliteDatabase): Peewee database instance.
     """
 
-    __DATABASE_VERSION = 1
+    DATABASE_VERSION = 2
     __app: App
     __db_file: str
     db: SqliteDatabase
 
     def __init__(self, app: App):
         """
-        Initialize the Database wrapper.
+        Initialize the database manager.
 
         Args:
-            app (App): Cement App object.
+            app (App): The Cement application instance.
         """
         self.__app = app
         self.__db_file = fs.abspath(self.__app.config.get('local', 'db_file'))
 
     def init(self) -> SqliteDatabase:
         """
-        Initialize the database and return a bound Peewee instance.
+        Initialize, bind, and migrate the database as needed.
 
-        Creates the database if it does not exist, sets the schema,
-        and upgrades it if necessary.
+        Creates the database file if missing, binds models, and applies
+        migrations sequentially until the schema matches the current
+        application version.
 
         Returns:
-            SqliteDatabase: Bound Peewee database instance.
+            SqliteDatabase: Bound and ready-to-use database instance.
         """
+        # Ensure database exists
         if not os.path.exists(self.__db_file):
-            self.__app.log.info('DataBase "%s" does not exist, creating...' % self.__db_file)
+            self.__app.log.info(f'Database "{self.__db_file}" not found — creating new file...')
             fs.ensure_dir_exists(os.path.dirname(self.__db_file))
             self.__init_and_bind()
-            self.__set_db_schema()
+            self.__create_db_schema()
         else:
             self.__init_and_bind()
 
-        # Upgrade DB if necessary
-        db_version = SeedboxSync.get_db_version()
-        self.__app.log.debug('SQLite database version is %s' % db_version)
-        if int(db_version) < self.__DATABASE_VERSION:
-            self.__app.log.info('Upgrading database "%s" from v%s to v%s' % (self.__db_file, db_version, self.__DATABASE_VERSION))
-            self.__set_db_schema()
+        # Check and run migrations if needed
+        db_version = int(SeedboxSync.get_db_version())
+        self.__app.log.debug(f'SQLite database version is {db_version}')
+        while db_version < self.DATABASE_VERSION:
+            next_version = db_version + 1
+            migration_name = f"migrate_to_{next_version}"
+
+            self.__app.log.info(f'Upgrading database "{self.__db_file}" from v{db_version} to v{next_version}')
+
+            # Dynamically resolve migration function
+            migration_func = getattr(self, migration_name, None)
+            if migration_func is None:
+                raise RuntimeError(f"Missing migration function: {migration_name}")
+            migration_func()
+            db_version = next_version
 
         # Upsert SeedboxSync version
         SeedboxSync.set_version()
@@ -114,23 +125,33 @@ class Database:
 
     def __init_and_bind(self) -> None:
         """
-        Bind the database to Peewee models and register custom functions.
+        Initialize and bind Peewee models to the SQLite database.
         """
         self.db = SqliteDatabase(self.__db_file)
-        self.db.bind([Download, SeedboxSync, Torrent])
+        self.db.bind([Download, Lock, SeedboxSync, Torrent])
         self.__register_functions()
 
-    def __set_db_schema(self) -> None:
+    def __create_db_schema(self) -> None:
         """
-        Create tables if they do not exist and update the database version.
+        Create all tables and set the initial database version.
         """
-        self.db.connect()
-        self.db.create_tables([Download, Torrent, SeedboxSync], safe=True)
-        SeedboxSync.set_db_version(str(self.__DATABASE_VERSION))
+        self.db.create_tables([Download, Lock, Torrent, SeedboxSync])
+        SeedboxSync.set_db_version(str(self.DATABASE_VERSION))
+
+    def migrate_to_2(self) -> None:
+        """
+        Migration: rebuild SeedboxSync table and add Lock table.
+
+        Fixes compatibility issues between tables created with Peewee v2 and v3.
+        Also introduces the 'Lock' table, replacing legacy '.lock' files.
+        """
+        self.db.drop_tables([SeedboxSync])
+        self.db.create_tables([Lock, SeedboxSync])
+        SeedboxSync.set_db_version('2')
 
     def __register_functions(self) -> None:
         """
-        Register custom SQLite functions for this database instance.
+        Register custom SQLite functions.
         """
 
         @self.db.func('sizeof')  # type: ignore[misc]
@@ -139,10 +160,10 @@ class Database:
             SQLite function to convert a number to human-readable format.
 
             Args:
-                num (int): Numeric value.
-                suffix (str): Unit suffix.
+                num (int): Byte value.
+                suffix (str): Optional unit suffix.
 
             Returns:
-                str: Human-readable string.
+                str: Human-readable size string.
             """
             return sizeof(num, suffix)

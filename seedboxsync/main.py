@@ -84,7 +84,7 @@ class SeedboxSync(App):
         ]
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     """
     Main function.
     """

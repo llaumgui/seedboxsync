@@ -7,7 +7,7 @@
 #
 
 import datetime
-from peewee import AutoField, DateTimeField, TextField
+from peewee import DateTimeField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel
 
 
