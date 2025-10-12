@@ -20,7 +20,6 @@ class Download(SeedboxSyncModel):
     the download started and finished.
     """
 
-    id = AutoField()
     path = TextField()
     seedbox_size = IntegerField()
     local_size = IntegerField(default=0)

@@ -25,7 +25,6 @@ class Torrent(SeedboxSyncModel):
         sent (datetime): Timestamp indicating when the torrent was sent or created.
     """
 
-    id = AutoField()
     name = TextField()
     announce = TextField()
     sent = DateTimeField(default=datetime.datetime.now)
