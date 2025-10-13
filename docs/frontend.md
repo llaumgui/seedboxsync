@@ -12,6 +12,44 @@ That’s why it was originally designed as a pure command-line utility.
 However, a dedicated **frontend** is also available to help you monitor and visualize what SeedboxSync is doing.
 This frontend is provided as a [separate GitHub project](https://github.com/llaumgui/seedboxsync-front) and leverages SeedboxSync’s database to extract information and generate useful statistics.
 
+:warning: Currently, the front-end does not implement any authentication method.
+You are responsible for handling authentication through a reverse proxy or another solution.
+
+---
+
+<div align="center">
+    <table>
+    <tr>
+        <td align="center">
+        <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/homepage.png">
+            <img alt="Main page" src="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/homepage.png" width="300"/>
+        </a>
+        <br><em>Main page</em>
+        </td>
+        <td align="center">
+        <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/downloaded.png">
+            <img alt="Downloaded files" src="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/downloaded.png" width="300"/>
+        </a>
+        <br><em>Downloaded files</em>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+        <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/uploaded.png">
+            <img alt="Uploaded torrents" src="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/uploaded.png" width="300"/>
+        </a>
+        <br><em>Uploaded torrents</em>
+        </td>
+        <td align="center">
+        <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/stats.png">
+            <img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync-front/refs/heads/main/screenshots/stats.png" width="300"/>
+        </a>
+        <br><em>Statistics</em>
+        </td>
+    </tr>
+    </table>
+</div
+
 ---
 
 ## Installation
