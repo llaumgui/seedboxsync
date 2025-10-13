@@ -8,7 +8,7 @@ import shutil
 import yaml
 from cement import fs
 from unittest import mock
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 
 @pytest.fixture(scope="function")
@@ -60,3 +60,14 @@ def mock_sftp(monkeypatch):
 def mock_empty_download():
     with patch('seedboxsync.core.sync.sftp_client.SftpClient.walk', return_value=[]):
         yield
+
+
+@pytest.fixture
+def mock_urllib():
+    """
+    Fixture that patches urllib.request.urlopen
+    and stores call arguments for later assertions.
+    """
+    with patch('seedboxsync.ext.ext_healthchecks.urllib.request.urlopen') as mock_urlopen:
+        mock_urlopen.return_value = MagicMock()  # fake HTTPResponse
+        yield mock_urlopen  # yield mock object for inspection after test

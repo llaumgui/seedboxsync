@@ -17,7 +17,7 @@ from abc import ABCMeta, abstractmethod
 from cement.core.log import LogInterface
 
 
-class AbstractClient():
+class AbstractClient():  # pragma: no cover
     """
     Abstract base class for transport clients.
 
