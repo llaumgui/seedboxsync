@@ -48,6 +48,16 @@ class SeedboxSync(SeedboxSyncModel):
         SeedboxSync.replace(key='db_version', value=db_version).execute()
 
     @staticmethod
+    def get_version() -> str:
+        """
+        Get SeedboxSync version.
+
+        Returns:
+            str: The database model version.
+        """
+        return str(SeedboxSync.get(SeedboxSync.key == 'version').value)
+
+    @staticmethod
     def set_version() -> None:
         """
         Upsert SeedboxSync version.
