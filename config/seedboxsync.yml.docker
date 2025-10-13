@@ -55,18 +55,6 @@ local:
 
 
 #
-# PID and lock management to prevent several launches
-#
-pid:
-
-  ### PID for blackhole sync
-  blackhole_path: /config/lock/blackhole.pid
-
-  ### PID for seedbox downloaded sync
-  download_path: /config/lock/download.pid
-
-
-#
 # Healthchecks ping service
 #
 healthchecks:

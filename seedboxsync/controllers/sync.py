@@ -59,9 +59,8 @@ class Sync(Controller):
             for res in self.app.hook.run('ping_start_hook', self.app, 'sync_blackhole'):
                 pass
 
-        # Create lock file
-        lock_file = self.app.config.get('pid', 'blackhole_path')
-        self.app.lock.lock_or_exit(lock_file)  # type: ignore[attr-defined]
+        # Create lock
+        self.app.lock.lock_or_exit('sync_blackhole')  # type: ignore[attr-defined]
 
         # Gather all torrent files
         torrents = glob.glob(fs.join(fs.abspath(self.app.config.get('local', 'watch_path')), '*.torrent'))
@@ -108,8 +107,8 @@ class Sync(Controller):
         else:
             self.app.log.info('No torrent files found in "%s"' % self.app.config.get('local', 'watch_path'))
 
-        # Remove lock file
-        self.app.lock.unlock(lock_file)  # type: ignore[attr-defined]
+        # Remove lock
+        self.app.lock.unlock('sync_blackhole')  # type: ignore[attr-defined]
 
         # Call ping_success_hook if enabled
         if self.app.pargs.ping:
@@ -145,9 +144,8 @@ class Sync(Controller):
         self.app.log.debug('sync_seedbox dry-run: "%s"' % self.app.pargs.dry_run)
         self.app.log.debug('sync_seedbox only-store: "%s"' % self.app.pargs.only_store)
 
-        # Create lock file
-        lock_file = self.app.config.get('pid', 'download_path')
-        self.app.lock.lock_or_exit(lock_file)  # type: ignore[attr-defined]
+        # Create lock
+        self.app.lock.lock_or_exit('sync_seedbox')  # type: ignore[attr-defined]
 
         finished_path = self.app.config.get('seedbox', 'finished_path')
         part_suffix = self.app.config.get('seedbox', 'part_suffix')
@@ -173,8 +171,8 @@ class Sync(Controller):
         except (IOError, FileNotFoundError) as exc:
             self.app.log.error('SeedboxSyncError > "%s"' % exc)
 
-        # Remove lock file
-        self.app.lock.unlock(lock_file)  # type: ignore[attr-defined]
+        # Remove lock
+        self.app.lock.unlock('sync_seedbox')  # type: ignore[attr-defined]
 
         # Call ping_success_hook if enabled
         if self.app.pargs.ping:

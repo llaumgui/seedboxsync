@@ -7,7 +7,9 @@
 #
 
 import os
-from cement import App, fs  # type: ignore[attr-defined]
+import datetime
+from cement import App  # type: ignore[attr-defined]
+from seedboxsync.core.dao import Lock as LockModel
 from seedboxsync.core.exc import SeedboxSyncError
 
 
@@ -25,56 +27,68 @@ class Lock(object):
         """
         self.app = app
 
-    def lock(self, lock_file: str) -> None:
+    def lock(self, lock_key: str) -> None:
         """
-        Lock the task by creating a PID file.
+        Lock the task by upsert a lock entry.
 
         Args:
-            lock_file (str): The lock file path.
-
-        Raises:
-            LockError: If the lock file cannot be created.
+            lock_key (str): The lock key.
         """
-        lock_file = fs.abspath(lock_file)
-        self.app.log.debug('Lock task by %s' % lock_file)
-        try:
-            fs.ensure_dir_exists(os.path.dirname(lock_file))
-            lock = open(lock_file, 'w+')
-            lock.write(str(os.getpid()))
-            lock.close()
-        except Exception as exc:
-            raise LockError('Lock error: %s' % str(exc))
+        self.app.log.debug('Lock task by %s' % lock_key)
+        LockModel.insert(
+            key=lock_key,
+            pid=os.getpid(),
+            locked=True,
+            locked_at=datetime.datetime.now()
+        ).on_conflict(
+            conflict_target=[LockModel.key],
+            update={
+                'pid': os.getpid(),
+                'locked': True,
+                'locked_at': datetime.datetime.now()
+            }
+        ).execute()
 
-    def unlock(self, lock_file: str) -> None:
+    def unlock(self, lock_key: str) -> None:
         """
-        Unlock the task by removing the PID file.
+        Unlock the task by upsert a lock entry.
 
         Args:
-            lock_file (str): The lock file path.
-
-        Raises:
-            LockError: If the lock file cannot be removed.
+            lock_key (str): The lock key.
         """
-        lock_file = fs.abspath(lock_file)
-        self.app.log.debug('Unlock task by %s' % lock_file)
-        try:
-            os.remove(lock_file)
-        except Exception as exc:
-            raise LockError('Lock error: %s' % str(exc))
+        self.app.log.debug('Unlock task by %s' % lock_key)
 
-    def is_locked(self, lock_file: str) -> bool:
+        LockModel.insert(
+            key=lock_key,
+            pid=0,
+            locked=False,
+            unlocked_at=datetime.datetime.now()
+        ).on_conflict(
+            conflict_target=[LockModel.key],
+            update={
+                'pid': 0,
+                'locked': False,
+                'unlocked_at': datetime.datetime.now()
+            }
+        ).execute()
+
+    def is_locked(self, lock_key: str) -> bool:
         """
         Check if the task is currently locked by a PID file.
 
         Args:
-            lock_file (str): The lock file path.
+            lock_key (str): The lock key.
 
         Returns:
             bool: True if the task is locked, False otherwise.
         """
-        lock_file = fs.abspath(lock_file)
-        if os.path.isfile(lock_file):
-            pid = int(open(lock_file, 'r').readlines()[0])
+        try:
+            lock = LockModel.get(LockModel.key == lock_key)
+        except LockModel.DoesNotExist:
+            return False
+
+        if lock.locked:
+            pid = int(lock.pid)
             if self._check_pid(pid):
                 self.app.log.info('Already running (pid=%s)' % str(pid))
                 return True
@@ -83,18 +97,18 @@ class Lock(object):
 
         return False
 
-    def lock_or_exit(self, lock_file: str) -> None:
+    def lock_or_exit(self, lock_key: str) -> None:
         """
         Lock the task or exit if already running.
 
         Args:
-            lock_file (str): The lock file path.
+            lock_key (str): The lock key.
         """
-        if self.is_locked(lock_file):
+        if self.is_locked(lock_key):
             self.app.exit_code = 0
             self.app.close()
         else:
-            self.lock(lock_file)
+            self.lock(lock_key)
 
     def _check_pid(self, pid: int) -> bool:
         """

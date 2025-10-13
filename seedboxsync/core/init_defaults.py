@@ -9,7 +9,7 @@
 from cement.utils.misc import init_defaults
 
 # setup the nested dicts
-CONFIG = init_defaults('seedboxsync', 'seedbox', 'local', 'pid', 'healthchecks', 'healthchecks.sync_seedbox')
+CONFIG = init_defaults('seedboxsync', 'seedbox', 'local', 'healthchecks', 'healthchecks.sync_seedbox')
 
 
 #
@@ -60,17 +60,6 @@ CONFIG['local']['download_path'] = '~/Download/'
 
 # Use local sqlite database for store downloaded files
 CONFIG['local']['db_file'] = '~/.config/seedboxsync/seedboxsync.db'
-
-
-#
-# PID and lock management to prevent several launch
-#
-
-# PID for blackhole sync
-CONFIG['pid']['blackhole_path'] = '~/.config/seedboxsync/lock/blackhole.pid'
-
-# PID for seedbox downloaded sync
-CONFIG['pid']['download_path'] = '~/.config/seedboxsync/lock/download.pid'
 
 
 #

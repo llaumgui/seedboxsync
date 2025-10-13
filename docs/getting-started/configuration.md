@@ -104,7 +104,7 @@ seedbox:
 
 ### NAS / Local configuration
 
-Your NAS configuration is defined in the `local` and `pid` sections:
+Your NAS configuration is defined in the `local` section:
 
 ```yaml
 #
@@ -120,18 +120,6 @@ local:
 
   ### Path to the local SQLite database for tracking downloaded files
   db_file: ~/.config/seedboxsync/seedboxsync.db
-
-
-#
-# PID and lock management to prevent multiple instances
-#
-pid:
-
-  ### PID file for blackhole sync
-  blackhole_path: ~/.config/seedboxsync/lock/blackhole.pid
-
-  ### PID file for seedbox download sync
-  download_path: ~/.config/seedboxsync/lock/download.pid
 ```
 
 ### Ping service configuration
