@@ -5,7 +5,6 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-
 from peewee import CharField, TextField
 from seedboxsync import __version__ as version
 from seedboxsync.core.dao import SeedboxSyncModel

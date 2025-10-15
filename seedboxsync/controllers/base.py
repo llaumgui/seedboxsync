@@ -5,7 +5,6 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-
 import seedboxsync
 from cement import Controller  # type: ignore[attr-defined]
 from cement.utils.version import get_version_banner
