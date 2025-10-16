@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 3.3.0 - ???
+
+* ✨ Migrated lock.pid files to the database, allowing them to be managed and accessed from the frontend.
+* ✨ Replaced the use of ProxyDb with a bound database method to simplify model usage within the frontend.
+* ✨ Introduced a database migration system and migrated to version 2 of the schema.
+* ⬆️ Dropped support for Python 3.7 and added support for Python 3.14.
+* ♻️ Refactored for Peewee v3 compatibility (the project was originally built for Peewee v2).
+* ♻️ Added static typing and integrated mypy for type checking and improved code quality.
+* 🧪 Increased unit test coverage to over 80%.
+* 🧪 Improved the unit testing system by using a temporary file-based instance during tests.
+* 📝 Added frontend documentation to the project.
+
 ## 3.2.0 - Jul 05, 2025
 
 * ✨ Allow to delete entry by ID [#56](https://github.com/llaumgui/seedboxsync/issues/56)
