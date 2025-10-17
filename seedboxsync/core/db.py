@@ -45,6 +45,12 @@ def sizeof(num: float, suffix: str = 'B') -> str:
     Returns:
         str: Human-readable size string.
     """
+    try:
+        # Treat None or invalid type as 0
+        num = float(num or 0)
+    except (ValueError, TypeError):
+        num = 0.0
+
     for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
         if abs(num) < 1024.0:
             return f"{num:3.1f}{unit}{suffix}"
