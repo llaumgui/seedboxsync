@@ -5,4 +5,4 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-__version__ = "3.3.0"
+__version__ = "3.3.1b1"
