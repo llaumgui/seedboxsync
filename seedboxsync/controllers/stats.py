@@ -5,10 +5,10 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+import humanize
 from cement import Controller, ex  # type: ignore[attr-defined]
 from peewee import fn
 from seedboxsync.core.dao import Download
-from seedboxsync.core.db import sizeof
 
 
 class Stats(Controller):
@@ -59,7 +59,7 @@ class Stats(Controller):
             {
                 period: key,
                 "files": tmp[key]["files"],
-                "total_size": sizeof(tmp[key]["total_size"]),
+                "total_size": humanize.filesize.naturalsize(tmp[key]["total_size"], True),
             }
             for key in sorted(tmp)
         ]
@@ -93,7 +93,7 @@ class Stats(Controller):
 
         stats = [{
             'files': total_files,
-            'total_size': sizeof(total_size),
+            'total_size': humanize.filesize.naturalsize(total_size, True),
         }]
 
         self.app.render(stats, headers={'files': 'Nb files', 'total_size': 'Total size'})

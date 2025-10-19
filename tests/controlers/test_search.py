@@ -36,33 +36,33 @@ def test_seedboxsync_search_downloaded(tmp):
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == 'd5358298b49cb0359b379000d215ec41'
+        assert hash_output(output) == '7429e74cb0dbd512b65ba53949410bed'
 
     # seedboxsync search downloaded -n 5
     argv = ['search', 'downloaded', '-n', '5']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '013c431a1bf733bfb3108d3e692ff9c8'
+        assert hash_output(output) == '9e72e4a8b98c1a63f7f438c46ba1616b'
     # seedboxsync search downloaded --number 5
     argv = ['search', 'downloaded', '--number', '5']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '013c431a1bf733bfb3108d3e692ff9c8'
+        assert hash_output(output) == '9e72e4a8b98c1a63f7f438c46ba1616b'
 
     # seedboxsync search downloaded -s Nulla
     argv = ['search', 'downloaded', '-s', 'Nulla']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '6f8c477b46b38e1c87aa5af21b95a67c'
+        assert hash_output(output) == '5831e9dc3c21b6b35715f0b7a8f84b5f'
     # seedboxsync search downloaded --search 5
     argv = ['search', 'downloaded', '--search', 'nULLa']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '6f8c477b46b38e1c87aa5af21b95a67c'
+        assert hash_output(output) == '5831e9dc3c21b6b35715f0b7a8f84b5f'
 
 
 def test_seedboxsync_search_progress(tmp):
@@ -84,33 +84,33 @@ def test_seedboxsync_search_progress(tmp):
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == 'e776b53155595b6cc66bd21e6c16a547'
+        assert hash_output(output) == 'e3bed24f4245f631d94668d67f511f7f'
 
     # seedboxsync search progress -n 1
     argv = ['search', 'progress', '-n', '1']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '892f588b5a6b2b45a29a40ec61a43465'
+        assert hash_output(output) == 'bfa0b491cd08f37d6024de7f1ec09e93'
     # seedboxsync search progress --number 1
     argv = ['search', 'progress', '--number', '1']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '892f588b5a6b2b45a29a40ec61a43465'
+        assert hash_output(output) == 'bfa0b491cd08f37d6024de7f1ec09e93'
 
     # seedboxsync search progress -s ante
     argv = ['search', 'progress', '-s', 'smor']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '892f588b5a6b2b45a29a40ec61a43465'
+        assert hash_output(output) == 'bfa0b491cd08f37d6024de7f1ec09e93'
     # seedboxsync search progress --search AnTe
     argv = ['search', 'progress', '--search', 'sMor']
     with SeedboxSyncTest(argv=argv, config_files=tmp_config_files) as app:
         app.run()
         _, output = app.last_rendered
-        assert hash_output(output) == '892f588b5a6b2b45a29a40ec61a43465'
+        assert hash_output(output) == 'bfa0b491cd08f37d6024de7f1ec09e93'
 
 
 def test_seedboxsync_search_uploaded(tmp):

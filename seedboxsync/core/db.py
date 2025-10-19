@@ -6,6 +6,7 @@
 # file that was distributed with this source code.
 #
 import os
+import humanize
 from peewee import SqliteDatabase
 from cement import App  # type: ignore[attr-defined]
 from cement.utils import fs
@@ -32,30 +33,6 @@ def close_db(app: App) -> None:
     """
     app.log.debug('Closing database connection')
     app._db.close()  # type: ignore[attr-defined]
-
-
-def sizeof(num: float, suffix: str = 'B') -> str:
-    """
-    Convert a byte count into a human-readable string (e.g. 1.0KiB, 12.3MiB).
-
-    Args:
-        num (float): Value to convert.
-        suffix (str): Unit suffix (default: 'B').
-
-    Returns:
-        str: Human-readable size string.
-    """
-    try:
-        # Treat None or invalid type as 0
-        num = float(num or 0)
-    except (ValueError, TypeError):
-        num = 0.0
-
-    for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
-        if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
-        num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
 
 
 class Database:
@@ -159,16 +136,6 @@ class Database:
         Register custom SQLite functions.
         """
 
-        @self.db.func('sizeof')  # type: ignore[misc]
-        def db_sizeof(num: int, suffix: str = 'B') -> str:
-            """
-            SQLite function to convert a number to human-readable format.
-
-            Args:
-                num (int): Byte value.
-                suffix (str): Optional unit suffix.
-
-            Returns:
-                str: Human-readable size string.
-            """
-            return sizeof(num, suffix)
+        @self.db.func('humanize')  # type: ignore
+        def db_humanize(num: float) -> str:
+            return humanize.filesize.naturalsize(num, True)

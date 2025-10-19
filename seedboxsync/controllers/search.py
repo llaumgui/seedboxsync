@@ -98,7 +98,7 @@ class Search(Controller):
             Download.id,
             fn.SUBSTR(Download.path, -100).alias('path'),
             Download.finished,
-            fn.sizeof(Download.local_size).alias('size')
+            fn.humanize(Download.local_size).alias('size')
         ).where(where).limit(self.app.pargs.number).order_by(Download.finished.desc()).dicts()
 
         self.app.render(reversed(data), headers={'id': 'Id', 'finished': 'Finished', 'path': 'Path', 'size': 'Size'})
@@ -139,7 +139,7 @@ class Search(Controller):
             fn.SUBSTR(Download.path, -100).alias('path'),
             Download.started,
             Download.seedbox_size,
-            fn.sizeof(Download.seedbox_size).alias('size'),
+            fn.humanize(Download.seedbox_size).alias('size'),
         ).where(where).limit(self.app.pargs.number).order_by(Download.started.desc()).dicts()
 
         in_progress = []
