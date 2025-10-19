@@ -22,10 +22,10 @@ classifiers = [
 ]
 readme = "README.md"
 license-files = ["LICENSE"]
-license = "GPL-2.0-only"
+license = "GPL-3.0-only"
 requires-python = ">=3.10"
 dependencies = [
-  "cement==3.0.14",
+  "cement>=3.0.14",
   "pyyaml",
   "colorlog",
   "paramiko>=2.12",

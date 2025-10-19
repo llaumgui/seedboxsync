@@ -3,6 +3,7 @@
 [![Author][ico-bluesky]][link-bluesky]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-ghactions]][link-ghactions]
+
 [![Latest Version][ico-pypi-version]][link-pypi]
 [![Docker Pull][ico-docker]][link-docker]
 [![Latest Version][ico-version]][link-docker]
@@ -17,21 +18,31 @@
   <a href="https://llaumgui.github.io/seedboxsync/" title="Documentation"><img alt="SeedboxSync logo" src="logo/256.png" /></a>
 </p>
 
-**SeedboxSync** provides powerful synchronization features between your NAS and your seedbox, making torrent management seamless and automated.
+**SeedboxSync** provides a seamless and automated way to synchronize, download, and manage your torrents between your NAS and seedbox.
 
-Key Features:
+## Key Features
 
-* **Local to Seedbox Sync**: Synchronize a local blackhole folder (e.g., on your NAS) with the blackhole directory on your seedbox.
-* **Seedbox to NAS Downloads**: Automatically download files from your seedbox to your NAS, keeping track of downloaded files in a SQLite database to prevent duplicates.
-* **Query & Reporting**: Retrieve information such as recent torrents, latest downloads, and other useful statistics.
+* **🔄 Two-way synchronization**:
+  * Sync from NAS to Seedbox (upload blackhole folder)
+  * Sync from Seedbox to NAS (automatic download with de-duplication tracking)
+* **📥 Download management**: Prevent duplicate transfers using an integrated SQLite database
+* **📊 Statistics and reporting**: View monthly and yearly download statistics
+* **✅ Quality and testing**: Over 80% unit test coverage
+* **🌐 Web frontend**: A web front-end is also available as a separate project if you don't want to use the CLI for management and reporting.
 
 ## Full documentation
 
 See: [https://llaumgui.github.io/seedboxsync/](https://llaumgui.github.io/seedboxsync/)
 
+## Powered by
+
+<p style="text-align:center;">
+  <a href="https://www.python.org"><img alt="Python logo" src="docs/images/python-powered-w-140x56.png" /></a> <a href="https://builtoncement.com"><img alt="SeedboxSync logo" src="docs/images/logo-cement.png" /></a> <a href="https://docs.peewee-orm.com"><img alt="peewee logo" src="docs/images/logo-peewee.png" /></a>
+</p>
+
 ## License
 
-Released under the [GPL v2](http://opensource.org/licenses/GPL-2.0).
+Released under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 [ico-bluesky]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=208bfe&logo=bluesky&style=flat-square
 [link-bluesky]: https://bsky.app/profile/llaumgui.kulakowski.fr

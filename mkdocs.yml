@@ -85,4 +85,4 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
-copyright: Copyright &copy; 2015-2025 <a href="https://blog.kulakowski.fr">Guillaume Kulakowski</a>.
+copyright: Copyright &copy; 2015-2025 <a href="https://blog.kulakowski.fr">Guillaume Kulakowski</a> under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-v3</a>.
