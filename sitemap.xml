@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/frontend/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/advanced/development-back/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/advanced/development-front/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/getting-started/configuration/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/getting-started/docker/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/getting-started/install/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+    <url>
+         <loc>https://llaumgui.github.io/seedboxsync/getting-started/usage/</loc>
+         <lastmod>2025-10-19</lastmod>
+    </url>
+</urlset>
