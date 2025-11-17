@@ -13,8 +13,21 @@ seedbox:
   # password: p4sw0rd
   # timeout: false
 
-  ### Only 'sftp' is supported for now
+  ### Protocol: 'sftp' or 'lftp'
+  ### - 'sftp': Standard SFTP using Paramiko (sequential downloads)
+  ### - 'lftp': LFTP client with parallel download support (faster for large files)
   # protocol: sftp
+
+  ### LFTP-specific settings (only used when protocol='lftp')
+  ### Protocol for LFTP to use: sftp, ftp, ftps, http, https, etc.
+  # lftp_protocol: sftp
+
+  ### Number of parallel segments for downloading a single file with pget
+  ### Higher values = faster downloads for large files, but more server load
+  # lftp_pget_segments: 5
+
+  ### Maximum retries for failed LFTP operations
+  # lftp_max_retries: 3
 
   ### Chmod torrent after upload (set to false to disable)
   ### Use octal notation, e.g. 0o644

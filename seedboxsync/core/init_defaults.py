@@ -22,8 +22,13 @@ CONFIG['seedbox']['login'] = 'me'
 CONFIG['seedbox']['password'] = 'p4sw0rd'
 CONFIG['seedbox']['timeout'] = False
 
-# For the moment, only sftp
+# Protocol: sftp or lftp
 CONFIG['seedbox']['protocol'] = 'sftp'
+
+# LFTP-specific settings (only used when protocol='lftp')
+CONFIG['seedbox']['lftp_protocol'] = 'sftp'  # Protocol for LFTP to use (sftp, ftp, ftps, http, etc.)
+CONFIG['seedbox']['lftp_pget_segments'] = 5  # Number of parallel segments for downloading a single file
+CONFIG['seedbox']['lftp_max_retries'] = 3    # Maximum retries for failed operations
 
 # Chmod torrent after upload (false = disable)
 # Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod

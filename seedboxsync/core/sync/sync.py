@@ -65,16 +65,24 @@ def extend_sync(app: App) -> None:
             'Unsupported protocol module! No class "%s" in module "seedboxsync.core.sync.%s_client"'
             % (client_class, protocol))
 
-    # Instantiate the client
+    # Instantiate the client with common parameters
+    client_params = {
+        'log': app.log,
+        'host': app.config.get('seedbox', 'host'),
+        'port': int(app.config.get('seedbox', 'port')),
+        'login': app.config.get('seedbox', 'login'),
+        'password': app.config.get('seedbox', 'password'),
+        'timeout': app.config.get('seedbox', 'timeout')
+    }
+
+    # Add LFTP-specific parameters if using LFTP protocol
+    if protocol == 'lftp':
+        client_params['protocol'] = app.config.get('seedbox', 'lftp_protocol')
+        client_params['pget_segments'] = int(app.config.get('seedbox', 'lftp_pget_segments'))
+        client_params['max_retries'] = int(app.config.get('seedbox', 'lftp_max_retries'))
+
     try:
-        sync = transfer_client(
-            log=app.log,
-            host=app.config.get('seedbox', 'host'),
-            port=int(app.config.get('seedbox', 'port')),
-            login=app.config.get('seedbox', 'login'),
-            password=app.config.get('seedbox', 'password'),
-            timeout=app.config.get('seedbox', 'timeout')
-        )
+        sync = transfer_client(**client_params)
     except Exception as exc:
         raise ConnectionError('Connection failed: %s' % str(exc))
 

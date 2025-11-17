@@ -57,6 +57,24 @@ def mock_sftp(monkeypatch):
 
 
 @pytest.fixture
+def mock_lftp(monkeypatch):
+    """
+    Mock LFTP subprocess calls for testing.
+    """
+    mock_result = mock.MagicMock()
+    mock_result.returncode = 0
+    mock_result.stdout = ""
+    mock_result.stderr = ""
+
+    def mock_run(*args, **kwargs):
+        return mock_result
+
+    monkeypatch.setattr('subprocess.run', mock_run)
+
+    return mock_result
+
+
+@pytest.fixture
 def mock_empty_download():
     with patch('seedboxsync.core.sync.sftp_client.SftpClient.walk', return_value=[]):
         yield
