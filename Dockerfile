@@ -37,8 +37,7 @@ ARG TARGETARCH
 
 # ------------------------------------------------------------------- s6 overlay
 # Map Docker TARGETARCH to s6-overlay architecture names
-# hadolint ignore=DL3018
-# hadolint ignore=DL3047
+# hadolint ignore=DL3047,DL3018 ignore=DL3018 ignore=DL3047
 RUN apk add --update --no-cache wget shadow lftp && \
     case "${TARGETARCH}" in \
         amd64) S6_ARCH=x86_64 ;; \
