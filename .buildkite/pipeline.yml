@@ -10,7 +10,7 @@ steps:
       fi
 
       echo "--- :python: Install dependencies"
-      python -m venv env
+      python3 -m venv env
       env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
@@ -28,7 +28,7 @@ steps:
       fi
 
       echo "--- :python: Install dependencies"
-      python -m venv env
+      python3 -m venv env
       env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
@@ -46,7 +46,7 @@ steps:
       fi
 
       echo "--- :python: Install dependencies"
-      python -m venv env
+      python3 -m venv env
       env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
