@@ -52,7 +52,7 @@ steps:
     artifact_paths:
       - "coverage.xml"
 
-  - label ":markdown: Markdown Lint"
+  - label: ":markdown: Markdown Lint"
     key: "markdown-lint"
     agents:
       role: "builder"
