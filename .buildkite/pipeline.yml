@@ -1,0 +1,139 @@
+steps:
+  - label: ":python: Python Lint (Flake8)"
+    key: "python-lint"
+    agents:
+      role: "builder"
+    command: |
+      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+        echo "--- :fast_forward: Skipping Python linting (CI_SKIP_TESTS found in commit message)"
+        exit 0
+      fi
+
+      echo "--- :python: Install dependencies"
+      python -m venv env
+      env/bin/pip install -e ".[dev]"
+
+      echo "--- :cop: Running Flake8"
+      env/bin/flake8 seedboxsync/ tests/
+
+  - label: ":mag: Type Checking (mypy)"
+    key: "type-check"
+    agents:
+      role: "builder"
+    command: |
+      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+        echo "--- :fast_forward: Skipping type checking (CI_SKIP_TESTS found in commit message)"
+        exit 0
+      fi
+
+      echo "--- :python: Install dependencies"
+      python -m venv env
+      env/bin/pip install -e ".[dev]"
+
+      echo "--- :mag: Running mypy"
+      env/bin/mypy
+
+  - label: ":pytest: Run Tests"
+    key: "tests"
+    agents:
+      role: "builder"
+    command: |
+      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+        echo "--- :fast_forward: Skipping pytest tests (CI_SKIP_TESTS found in commit message)"
+        exit 0
+      fi
+
+      echo "--- :python: Install dependencies"
+      python -m venv env
+      env/bin/pip install -e ".[dev]"
+
+      echo "--- :pytest: Run tests with coverage"
+      env/bin/pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
+    artifact_paths:
+      - "coverage.xml"
+
+  - label ":markdown: Markdown Lint"
+    key: "markdown-lint"
+    agents:
+      role: "builder"
+    command: |
+      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+        echo "--- :fast_forward: Skipping markdown linting (CI_SKIP_TESTS found in commit message)"
+        exit 0
+      fi
+
+      echo "--- :markdown: Running markdownlint"
+      docker run --rm -v "$${PWD}:/workspace" -w /workspace \
+        ghcr.io/igorshubovych/markdownlint-cli:latest \
+        --config .markdownlint.yaml \
+        "*.md" "docs/"
+
+  - label: ":docker: Dockerfile Lint (hadolint)"
+    key: "dockerfile-lint"
+    agents:
+      role: "builder"
+    command: |
+      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+        echo "--- :fast_forward: Skipping hadolint (CI_SKIP_TESTS found in commit message)"
+        exit 0
+      fi
+
+      echo "--- :docker: Running hadolint"
+      docker run --rm -i hadolint/hadolint < Dockerfile
+
+  - wait
+
+  - label: ":hammer: Build and Push Docker Image"
+    key: "build"
+    agents:
+      role: "builder"
+    command: |
+      echo "--- :key: Login to registry"
+      echo "$$BUILDKITE_REGISTRY_TOKEN" | docker login packages.buildkite.com -u "$$BUILDKITE_REGISTRY_USER" --password-stdin
+
+      echo "--- :docker: Build image"
+      docker build -t packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT .
+
+      echo "--- :label: Tag images"
+      docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:build-$$BUILDKITE_BUILD_NUMBER
+
+      if [[ "$$BUILDKITE_TAG" != "" ]]; then
+        docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_TAG
+      fi
+
+      if [[ "$$BUILDKITE_BRANCH" == "main" ]] || [[ "$$BUILDKITE_BRANCH" == "lftp_multithreading" ]]; then
+        docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_BRANCH
+      fi
+
+      if [[ "$$BUILDKITE_BRANCH" == "main" ]]; then
+        docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:latest
+      fi
+
+      echo "--- :rocket: Push to registry"
+      docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT
+      docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:build-$$BUILDKITE_BUILD_NUMBER
+
+      if [[ "$$BUILDKITE_TAG" != "" ]]; then
+        echo "--- :rocket: Pushing version tag: $$BUILDKITE_TAG"
+        docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_TAG
+      fi
+
+      if [[ "$$BUILDKITE_BRANCH" == "main" ]] || [[ "$$BUILDKITE_BRANCH" == "lftp_multithreading" ]]; then
+        echo "--- :rocket: Pushing branch tag: $$BUILDKITE_BRANCH"
+        docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_BRANCH
+      fi
+
+      if [[ "$$BUILDKITE_BRANCH" == "main" ]]; then
+        echo "--- :rocket: Pushing latest tag"
+        docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:latest
+      fi
+    depends_on:
+      - "python-lint"
+      - "type-check"
+      - "tests"
+      - "markdown-lint"
+      - "dockerfile-lint"
+
+env:
+  DOCKER_BUILDKIT: "1"
+  COMPOSE_DOCKER_CLI_BUILD: "1"
