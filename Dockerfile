@@ -38,6 +38,7 @@ ARG TARGETARCH
 # ------------------------------------------------------------------- s6 overlay
 # Map Docker TARGETARCH to s6-overlay architecture names
 # hadolint ignore=DL3018
+# hadolint ignore=DL3047
 RUN apk add --update --no-cache wget shadow lftp && \
     case "${TARGETARCH}" in \
         amd64) S6_ARCH=x86_64 ;; \
@@ -45,9 +46,9 @@ RUN apk add --update --no-cache wget shadow lftp && \
         armhf|armv7|arm) S6_ARCH=armhf ;; \
         *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
     esac && \
-    wget -O /tmp/s6-overlay-noarch.tar.xz \
+    wget -qO /tmp/s6-overlay-noarch.tar.xz \
         "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" && \
-    wget -O /tmp/s6-overlay-arch.tar.xz \
+    wget -qO /tmp/s6-overlay-arch.tar.xz \
         "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" && \
     tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
     tar -C / -Jxpf /tmp/s6-overlay-arch.tar.xz && \
