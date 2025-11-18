@@ -93,10 +93,10 @@ steps:
       echo "$$BUILDKITE_REGISTRY_TOKEN" | docker login packages.buildkite.com -u "$$BUILDKITE_REGISTRY_USER" --password-stdin
 
       echo "--- :gear: Setup QEMU for cross-platform builds"
-      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      docker run --rm --privileged tonistiigi/binfmt --install all
 
       echo "--- :gear: Setup buildx"
-      docker buildx create --use --name seedboxsync-builder --driver docker-container 2>/dev/null || docker buildx use seedboxsync-builder
+      docker buildx create --use --name seedboxsync-builder --driver docker-container --platform linux/amd64,linux/arm64 2>/dev/null || docker buildx use seedboxsync-builder
 
       echo "--- :mag: Debug build environment"
       echo "Builder architecture: $$(uname -m)"
