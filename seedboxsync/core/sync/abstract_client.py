@@ -64,7 +64,7 @@ class AbstractClient():  # pragma: no cover
         pass
 
     @abstractmethod
-    def stat(self, filepath: str) -> None:
+    def stat(self, filepath: str):  # type: ignore[no-untyped-def]
         """
         Retrieve metadata about a file on the remote system.
 
@@ -73,6 +73,9 @@ class AbstractClient():  # pragma: no cover
 
         Args:
             filepath (str): Path to the remote file.
+
+        Returns:
+            An object with stat-like attributes (implementation-dependent).
         """
         pass
 
@@ -87,7 +90,7 @@ class AbstractClient():  # pragma: no cover
         pass
 
     @abstractmethod
-    def chmod(self, path: str, mode: str) -> None:
+    def chmod(self, path: str, mode: int) -> None:
         """
         Change permissions of a remote file.
 

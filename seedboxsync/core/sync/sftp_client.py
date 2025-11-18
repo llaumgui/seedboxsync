@@ -126,7 +126,7 @@ class SftpClient(AbstractClient):
         self.__connect_before()
         self.__client.chdir(path)
 
-    def chmod(self, path: str, mode: str) -> None:
+    def chmod(self, path: str, mode: int) -> None:
         """
         Change the mode (permissions) of a remote file.
 

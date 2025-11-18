@@ -110,7 +110,7 @@ class LftpClient(AbstractClient):
         password_escaped = self.__password.replace('@', '%40').replace(':', '%3A')
         return f"{self.__protocol}://{self.__login}:{password_escaped}@{self.__host}:{self.__port}"
 
-    def __run_lftp_command(self, command: str, input_data: Optional[str] = None) -> subprocess.CompletedProcess:
+    def __run_lftp_command(self, command: str, input_data: Optional[str] = None) -> subprocess.CompletedProcess[str]:
         """
         Execute an LFTP command.
 
@@ -261,7 +261,7 @@ class LftpClient(AbstractClient):
 
             self.__cwd = path
 
-    def chmod(self, path: str, mode: str) -> None:
+    def chmod(self, path: str, mode: int) -> None:
         """
         Change the mode (permissions) of a remote file.
 
