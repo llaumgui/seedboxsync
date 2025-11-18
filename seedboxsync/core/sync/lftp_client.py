@@ -11,7 +11,6 @@ Transport client using LFTP with parallel download support.
 import os
 import subprocess
 import shlex
-import tempfile
 from typing import Generator, Tuple, List, Optional
 from cement.core.log import LogInterface
 from seedboxsync.core.sync.abstract_client import AbstractClient
@@ -128,8 +127,8 @@ class LftpClient(AbstractClient):
         script_lines = [
             f"set net:timeout {self.__timeout}",
             f"set net:max-retries {self.__max_retries}",
-            f"set net:reconnect-interval-base 5",
-            f"set net:reconnect-interval-multiplier 1",
+            "set net:reconnect-interval-base 5",
+            "set net:reconnect-interval-multiplier 1",
             "set ssl:verify-certificate no",  # For testing; should be configurable in production
         ]
 
@@ -153,7 +152,7 @@ class LftpClient(AbstractClient):
                 timeout=int(self.__timeout) * 3 if self.__timeout else None
             )
             return result
-        except subprocess.TimeoutExpired as exc:
+        except subprocess.TimeoutExpired:
             self.__log.error(f'LFTP command timed out: {command}')
             raise
         except FileNotFoundError:

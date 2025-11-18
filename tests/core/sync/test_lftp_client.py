@@ -12,7 +12,6 @@ import pytest
 from unittest import mock
 from cement import TestApp
 from seedboxsync.core.sync.lftp_client import LftpClient, LftpStatResult
-from seedboxsync.core.sync.sync import ConnectionError
 
 
 class TestLftpStatResult:
