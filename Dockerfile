@@ -31,19 +31,26 @@ ENV \
     # Setup s6 overlay
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
     S6_VERBOSITY=1
-ARG \
-    # Set version for s6 overlay \
-    ARG S6_OVERLAY_VERSION="3.2.1.0" \
-    ARG S6_OVERLAY_ARCH="x86_64"
+ARG S6_OVERLAY_VERSION="3.2.1.0"
+ARG TARGETARCH
 
 
 # ------------------------------------------------------------------- s6 overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-"${S6_OVERLAY_ARCH}".tar.xz /tmp
+# Map Docker TARGETARCH to s6-overlay architecture names
 # hadolint ignore=DL3018
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
-    tar -C / -Jxpf /tmp/s6-overlay-"${S6_OVERLAY_ARCH}".tar.xz && \
-    apk add --update --no-cache shadow && \
+RUN apk add --update --no-cache wget shadow lftp && \
+    case "${TARGETARCH}" in \
+        amd64) S6_ARCH=x86_64 ;; \
+        arm64) S6_ARCH=aarch64 ;; \
+        armhf|armv7|arm) S6_ARCH=armhf ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac && \
+    wget -O /tmp/s6-overlay-noarch.tar.xz \
+        "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" && \
+    wget -O /tmp/s6-overlay-arch.tar.xz \
+        "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_ARCH}.tar.xz" && \
+    tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay-arch.tar.xz && \
     rm -rf /tmp/*.tar.xz
 
 # ------------------------------------------------------------ SeedboxSync setup

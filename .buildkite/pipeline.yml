@@ -94,8 +94,14 @@ steps:
       echo "--- :key: Login to registry"
       echo "$$BUILDKITE_REGISTRY_TOKEN" | docker login packages.buildkite.com -u "$$BUILDKITE_REGISTRY_USER" --password-stdin
 
-      echo "--- :docker: Build image"
-      docker build -t packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT .
+      echo "--- :gear: Setup buildx"
+      docker buildx create --use --name seedboxsync-builder 2>/dev/null || docker buildx use seedboxsync-builder
+
+      echo "--- :docker: Build image for native platform"
+      PLATFORM=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/;s/armv7l/arm\/v7/')
+      echo "Building for platform: linux/$$PLATFORM"
+      docker buildx build --load --platform "linux/$$PLATFORM" \
+        -t packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT .
 
       echo "--- :label: Tag images"
       docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:build-$$BUILDKITE_BUILD_NUMBER
