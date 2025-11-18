@@ -11,6 +11,7 @@ steps:
 
       echo "--- :python: Install dependencies"
       python -m venv env
+      env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
       echo "--- :cop: Running Flake8"
@@ -28,6 +29,7 @@ steps:
 
       echo "--- :python: Install dependencies"
       python -m venv env
+      env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
       echo "--- :mag: Running mypy"
@@ -45,6 +47,7 @@ steps:
 
       echo "--- :python: Install dependencies"
       python -m venv env
+      env/bin/pip install --upgrade pip
       env/bin/pip install -e ".[dev]"
 
       echo "--- :pytest: Run tests with coverage"
