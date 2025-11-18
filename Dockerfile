@@ -10,6 +10,7 @@ ENV \
     PYTHONUNBUFFERED=1
 
 COPY . /src
+# hadolint ignore=DL3013
 RUN pip install --no-cache-dir cement && \
     pip install --no-cache-dir -e .[dev] && \
     pip wheel --no-cache-dir --no-deps --wheel-dir /src/wheels .
@@ -38,16 +39,12 @@ ARG \
 
 # ------------------------------------------------------------------- s6 overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
-# Optional symlinks
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
-
-RUN apk add --update --no-cache shadow
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-"${S6_OVERLAY_ARCH}".tar.xz /tmp
+# hadolint ignore=DL3018
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay-"${S6_OVERLAY_ARCH}".tar.xz && \
+    apk add --update --no-cache shadow && \
+    rm -rf /tmp/*.tar.xz
 
 # ------------------------------------------------------------ SeedboxSync setup
 RUN addgroup -g ${PGID} seedboxsync && adduser -D -u ${PUID} -G seedboxsync seedboxsync
@@ -62,6 +59,7 @@ RUN mkdir /config && \
 
 # Add cement for setup.py before
 COPY --from=builder /src/wheels wheels
+# hadolint ignore=DL3013
 RUN pip install --no-cache-dir wheels/* && \
     rm -rf /src
 
