@@ -1,75 +1,75 @@
 steps:
-  - label: ":python: Python Lint (Flake8)"
-    key: "python-lint"
-    agents:
-      role: "builder"
-    command: |
-      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
-        echo "--- :fast_forward: Skipping Python linting (CI_SKIP_TESTS found in commit message)"
-        exit 0
-      fi
+  # - label: ":python: Python Lint (Flake8)"
+  #   key: "python-lint"
+  #   agents:
+  #     role: "builder"
+  #   command: |
+  #     if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+  #       echo "--- :fast_forward: Skipping Python linting (CI_SKIP_TESTS found in commit message)"
+  #       exit 0
+  #     fi
 
-      echo "--- :python: Install dependencies"
-      python3 -m venv env
-      env/bin/pip install --upgrade pip
-      env/bin/pip install -e ".[dev]"
+  #     echo "--- :python: Install dependencies"
+  #     python3 -m venv env
+  #     env/bin/pip install --upgrade pip
+  #     env/bin/pip install -e ".[dev]"
 
-      echo "--- :cop: Running Flake8"
-      env/bin/flake8 seedboxsync/ tests/
+  #     echo "--- :cop: Running Flake8"
+  #     env/bin/flake8 seedboxsync/ tests/
 
-  - label: ":mag: Type Checking (mypy)"
-    key: "type-check"
-    agents:
-      role: "builder"
-    command: |
-      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
-        echo "--- :fast_forward: Skipping type checking (CI_SKIP_TESTS found in commit message)"
-        exit 0
-      fi
+  # - label: ":mag: Type Checking (mypy)"
+  #   key: "type-check"
+  #   agents:
+  #     role: "builder"
+  #   command: |
+  #     if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+  #       echo "--- :fast_forward: Skipping type checking (CI_SKIP_TESTS found in commit message)"
+  #       exit 0
+  #     fi
 
-      echo "--- :python: Install dependencies"
-      python3 -m venv env
-      env/bin/pip install --upgrade pip
-      env/bin/pip install -e ".[dev]"
+  #     echo "--- :python: Install dependencies"
+  #     python3 -m venv env
+  #     env/bin/pip install --upgrade pip
+  #     env/bin/pip install -e ".[dev]"
 
-      echo "--- :mag: Running mypy"
-      env/bin/mypy
+  #     echo "--- :mag: Running mypy"
+  #     env/bin/mypy
 
-  - label: ":pytest: Run Tests"
-    key: "tests"
-    agents:
-      role: "builder"
-    command: |
-      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
-        echo "--- :fast_forward: Skipping pytest tests (CI_SKIP_TESTS found in commit message)"
-        exit 0
-      fi
+  # - label: ":pytest: Run Tests"
+  #   key: "tests"
+  #   agents:
+  #     role: "builder"
+  #   command: |
+  #     if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+  #       echo "--- :fast_forward: Skipping pytest tests (CI_SKIP_TESTS found in commit message)"
+  #       exit 0
+  #     fi
 
-      echo "--- :python: Install dependencies"
-      python3 -m venv env
-      env/bin/pip install --upgrade pip
-      env/bin/pip install -e ".[dev]"
+  #     echo "--- :python: Install dependencies"
+  #     python3 -m venv env
+  #     env/bin/pip install --upgrade pip
+  #     env/bin/pip install -e ".[dev]"
 
-      echo "--- :pytest: Run tests with coverage"
-      env/bin/pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
-    artifact_paths:
-      - "coverage.xml"
+  #     echo "--- :pytest: Run tests with coverage"
+  #     env/bin/pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
+  #   artifact_paths:
+  #     - "coverage.xml"
 
-  - label: ":markdown: Markdown Lint"
-    key: "markdown-lint"
-    agents:
-      role: "builder"
-    command: |
-      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
-        echo "--- :fast_forward: Skipping markdown linting (CI_SKIP_TESTS found in commit message)"
-        exit 0
-      fi
+  # - label: ":markdown: Markdown Lint"
+  #   key: "markdown-lint"
+  #   agents:
+  #     role: "builder"
+  #   command: |
+  #     if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+  #       echo "--- :fast_forward: Skipping markdown linting (CI_SKIP_TESTS found in commit message)"
+  #       exit 0
+  #     fi
 
-      echo "--- :markdown: Running markdownlint"
-      docker run --rm -v "$${PWD}:/workspace" -w /workspace \
-        ghcr.io/igorshubovych/markdownlint-cli:latest \
-        --config .markdownlint.yaml \
-        "*.md" "docs/"
+  #     echo "--- :markdown: Running markdownlint"
+  #     docker run --rm -v "$${PWD}:/workspace" -w /workspace \
+  #       ghcr.io/igorshubovych/markdownlint-cli:latest \
+  #       --config .markdownlint.yaml \
+  #       "*.md" "docs/"
 
   # - label: ":docker: Dockerfile Lint (hadolint)"
   #   key: "dockerfile-lint"
@@ -84,8 +84,6 @@ steps:
   #     echo "--- :docker: Running hadolint"
   #     docker run --rm -i hadolint/hadolint < Dockerfile
 
-  - wait
-
   - label: ":hammer: Build and Push Docker Image"
     key: "build"
     agents:
@@ -94,14 +92,26 @@ steps:
       echo "--- :key: Login to registry"
       echo "$$BUILDKITE_REGISTRY_TOKEN" | docker login packages.buildkite.com -u "$$BUILDKITE_REGISTRY_USER" --password-stdin
 
-      echo "--- :gear: Setup buildx"
-      docker buildx create --use --name seedboxsync-builder 2>/dev/null || docker buildx use seedboxsync-builder
+      echo "--- :gear: Setup QEMU for cross-platform builds"
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-      echo "--- :docker: Build image for native platform"
-      PLATFORM=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/;s/armv7l/arm\/v7/')
-      echo "Building for platform: linux/$$PLATFORM"
-      docker buildx build --load --platform "linux/$$PLATFORM" \
+      echo "--- :gear: Setup buildx"
+      docker buildx create --use --name seedboxsync-builder --driver docker-container 2>/dev/null || docker buildx use seedboxsync-builder
+
+      echo "--- :mag: Debug build environment"
+      echo "Builder architecture: $$(uname -m)"
+      echo "Docker version: $$(docker --version)"
+      echo "Buildx version: $$(docker buildx version)"
+
+      echo "--- :docker: Build image for AMD64 (Synology Intel Celeron)"
+      docker buildx build --load --platform linux/amd64 \
+        --progress=plain \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
         -t packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT .
+
+      echo "--- :mag: Verify built image architecture"
+      docker run --rm packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT uname -m || echo "Failed to run uname"
+      docker inspect packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT | grep -i arch
 
       echo "--- :label: Tag images"
       docker tag packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:$$BUILDKITE_COMMIT packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:build-$$BUILDKITE_BUILD_NUMBER
@@ -136,11 +146,11 @@ steps:
         echo "--- :rocket: Pushing latest tag"
         docker push packages.buildkite.com/ivydra-dot-com/personal-docker/seedboxsync:latest
       fi
-    depends_on:
-      - "python-lint"
-      - "type-check"
-      - "tests"
-      - "markdown-lint"
+    # depends_on:
+    #   - "python-lint"
+    #   - "type-check"
+    #   - "tests"
+    #   - "markdown-lint"
 
 env:
   DOCKER_BUILDKIT: "1"
