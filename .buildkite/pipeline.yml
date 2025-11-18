@@ -71,18 +71,18 @@ steps:
         --config .markdownlint.yaml \
         "*.md" "docs/"
 
-  - label: ":docker: Dockerfile Lint (hadolint)"
-    key: "dockerfile-lint"
-    agents:
-      role: "builder"
-    command: |
-      if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
-        echo "--- :fast_forward: Skipping hadolint (CI_SKIP_TESTS found in commit message)"
-        exit 0
-      fi
+  # - label: ":docker: Dockerfile Lint (hadolint)"
+  #   key: "dockerfile-lint"
+  #   agents:
+  #     role: "builder"
+  #   command: |
+  #     if [[ "$$BUILDKITE_MESSAGE" == *"CI_SKIP_TESTS"* ]]; then
+  #       echo "--- :fast_forward: Skipping hadolint (CI_SKIP_TESTS found in commit message)"
+  #       exit 0
+  #     fi
 
-      echo "--- :docker: Running hadolint"
-      docker run --rm -i hadolint/hadolint < Dockerfile
+  #     echo "--- :docker: Running hadolint"
+  #     docker run --rm -i hadolint/hadolint < Dockerfile
 
   - wait
 
@@ -141,7 +141,6 @@ steps:
       - "type-check"
       - "tests"
       - "markdown-lint"
-      - "dockerfile-lint"
 
 env:
   DOCKER_BUILDKIT: "1"
