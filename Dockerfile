@@ -39,7 +39,7 @@ ARG TARGETARCH
 # Map Docker TARGETARCH to s6-overlay architecture names
 # hadolint ignore=DL3047,DL3018 ignore=DL3018 ignore=DL3047
 RUN echo "Building for TARGETARCH=${TARGETARCH}" && \
-    apk add --update --no-cache wget shadow lftp && \
+    apk add --update --no-cache wget shadow lftp openssh-client && \
     case "${TARGETARCH}" in \
         amd64) S6_ARCH=x86_64 ;; \
         arm64) S6_ARCH=aarch64 ;; \
