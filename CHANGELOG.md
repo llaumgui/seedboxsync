@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.4.0 - Xxx xx, 2026
+
+* ✨ Add FTP support !
+
 ## 3.3.0 - Oct 18, 2025
 
 * ✨ Migrated lock.pid files to the database, allowing them to be managed and accessed from the frontend.

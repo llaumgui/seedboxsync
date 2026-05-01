@@ -22,7 +22,7 @@ CONFIG['seedbox']['login'] = 'me'
 CONFIG['seedbox']['password'] = 'p4sw0rd'
 CONFIG['seedbox']['timeout'] = False
 
-# For the moment, only sftp
+# Set protocol: 'sftp' or 'ftp'
 CONFIG['seedbox']['protocol'] = 'sftp'
 
 # Chmod torrent after upload (false = disable)

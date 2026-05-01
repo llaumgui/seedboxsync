@@ -87,7 +87,7 @@ class AbstractClient():  # pragma: no cover
         pass
 
     @abstractmethod
-    def chmod(self, path: str, mode: str) -> None:
+    def chmod(self, path: str, mode: int) -> None:
         """
         Change permissions of a remote file.
 

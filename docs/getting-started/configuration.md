@@ -47,7 +47,6 @@ Supported configuration file locations:
 ### Seedbox and BitTorrent client configuration
 
 First, set the connection information for your seedbox.
-Currently, only SFTP is supported.
 
 ```yaml
 #
@@ -62,7 +61,7 @@ seedbox:
   password: p4sw0rd
   timeout: false
 
-  ### Only 'sftp' is supported for now
+  ### Set protocol: 'sftp' or 'ftp'
   protocol: sftp
 
   ### Chmod torrent after upload (set to false to disable)

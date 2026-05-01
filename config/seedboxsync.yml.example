@@ -13,11 +13,11 @@ seedbox:
   # password: p4sw0rd
   # timeout: false
 
-  ### Only 'sftp' is supported for now
+  ### Set protocol: 'sftp' or 'ftp'
   # protocol: sftp
 
   ### Chmod torrent after upload (set to false to disable)
-  ### Use octal notation, e.g. 0o644
+  ### Use octal notation, e.g. 0o644 like https://docs.python.org/3.4/library/os.html#os.chmod
   # chmod: false
 
   ### Use a temporary directory for incomplete transfers (must be created manually)

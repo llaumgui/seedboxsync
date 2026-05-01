@@ -13,7 +13,7 @@ seedbox:
   # password: p4sw0rd
   # timeout: false
 
-  ### For the moment, only sftp
+  ### Set protocol: 'sftp' or 'ftp'
   # protocol: sftp
 
   ### Chmod torrent after upload (false :  disable)

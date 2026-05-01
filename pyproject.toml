@@ -9,6 +9,7 @@ keywords = [
   "seedbox",
   "nas",
   "sync",
+  "ftp",
   "sftp",
 ]
 classifiers = [
@@ -29,6 +30,7 @@ dependencies = [
   "pyyaml",
   "colorlog",
   "paramiko>=2.12",
+  "ftputil",
   "bcoding",
   "tabulate",
   "humanize",

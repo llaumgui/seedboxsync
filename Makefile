@@ -9,7 +9,7 @@ virtualenv:
 
 test: comply mypy pytest markdownlint hadolint
 
-test-ci: comply pytest-xml
+test-ci: comply mypy pytest-xml
 
 pytest:
 	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
