@@ -84,6 +84,19 @@ environment:
 | `PUID`     | User ID for the main process                  | `1000`        |
 | `PGID`     | Group ID for the main process                 | `1000`        |
 
+### Customize cron
+
+You can override [the original crontab file](docker/etc/crontabs/seedboxsync), located at `/etc/crontabs/seedboxsync`, by mounting your own version.
+
+```yaml
+services:
+  seedboxsync:
+    [...]
+    volumes:
+      - /data/seedboxsync/crontabs:/etc/crontabs/seedboxsync
+    [...]
+```
+
 ## Using the Command Line from the Docker Host
 
 You can use a script to easily run SeedboxSync commands inside the container:
