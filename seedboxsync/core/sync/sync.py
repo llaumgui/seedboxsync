@@ -76,7 +76,7 @@ def extend_sync(app: App) -> None:
             timeout=app.config.get('seedbox', 'timeout')
         )
     except Exception as exc:
-        raise ConnectionError('Connection failed: %s' % str(exc))
+        raise ConnectionError(f"{str(exc)}\nFailed to establish a connection.")
 
     # Attach the client instance to the app
     app.extend('sync', sync)

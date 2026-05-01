@@ -152,7 +152,12 @@ class Sync(Controller):
 
         # Walk through all files on the seedbox
         try:
-            self.app.sync.chdir(finished_path)  # type: ignore[attr-defined]
+            try:
+                self.app.sync.chdir(finished_path)  # type: ignore[attr-defined]
+            except FileNotFoundError as exc:
+                self.app.log.error(f"{str(exc)}\nFailed to scan directory: {finished_path}")
+                return
+
             for walker in self.app.sync.walk(''):  # type: ignore[attr-defined]
                 for filename in walker[2]:
                     filepath = os.path.join(walker[0], filename)

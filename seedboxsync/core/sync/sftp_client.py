@@ -10,6 +10,7 @@ Transport client using sFTP protocol.
 """
 import os
 import paramiko  # type: ignore[import-untyped]
+import socket
 from stat import S_ISDIR
 from cement.core.log import LogInterface
 from typing import Generator, Tuple, List
@@ -59,16 +60,21 @@ class SftpClient(AbstractClient):
         Initialize the SFTP transport and client if not already connected.
 
         Raises:
-            ConnectionError: If authentication fails.
+            ConnectionError: If connection or authentication fails.
         """
         if self.__transport is None:
             self.__log.debug('Init paramiko.Transport')
-            self.__transport = paramiko.Transport((self.__host, int(self.__port)))
+            try:
+                self.__transport = paramiko.Transport((self.__host, int(self.__port)))
+            except (socket.gaierror, ConnectionRefusedError) as exc:
+                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. Ensure the host and port are correct, and that no firewall is blocking access.")
+
             try:
                 self.__transport.connect(username=self.__login, password=self.__password)
             except paramiko.ssh_exception.AuthenticationException as exc:
-                raise ConnectionError('Connection fail: %s' % str(exc))
+                raise ConnectionError(f'{str(exc)}\nFailed to establish a connection. Ensure the login and password are correct.')
 
+            self.__log.debug('Init paramiko.SFTPClient from transport')
             self.__client = paramiko.SFTPClient.from_transport(self.__transport)
 
             # Setup timeout
@@ -165,8 +171,8 @@ class SftpClient(AbstractClient):
         """
         self.__connect_before()
         path = remote_path
-        files = []
-        folders = []
+        files: List[str] = []
+        folders: List[str] = []
         for f in self.__client.listdir_attr(remote_path):
             if S_ISDIR(f.st_mode):
                 folders.append(f.filename)
