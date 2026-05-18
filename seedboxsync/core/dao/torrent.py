@@ -25,5 +25,5 @@ class Torrent(SeedboxSyncModel):
     """
 
     name = TextField()
-    announce = TextField()
+    announce = TextField(null=True)
     sent = DateTimeField(default=datetime.datetime.now)

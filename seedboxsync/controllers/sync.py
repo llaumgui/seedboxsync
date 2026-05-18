@@ -90,7 +90,7 @@ class Sync(Controller):
                         torrent_info = self.app.bcoding.get_torrent_infos(torrent_file)  # type: ignore[attr-defined]
                         torrent = Torrent.create(name=torrent_name)
                         if torrent_info is not None:
-                            torrent.announce = torrent_info['announce']
+                            torrent.announce = torrent_info.get('announce') or None
                             torrent.save()
 
                             # Remove local torrent file
