@@ -11,6 +11,7 @@ from peewee import SqliteDatabase
 from cement import App  # type: ignore[attr-defined]
 from cement.utils import fs
 from seedboxsync.core.dao import Download, Lock, SeedboxSync, Torrent
+from playhouse.migrate import SchemaMigrator, migrate
 
 
 def extend_db(app: App) -> None:
@@ -49,7 +50,7 @@ class Database:
         db (SqliteDatabase): Peewee database instance.
     """
 
-    DATABASE_VERSION = 2
+    DATABASE_VERSION = 3
     __app: App
     __db_file: str
     db: SqliteDatabase
@@ -139,3 +140,13 @@ class Database:
         @self.db.func('humanize')  # type: ignore
         def db_humanize(num: float) -> str:
             return humanize.filesize.naturalsize(num, True)
+
+    def migrate_to_3(self) -> None:
+        """
+        Migration: allow null values for the 'announce' field in the torrent table.
+        """
+        migrator = SchemaMigrator.from_database(self.db)
+        migrate(
+            migrator.drop_not_null('torrent', 'announce'),
+        )
+        SeedboxSync.set_db_version('3')
