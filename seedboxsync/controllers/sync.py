@@ -14,7 +14,7 @@ import datetime
 import glob
 import os
 import re
-from paramiko import SSHException  # type: ignore[import-untyped]
+from paramiko import SSHException
 from cement import Controller, ex, fs  # type: ignore[attr-defined]
 from seedboxsync.core.dao import Download, Torrent
 from seedboxsync.core.exc import SeedboxSyncConfigurationError

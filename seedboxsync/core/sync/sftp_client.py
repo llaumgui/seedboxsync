@@ -9,12 +9,12 @@
 Transport client using sFTP protocol.
 """
 import os
-import paramiko  # type: ignore[import-untyped]
+import paramiko
 import socket
 from stat import S_ISDIR
 from cement.core.log import LogInterface
 from typing import Generator, Tuple, List
-from paramiko.sftp_attr import SFTPAttributes  # type: ignore[import-untyped]
+from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core.sync.abstract_client import AbstractClient
 from seedboxsync.core.sync.sync import ConnectionError
 
