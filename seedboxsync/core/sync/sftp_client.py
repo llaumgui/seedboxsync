@@ -34,6 +34,7 @@ class SftpClient(AbstractClient):
     __timeout: str | bool
     __transport = paramiko.Transport
     __client: paramiko.SFTPClient
+    __max_concurrent_prefetch_requests: int = 32
 
     def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str | bool = False):
         """
@@ -107,7 +108,7 @@ class SftpClient(AbstractClient):
             local_path (str): Destination path on the local host.
         """
         self.__connect_before()
-        self.__client.get(remote_path, local_path, max_concurrent_prefetch_requests=16)
+        self.__client.get(remote_path, local_path, max_concurrent_prefetch_requests=self.__max_concurrent_prefetch_requests)
 
     def stat(self, filepath: str) -> SFTPAttributes:
         """
