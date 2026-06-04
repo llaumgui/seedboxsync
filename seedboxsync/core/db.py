@@ -132,15 +132,6 @@ class Database:
         self.db.create_tables([Lock, SeedboxSync])
         SeedboxSync.set_db_version('2')
 
-    def __register_functions(self) -> None:
-        """
-        Register custom SQLite functions.
-        """
-
-        @self.db.func('humanize')  # type: ignore
-        def db_humanize(num: float) -> str:
-            return humanize.filesize.naturalsize(num, True)
-
     def migrate_to_3(self) -> None:
         """
         Migration: allow null values for the 'announce' field in the torrent table.
@@ -150,3 +141,12 @@ class Database:
             migrator.drop_not_null('torrent', 'announce'),
         )
         SeedboxSync.set_db_version('3')
+
+    def __register_functions(self) -> None:
+        """
+        Register custom SQLite functions.
+        """
+
+        @self.db.func('humanize')  # type: ignore
+        def db_humanize(num: float) -> str:
+            return humanize.filesize.naturalsize(num, True)
