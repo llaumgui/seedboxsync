@@ -4,6 +4,7 @@
 
 * ⚡️ [Issue #106](https://github.com/llaumgui/seedboxsync/issues/106): Improve SFTP client performance for large file transfers.
 * ✨ [Issue #11](https://github.com/llaumgui/seedboxsync/issues/11): Add FTP support through a new client based on [ftputil](https://ftputil.sschwarzer.net/).
+* 🐛 [PR #102](https://github.com/llaumgui/seedboxsync/pull/102): Fix torrent ingestion crash due to NOT NULL announce constraint (Thx @Monkee-code).
 * ♻️ Replace custom formatting utilities with [humanize](https://pypi.org/project/humanize/).
 * 📝 [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93): Add documentation about overriding the cron schedule.
 
