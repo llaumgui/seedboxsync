@@ -34,7 +34,6 @@ class SftpClient(AbstractClient):
     __timeout: str | bool
     __transport = paramiko.Transport
     __client: paramiko.SFTPClient
-    __buffer_size: int = 1024 * 1024  # 1MB chunks for transfers
 
     def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str | bool = False):
         """
@@ -101,30 +100,14 @@ class SftpClient(AbstractClient):
 
     def get(self, remote_path: str, local_path: str) -> None:
         """
-        Download a remote file from the SFTP server with optimized buffering.
-
-        Uses larger buffer sizes than Paramiko's default (256KB instead of 32KB)
-        to reduce CPU overhead during transfers.
+        Download a remote file from the SFTP server.
 
         Args:
             remote_path (str): Path of the remote file.
             local_path (str): Destination path on the local host.
         """
         self.__connect_before()
-
-        # Use optimized get with larger buffers
-        try:
-            with self.__client.file(remote_path, 'r') as remote_file:
-                with open(local_path, 'wb') as local_file:
-                    while True:
-                        chunk = remote_file.read(self.__buffer_size)
-                        if not chunk:
-                            break
-                        local_file.write(chunk)
-        except Exception:
-            # Fallback to Paramiko's default get() if custom transfer fails
-            self.__log.debug('Falling back to standard Paramiko get()')
-            self.__client.get(remote_path, local_path)
+        self.__client.get(remote_path, local_path)
 
     def stat(self, filepath: str) -> SFTPAttributes:
         """
