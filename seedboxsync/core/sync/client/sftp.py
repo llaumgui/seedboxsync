@@ -12,7 +12,7 @@ import os
 import paramiko
 import socket
 from stat import S_ISDIR
-from cement.core.log import LogInterface
+from cement import App  # type: ignore[attr-defined]
 from typing import Generator, Tuple, List
 from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core.sync.abstract_client import AbstractClient
@@ -26,7 +26,7 @@ class SftpClient(AbstractClient):
     Handles file transfers between NAS and Seedbox servers. Provides basic
     operations such as get, put, rename, chmod, and directory traversal.
     """
-    __log: LogInterface
+    __app: App
     __host: str
     __login: str
     __password: str
@@ -34,26 +34,22 @@ class SftpClient(AbstractClient):
     __timeout: str | bool
     __transport = paramiko.Transport
     __client: paramiko.SFTPClient
-    __max_concurrent_prefetch_requests: int = 32
+    __max_concurrent_prefetch_requests: int
 
-    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str = "22", timeout: str | bool = False):
+    def __init__(self, app: App):
         """
         Initialize the SFTP client with connection parameters.
 
         Args:
-            log (LogInterface): Logger instance.
-            host (str): SFTP server hostname.
-            login (str): Username for authentication.
-            password (str): Password for authentication.
-            port (str): Server port (default: '22').
-            timeout (str | bool): Socket timeout in seconds (default: False, no timeout).
+            app (App): The Cement application instance.
         """
-        self.__log = log
-        self.__host = host
-        self.__login = login
-        self.__password = password
-        self.__port = port
-        self.__timeout = timeout
+        self.__app = app
+        self.__host = self.__app.config.get('seedbox', 'host')
+        self.__login = self.__app.config.get('seedbox', 'login')
+        self.__password = self.__app.config.get('seedbox', 'password')
+        self.__port = self.__app.config.get('seedbox', 'port')
+        self.__timeout = self.__app.config.get('seedbox', 'timeout')
+        self.__max_concurrent_prefetch_requests = self.__app.config.get('seedbox', 'max_concurrent_prefetch_requests')
         self.__transport = None
 
     def __connect_before(self) -> None:
@@ -64,7 +60,7 @@ class SftpClient(AbstractClient):
             ConnectionError: If connection or authentication fails.
         """
         if self.__transport is None:
-            self.__log.debug('Init paramiko.Transport')
+            self.__app.log.debug('Init paramiko.Transport')
             try:
                 self.__transport = paramiko.Transport((self.__host, int(self.__port)))
             except (socket.gaierror, ConnectionRefusedError) as exc:
@@ -76,14 +72,14 @@ class SftpClient(AbstractClient):
             except paramiko.ssh_exception.AuthenticationException as exc:
                 raise ConnectionError(f'{str(exc)}\nFailed to establish a connection. Ensure the login and password are correct.')
 
-            self.__log.debug('Init paramiko.SFTPClient from transport')
+            self.__app.log.debug('Init paramiko.SFTPClient from transport')
             self.__client = paramiko.SFTPClient.from_transport(self.__transport)
 
             # Setup timeout
             if self.__timeout:
                 channel = self.__client.get_channel()
                 channel.settimeout(self.__timeout)
-                self.__log.debug('Timeout is set to %s' % channel.gettimeout())
+                self.__app.log.debug('Timeout is set to %s' % channel.gettimeout())
 
     def put(self, local_path: str, remote_path: str) -> SFTPAttributes:
         """
@@ -192,5 +188,5 @@ class SftpClient(AbstractClient):
         Close the SFTP transport client and underlying connection.
         """
         if self.__transport is not None:
-            self.__log.debug('Close paramiko.Transport client')
+            self.__app.log.debug('Close paramiko.Transport client')
             self.__transport.close()

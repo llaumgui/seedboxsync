@@ -16,6 +16,13 @@ seedbox:
   ### Set protocol: 'sftp' or 'ftp'
   # protocol: sftp
 
+  ### Only for SFTP (Paramiko)
+  ### The maximum number of concurrent read requests to prefetch. When this is None (the default),
+  ### do not limit the number of concurrent prefetch requests.
+  ### Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, while Paramiko imposes no limit by default;
+  ### consider setting a limit if a file can be successfully received with sftp but hangs with Paramiko.
+  max_concurrent_prefetch_requests: 32
+
   ### Chmod torrent after upload (set to false to disable)
   ### Use octal notation, e.g. 0o644 like https://docs.python.org/3.4/library/os.html#os.chmod
   # chmod: false

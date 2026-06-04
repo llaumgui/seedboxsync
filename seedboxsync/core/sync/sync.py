@@ -53,7 +53,7 @@ def extend_sync(app: App) -> None:
 
     # Load the client module dynamically
     try:
-        client_module = import_module('..core.sync.' + protocol + '_client', 'seedboxsync.ext')
+        client_module = import_module('..core.sync.client.' + protocol, 'seedboxsync.ext')
     except ImportError as exc:
         raise SyncProtocoleError('Unsupported protocol: %s: %s' % (protocol, str(exc)))
 
@@ -67,14 +67,7 @@ def extend_sync(app: App) -> None:
 
     # Instantiate the client
     try:
-        sync = transfer_client(
-            log=app.log,
-            host=app.config.get('seedbox', 'host'),
-            port=int(app.config.get('seedbox', 'port')),
-            login=app.config.get('seedbox', 'login'),
-            password=app.config.get('seedbox', 'password'),
-            timeout=app.config.get('seedbox', 'timeout')
-        )
+        sync = transfer_client(app)
     except Exception as exc:
         raise ConnectionError(f"{str(exc)}\nFailed to establish a connection.")
 

@@ -12,7 +12,7 @@ import ftplib
 from typing import Any, Generator, List, Tuple
 import ftputil
 import ftputil.error
-from cement.core.log import LogInterface
+from cement import App  # type: ignore[attr-defined]
 from seedboxsync.core.sync.abstract_client import AbstractClient
 from seedboxsync.core.sync.sync import ConnectionError
 
@@ -35,7 +35,7 @@ class FtpClient(AbstractClient):
     Handles file transfers between NAS and Seedbox servers. Provides basic
     operations such as get, put, rename, chmod, and directory traversal.
     """
-    __log: LogInterface
+    __app: App
     __host: str
     __login: str
     __password: str
@@ -43,32 +43,19 @@ class FtpClient(AbstractClient):
     __timeout: str | bool
     __client: Any | None
 
-    def __init__(
-        self,
-        log: LogInterface,
-        host: str,
-        login: str,
-        password: str,
-        port: str = "21",
-        timeout: str | bool = False,
-    ):
+    def __init__(self, app: App):
         """
         Initialize the FTP client with connection parameters.
 
         Args:
-            log (LogInterface): Logger instance.
-            host (str): FTP server hostname.
-            login (str): Username for authentication.
-            password (str): Password for authentication.
-            port (str): Server port (default: '21').
-            timeout (str | bool): Socket timeout in seconds (default: False, no timeout).
+            app (App): The Cement application instance.
         """
-        self.__log = log
-        self.__host = host
-        self.__login = login
-        self.__password = password
-        self.__port = port
-        self.__timeout = timeout
+        self.__app = app
+        self.__host = self.__app.config.get('seedbox', 'host')
+        self.__login = self.__app.config.get('seedbox', 'login')
+        self.__password = self.__app.config.get('seedbox', 'password')
+        self.__port = self.__app.config.get('seedbox', 'port')
+        self.__timeout = self.__app.config.get('seedbox', 'timeout')
         self.__client = None
 
     def __connect_before(self) -> Any:
@@ -79,7 +66,7 @@ class FtpClient(AbstractClient):
             ConnectionError: If connection or authentication fails.
         """
         if self.__client is None:
-            self.__log.debug('Init ftputil.FTPHost')
+            self.__app.log.debug('Init ftputil.FTPHost')
             try:
                 self.__client = ftputil.FTPHost(
                     self.__host,
@@ -216,6 +203,6 @@ class FtpClient(AbstractClient):
         Close the FTP client and underlying connection.
         """
         if self.__client is not None:
-            self.__log.debug('Close ftputil.FTPHost client')
+            self.__app.log.debug('Close ftputil.FTPHost client')
             self.__client.close()
             self.__client = None

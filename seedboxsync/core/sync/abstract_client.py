@@ -13,7 +13,7 @@ providing methods for file operations and session management on a remote server.
 """
 
 from abc import ABCMeta, abstractmethod
-from cement.core.log import LogInterface
+from cement import App  # type: ignore[attr-defined]
 
 
 class AbstractClient():  # pragma: no cover
@@ -26,17 +26,12 @@ class AbstractClient():  # pragma: no cover
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, log: LogInterface, host: str, login: str, password: str, port: str, timeout: str | bool = False):
+    def __init__(self, app: App):
         """
         Initialize the transport client.
 
         Args:
-            log (LogInterface): The log interface for debug and info messages.
-            host (str): Hostname or IP address of the remote server.
-            login (str): Username to connect to the server.
-            password (str): Password to authenticate on the server.
-            port (str): Port of the remote server.
-            timeout (str | bool, optional): Socket connection timeout. Defaults to False.
+            app (App): The Cement application instance.
         """
         pass
 
