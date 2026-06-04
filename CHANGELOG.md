@@ -2,7 +2,10 @@
 
 ## 3.4.0 - Xxx xx, 2026
 
-* ✨ Add FTP support !
+* ⚡️ [Issue #106](https://github.com/llaumgui/seedboxsync/issues/106): Improve SFTP client performance for large file transfers.
+* ✨ [Issue #11](https://github.com/llaumgui/seedboxsync/issues/11): Add FTP support through a new client based on [ftputil](https://ftputil.sschwarzer.net/).
+* ♻️ Replace custom formatting utilities with [humanize](https://pypi.org/project/humanize/).
+* 📝 [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93): Add documentation about overriding the cron schedule.
 
 ## 3.3.0 - Oct 18, 2025
 
