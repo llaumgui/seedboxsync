@@ -107,7 +107,7 @@ class SftpClient(AbstractClient):
             local_path (str): Destination path on the local host.
         """
         self.__connect_before()
-        self.__client.get(remote_path, local_path)
+        self.__client.get(remote_path, local_path, max_concurrent_prefetch_requests=16)
 
     def stat(self, filepath: str) -> SFTPAttributes:
         """
