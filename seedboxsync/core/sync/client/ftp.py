@@ -13,7 +13,7 @@ from typing import Any, Generator, List, Tuple
 import ftputil
 import ftputil.error
 from cement import App  # type: ignore[attr-defined]
-from seedboxsync.core.sync.abstract_client import AbstractClient
+from seedboxsync.core.sync.abstract_client import AbstractClient, _Callback
 from seedboxsync.core.sync.sync import ConnectionError
 
 
@@ -110,13 +110,14 @@ class FtpClient(AbstractClient):
         client = self.__connect_before()
         client.upload(local_path, remote_path)
 
-    def get(self, remote_path: str, local_path: str) -> None:
+    def get(self, remote_path: str, local_path: str, progress_callback: _Callback | None = None) -> None:
         """
         Download a remote file from the FTP server.
 
         Args:
             remote_path (str): Path of the remote file.
             local_path (str): Destination path on the local host.
+            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
         client = self.__connect_before()
         client.download(remote_path, local_path)

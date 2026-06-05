@@ -16,8 +16,26 @@ import os
 import re
 from paramiko import SSHException
 from cement import Controller, ex, fs  # type: ignore[attr-defined]
+from cement.core.log import LogInterface
 from seedboxsync.core.dao import Download, Torrent
 from seedboxsync.core.exc import SeedboxSyncConfigurationError
+
+
+class DownloadProgress:
+    """Callable class to track download progress and update the Download record in the database."""
+
+    def __init__(self, download: Download, log: LogInterface) -> None:
+        self.__download = download
+        self.__log = log
+        self.__last_saved_size = 0
+
+    def __call__(self, transferred: int, total: int) -> None:
+        # Update the Download record in the database if the transferred size has increased by at least 50 MB or if the download is complete.
+        if (transferred == total or transferred - self.__last_saved_size >= 50 * 1024 * 1024):
+            self.__download.local_size = transferred
+            self.__log.debug('Download progress: %d / %d (%.2f%%)' % (transferred, total, (transferred / total) * 100 if total > 0 else 0))
+            self.__download.save()
+            self.__last_saved_size = transferred
 
 
 class Sync(Controller):
@@ -213,7 +231,8 @@ class Sync(Controller):
 
             if not self.app.pargs.only_store:
                 self.app.log.info('Downloading "%s"' % filepath)
-                self.app.sync.get(filepath, local_filepath_part)  # type: ignore[attr-defined]
+                progress_callback = DownloadProgress(download, self.app.log)
+                self.app.sync.get(filepath, local_filepath_part, progress_callback=progress_callback)  # type: ignore[attr-defined]
                 local_size = os.stat(local_filepath_part).st_size
 
                 if local_size == 0 or local_size != seedbox_size:

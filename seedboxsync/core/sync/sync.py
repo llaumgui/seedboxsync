@@ -49,7 +49,7 @@ def extend_sync(app: App) -> None:
     protocol = app.config.get('seedbox', 'protocol')
     client_class = protocol.title() + 'Client'
 
-    app.log.debug('Extending SeedboxSync application with sync (%s/%s)' % (protocol, client_class))
+    app.log.debug('Extending SeedboxSync application with sync (%s / %s)' % (protocol, client_class))
 
     # Load the client module dynamically
     try:

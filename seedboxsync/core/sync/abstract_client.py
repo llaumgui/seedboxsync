@@ -13,7 +13,11 @@ providing methods for file operations and session management on a remote server.
 """
 
 from abc import ABCMeta, abstractmethod
+from typing import Callable
+from typing_extensions import TypeAlias
 from cement import App  # type: ignore[attr-defined]
+
+_Callback: TypeAlias = Callable[[int, int], object]
 
 
 class AbstractClient():  # pragma: no cover
@@ -48,13 +52,14 @@ class AbstractClient():  # pragma: no cover
         pass
 
     @abstractmethod
-    def get(self, remotep_path: str, local_path: str) -> None:
+    def get(self, remotep_path: str, local_path: str, progress_callback: _Callback | None = None) -> None:
         """
         Download a file from the remote server to the local host.
 
         Args:
             remotep_path (str): Path to the remote file to copy.
             local_path (str): Destination path on the local host.
+            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
         pass
 

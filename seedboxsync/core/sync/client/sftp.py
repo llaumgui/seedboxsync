@@ -15,7 +15,7 @@ from stat import S_ISDIR
 from cement import App  # type: ignore[attr-defined]
 from typing import Generator, Tuple, List
 from paramiko.sftp_attr import SFTPAttributes
-from seedboxsync.core.sync.abstract_client import AbstractClient
+from seedboxsync.core.sync.abstract_client import AbstractClient, _Callback
 from seedboxsync.core.sync.sync import ConnectionError
 
 
@@ -95,16 +95,22 @@ class SftpClient(AbstractClient):
         self.__connect_before()
         return self.__client.put(local_path, remote_path)
 
-    def get(self, remote_path: str, local_path: str) -> None:
+    def get(self, remote_path: str, local_path: str, progress_callback: _Callback | None = None) -> None:
         """
         Download a remote file from the SFTP server.
 
         Args:
             remote_path (str): Path of the remote file.
             local_path (str): Destination path on the local host.
+            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
         self.__connect_before()
-        self.__client.get(remote_path, local_path, max_concurrent_prefetch_requests=self.__max_concurrent_prefetch_requests)
+        self.__client.get(
+            remote_path,
+            local_path,
+            callback=progress_callback,
+            max_concurrent_prefetch_requests=self.__max_concurrent_prefetch_requests
+        )
 
     def stat(self, filepath: str) -> SFTPAttributes:
         """
