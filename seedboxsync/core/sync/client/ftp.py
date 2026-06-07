@@ -117,10 +117,29 @@ class FtpClient(AbstractClient):
         Args:
             remote_path (str): Path of the remote file.
             local_path (str): Destination path on the local host.
-            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
+            progress_callback (_Callback | None): Optional callback receiving bytes_transferred and total_bytes.
         """
         client = self.__connect_before()
-        client.download(remote_path, local_path)
+
+        if progress_callback is None:
+            client.download(remote_path, local_path)
+            return
+
+        total_size = client.stat(remote_path).st_size
+        transferred = 0
+        ftp_session = client._session  # noqa: SLF001 - ftputil internal session used to access retrbinary.
+
+        with open(local_path, 'wb') as local_file:
+            def on_block(data: bytes) -> None:
+                nonlocal transferred
+                local_file.write(data)
+                transferred += len(data)
+                progress_callback(transferred, total_size)
+
+            ftp_session.retrbinary(
+                f'RETR {remote_path}',
+                on_block,
+            )
 
     def stat(self, filepath: str) -> Any:
         """
