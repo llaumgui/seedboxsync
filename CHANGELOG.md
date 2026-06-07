@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.4.0 - Xxx xx, 2026
+## 3.4.0 - Jun 07, 2026
 
 * ✨ [Issue #86](https://github.com/llaumgui/seedboxsync/issues/86): Save local size during download.
 * ✨ [Issue #11](https://github.com/llaumgui/seedboxsync/issues/11): Add FTP support through a new client based on [ftputil](https://ftputil.sschwarzer.net/).
