@@ -122,7 +122,8 @@ Once installed, you can access the frontend: [http://127.0.0.1:8000](http://127.
 | Tags         | Description                                     | Stable |
 | ------------ | ----------------------------------------------- | ------ |
 | `latest`     | Based on the latest release version             | ✅     |
-| `main`       | Built from the `main` branch (development)      | ❌     |
+| `main`       | Built from the `main` branch                    | 🟡     |
+| `develop`    | Built from the `develop` branch (development)   | ❌     |
 
 #### Environment Variables
 
