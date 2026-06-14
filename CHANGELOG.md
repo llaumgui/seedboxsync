@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.4.1 - Jun 14, 2026
+
+* 🔧 Change default `max_concurrent_prefetch_requests` from 32 to 128.
+
 ## 3.4.0 - Jun 07, 2026
 
 * ✨ [Issue #86](https://github.com/llaumgui/seedboxsync/issues/86): Save local size during download.

@@ -26,7 +26,7 @@ CONFIG['seedbox']['timeout'] = False
 CONFIG['seedbox']['protocol'] = 'sftp'
 
 # Only for SFTP (Paramiko)
-CONFIG['seedbox']['max_concurrent_prefetch_requests'] = 32
+CONFIG['seedbox']['max_concurrent_prefetch_requests'] = 128
 
 # Chmod torrent after upload (false = disable)
 # Use octal notation like https://docs.python.org/3.4/library/os.html#os.chmod
