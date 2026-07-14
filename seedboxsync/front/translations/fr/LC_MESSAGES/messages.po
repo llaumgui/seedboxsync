@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-07-14 11:02+0200\n"
+"POT-Creation-Date: 2026-07-14 16:25+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -202,8 +202,8 @@ msgid "Since"
 msgstr "Depuis"
 
 #: seedboxsync/front/templates/info.html:25
-#: seedboxsync/front/templates/info.html:53
-#: seedboxsync/front/templates/info.html:67
+#: seedboxsync/front/templates/info.html:49
+#: seedboxsync/front/templates/info.html:63
 msgid "Never executed."
 msgstr "Jamais exécuté."
 
@@ -212,38 +212,34 @@ msgid "Versions"
 msgstr "Versions"
 
 #: seedboxsync/front/templates/info.html:35
-msgid "SeedboxSyncFront version"
-msgstr "Version de SeedboxSyncFront"
-
-#: seedboxsync/front/templates/info.html:39
 msgid "SeedboxSync version"
 msgstr "Version de SeedboxSync"
 
-#: seedboxsync/front/templates/info.html:43
+#: seedboxsync/front/templates/info.html:39
 msgid "SeedboxSync database version"
 msgstr "Version de la base de données de SeedboxSync"
 
-#: seedboxsync/front/templates/info.html:47
+#: seedboxsync/front/templates/info.html:43
 msgid "Cron job"
 msgstr "Tâche planifiée"
 
-#: seedboxsync/front/templates/info.html:50
+#: seedboxsync/front/templates/info.html:46
 msgid "Blackhole synchronization"
 msgstr "Synchronisation de la blackhole"
 
-#: seedboxsync/front/templates/info.html:56
-#: seedboxsync/front/templates/info.html:70
+#: seedboxsync/front/templates/info.html:52
+#: seedboxsync/front/templates/info.html:66
 #, python-format
 msgid "Locked since %(since)s"
 msgstr "Verrouillé depuis %(since)s"
 
-#: seedboxsync/front/templates/info.html:58
-#: seedboxsync/front/templates/info.html:72
+#: seedboxsync/front/templates/info.html:54
+#: seedboxsync/front/templates/info.html:68
 #, python-format
 msgid "Unlocked since %(since)s"
 msgstr "Déverrouillé depuis %(since)s"
 
-#: seedboxsync/front/templates/info.html:64
+#: seedboxsync/front/templates/info.html:60
 msgid "Seedbox synchronization"
 msgstr "Synchronisation de la seedbox"
 
@@ -549,4 +545,3 @@ msgstr "Il manque les champs requis: {%(missing)s}"
 #: seedboxsync/front/views/settings.py:42
 msgid "Failed to save configuration."
 msgstr "Échec de l’enregistrement de la configuration."
-

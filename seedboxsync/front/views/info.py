@@ -53,7 +53,6 @@ def info() -> str:
         "stats_first": first_date,
         "stats_first_delta": first_delta,
         "version": version,
-        "seedboxsync_version": SeedboxSync.get_version(),
         "seedboxsync_db_version": SeedboxSync.get_db_version(),
         "sync_blackhole": sync_blackhole,
         "sync_seedbox": sync_seedbox,
