@@ -6,7 +6,6 @@
 # file that was distributed with this source code.
 #
 from peewee import CharField, TextField
-from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import SeedboxSyncModel
 
 
@@ -45,20 +44,3 @@ class SeedboxSync(SeedboxSyncModel):
             db_version (str): The database model version.
         """
         SeedboxSync.replace(key="db_version", value=db_version).execute()  # type: ignore[no-untyped-call]
-
-    @staticmethod
-    def get_version() -> str:
-        """
-        Get SeedboxSync version.
-
-        Returns:
-            str: The database model version.
-        """
-        return str(SeedboxSync.get(SeedboxSync.key == "version").value)
-
-    @staticmethod
-    def set_version() -> None:
-        """
-        Upsert SeedboxSync version.
-        """
-        SeedboxSync.replace(key="version", value=version).execute()  # type: ignore[no-untyped-call]
