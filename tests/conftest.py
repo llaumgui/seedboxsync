@@ -1,73 +1,58 @@
-"""
-PyTest Fixtures.
-"""
-
-import pytest
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2025-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
 import os
+import pytest
 import shutil
-import yaml
-from cement import fs
-from unittest import mock
-from unittest.mock import patch, MagicMock
+import tempfile
+from seedboxsync import create_app
 
 
-@pytest.fixture(scope="function")
-def tmp(request):
+@pytest.fixture
+def app():
     """
-    Create a `tmp` object that geneates a unique temporary directory, and file
-    for each test function that requires it.
+    Create app fixture
     """
-    t = fs.Tmp()
+    db_fd, tmp_db = tempfile.mkstemp()
 
     # Copy database
     test_db = os.path.abspath("tests/resources/seedboxsync.db")
-    tmp_db = os.path.join(t.dir, "seedboxsync.db")
     shutil.copy(test_db, tmp_db)
 
-    # Copy watch
-    test_watch = os.path.abspath("tests/resources/watch")
-    tmp_watch = os.path.join(t.dir, "watch")
-    shutil.copytree(test_watch, tmp_watch)
+    app = create_app({
+        'TESTING': True,
+        'DATABASE': tmp_db,
+        'SECRET_KEY': 'pytest',
+        'CACHE_TYPE': 'NullCache',
+        'BABEL_DEFAULT_LOCALE': 'en',
+    })
 
-    # Edit config and copy in tmp
-    test_conf = os.path.abspath("tests/resources/seedboxsync.yml")
-    tmp_conf = os.path.join(t.dir, "seedboxsync.yml")
-    shutil.copy(test_conf, tmp_conf)
-    with open(tmp_conf, 'r') as f:
-        cfg = yaml.safe_load(f)
-    cfg['local']['db_file'] = tmp_db
-    cfg['local']['watch_path'] = tmp_watch
-    with open(tmp_conf, 'w') as f:
-        yaml.safe_dump(cfg, f)
+    # Can close DB, reopen for test
+    db_wrapper = app.extensions.get("flaskdb") or None
+    if db_wrapper is not None:
+        db = db_wrapper.database
+        if not db.is_closed():
+            db.close()
 
-    yield t, [tmp_conf], tmp_db, tmp_watch
+    yield app
 
-    t.remove()
-
-
-@pytest.fixture
-def mock_sftp(monkeypatch):
-    mock_transport = mock.MagicMock()
-    mock_sftp = mock.MagicMock()
-
-    monkeypatch.setattr('paramiko.Transport', lambda *a, **kw: mock_transport)
-    monkeypatch.setattr('paramiko.SFTPClient.from_transport', lambda *a, **kw: mock_sftp)
-
-    return mock_sftp
+    # Cleanup
+    os.close(db_fd)
+    os.unlink(tmp_db)
 
 
 @pytest.fixture
-def mock_empty_download():
-    with patch('seedboxsync.core.sync.sftp_client.SftpClient.walk', return_value=[]):
-        yield
-
-
-@pytest.fixture
-def mock_urllib():
+def client(app):
     """
-    Fixture that patches urllib.request.urlopen
-    and stores call arguments for later assertions.
+    Create client fixture
     """
-    with patch('seedboxsync.ext.ext_healthchecks.urllib.request.urlopen') as mock_urlopen:
-        mock_urlopen.return_value = MagicMock()  # fake HTTPResponse
-        yield mock_urlopen  # yield mock object for inspection after test
+    return app.test_client()
+
+
+@pytest.fixture()
+def runner(app):
+    return app.test_cli_runner()

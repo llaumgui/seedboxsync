@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 import datetime
-from peewee import DateTimeField, IntegerField, TextField
+from peewee import AutoField, DateTimeField, IntegerField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel
 
 
@@ -19,6 +19,7 @@ class Download(SeedboxSyncModel):
     the download started and finished.
     """
 
+    id = AutoField()
     path = TextField()
     seedbox_size = IntegerField()
     local_size = IntegerField(default=0)

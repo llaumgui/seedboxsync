@@ -9,91 +9,22 @@ summary: Configuration of SeedboxSync
 
 > :information_source: **Recommended:** This is the recommended way.
 
-The configuration file should be placed in `/conf`.
+The sqlite database file should be placed in `/conf`.
 
 ### Other ways
 
 > :warning: **Warning:** Docker is the recommended method.
 
-You can use [the example configuration file](https://github.com/llaumgui/seedboxsync/blob/main/config/seedboxsync.yml.example).
-This example file can be located in:
+Supported qlite database file locations:
 
-* `/usr/local/config/` (pip install)
-* `~/.local/config/` (pip install with user privileges)
-
-To create your configuration directory and copy the example file:
-
-```bash
-mkdir -p ~/.config/seedboxsync
-cp ~/.local/config/seedboxsync.yml.example ~/.config/seedboxsync/seedboxsync.yml
-```
-
-Or for a global configuration:
-
-```bash
-sudo mkdir -p /etc/seedboxsync
-sudo cp /usr/local/config/seedboxsync.yml.example /etc/seedboxsync/seedboxsync.yml
-```
-
-Supported configuration file locations:
-
-* `/etc/seedboxsync/seedboxsync.yml`
-* `~/.config/seedboxsync/seedboxsync.yml`
-* `~/.seedboxsync/config/seedboxsync.yml`
-* `~/.seedboxsync.yml`
+* `/etc/seedboxsync/seedboxsync.db`
+* `~/.config/seedboxsync/seedboxsync.db`
+* `~/.seedboxsync/config/seedboxsync.db`
+* `~/.seedboxsync.db`
 
 ## Settings
 
-### Seedbox and BitTorrent client configuration
-
-First, set the connection information for your seedbox.
-
-```yaml
-#
-# Information about your seedbox
-#
-seedbox:
-
-  ### Connection information
-  host: my-seedbox.ltd
-  port: 22
-  login: me
-  password: p4sw0rd
-  timeout: false
-
-  ### Set protocol: 'sftp' or 'ftp'
-  protocol: sftp
-
-  ### Only for SFTP (Paramiko)
-  ### The maximum number of concurrent read requests to prefetch. When this is None (the default),
-  ### do not limit the number of concurrent prefetch requests.
-  ### Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, while Paramiko imposes no limit by default;
-  ### consider setting a limit if a file can be successfully received with sftp but hangs with Paramiko.
-  max_concurrent_prefetch_requests: 128
-
-  ### Chmod torrent after upload (set to false to disable)
-  ### Use octal notation, e.g. 0o644
-  chmod: false
-
-  ### Use a temporary directory for incomplete transfers (must be created manually)
-  tmp_path: /tmp
-
-  ### Your BitTorrent client's "watch" folder (must be created manually)
-  watch_path: /watch
-
-  ### The folder where your BitTorrent client puts finished files
-  finished_path: /files
-
-  ### Remove a prefix from the synced path (usually the same as "finished_path")
-  prefixed_path: /files
-
-  ### Exclude files with this suffix (e.g. incomplete downloads)
-  part_suffix: .part
-
-  ### Exclude files from sync using a regular expression (Python re syntax)
-  ### Example: .*missing$|^\..*\.sw
-  exclude_syncing: .*missing$|^\..*\.sw
-```
+> :information_source: Since SeedboxSync v4, all configuration is stored in the database, and settings have been moved to the web UI.
 
 **Notes:**
 
@@ -108,54 +39,7 @@ seedbox:
 
 ![ruTorrent settings / Autotools](../images/rutorrent_2.png)
 
-### NAS / Local configuration
-
-Your NAS configuration is defined in the `local` section:
-
-```yaml
-#
-# Information about the local environment (NAS, etc.)
-#
-local:
-
-  ### Your local "watch" folder
-  watch_path: ~/watch
-
-  ### Path where files are downloaded
-  download_path: ~/Downloads/
-
-  ### Path to the local SQLite database for tracking downloaded files
-  db_file: ~/.config/seedboxsync/seedboxsync.db
-```
-
 ### Ping service configuration
 
 The ping service is triggered by the `--ping` argument.
 Currently, only [Healthchecks](https://github.com/healthchecks/healthchecks) is supported.
-
-#### Healthchecks
-
-Add a Healthchecks configuration for each sync command:
-
-```yaml
-#
-# Healthchecks ping service
-#
-healthchecks:
-
-  ### Sync seedbox part
-  sync_seedbox:
-    ### Enable or disable the service
-    enabled: true
-
-    # Ping URL
-    ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
-
-  ### Sync blackhole part
-  sync_blackhole:
-    ## Enable or disable the service
-    enabled: true
-
-    ## Ping URL
-    ping_url: https://hc-ping.com/ca5e1159-9acf-410c-9202-f76a7bb856e0
-```

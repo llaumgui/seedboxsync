@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="title">{% block title %}{{ _('Informations') }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+  <table x-show="data.length > 0" class="table is-bordered is-hoverable is-fullwidth">
+    <tr>
+      <tr class="is-link has-text-centered">
+        <th colspan="2">{{ _('Statistics') }}</th>
+      </tr>
+      <th>{{ _('Number of files downloaded') }}</th>
+      <td>{{ info.stats_total_files }}</td>
+    </tr>
+    <tr>
+      <th>{{ _('Total size of files downloaded') }}</th>
+      <td>{{ info.stats_total_size }}</td>
+    </tr>
+    <tr>
+      <th>{{ _('Since') }}</th>
+      <td>
+        {% if info.stats_first == None %}
+          {{ _('Never executed.') }}
+        {% else %}
+          {{ format_datetime(info.stats_first) }}<br>{{ info.stats_first_delta }}
+        {% endif %}
+      </td>
+    </tr>
+    <tr class="is-link has-text-centered">
+      <th colspan="2">{{ _('Versions') }}</th>
+    </tr>
+    <tr>
+      <th>{{ _('SeedboxSyncFront version') }}</th>
+      <td>{{ info.version }}</td>
+    </tr>
+    <tr>
+      <th>{{ _('SeedboxSync version') }}</th>
+      <td>{{ info.seedboxsync_version }}</td>
+    </tr>
+    <tr>
+      <th>{{ _('SeedboxSync database version') }}</th>
+      <td>{{ info.seedboxsync_db_version }}</td>
+    </tr>
+    <tr class="is-link has-text-centered">
+      <th colspan="2">{{ _('Cron job') }}</th>
+    </tr>
+    <tr>
+      <th>{{ _('Blackhole synchronization') }}</th>
+      <td>
+        {% if info.sync_blackhole == False %}
+          {{ _('Never executed.') }}
+        {% else %}
+          {% if info.sync_blackhole.locked == True %}
+            {{ _('Locked since %(since)s', since=format_datetime(info.sync_blackhole.locked_at) ) }}
+          {% else %}
+            {{ _('Unlocked since %(since)s', since=format_datetime(info.sync_blackhole.unlocked_at) ) }}
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>{{ _('Seedbox synchronization') }}</th>
+      <td>
+        {% if info.sync_seedbox == False %}
+          {{ _('Never executed.') }}
+        {% else %}
+          {% if info.sync_seedbox.locked == True %}
+            {{ _('Locked since %(since)s', since=format_datetime(info.sync_seedbox.locked_at) ) }}
+          {% else %}
+            {{ _('Unlocked since %(since)s', since=format_datetime(info.sync_seedbox.unlocked_at) ) }}
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+{% endblock %}

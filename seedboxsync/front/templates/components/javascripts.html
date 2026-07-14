@@ -1,0 +1,6 @@
+<script>
+window.Translations = {in_progress_since:"{{ _('In progress since') }}",completed_since:"{{ _('Completed since') }}",never_launched:"{{ _('Never launched') }}",error_loading_lock_status:"{{ _('Error loading lock status') }}"};
+const dateTimeOption = {weekday:"short",year:"numeric",month:"short",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+</script>
+<script type="module" src="{{ url_for('static', filename='dist/main.js') }}" defer></script>
+{% block extended_javascript %}{% endblock %}

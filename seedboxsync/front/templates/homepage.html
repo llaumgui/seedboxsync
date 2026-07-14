@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="title is-hidden">{% block title %}{{ _('Dashboard') }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+
+  <div class="columns is-desktop">
+    {% if config.sync_blackhole_enabled %}
+      <div class="message is-small column is-4" x-data="LockBoxComponent('{{ url_for('api.locks_locks', key='sync_blackhole') }}', '{{ _('Blackhole') }}')">
+        <div class="message-header">{{ _('Blackhole') }}</div>
+        <div class="message-body">
+          <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+          <div x-show="!loading && !error" x-text="lockMessage"></div>
+          <div x-show="error" class="has-text-danger" x-text="error"></div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="message is-small column is-4 is-offset-4" x-data="LockBoxComponent('{{ url_for('api.locks_locks', key='sync_seedbox') }}', '{{ _('Seedbox') }}')">
+      <div class="message-header">{{ _('Seedbox') }}</div>
+      <div class="message-body">
+        <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+        <div x-show="!loading && !error" x-text="lockMessage"></div>
+        <div x-show="error" class="has-text-danger" x-text="error"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="has-text-right">
+    <button x-data
+            class="button is-info is-small is-responsive"
+            @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
+      <span class="icon">
+        <i class="fa fa-refresh"></i>
+      </span>
+      <span>{{ _('Refresh') }}</span>
+    </button>
+  </div>
+
+  <h2>{{ _('Download in progress') }}</h2>
+  <div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false')">
+    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+      <p class="is-italic">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
+      <button x-show="data.length > 0" class="button is-danger is-small is-responsive js-modal-trigger"
+              @click="OpenModalConfirmCall(
+                '{{ url_for('api.downloads_downloads_progress') }}',
+                'DELETE',
+                '{{ _('Purge?') }}',
+                '{{ _('Do you want to purge all in-progress downloads?') }}',
+                'In-progress has been purged'
+              )">{{ _('Purge') }}</button>
+    </div>
+    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
+    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+    <div x-show="!loading && !error && data.length === 0" class="notification is-info"><i class="fas fa-inbox"></i> {{ _('No download in progress now...') }}</div>
+    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th class="is-hidden-mobile">{{ _('Started') }}</th>
+          <th>{{ _('Progress') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in data" :key="row.id || row.key">
+          <tr>
+            <td class="is-overflow-anywhere" x-text="row.path"></td>
+            <td class="is-hidden-mobile" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
+            <td class="is-hidden-mobile">
+              <div class="is-flex is-align-items-center is-justify-content-center" style="gap: 15px;">
+                <progress class="progress is-primary mb-0" :value="row.progress" max="100" x-text="row.progress + '%'"></progress>
+                <span class="is-size-7" x-text="row.progress + '%'"></span>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>{{ _('Last files downloaded') }}</h2>
+  <div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=true')">
+    <p class="is-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
+    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
+    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
+    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th class="is-hidden-mobile">{{ _('Finished') }}</th>
+          <th class="is-hidden-mobile">{{ _('Size') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in data" :key="row.id || row.key">
+          <tr>
+            <td class="is-overflow-anywhere" x-text="row.path"></td>
+            <td class="is-hidden-mobile" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+            <td class="is-hidden-mobile" x-text="row.human_local_size"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>{{ _('Last torrents uploaded') }}</h2>
+  <div x-data="TableComponent('{{ url_for('api.uploads_uploads_list') }}?limit=5')">
+    <p class="is-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
+    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
+    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No torrent downloaded yet...') }} </div>
+    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th class="is-hidden-mobile">{{ _('Sent') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in data" :key="row.id || row.key">
+          <tr>
+            <td class="is-overflow-anywhere" x-text="row.name"></td>
+            <td class="is-hidden-mobile" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

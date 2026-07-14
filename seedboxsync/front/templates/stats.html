@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="title is-invisible">{% block title %}{{ _('Statistics') }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2>{{ _('Total') }}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>{{ _('Number of files downloaded') }}</th>
+        <th>{{ _('Total size of files downloaded') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ stats_total.files }}</td>
+        <td>{{ stats_total.total_size }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>{{ _('Statistics by month') }}</h2>
+  <canvas id="statsByMonth"></canvas>
+
+  <h2>{{ _('Statistics by year') }}</h2>
+  <canvas id="statsByYear"></canvas>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    loadChart(document.getElementById('statsByMonth'), '{{ url_for("api.downloads_downloads_stats_by_month") }}', 'month');
+    loadChart(document.getElementById('statsByYear'), '{{ url_for("api.downloads_downloads_stats_by_year") }}', 'year');
+  });
+</script>
+{% endblock %}

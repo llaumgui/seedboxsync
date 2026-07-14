@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 import datetime
-from peewee import DateTimeField, TextField
+from peewee import AutoField, DateTimeField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel
 
 
@@ -24,6 +24,7 @@ class Torrent(SeedboxSyncModel):
         sent (datetime): Timestamp indicating when the torrent was sent or created.
     """
 
+    id = AutoField()
     name = TextField()
     announce = TextField(null=True)
     sent = DateTimeField(default=datetime.datetime.now)

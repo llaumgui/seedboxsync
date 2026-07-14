@@ -1,0 +1,14 @@
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="container">
+  <div x-data="{ show: true }" x-show="show" class="notification is-danger mt-4">
+    <button class="delete" @click="show = false"></button>
+    <ul>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+{% endwith %}

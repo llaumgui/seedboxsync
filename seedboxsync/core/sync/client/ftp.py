@@ -8,13 +8,15 @@
 """
 Transport client using FTP protocol.
 """
+
 import ftplib
-from typing import Any, Generator, List, Tuple
 import ftputil
 import ftputil.error
-from cement import App  # type: ignore[attr-defined]
-from seedboxsync.core.sync.abstract_client import AbstractClient, _Callback
-from seedboxsync.core.sync.sync import ConnectionError
+from flask import Flask, current_app
+from typing import Any, Generator, List, Tuple
+from seedboxsync.core.config import Config
+from seedboxsync.core.sync.abstract_sync_client import AbstractSyncClient, _Callback
+from seedboxsync.cli.exception import ConnectionError
 
 
 class FtpSession(ftplib.FTP):
@@ -28,71 +30,79 @@ class FtpSession(ftplib.FTP):
         self.login(user, password)
 
 
-class FtpClient(AbstractClient):
+class FtpClient(AbstractSyncClient):
     """
     FTP transport client using ftputil.
 
     Handles file transfers between NAS and Seedbox servers. Provides basic
     operations such as get, put, rename, chmod, and directory traversal.
     """
-    __app: App
-    __host: str
-    __login: str
-    __password: str
-    __port: str
-    __timeout: str | bool
-    __client: Any | None
 
-    def __init__(self, app: App):
+    app: Flask
+    _host: str
+    _login: str
+    _password: str
+    _port: str
+    _timeout: str | bool
+    _client: Any | None
+
+    def __init__(self) -> None:
         """
         Initialize the FTP client with connection parameters.
 
         Args:
-            app (App): The Cement application instance.
+            app (Flask): The Flask application instance.
         """
-        self.__app = app
-        self.__host = self.__app.config.get('seedbox', 'host')
-        self.__login = self.__app.config.get('seedbox', 'login')
-        self.__password = self.__app.config.get('seedbox', 'password')
-        self.__port = self.__app.config.get('seedbox', 'port')
-        self.__timeout = self.__app.config.get('seedbox', 'timeout')
-        self.__client = None
+        self.app = current_app
 
-    def __connect_before(self) -> Any:
+        # Get config as namespace
+        config = self.app.config.get_namespace(Config.CONFIG_NAMESPACE)
+
+        self._host = config.get("seedbox_host") or ""
+        self._login = config.get("seedbox_login") or ""
+        self._password = config.get("seedbox_password") or ""
+        self._port = config.get("seedbox_port") or "21"
+        self._timeout = config.get("seedbox_timeout") or False
+        self._client = None
+
+    def _connect_before(self) -> Any:
         """
         Initialize the FTP client if not already connected.
 
         Raises:
             ConnectionError: If connection or authentication fails.
         """
-        if self.__client is None:
-            self.__app.log.debug('Init ftputil.FTPHost')
+        if self._client is None:
+            self.app.logger.debug("Init ftputil.FTPHost")
             try:
-                self.__client = ftputil.FTPHost(
-                    self.__host,
-                    self.__login,
-                    self.__password,
-                    port=int(self.__port),
-                    timeout=self.__normalize_timeout(),
+                self._client = ftputil.FTPHost(
+                    self._host,
+                    self._login,
+                    self._password,
+                    port=int(self._port),
+                    timeout=self._normalize_timeout(),
                     session_factory=FtpSession,
                 )
-            except (ftputil.error.FTPError, ftplib.Error, OSError, EOFError, ValueError) as exc:
-                raise ConnectionError(
-                    f"{str(exc)}\nFailed to establish a connection. "
-                    "Ensure the host, port, login and password are correct."
-                )
+            except (
+                ftputil.error.FTPError,
+                ftplib.Error,
+                OSError,
+                EOFError,
+                ValueError,
+            ) as exc:
+                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. " "Ensure the host, port, login and password are correct.")
 
-        return self.__client
+        return self._client
 
-    def __normalize_timeout(self) -> float | None:
+    def _normalize_timeout(self) -> float | None:
         """
         Convert the configured timeout into a socket-compatible value.
         """
-        if self.__timeout is False or self.__timeout is None:
+        if self._timeout is False or self._timeout is None:
             return None
 
-        if isinstance(self.__timeout, str):
-            timeout = self.__timeout.strip()
+        if isinstance(self._timeout, str):
+            timeout = self._timeout.strip()
             if timeout == "" or timeout.lower() in ("false", "none", "null"):
                 return None
             return float(timeout)
@@ -107,10 +117,15 @@ class FtpClient(AbstractClient):
             local_path (str): Path to the local file.
             remote_path (str): Destination path on the server (including filename).
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         client.upload(local_path, remote_path)
 
-    def get(self, remote_path: str, local_path: str, progress_callback: _Callback | None = None) -> None:
+    def get(
+        self,
+        remote_path: str,
+        local_path: str,
+        progress_callback: _Callback | None = None,
+    ) -> None:
         """
         Download a remote file from the FTP server.
 
@@ -119,7 +134,7 @@ class FtpClient(AbstractClient):
             local_path (str): Destination path on the local host.
             progress_callback (_Callback | None): Optional callback receiving bytes_transferred and total_bytes.
         """
-        client = self.__connect_before()
+        client = self._connect_before()
 
         if progress_callback is None:
             client.download(remote_path, local_path)
@@ -129,7 +144,8 @@ class FtpClient(AbstractClient):
         transferred = 0
         ftp_session = client._session  # noqa: SLF001 - ftputil internal session used to access retrbinary.
 
-        with open(local_path, 'wb') as local_file:
+        with open(local_path, "wb") as local_file:
+
             def on_block(data: bytes) -> None:
                 nonlocal transferred
                 local_file.write(data)
@@ -137,7 +153,7 @@ class FtpClient(AbstractClient):
                 progress_callback(transferred, total_size)
 
             ftp_session.retrbinary(
-                f'RETR {remote_path}',
+                f"RETR {remote_path}",
                 on_block,
             )
 
@@ -151,7 +167,7 @@ class FtpClient(AbstractClient):
         Returns:
             Any: Object with attributes similar to Python's os.stat.
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         return client.stat(filepath)
 
     def chdir(self, path: str | None = None) -> None:
@@ -161,7 +177,7 @@ class FtpClient(AbstractClient):
         Args:
             path (Optional[str]): Target directory. If None, no change occurs.
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         if path is not None:
             client.chdir(path)
 
@@ -173,7 +189,7 @@ class FtpClient(AbstractClient):
             path (str): Path of the file.
             mode (int): Unix-style permissions (like os.chmod).
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         client.chmod(path, mode)
 
     def rename(self, old_path: str, new_path: str) -> None:
@@ -184,7 +200,7 @@ class FtpClient(AbstractClient):
             old_path (str): Existing path.
             new_path (str): New path.
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         client.rename(old_path, new_path)
 
     def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:
@@ -197,15 +213,15 @@ class FtpClient(AbstractClient):
         Yields:
             Tuple[str, List[str], List[str]]: (current_path, folders, files)
         """
-        client = self.__connect_before()
+        client = self._connect_before()
         walk_path = remote_path if remote_path != "" else client.curdir
         for path, folders, files in client.walk(walk_path):
             if remote_path == "":
-                path = self.__remove_current_directory_prefix(client, path)
+                path = self._remove_current_directory_prefix(client, path)
             yield path, folders, files
 
     @staticmethod
-    def __remove_current_directory_prefix(client: Any, path: str) -> str:
+    def _remove_current_directory_prefix(client: Any, path: str) -> str:
         """
         Keep FTP walk paths compatible with SftpClient.walk('').
         """
@@ -222,7 +238,7 @@ class FtpClient(AbstractClient):
         """
         Close the FTP client and underlying connection.
         """
-        if self.__client is not None:
-            self.__app.log.debug('Close ftputil.FTPHost client')
-            self.__client.close()
-            self.__client = None
+        if self._client is not None:
+            self.app.logger.debug("Close ftputil.FTPHost client")
+            self._client.close()
+            self._client = None

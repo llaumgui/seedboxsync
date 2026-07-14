@@ -6,23 +6,20 @@ summary: SeedboxSync usage
 ## Use in command line
 
 ```bash
-usage: seedboxsync [-h] [-d] [-q] [-v] {sync,list,clean} ...
+Usage: seedboxsync [OPTIONS] COMMAND [ARGS]...
 
-Script for sync operations between your NAS and your seedbox
+  Script for sync operations between your NAS and your seedbox
 
-options:
-  -h, --help         show this help message and exit
-  -d, --debug        full application debug mode
-  -q, --quiet        suppress all console output
-  -v, --version      show program's version number and exit
+Options:
+  --version             Show the version and exit.
+  --debug / --no-debug  Set debug mode.
+  -h, --help            Show this message and exit.
 
-sub-commands:
-  {sync,list,clean}
-    sync             all synchronization operations
-    list             all list operations
-    clean            all cleaning operations
-
-Usage: seedboxsync sync blackhole --dry-run
+Commands:
+  clean   All cleaning operations.
+  search  All search operations.
+  stats   All stats operations.
+  sync    All synchronization operations.
 ```
 
 * Sync blackhole:

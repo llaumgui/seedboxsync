@@ -1,6 +1,6 @@
 [project]
 name = "seedboxsync"
-description = "Script for sync operations between your NAS and your seedbox"
+description = "Application for sync operations between your NAS and your seedbox"
 dynamic = ["version"]
 authors = [
   { name = "Guillaume Kulakowski", email = "guillaume@kulakowski.fr" }
@@ -9,8 +9,8 @@ keywords = [
   "seedbox",
   "nas",
   "sync",
-  "ftp",
   "sftp",
+  "ftp",
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -18,7 +18,7 @@ classifiers = [
   "Topic :: Internet",
   "Programming Language :: Python :: 3",
   "Environment :: Console",
-  "Natural Language :: English",
+  "Environment :: Web Environment",
   "Operating System :: POSIX"
 ]
 readme = "README.md"
@@ -26,16 +26,18 @@ license-files = ["LICENSE"]
 license = "GPL-3.0-only"
 requires-python = ">=3.10"
 dependencies = [
-  "cement>=3.0.14",
-  "pyyaml>=6.0.2",
-  "colorlog>=6.9.0",
+  "peewee>=3.17.7",
   "paramiko>=3.5.1",
   "ftputil>=5.1.0",
+  "tabulate",
+  "humanize",
   "bcoding",
-  "tabulate>=0.9.0",
-  "humanize>=4.12.1",
-  "peewee>=3.17.7",
-  "typing-extensions>=4.13.2"
+  "typing-extensions",
+  "flask",
+  "click",
+  "Flask-Caching",
+  "Flask-Babel",
+  "flask-restx",
 ]
 
 [project.urls]
@@ -46,18 +48,19 @@ Source = "https://github.com/llaumgui/seedboxsync/"
 [project.optional-dependencies]
 dev = [
   "flake8",
+  "Flake8-pyproject",
+  "black",
   "pytest",
   "pytest-cov",
   "coverage",
   "flit",
   "mypy",
   "twine",
-  "cement[cli]",
   "mkdocs-material",
 ]
 
 [project.scripts]
-seedboxsync = "seedboxsync.main:main"
+seedboxsync = "seedboxsync.cli:cli"
 
 [build-system]
 requires = ["flit_core<4"]
@@ -65,13 +68,14 @@ build-backend = "flit_core.buildapi"
 
 [tool.flit.sdist]
 include = [
-  "config/seedboxsync.yml.example",
+  "seedboxsync/front/static/dist/**",
   "README.md",
   "LICENSE"
 ]
 exclude = [
   ".github/**",
   "docker/**",
+  "screenshots/**",
   "doc/**",
   "logo/**",
   "tests/**",
@@ -83,7 +87,10 @@ exclude = [
   ".markdownlint.yaml",
   "Dockerfile",
   "Makefile",
+  "package.json",
+  "package-lock.json",
   "sonar-project.properties",
+  "vite.config.js",
 ]
 
 [tool.mypy]
@@ -91,3 +98,23 @@ files = ["seedboxsync"]
 ignore_missing_imports = true
 strict = true
 show_error_codes = true
+pretty = true
+
+[tool.flake8]
+ignore = ["W504"]
+max-line-length = 160
+exclude = [
+  "*.egg",
+  "build/*",
+  "docs/*"
+]
+select = ["E", "W", "F"]
+
+[tool.black]
+line-length = 160
+
+[tool.coverage.report]
+omit = [
+    "*/templates/*",
+    "*/static/*",
+]

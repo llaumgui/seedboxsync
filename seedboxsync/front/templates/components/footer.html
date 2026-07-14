@@ -1,0 +1,16 @@
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-desktop">
+      <p class="column has-text-centered-mobile">
+        {{ _('%(seedboxsync)s v%(version)s by %(author)s under %(license)s',
+            version=version,
+            seedboxsync='<strong ><a href="https://llaumgui.github.io/seedboxsync/">SeedboxSync</a></strong>' | safe,
+            author='<a href="https://blog.kulakowski.fr">Guillaume Kulakowski</a>' | safe,
+            license='<a href="https://opensource.org/license/gpl-3-0">GPL-v3</a>'| safe ) }}
+      </p>
+      <p class="column has-text-right has-text-centered-mobile">
+        <a href="{{ url_for('api.doc') }}">{{ _('SeedboxSync API v%(api_version)s', api_version=api_version) }}</a>
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,4 +1,4 @@
-.PHONY: virtualenv test test-ci pytest pytest-xml test-core  comply markdownlint hadolint mypy docs docs-serve clean dist
+.PHONY: virtualenv run i18n-extract i18n-update i18n-compile test test-ci pytest pytest-xml test-core  comply markdownlint hadolint mypy npm-lint docs docs-serve clean dist publish
 
 virtualenv:
 	virtualenv --prompt '|> seedboxsync <| ' env
@@ -7,9 +7,27 @@ virtualenv:
 	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
 	@echo
 
-test: comply mypy pytest markdownlint hadolint
+run:
+	export FLASK_SECRET_KEY=dev ; \
+	export FLASK_CACHE_TYPE=NullCache ; \
+	flask --app seedboxsync.app:app run --debug
 
-test-ci: comply mypy pytest-xml
+run-gunicorn:
+	export FLASK_SECRET_KEY=gunicorn ; \
+	gunicorn -w 1 -b 0.0.0.0:5000 seedboxsync.app:app
+
+i18n-extract:
+	pybabel extract -F babel.cfg -o seedboxsync/front/messages.pot .
+
+i18n-update:
+	pybabel update -i seedboxsync/front/messages.pot -d seedboxsync/front/translations
+
+i18n-compile:
+	pybabel compile -d seedboxsync/front/translations
+
+test: comply mypy pytest markdownlint hadolint npm-lint
+
+test-ci: comply mypy i18n-compile pytest-xml
 
 pytest:
 	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
@@ -17,19 +35,20 @@ pytest:
 pytest-xml:
 	python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
 
-test-core: comply
-	python -m pytest -v --cov=seedboxsync.core --cov-report=term --cov-report=html:coverage-report --capture=sys tests/core
-
 comply:
 	flake8 seedboxsync/ tests/
 
 markdownlint:
 	markdownlint -c .markdownlint.yaml *.md docs/
+
 hadolint:
 	hadolint Dockerfile
 
 mypy:
 	mypy
+
+npm-lint:
+	npm run test:lint
 
 docs:
 	mkdocs build
@@ -43,4 +62,8 @@ clean:
 
 dist: clean
 	rm -rf dist/*
+	npm run build
 	flit build
+
+publish:
+	flit publish

@@ -20,6 +20,7 @@ docker run -d \
   -e TZ=Europe/Paris \
   -e PUID=1000 \
   -e PGID=100 \
+  -e FLASK_SECRET_KEY=MySecretKey \
   ghcr.io/llaumgui/seedboxsync:latest
 ```
 
@@ -36,11 +37,14 @@ services:
       TZ: 'Europe/Paris'
       PUID: 1000
       PGID: 100
+      FLASK_SECRET_KEY: MySecretKey
     volumes:
       - /data/seedboxsync/config:/config
       - /data/seedboxsync/watch:/watch
       - /data/seedboxsync/downloads:/downloads
 ```
+
+Once installed, you can access to the frontend: [http://127.0.0.1:8000](http://127.0.0.1:8000/).
 
 ### Docker tags
 
@@ -79,11 +83,14 @@ environment:
 
 ### Environment Variables
 
-| Variable   | Description                                   | Default Value |
-|------------|-----------------------------------------------|---------------|
-| `TZ`       | Timezone configuration                        |               |
-| `PUID`     | User ID for the main process                  | `1000`        |
-| `PGID`     | Group ID for the main process                 | `1000`        |
+| Variable           | Description                                   | Default Value |
+|--------------------|-----------------------------------------------|---------------|
+| `TZ`               | Timezone configuration                        |               |
+| `PUID`             | User ID for the main process                  | `1000`        |
+| `PGID`             | Group ID for the main process                 | `1000`        |
+| `FLASK_SECRET_KEY` | The [Flask's secret](https://flask.palletsprojects.com/en/stable/config/#SECRET_KEY) key that will be used for securely signing the session cookie and can be used for any other security related needs by extensions or your application. It should be a long random bytes or str. | `dev` |
+| `GUNICORN_WORKERS` | The number of [Gunicorn worker](https://docs.gunicorn.org/en/stable/run.html#commonly-used-arguments) processes. This number should generally be between 2-4 workers per core in the server. | `1` |
+| `GUNICORN_BIND`    | Specify a server socket to bind. Server sockets can be any of `$(HOST)`, `$(HOST):$(PORT)`, `fd://$(FD)`, or `unix:$(PATH)`. An IP is a valid `$(HOST)`. | `0.0.0.0:8000` |
 
 ### Customize cron
 
