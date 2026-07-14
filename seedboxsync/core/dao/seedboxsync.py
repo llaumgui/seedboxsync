@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 from peewee import CharField, TextField
-from seedboxsync import __version__ as version
+from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import SeedboxSyncModel
 
 
@@ -34,7 +34,7 @@ class SeedboxSync(SeedboxSyncModel):
         Returns:
             str: The database model version.
         """
-        return str(SeedboxSync.select(SeedboxSync.value).where(SeedboxSync.key == 'db_version').first().value)  # Use old style to prevent Peewee 2 databases.
+        return str(SeedboxSync.select(SeedboxSync.value).where(SeedboxSync.key == "db_version").first().value)  # Use old style to prevent Peewee 2 databases.
 
     @staticmethod
     def set_db_version(db_version: str) -> None:
@@ -44,7 +44,7 @@ class SeedboxSync(SeedboxSyncModel):
         Args:
             db_version (str): The database model version.
         """
-        SeedboxSync.replace(key='db_version', value=db_version).execute()
+        SeedboxSync.replace(key="db_version", value=db_version).execute()  # type: ignore[no-untyped-call]
 
     @staticmethod
     def get_version() -> str:
@@ -54,11 +54,11 @@ class SeedboxSync(SeedboxSyncModel):
         Returns:
             str: The database model version.
         """
-        return str(SeedboxSync.get(SeedboxSync.key == 'version').value)
+        return str(SeedboxSync.get(SeedboxSync.key == "version").value)
 
     @staticmethod
     def set_version() -> None:
         """
         Upsert SeedboxSync version.
         """
-        SeedboxSync.replace(key='version', value=version).execute()
+        SeedboxSync.replace(key="version", value=version).execute()  # type: ignore[no-untyped-call]

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1 class="title">{% block title %}{{ _('Last torrents uploaded') }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+  <p class="is-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
+
+  <div x-data="TablePaginedComponent('{{ url_for('api.uploads_uploads_list') }}?limit=1000')">
+
+    {# Search #}
+    <div class="mb-4 control has-icons-left has-icons-right">
+      <input class="input" type="text" placeholder="{{ _('Search') }}" x-model="search" @input.debounce.300ms="load()" />
+      <span class="icon is-small is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </div>
+
+    {# Messages #}
+    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
+    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No files uploaded yet...') }}</div>
+
+    {# Table #}
+    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th>{{ _('Sent') }}</th>
+          <th class="is-narrow"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in data" :key="row.id || row.key">
+          <tr>
+            <td x-text="row.name"></td>
+            <td x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
+            <td class="has-text-right">
+              <button class="button is-danger is-outlined"
+                 @click="OpenModalConfirmCall(
+                  '{{ url_for('api.uploads_uploads', id=0) }}'.replace('0', row.id),
+                  'DELETE',
+                  '{{ _('Delete?') }}',
+                  `'{{ _('Do you want to delete this upload?') }}<br><em>${row.name}</em>`,
+                  `<em>${row.name}</em> {{ _('has been deleted') }}.`,
+                )">
+                  <span class="is-hidden-mobile">{{ _('Delete') }}</span><span class="icon is-small"><i class="fas fa-times"></i></span>
+              </button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+
+    {# Pagination controls #}
+    <nav class="pagination is-right" role="navigation" aria-label="pagination">
+      <a href="#" class="pagination-previous" :class="{ 'is-disabled': page === 1 }" @click.prevent="prevPage()">{{ _('Previous') }}</a>
+      <a href="#" class="pagination-next" :class="{ 'is-disabled': page === totalPages }" @click.prevent="nextPage()">{{ _('Next') }}</a>
+
+      <ul class="pagination-list">
+        <template x-for="pObj in visiblePages" :key="pObj.page ?? Math.random()">
+          <li>
+            <a href="#" class="pagination-link"
+              :class="{ 'is-current': page === pObj.page, 'is-disabled': pObj.isEllipsis }"
+              @click.prevent="if(!pObj.isEllipsis) goToPage(pObj.page)"
+              x-text="pObj.isEllipsis ? '…' : pObj.page">
+            </a>
+          </li>
+        </template>
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

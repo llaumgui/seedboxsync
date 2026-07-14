@@ -8,7 +8,7 @@
 from peewee import Model
 
 
-class SeedboxSyncModel(Model):  # type: ignore[misc]
+class SeedboxSyncModel(Model):
     """
     Basemodel from which all other peewee models are derived.
     """

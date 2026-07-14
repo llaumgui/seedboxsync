@@ -10,18 +10,22 @@ hide:
   <img alt="SeedboxSync logo" src="images/seedboxsync.png" />
 </p>
 
-**SeedboxSync** provides a seamless and automated way to synchronize, download, and manage your torrents between your NAS and seedbox.
+**SeedboxSync** is designed for users who run a NAS (Synology, TrueNAS, Unraid, Linux...) alongside a remote seedbox and want to automate torrent transfers without manual intervention.
 
-## Key Features
+**SeedboxSync** automates the complete lifecycle of your torrents between your NAS and your seedbox: upload `.torrent` files, download completed data, avoid duplicate transfers, and monitor everything from a web interface.
 
-* **🔄 Two-way synchronization**:
-    * Sync from NAS to Seedbox (upload blackhole folder)
-    * Sync from Seedbox to NAS (automatic download with de-duplication tracking)
-* **📥 Download management**: Prevent duplicate transfers using an integrated SQLite database
+## Features
+
+* **🔄 Torrent workflow automation**
+    * Upload `.torrent` files from your NAS to your seedbox (blackhole directory).
+    * Automatically download completed torrents back to your NAS.
+* **📥 Smart download tracking**: Prevent duplicate transfers and keep track of downloaded torrents using an embedded SQLite database.
+* **🌐 Web frontend**: Monitor your downloads and syncs in real-time through a user-friendly web interface.
 * **📊 Statistics and reporting**: View monthly and yearly download statistics
-* **✅ Quality and testing**: Over 80% unit test coverage
-* **🌐 Web frontend**: A web front-end is also available as a separate project if you don't want to use the CLI for management and reporting.
+* **🗄️ REST API**: Integrate SeedboxSync with your own tools and automation workflows.
 
-<p style="text-align:center; margin-top: 60px">
-  <a href="https://www.python.org"><img alt="Python logo" src="images/python-powered-w-140x56.png" /></a> <a href="https://builtoncement.com"><img alt="SeedboxSync logo" src="images/logo-cement.png" /></a> <a href="https://docs.peewee-orm.com"><img alt="peewee logo" src="images/logo-peewee.png" /></a>
+## Build with
+
+<p style="text-align:center;">
+  <a href="https://www.python.org"><img alt="Python logo" src="./images/python-powered-w-140x56.png" /></a> <a href="https://flask.palletsprojects.com"><img alt="Flask logo" src="./images/logo-flask.png" /></a> <a href="https://docs.peewee-orm.com"><img alt="peewee logo" src="./images/logo-peewee.png" /></a>
 </p>

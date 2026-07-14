@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 4.0.0
+
+**Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
+
+* ✨ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync & SeedboxSyncFront all in one.
+* ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
+* ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disable sync.
+
 ## 3.4.1 - Jun 14, 2026
 
 * 🔧 Change default `max_concurrent_prefetch_requests` from 32 to 128.

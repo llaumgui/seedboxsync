@@ -8,78 +8,88 @@
 """
 Transport client using sFTP protocol.
 """
+
 import os
 import paramiko
 import socket
+from flask import Flask, current_app
 from stat import S_ISDIR
-from cement import App  # type: ignore[attr-defined]
 from typing import Generator, Tuple, List
 from paramiko.sftp_attr import SFTPAttributes
-from seedboxsync.core.sync.abstract_client import AbstractClient, _Callback
-from seedboxsync.core.sync.sync import ConnectionError
+from seedboxsync.core.config import Config
+from seedboxsync.core.sync.abstract_sync_client import AbstractSyncClient, _Callback
+from seedboxsync.cli.exception import ConnectionError
 
 
-class SftpClient(AbstractClient):
+class SftpClient(AbstractSyncClient):
     """
     SFTP transport client using Paramiko.
 
     Handles file transfers between NAS and Seedbox servers. Provides basic
     operations such as get, put, rename, chmod, and directory traversal.
     """
-    __app: App
-    __host: str
-    __login: str
-    __password: str
-    __port: str
-    __timeout: str | bool
-    __transport = paramiko.Transport
-    __client: paramiko.SFTPClient
-    __max_concurrent_prefetch_requests: int
 
-    def __init__(self, app: App):
+    app: Flask
+    _host: str
+    _login: str
+    _password: str
+    _port: str
+    _timeout: str | bool
+    _transport = paramiko.Transport
+    _client: paramiko.SFTPClient
+    _max_concurrent_prefetch_requests: int
+
+    def __init__(self) -> None:
         """
         Initialize the SFTP client with connection parameters.
 
         Args:
-            app (App): The Cement application instance.
+            app (Flask): The Flask application instance.
         """
-        self.__app = app
-        self.__host = self.__app.config.get('seedbox', 'host')
-        self.__login = self.__app.config.get('seedbox', 'login')
-        self.__password = self.__app.config.get('seedbox', 'password')
-        self.__port = self.__app.config.get('seedbox', 'port')
-        self.__timeout = self.__app.config.get('seedbox', 'timeout')
-        self.__max_concurrent_prefetch_requests = self.__app.config.get('seedbox', 'max_concurrent_prefetch_requests')
-        self.__transport = None
+        self.app = current_app
 
-    def __connect_before(self) -> None:
+        # Get config as namespace
+        config = self.app.config.get_namespace(Config.CONFIG_NAMESPACE)
+
+        self._host = config.get("seedbox_host") or ""
+        self._login = config.get("seedbox_login") or ""
+        self._password = config.get("seedbox_password") or ""
+        self._port = config.get("seedbox_port") or ""
+        self._timeout = config.get("seedbox_timeout") or False
+        self._max_concurrent_prefetch_requests = int(config.get("seedbox_max_concurrent_prefetch_requests") or 128)
+        self._transport = None
+
+        self.app.logger.debug(f"Use sftp://{self._login}:****@{self._host}:{self._port}")
+
+    def _connect_before(self) -> None:
         """
-        Initialize the SFTP transport and client if not already connected.
+        Initialize the SFTP transport and client i   f not already connected.
 
         Raises:
             ConnectionError: If connection or authentication fails.
         """
-        if self.__transport is None:
-            self.__app.log.debug('Init paramiko.Transport')
+        if self._transport is None:
+            self.app.logger.debug("Init paramiko.Transport")
             try:
-                self.__transport = paramiko.Transport((self.__host, int(self.__port)))
+                self._transport = paramiko.Transport((self._host, int(self._port)))
             except (socket.gaierror, ConnectionRefusedError) as exc:
-                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. " +
-                                      "Ensure the host and port are correct, and that no firewall is blocking access.")
+                raise ConnectionError(
+                    f"{str(exc)}\nFailed to establish a connection. " + "Ensure the host and port are correct, and that no firewall is blocking access."
+                )
 
             try:
-                self.__transport.connect(username=self.__login, password=self.__password)
+                self._transport.connect(username=self._login, password=self._password)
             except paramiko.ssh_exception.AuthenticationException as exc:
-                raise ConnectionError(f'{str(exc)}\nFailed to establish a connection. Ensure the login and password are correct.')
+                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. Ensure the login and password are correct.")
 
-            self.__app.log.debug('Init paramiko.SFTPClient from transport')
-            self.__client = paramiko.SFTPClient.from_transport(self.__transport)
+            self.app.logger.debug("Init paramiko.SFTPClient from transport")
+            self._client = paramiko.SFTPClient.from_transport(self._transport)
 
             # Setup timeout
-            if self.__timeout:
-                channel = self.__client.get_channel()
-                channel.settimeout(self.__timeout)
-                self.__app.log.debug('Timeout is set to %s' % channel.gettimeout())
+            if self._timeout:
+                channel = self._client.get_channel()
+                channel.settimeout(self._timeout)
+                self.app.logger.debug("Timeout is set to %s" % channel.gettimeout())
 
     def put(self, local_path: str, remote_path: str) -> SFTPAttributes:
         """
@@ -92,10 +102,15 @@ class SftpClient(AbstractClient):
         Returns:
             SFTPAttributes: Metadata of the uploaded file.
         """
-        self.__connect_before()
-        return self.__client.put(local_path, remote_path)
+        self._connect_before()
+        return self._client.put(local_path, remote_path)
 
-    def get(self, remote_path: str, local_path: str, progress_callback: _Callback | None = None) -> None:
+    def get(
+        self,
+        remote_path: str,
+        local_path: str,
+        progress_callback: _Callback | None = None,
+    ) -> None:
         """
         Download a remote file from the SFTP server.
 
@@ -104,12 +119,12 @@ class SftpClient(AbstractClient):
             local_path (str): Destination path on the local host.
             progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
-        self.__connect_before()
-        self.__client.get(
+        self._connect_before()
+        self._client.get(
             remote_path,
             local_path,
             callback=progress_callback,
-            max_concurrent_prefetch_requests=self.__max_concurrent_prefetch_requests
+            max_concurrent_prefetch_requests=self._max_concurrent_prefetch_requests,
         )
 
     def stat(self, filepath: str) -> SFTPAttributes:
@@ -123,8 +138,8 @@ class SftpClient(AbstractClient):
             SFTPAttributes: Object with attributes similar to Python's os.stat:
                 st_mode, st_size, st_uid, st_gid, st_atime, st_mtime.
         """
-        self.__connect_before()
-        return self.__client.stat(filepath)
+        self._connect_before()
+        return self._client.stat(filepath)
 
     def chdir(self, path: str | None = None) -> None:
         """
@@ -133,8 +148,8 @@ class SftpClient(AbstractClient):
         Args:
             path (Optional[str]): Target directory. If None, no change occurs.
         """
-        self.__connect_before()
-        self.__client.chdir(path)
+        self._connect_before()
+        self._client.chdir(path)
 
     def chmod(self, path: str, mode: int) -> None:
         """
@@ -144,8 +159,8 @@ class SftpClient(AbstractClient):
             path (str): Path of the file.
             mode (int): Unix-style permissions (like os.chmod).
         """
-        self.__connect_before()
-        self.__client.chmod(path, mode)
+        self._connect_before()
+        self._client.chmod(path, mode)
 
     def rename(self, old_path: str, new_path: str) -> None:
         """
@@ -155,7 +170,7 @@ class SftpClient(AbstractClient):
             old_path (str): Existing path.
             new_path (str): New path.
         """
-        self.__client.posix_rename(old_path, new_path)
+        self._client.posix_rename(old_path, new_path)
 
     def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:
         """
@@ -173,11 +188,11 @@ class SftpClient(AbstractClient):
         Source:
             https://gist.github.com/johnfink8/2190472
         """
-        self.__connect_before()
+        self._connect_before()
         path = remote_path
         files: List[str] = []
         folders: List[str] = []
-        for f in self.__client.listdir_attr(remote_path):
+        for f in self._client.listdir_attr(remote_path):
             if S_ISDIR(f.st_mode):
                 folders.append(f.filename)
             else:
@@ -193,6 +208,6 @@ class SftpClient(AbstractClient):
         """
         Close the SFTP transport client and underlying connection.
         """
-        if self.__transport is not None:
-            self.__app.log.debug('Close paramiko.Transport client')
-            self.__transport.close()
+        if self._transport is not None:
+            self.app.logger.debug("Close paramiko.Transport client")
+            self._transport.close()

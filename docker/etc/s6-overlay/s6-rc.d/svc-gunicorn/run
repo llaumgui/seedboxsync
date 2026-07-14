@@ -1,0 +1,13 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Number of workers by default
+export GUNICORN_WORKERS=${GUNICORN_WORKERS:-1}
+
+# Bind address with default
+export GUNICORN_BIND=${GUNICORN_BIND:-0.0.0.0:8000}
+
+# Launch Gunicorn as seedboxsync
+export HOME=~seedboxsync
+exec s6-setuidgid seedboxsync \
+  gunicorn -w "${GUNICORN_WORKERS}" -b "${GUNICORN_BIND}" seedboxsync.app:app

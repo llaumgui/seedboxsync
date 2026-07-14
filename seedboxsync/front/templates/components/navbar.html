@@ -1,0 +1,28 @@
+{% set current_path = request.path %}
+<nav class="navbar has-shadow is-dark" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="{{ url_for('frontend.homepage') }}">
+        <img alt="SeedboxSync logo" src="{{ url_for('static', filename='logo.png') }}" /> SeedboxSync
+      </a>
+      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+      <div class="navbar-start">
+        <a class="navbar-item{% if current_path == url_for('frontend.homepage') %} is-active{% endif %}" href="{{ url_for('frontend.homepage') }}"><h1>{{ _('Dashboard') }}</h1></a>
+        <a class="navbar-item{% if current_path == url_for('frontend.downloaded') %} is-active{% endif %}" href="{{ url_for('frontend.downloaded') }}"><h1>{{ _('Downloaded') }}</h1></a>
+        <a class="navbar-item{% if current_path == url_for('frontend.uploaded') %} is-active{% endif %}" href="{{ url_for('frontend.uploaded') }}"><h1>{{ _('Uploaded') }}</h1></a>
+        <a class="navbar-item{% if current_path == url_for('frontend.info') %} is-active{% endif %}" href="{{ url_for('frontend.info') }}"><h1>{{ _('Info') }}</h1></a>
+        <a class="navbar-item{% if current_path == url_for('frontend.stats') %} is-active{% endif %}" href="{{ url_for('frontend.stats') }}"><h1>{{ _('Stats') }}</h1></a>
+      </div>
+      <div class="navbar-end">
+        <a class="navbar-item{% if current_path == url_for('frontend.settings') %} is-active{% endif %}" href="{{ url_for('frontend.settings') }}"><h1>{{ _('Settings') }}</h1></a>
+      </div>
+    </div>
+  </div>
+</nav>

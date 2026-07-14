@@ -17,4 +17,7 @@ SeedboxSync is [available on PyPI](https://pypi.org/project/seedboxsync/).
 
 ```bash
 pip install seedboxsync
+flask flask --app seedboxsync.app:main run
 ```
+
+Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/).

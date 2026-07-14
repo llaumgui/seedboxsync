@@ -3,6 +3,7 @@ on:
   [push, pull_request]
 env:
   pythonLastVersion: '3.14'
+  nodeLastVersion: '26.X'
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/seedboxsync
 
@@ -17,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
     steps:
     - name: Git checkout
       uses: actions/checkout@v7
@@ -30,6 +31,24 @@ jobs:
         name: coverage-${{ matrix.python-version }}
         path: coverage.xml
 
+  test_javascript:
+    runs-on: ubuntu-latest
+    name: Test Javascript
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22.X, 24.X, 26.X]
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v6
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: Run tests (QA and unit tests)
+      run: npm run test:lint
   ##############################################################################
   # Markdownlint
   #
@@ -68,7 +87,8 @@ jobs:
     needs: [
       test_python,
       test_markdownlint,
-      test_dockerfiles
+      test_dockerfiles,
+      test_javascript
     ]
     runs-on: ubuntu-latest
     name: SonarCloud analyse
@@ -106,8 +126,14 @@ jobs:
       with:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
-    - name: Install Dependencies
+    - name: Use Node.js ${{ env.nodeLastVersion }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ env.nodeLastVersion }}
+    - name: Install Python Dependencies
       run: pip install -e ".[dev]"
+    - name: Install Node Dependencies
+      run: npm install
     - name: Package
       run: make dist
     - name: Archive package
@@ -156,7 +182,7 @@ jobs:
         template: '@/contrib/sarif.tpl'
         output: 'trivy-results.sarif'
     - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: 'trivy-results.sarif'
 
@@ -248,8 +274,14 @@ jobs:
       with:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
+    - name: Use Node.js ${{ env.nodeLastVersion }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ env.nodeLastVersion }}
     - name: Install Dependencies
       run: pip install -e ".[dev]"
+    - name: Install Node Dependencies
+      run: npm install
     - name: Package
       run: make dist
     - name: Create GitHub release
