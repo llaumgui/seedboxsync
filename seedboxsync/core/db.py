@@ -67,6 +67,22 @@ class Database(object):
         else:
             self._init_and_bind()
 
+        # Check and run migrations if needed
+        db_version = int(SeedboxSync.get_db_version())
+        self.app.logger.debug(f'SQLite database version is {db_version}')
+        while db_version < self.DATABASE_VERSION:
+            next_version = db_version + 1
+            migration_name = f"migrate_to_{next_version}"
+
+            self.app.logger.info(f'Upgrading database "{self._db_file}" from v{db_version} to v{next_version}')
+
+            # Dynamically resolve migration function
+            migration_func = getattr(self, migration_name, None)
+            if migration_func is None:
+                raise RuntimeError(f"Missing migration function: {migration_name}")
+            migration_func()
+            db_version = next_version
+
     def _init_and_bind(self) -> None:
         """Initialize and bind Peewee models to the SQLite database."""
 
