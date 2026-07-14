@@ -73,8 +73,17 @@ class Database(object):
         db_wrapper = FlaskDB(self.app)
         self.db = db_wrapper.database
         self.app.extensions["flaskdb"] = db_wrapper
+        self.db.journal_mode = "wal"
+        self.db.cache_size = -64000
+        self.db.foreign_keys = 1
         self.db.bind([Download, Lock, SeedboxSync, Torrent])
-        self.app.logger.debug("Database initialized %s", self.app.config["DATABASE"])
+        self.app.logger.debug(
+            "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
+            self.app.config["DATABASE"],
+            self.db.journal_mode,
+            self.db.cache_size,
+            self.db.foreign_keys,
+        )
 
     def _register_functions(self) -> None:
         """Register DB functions."""
