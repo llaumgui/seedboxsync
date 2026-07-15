@@ -27,7 +27,7 @@ license = "GPL-3.0-only"
 requires-python = ">=3.10"
 dependencies = [
   "peewee>=3.17.7",
-  "paramiko>=3.5.1",
+  "paramiko>=5.0.0",
   "ftputil>=5.1.0",
   "tabulate",
   "humanize",
