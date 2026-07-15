@@ -18,7 +18,7 @@ from seedboxsync.core.ping import AbstractPingClient
 class SeedboxSyncFlask(Flask):
     """Flask application with SeedboxSync-specific configuration helpers."""
 
-    @cached_property
+    @property
     def seedboxsync_config(self) -> dict[str, Any]:
         """
         Return the SeedboxSync configuration namespace.
