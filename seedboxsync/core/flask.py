@@ -11,6 +11,7 @@ from functools import cached_property
 from flask import current_app, Flask
 from seedboxsync.core import Config
 from seedboxsync.core.exception import PingServiceError, SyncProtocoleError
+from seedboxsync.core.task import task_manager, Manager
 from seedboxsync.core.sync import AbstractSyncClient
 from seedboxsync.core.ping import AbstractPingClient
 
@@ -28,6 +29,17 @@ class SeedboxSyncFlask(Flask):
             and keys converted to lowercase.
         """
         return self.config.get_namespace(Config.CONFIG_NAMESPACE)
+
+    @cached_property
+    def task_manager(self) -> Manager:
+        """
+        Return the task instance Manager.
+
+        Returns:
+            The task manager instance.
+        """
+        task_manager.init_app(self)
+        return task_manager
 
     @cached_property
     def sync(self) -> AbstractSyncClient:
@@ -89,7 +101,6 @@ class SeedboxSyncFlask(Flask):
             raise PingServiceError('Unsupported ping service module! No class "%s" in module "seedboxsync.core.ping.%sclient"' % (client_class, ping_service))
 
         return ping_client()  # type: ignore[no-any-return]
-
 
 
 seedboxsync_current_app = cast(SeedboxSyncFlask, current_app)

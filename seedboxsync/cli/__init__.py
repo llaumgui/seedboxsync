@@ -57,3 +57,5 @@ def cli(ctx: Context) -> None:
     """
     if ctx.app.debug:
         ctx.app.logger.setLevel(logging.DEBUG)
+    else:
+        ctx.app.logger.setLevel(logging.INFO)

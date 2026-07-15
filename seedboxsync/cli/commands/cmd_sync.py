@@ -11,17 +11,17 @@ All commands related to synchronization operations in SeedboxSync.
 
 import click
 import datetime
-import glob
 import os
 import re
 from paramiko import SSHException
-from seedboxsync.core.dao import Download, Torrent
-from seedboxsync.core.utils import get_torrent_infos
+from huey.exceptions import TaskLockedException
+from seedboxsync.core.dao import Download
 from seedboxsync.core.sync.download_progress import DownloadProgress
+from seedboxsync.core.sync.services import BLACKHONE_LOCK_NAME
 from seedboxsync.core import fs
 from seedboxsync.core.exception import SeedboxSyncConfigurationError
+from seedboxsync.core.sync.services import blackhole as blackhole_service
 from seedboxsync.cli import group, pass_context, Context
-
 
 @group("sync", help="All synchronization operations.")  # type: ignore[untyped-decorator]
 def cli() -> None:
@@ -48,84 +48,16 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
     """
     Perform the blackhole synchronization.
 
-    Uploads torrent files from the local watch folder to the seedbox.
-    Handles creation of lock files, optional dry-run, file permissions,
-    database persistence, and error handling.
-
     Args:
         ctx (Context): The Click context object.
         dry_run (bool): Whether to perform a dry run.
         ping (bool): Whether to ping a service during execution.
     """
-    if not ctx.app.seedboxsync_config.get("sync_blackhole_enabled") or False:
-        ctx.app.logger.info("Blackhole synchronization task is disabled")
-        ctx.exit(0)
-
-    ctx.app.logger.debug('blackhole dry-run: "%s"' % dry_run)
-    # Call ping_start_hook if enabled
-    if ping:
-        ctx.app.ping.start("sync_blackhole")
-
-    # Create lock
-    if not ctx.lock.lock_or_exit("sync_blackhole"):
-        ctx.exit(0)
-
-    # Gather all torrent files
-    local_watch_path = ctx.app.seedboxsync_config.get("local_watch_path") or ""
-    ctx.app.logger.debug('Scanning for torrent files in "%s"' % local_watch_path)
-    torrents = glob.glob(fs.join(fs.abspath(local_watch_path), "*.torrent"))
-    if len(torrents) > 0:
-        for torrent_file in torrents:
-            torrent_name = os.path.basename(torrent_file)
-            if not dry_run:
-                tmp_path = ctx.app.seedboxsync_config.get("seedbox_tmp_path") or ""
-                watch_path = ctx.app.seedboxsync_config.get("seedbox_watch_path") or ""
-
-                ctx.app.logger.info('Upload torrent: "%s"' % torrent_name)
-                ctx.app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
-
-                try:
-                    ctx.app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
-
-                    # Apply chmod if configured
-                    chmod = ctx.app.seedboxsync_config.get("seedbox_chmod") or False
-                    if isinstance(chmod, str):
-                        ctx.app.logger.debug("Change permissions to %s" % chmod)
-                        ctx.app.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
-
-                    # Move file from tmp to watch directory
-                    ctx.app.logger.debug('Move from "%s" to "%s"' % (tmp_path, watch_path))
-                    ctx.app.sync.rename(
-                        os.path.join(tmp_path, torrent_name),
-                        os.path.join(watch_path, torrent_name),
-                    )
-
-                    # Store torrent info in database
-                    torrent_info = get_torrent_infos(torrent_file) or None
-                    torrent = Torrent.create(name=torrent_name)
-                    if torrent_info is not None and isinstance(torrent_info, dict):
-                        torrent.announce = torrent_info.get("announce") or None
-                        torrent.save()
-
-                        # Remove local torrent file
-                        ctx.app.logger.debug('Remove local torrent "%s"' % torrent_file)
-                        os.remove(torrent_file)
-                    else:
-                        ctx.app.logger.warning('Rename local "%s" to .torrent.fail' % torrent_file)
-                        os.rename(torrent_file, torrent_file + ".fail")
-                except SSHException as exc:
-                    ctx.app.logger.warning("SSH client exception > %s" % str(exc))
-            else:
-                ctx.app.logger.info('Dry-run: not uploading torrent "%s"' % torrent_name)
-    else:
-        ctx.app.logger.info('No torrent files found in "%s"' % ctx.app.seedboxsync_config.get("local_watch_path"))
-
-    # Remove lock
-    ctx.lock.unlock("sync_blackhole")
-
-    # Call ping_success_hook if enabled
-    if ping:
-        ctx.app.ping.success("sync_blackhole")
+    try:
+        with ctx.app.task_manager.lock_task(BLACKHONE_LOCK_NAME):
+            blackhole_service(dry_run, ping)
+    except TaskLockedException as exc:
+        ctx.app.logger.debug('Blackhole sync already running')
 
 
 @cli.command("seedbox", help="Sync files from seedbox.")  # type: ignore[untyped-decorator]
