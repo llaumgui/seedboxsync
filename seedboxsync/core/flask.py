@@ -72,23 +72,23 @@ class SeedboxSyncFlask(Flask):
             AbstractPingClient: Configured ping client instance.
         """
         ping_service = "healthchecks"
-        service_class = ping_service.title()
+        client_class = ping_service.title()
 
-        self.logger.debug("Using SeedboxSync with ping (%s / %s)" % (ping_service, service_class))
+        self.logger.debug("Using SeedboxSync with ping (%s / %s)" % (ping_service, client_class))
 
         # Load the client module dynamically
         try:
-            service_module = import_module("seedboxsync.core.ping.client." + ping_service)
+            client_module = import_module("seedboxsync.core.ping.client." + ping_service)
         except ImportError as exc:
             raise PingServiceError("Unsupported ping service: %s: %s" % (ping_service, str(exc)))
 
         # Get the client class from the module
         try:
-            ping_client = getattr(service_module, ping_service)
+            ping_client = getattr(client_module, client_class)
         except AttributeError:
-            raise PingServiceError('Unsupported ping service module! No class "%s" in module "seedboxsync.core.ping.%s_client"' % (service_class, ping_service))
+            raise PingServiceError('Unsupported ping service module! No class "%s" in module "seedboxsync.core.ping.%sclient"' % (client_class, ping_service))
 
-        return ping_client  # type: ignore[no-any-return]
+        return ping_client()  # type: ignore[no-any-return]
 
 
 seedboxsync_current_app = cast(SeedboxSyncFlask, current_app)
