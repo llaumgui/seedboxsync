@@ -5,7 +5,7 @@
       <a class="navbar-item" href="{{ url_for('frontend.homepage') }}">
         <img alt="SeedboxSync logo" src="{{ url_for('static', filename='logo.png') }}" /> SeedboxSync
       </a>
-      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" tabindex="0" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>

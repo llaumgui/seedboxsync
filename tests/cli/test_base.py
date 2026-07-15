@@ -17,12 +17,17 @@ def test_help_lists_only_seedboxsync_options_and_commands(runner):
         assert command in result.output
 
 
-def test_no_command_displays_help_and_returns_click_usage_error(runner):
+def test_no_command_displays_help(runner):
     result = runner.invoke(cli)
 
-    assert result.exit_code == 2
+    # Click versions differ on whether implicit help is a successful exit or
+    # a usage error. The stable CLI contract is that help is displayed.
+    assert result.exit_code in (0, 2)
     assert "Usage: seedboxsync" in result.output
-    assert isinstance(result.exception, SystemExit)
+    if result.exit_code == 2:
+        assert isinstance(result.exception, SystemExit)
+    else:
+        assert result.exception is None
 
 
 @pytest.mark.parametrize("option", ["-h", "--help"])

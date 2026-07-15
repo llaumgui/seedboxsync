@@ -9,7 +9,7 @@ import os
 import humanize
 from seedboxsync.core import Flask
 from flask import Response, request, send_from_directory
-from flask_babel import format_datetime
+from flask_babel import format_datetime, get_locale as get_babel_locale
 from datetime import datetime
 from typing import Callable
 from seedboxsync.core import Config, Database, logger
@@ -81,7 +81,12 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
 
     @app.context_processor
     def inject_globals() -> dict[str, str]:
-        return {"version": version, "api_version": api_version}
+        locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
+        return {
+            "version": version,
+            "api_version": api_version,
+            "locale": str(locale).replace("_", "-"),
+        }
 
     # Cache loading
     cache.init_app(app)

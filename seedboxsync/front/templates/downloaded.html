@@ -12,7 +12,8 @@
 
     {# Search #}
     <div class="mb-4 control has-icons-left has-icons-right">
-      <input class="input" type="text" placeholder="{{ _('Search') }}" x-model="search" @input.debounce.300ms="load()" />
+      <label for="download-search" class="is-sr-only">{{ _('Search') }}</label>
+      <input id="download-search" class="input" type="text" placeholder="{{ _('Search') }}" x-model="search" @input.debounce.300ms="load()" />
       <span class="icon is-small is-left">
         <i class="fas fa-search"></i>
       </span>

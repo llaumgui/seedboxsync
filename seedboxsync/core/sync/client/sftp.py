@@ -169,6 +169,7 @@ class SftpClient(AbstractSyncClient):
             old_path (str): Existing path.
             new_path (str): New path.
         """
+        self._connect_before()
         self._client.posix_rename(old_path, new_path)
 
     def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:

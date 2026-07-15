@@ -106,7 +106,7 @@ class FtpClient(AbstractSyncClient):
                 return None
             return float(timeout)
 
-        return None
+        return float(self._timeout)
 
     def put(self, local_path: str, remote_path: str) -> None:
         """

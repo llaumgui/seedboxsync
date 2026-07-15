@@ -19,8 +19,8 @@
           enabled: {{ 'true' if form.sync_blackhole_enabled else 'false' }},
         }">
           <div class="field">
-            <label class="label">{{ _('Enable the blackhole synchronization task') }}</label>
-            <input type="checkbox" name="sync_blackhole_enabled" value="1" x-model="enabled" />
+            <label class="label" for="sync_blackhole_enabled">{{ _('Enable the blackhole synchronization task') }}</label>
+            <input id="sync_blackhole_enabled" type="checkbox" name="sync_blackhole_enabled" value="1" x-model="enabled" />
           </div>
         </div>
 
@@ -28,8 +28,8 @@
           enabled: {{ 'true' if form.sync_seedbox_enabled else 'false' }},
         }">
           <div class="field">
-            <label class="label">{{ _('Enable the seedbox synchronization task') }}</label>
-            <input type="checkbox" name="sync_seedbox_enabled" value="1" x-model="enabled" />
+            <label class="label" for="sync_seedbox_enabled">{{ _('Enable the seedbox synchronization task') }}</label>
+            <input id="sync_seedbox_enabled" type="checkbox" name="sync_seedbox_enabled" value="1" x-model="enabled" />
           </div>
         </div>
       </div>
@@ -46,9 +46,9 @@
               host: '{{ form.seedbox_host }}',
               isValid() { return isValidHost(this.host) }
             }">
-            <label class="label">{{ _('Hostname') }}</label>
+            <label class="label" for="seedbox_host">{{ _('Hostname') }}</label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_host" class="input" type="text"
                      name="seedbox_host" x-model="host"
                      placeholder="my-seedbox.ltd"
                      x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -63,9 +63,9 @@
               port: '{{ form.seedbox_port }}',
               isValid() { return isValidPort(this.port) }
             }">
-            <label class="label">{{ _('Port') }}</label>
+            <label class="label" for="seedbox_port">{{ _('Port') }}</label>
             <div class="control column is-4 p-0 has-icons-left has-icons-right">
-              <input class="input" type="number"
+              <input id="seedbox_port" class="input" type="number"
                     name="seedbox_port" x-model="port"
                     placeholder="22"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -82,9 +82,9 @@
               login: '{{ form.seedbox_login }}',
               isValid() { return isRequired(this.login) }
             }">
-            <label class="label">{{ _('Login') }}</label>
+            <label class="label" for="seedbox_login">{{ _('Login') }}</label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_login" class="input" type="text"
                     name="seedbox_login" x-model="login"
                     placeholder="me"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -99,9 +99,9 @@
               password: '{{ form.seedbox_password }}',
               isValid() { return isRequired(this.password) }
             }">
-            <label class="label">{{ _('Password') }}</label>
+            <label class="label" for="seedbox_password">{{ _('Password') }}</label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="password"
+              <input id="seedbox_password" class="input" type="password"
                     name="seedbox_password" x-model="password"
                     placeholder="********"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -119,10 +119,11 @@
               enabled: {{ form.seedbox_timeout_enabled }},
               isValid() { return isValidTimeout(this.timeout) }
             }">
-            <label class="label">{{ _('Timeout (in seconds)') }}</label>
-            <input type="checkbox" name="seedbox_timeout_enabled" value="1" checked x-model="enabled"/>
+            <label class="label" for="seedbox_timeout">{{ _('Timeout (in seconds)') }}</label>
+            <label class="is-sr-only" for="seedbox_timeout_enabled">{{ _('Timeout (in seconds)') }}</label>
+            <input id="seedbox_timeout_enabled" type="checkbox" name="seedbox_timeout_enabled" value="1" checked x-model="enabled"/>
             <div class="control column is-4 p-0 has-icons-left has-icons-right"  x-show="enabled" x-transition>
-              <input class="input" type="number"
+              <input id="seedbox_timeout" class="input" type="number"
                     name="seedbox_timeout" x-model="timeout"
                     placeholder="30"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -134,9 +135,9 @@
 
         <div class="column is-6">
           <div class="field" x-data="{ protocol: '{{ form.seedbox_protocol }}' }">
-            <label class="label">{{ _('Protocol') }}</label>
+            <label class="label" for="seedbox_protocol">{{ _('Protocol') }}</label>
             <div class="control select">
-              <select name="seedbox_protocol" x-model="protocol">
+              <select id="seedbox_protocol" name="seedbox_protocol" x-model="protocol">
                 <option value="sftp">{{ _('sFTP') }}</option>
                 <option value="ftp">{{ _('FTP') }}</option>
               </select>
@@ -153,16 +154,17 @@
               enabled: {{ form.seedbox_chmod_enabled }},
               isValid() { return isOctalChmod(this.chmod) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_chmod">
               {{ _('chmod (in octal notation)') }}
               <a class="icon has-text-grey"
                 title="{{ _('Chmod torrent after upload. Use octal notation, e.g. 0o644.') }}">
                 <i class="fas fa-circle-info"></i>
               </a>
             </label>
-            <input type="checkbox" name="seedbox_chmod_enabled" value="1" checked x-model="enabled" />
+            <label class="is-sr-only" for="seedbox_chmod_enabled">{{ _('chmod (in octal notation)') }}</label>
+            <input id="seedbox_chmod_enabled" type="checkbox" name="seedbox_chmod_enabled" value="1" checked x-model="enabled" />
             <div class="control column is-4 p-0 has-icons-left has-icons-right" x-show="enabled" x-transition>
-              <input class="input" type="text"
+              <input id="seedbox_chmod" class="input" type="text"
                     name="seedbox_chmod" x-model="chmod"
                     placeholder="0o644"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -177,7 +179,7 @@
               max_concurrent_prefetch_requests: '{{ form.seedbox_max_concurrent_prefetch_requests }}',
               isValid() { return isValidMaxConcPrefetchReq(this.max_concurrent_prefetch_requests) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_max_concurrent_prefetch_requests">
               {{ _('Max concurrent prefetch requests') }}
               <a class="icon has-text-grey"
                   title="{{ _('Only for SFTP (Paramiko). The maximum number of concurrent read requests to prefetch. When this is None (the default), do not limit the number of concurrent prefetch requests.
@@ -186,7 +188,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-4 p-0 has-icons-left has-icons-right">
-              <input class="input" type="number"
+              <input id="seedbox_max_concurrent_prefetch_requests" class="input" type="number"
                     name="seedbox_max_concurrent_prefetch_requests" x-model="max_concurrent_prefetch_requests"
                     placeholder="128"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -206,7 +208,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               tmp_path: '{{ form.seedbox_tmp_path }}',
               isValid() { return isRequired(this.tmp_path) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_tmp_path">
               {{ _('Tempory path') }}
               <a class="icon has-text-grey"
                 title="{{ _('Use a temporary directory for incomplete transfers (must be created manually).') }}">
@@ -214,7 +216,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_tmp_path" class="input" type="text"
                     name="seedbox_tmp_path" x-model="tmp_path"
                     placeholder="./tmp"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -229,7 +231,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               watch_path: '{{ form.seedbox_watch_path }}',
               isValid() { return isRequired(this.watch_path) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_watch_path">
               {{ _('Watch path') }}
               <a class="icon has-text-grey"
                 title="{{ _("Your BitTorrent client's watch folder (must be created manually).") }}">
@@ -237,7 +239,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_watch_path" class="input" type="text"
                     name="seedbox_watch_path" x-model="watch_path"
                     placeholder="./watch"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -254,7 +256,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               finished_path: '{{ form.seedbox_finished_path }}',
               isValid() { return isRequired(this.finished_path) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_finished_path">
               {{ _('Finished path') }}
               <a class="icon has-text-grey"
                 title="{{ _('The folder where your BitTorrent client puts finished files.') }}">
@@ -262,7 +264,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_finished_path" class="input" type="text"
                     name="seedbox_finished_path" x-model="finished_path"
                     placeholder="./downloads"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -277,7 +279,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               prefixed_path: '{{ form.seedbox_prefixed_path }}',
               isValid() { return isRequired(this.prefixed_path) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_prefixed_path">
               {{ _('Prefixed path') }}
               <a class="icon has-text-grey"
                 title="{{ _('Remove a prefix from the synced path (usually the same as finished_path).') }}">
@@ -285,7 +287,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_prefixed_path" class="input" type="text"
                     name="seedbox_prefixed_path" x-model="prefixed_path"
                     placeholder="downloaded"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -302,7 +304,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               part_suffix: '{{ form.seedbox_part_suffix }}',
               isValid() { return isRequired(this.part_suffix) }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_part_suffix">
               {{ _('Suffix used for .part') }}
               <a class="icon has-text-grey"
                 title="{{ _('Exclude files with this suffix (e.g. incomplete downloads).') }}">
@@ -310,7 +312,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_part_suffix" class="input" type="text"
                     name="seedbox_part_suffix" x-model="part_suffix"
                     placeholder=".part"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -325,7 +327,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               exclude_syncing: '{{ form.seedbox_exclude_syncing }}',
               isValid() { return true }
             }">
-            <label class="label">
+            <label class="label" for="seedbox_exclude_syncing">
               {{ _('Suffix used for .part') }}
               <a class="icon has-text-grey"
                 title="{{ _('Exclude files from sync using a regular expression (Python re syntax). Example: .*missing$') }}">
@@ -333,7 +335,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="seedbox_exclude_syncing" class="input" type="text"
                     name="seedbox_exclude_syncing" x-model="exclude_syncing"
                     placeholder="^.*missing$"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -355,7 +357,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               watch_path: '{{ form.local_watch_path }}',
               isValid() { return isRequired(this.watch_path) }
             }">
-            <label class="label">
+            <label class="label" for="local_watch_path">
               {{ _('Watch path') }}
               <a class="icon has-text-grey"
                 title="{{ _('Your local watch folder.') }}">
@@ -363,7 +365,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="local_watch_path" class="input" type="text"
                     name="local_watch_path" x-model="watch_path"
                     placeholder="/watch"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -378,7 +380,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               download_path: '{{ form.local_download_path }}',
               isValid() { return isRequired(this.download_path) }
             }">
-            <label class="label">
+            <label class="label" for="local_download_path">
               {{ _('Downloads path') }}
               <a class="icon has-text-grey"
                 title="{{ _('Path where files are downloaded.') }}">
@@ -386,7 +388,7 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               </a>
             </label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="local_download_path" class="input" type="text"
                     name="local_download_path" x-model="download_path"
                     placeholder="/downloads"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -410,16 +412,16 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
       }">
         <div class="column is-6">
           <div class="field">
-            <label class="label">{{ _('Enable for sync_seedbox task?') }}</label>
-            <input type="checkbox" name="healthchecks_sync_seedbox_enabled" value="1" checked x-model="enabled" />
+            <label class="label" for="healthchecks_sync_seedbox_enabled">{{ _('Enable for sync_seedbox task?') }}</label>
+            <input id="healthchecks_sync_seedbox_enabled" type="checkbox" name="healthchecks_sync_seedbox_enabled" value="1" checked x-model="enabled" />
           </div>
         </div>
 
         <div class="column is-6">
           <div class="field">
-            <label class="label">{{ _('Ping URL for sync_seedbox task') }}</label>
+            <label class="label" for="healthchecks_sync_seedbox_ping_url">{{ _('Ping URL for sync_seedbox task') }}</label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="healthchecks_sync_seedbox_ping_url" class="input" type="text"
                     name="healthchecks_sync_seedbox_ping_url" x-model="sync_seedbox_ping_url"
                     placeholder="https://hc-ping.com/826cb034-14fe-4965-a9d9-bc0bed7b034d"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -438,16 +440,16 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
         }">
         <div class="column is-6">
           <div class="field">
-            <label class="label">{{ _('Enable for sync_blackhole task?') }}</label>
-            <input type="checkbox" name="healthchecks_sync_blackhole_enabled" value="1" checked x-model="enabled" />
+            <label class="label" for="healthchecks_sync_blackhole_enabled">{{ _('Enable for sync_blackhole task?') }}</label>
+            <input id="healthchecks_sync_blackhole_enabled" type="checkbox" name="healthchecks_sync_blackhole_enabled" value="1" checked x-model="enabled" />
           </div>
         </div>
 
         <div class="column is-6">
           <div class="field">
-            <label class="label">{{ _('Ping URL for sync_blackhole task') }}</label>
+            <label class="label" for="healthchecks_sync_blackhole_ping_url">{{ _('Ping URL for sync_blackhole task') }}</label>
             <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input class="input" type="text"
+              <input id="healthchecks_sync_blackhole_ping_url" class="input" type="text"
                     name="healthchecks_sync_blackhole_ping_url" x-model="sync_blackhole_ping_url"
                     placeholder="https://hc-ping.com/94db845e-bd7c-42af-9ca8-25e89556b814"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
