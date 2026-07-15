@@ -15,7 +15,7 @@ import ftputil.error
 from typing import Any, Generator, List, Tuple
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.sync import AbstractSyncClient, _Callback
-from seedboxsync.cli.exception import ConnectionError
+from seedboxsync.core.exception import ConnectionError
 
 
 class FtpSession(ftplib.FTP):
@@ -24,6 +24,16 @@ class FtpSession(ftplib.FTP):
     """
 
     def __init__(self, host: str, user: str, password: str, port: int = 21, timeout: float = -999):
+        """
+        Connect and authenticate an FTP session.
+
+        Args:
+            host (str): FTP server hostname.
+            user (str): FTP account username.
+            password (str): FTP account password.
+            port (int): FTP server port.
+            timeout (float): Connection timeout passed to ``ftplib``.
+        """
         super().__init__()
         self.connect(host, port, timeout=timeout)
         self.login(user, password)
@@ -46,12 +56,7 @@ class FtpClient(AbstractSyncClient):
     _client: Any | None
 
     def __init__(self) -> None:
-        """
-        Initialize the FTP client with connection parameters.
-
-        Args:
-            app (Flask): The Flask application instance.
-        """
+        """Initialize the FTP client with application connection parameters."""
         self.app = current_app
 
         # Get config
@@ -223,13 +228,20 @@ class FtpClient(AbstractSyncClient):
     def _remove_current_directory_prefix(client: Any, path: str) -> str:
         """
         Keep FTP walk paths compatible with SftpClient.walk('').
+
+        Args:
+            client (Any): Active ``ftputil`` client.
+            path (str): Path returned by ``ftputil``.
+
+        Returns:
+            str: Path relative to the current FTP directory.
         """
         if path == client.curdir:
             return ""
 
         prefix = client.curdir + client.sep
         if path.startswith(prefix):
-            return path[len(prefix):]
+            return path[len(prefix) :]
 
         return path
 

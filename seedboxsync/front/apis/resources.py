@@ -139,7 +139,18 @@ class Resource(RestXResource):  # type: ignore[misc]
 
 
 class DateTimeOrZero(fields.DateTime):  # type: ignore[misc]
+    """Format date-time values while preserving the legacy zero value."""
+
     def format(self, value: int | datetime) -> Any:
+        """
+        Format a date-time value or return zero unchanged.
+
+        Args:
+            value (int | datetime): Date-time value or the legacy zero sentinel.
+
+        Returns:
+            Any: Formatted date-time value or zero.
+        """
         if value == 0:
             return 0
         return super().format(value)

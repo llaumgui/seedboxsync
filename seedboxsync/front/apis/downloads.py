@@ -239,6 +239,12 @@ class Downloads(Resource):
     def get(self, id: int) -> dict[str, Any]:
         """
         Retrieve a download.
+
+        Args:
+            id (int): Download identifier.
+
+        Returns:
+            dict[str, Any]: API response envelope containing the download.
         """
         try:
             select = (
@@ -269,7 +275,13 @@ class Downloads(Resource):
     @api.marshal_with(download_message_envelope, code=200, description="Delete download element")  # type: ignore[untyped-decorator]
     def delete(self, id: int) -> dict[str, Any]:
         """
-        Retrieve a download.
+        Delete a download.
+
+        Args:
+            id (int): Download identifier.
+
+        Returns:
+            dict[str, Any]: API response envelope containing a status message.
         """
         count = Download.delete().where(Download.id == id).execute()
         if count == 0:

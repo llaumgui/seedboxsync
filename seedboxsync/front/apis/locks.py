@@ -90,6 +90,12 @@ class Locks(Resource):
     def get(self, key: str) -> dict[str, Any]:
         """
         Retrieve a lock.
+
+        Args:
+            key (str): Lock identifier.
+
+        Returns:
+            dict[str, Any]: API response envelope containing the lock.
         """
         try:
             select = (

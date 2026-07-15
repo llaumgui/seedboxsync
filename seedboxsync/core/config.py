@@ -51,7 +51,7 @@ class Config(object):
         Initialize a new Config instance.
 
         Args:
-            app (Flask): The database object.
+            app (Flask): The Flask application to configure.
             test_config (dict[str, str] | None): Configuration for testing.
         """
 

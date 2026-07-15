@@ -115,7 +115,13 @@ class Uploads(Resource):
     @api.marshal_with(upload_envelope, code=200, description="Upload element")  # type: ignore[untyped-decorator]
     def get(self, id: int) -> dict[str, Any]:
         """
-        Retrieve a upload.
+        Retrieve an uploaded torrent.
+
+        Args:
+            id (int): Uploaded torrent identifier.
+
+        Returns:
+            dict[str, Any]: API response envelope containing the upload.
         """
         try:
             select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(Torrent.id == id).dicts().get()
@@ -128,7 +134,13 @@ class Uploads(Resource):
     @api.marshal_with(upload_message_envelope, code=200, description="Delete upload element")  # type: ignore[untyped-decorator]
     def delete(self, id: int) -> dict[str, Any]:
         """
-        Retrieve a download.
+        Delete an uploaded torrent.
+
+        Args:
+            id (int): Uploaded torrent identifier.
+
+        Returns:
+            dict[str, Any]: API response envelope containing a status message.
         """
         count = Torrent.delete().where(Torrent.id == id).execute()
         if count == 0:

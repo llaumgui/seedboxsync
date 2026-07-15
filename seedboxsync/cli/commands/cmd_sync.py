@@ -17,14 +17,15 @@ import re
 from paramiko import SSHException
 from seedboxsync.core.dao import Download, Torrent
 from seedboxsync.core.utils import get_torrent_infos
-from seedboxsync.core.sync import DownloadProgress
+from seedboxsync.core.sync.download_progress import DownloadProgress
 from seedboxsync.core import fs
-from seedboxsync.cli.exception import SeedboxSyncConfigurationError
+from seedboxsync.core.exception import SeedboxSyncConfigurationError
 from seedboxsync.cli import group, pass_context, Context
 
 
 @group("sync", help="All synchronization operations.")  # type: ignore[untyped-decorator]
 def cli() -> None:
+    """Provide commands for synchronization operations."""
     pass
 
 
@@ -63,7 +64,7 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
     ctx.app.logger.debug('blackhole dry-run: "%s"' % dry_run)
     # Call ping_start_hook if enabled
     if ping:
-        ctx.ping.start("sync_blackhole")
+        ctx.app.ping.start("sync_blackhole")
 
     # Create lock
     if not ctx.lock.lock_or_exit("sync_blackhole"):
@@ -84,17 +85,17 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
                 ctx.app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
 
                 try:
-                    ctx.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
+                    ctx.app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
 
                     # Apply chmod if configured
                     chmod = ctx.app.seedboxsync_config.get("seedbox_chmod") or False
                     if isinstance(chmod, str):
                         ctx.app.logger.debug("Change permissions to %s" % chmod)
-                        ctx.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
+                        ctx.app.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
 
                     # Move file from tmp to watch directory
                     ctx.app.logger.debug('Move from "%s" to "%s"' % (tmp_path, watch_path))
-                    ctx.sync.rename(
+                    ctx.app.sync.rename(
                         os.path.join(tmp_path, torrent_name),
                         os.path.join(watch_path, torrent_name),
                     )
@@ -124,7 +125,7 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
 
     # Call ping_success_hook if enabled
     if ping:
-        ctx.ping.success("sync_blackhole")
+        ctx.app.ping.success("sync_blackhole")
 
 
 @cli.command("seedbox", help="Sync files from seedbox.")  # type: ignore[untyped-decorator]
@@ -156,6 +157,12 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
     Downloads files from the remote seedbox to the local machine,
     supports optional dry-run and only-store modes, applies exclusion patterns,
     and persists download information in the database.
+
+    Args:
+        ctx (Context): The Click context object.
+        dry_run (bool): Whether to list files without downloading or persisting them.
+        ping (bool): Whether to ping the configured monitoring service.
+        only_store (bool): Whether to record remote files without downloading them.
     """
     if not ctx.app.seedboxsync_config.get("sync_seedbox_enabled") or False:
         ctx.app.logger.info("Seedbox synchronization task is disabled")
@@ -166,7 +173,7 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
 
     # Call ping_start_hook if enabled
     if ping:
-        ctx.ping.start("sync_seedbox")
+        ctx.app.ping.start("sync_seedbox")
 
     # Create lock
     if not ctx.lock.lock_or_exit("sync_seedbox"):
@@ -179,12 +186,12 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
     # Walk through all files on the seedbox
     try:
         try:
-            ctx.sync.chdir(finished_path)
+            ctx.app.sync.chdir(finished_path)
         except FileNotFoundError as exc:
             ctx.app.logger.error(f"{str(exc)}\nFailed to scan directory: {finished_path}")
             return
 
-        for walker in ctx.sync.walk(""):  # type: ignore[attr-defined]
+        for walker in ctx.app.sync.walk(""):  # type: ignore[attr-defined]
             for filename in walker[2]:
                 filepath = os.path.join(walker[0], filename)
                 if os.path.splitext(filename)[1] == part_suffix:
@@ -206,7 +213,7 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
 
     # Call ping_success_hook if enabled
     if ping:
-        ctx.ping.success("sync_seedbox")
+        ctx.app.ping.success("sync_seedbox")
 
 
 @pass_context
@@ -218,7 +225,9 @@ def __get_file(ctx: Context, filepath: str, only_store: bool) -> None:
     size verification, and renaming after successful download.
 
     Args:
+        ctx (Context): The Click context object.
         filepath (str): Path of the file on the seedbox.
+        only_store (bool): Whether to record the file without downloading it.
     """
     local_filepath = fs.join(ctx.app.seedboxsync_config.get("local_download_path") or "", filepath)
     part_suffix = ctx.app.seedboxsync_config.get("seedbox_part_suffix") or ""
@@ -231,7 +240,7 @@ def __get_file(ctx: Context, filepath: str, only_store: bool) -> None:
     ctx.app.logger.debug('Download: "%s" to "%s"' % (filepath, local_path))
 
     try:
-        seedbox_size = ctx.sync.stat(filepath).st_size  # type: ignore[attr-defined]
+        seedbox_size = ctx.app.sync.stat(filepath).st_size  # type: ignore[attr-defined]
         if seedbox_size == 0:
             ctx.app.logger.warning('Empty file: "%s" (%s)' % (filepath, str(seedbox_size)))
 
@@ -241,7 +250,7 @@ def __get_file(ctx: Context, filepath: str, only_store: bool) -> None:
         if not only_store:
             ctx.app.logger.info('Downloading "%s"' % filepath)
             progress_callback = DownloadProgress(download)
-            ctx.sync.get(filepath, local_filepath_part, progress_callback=progress_callback)
+            ctx.app.sync.get(filepath, local_filepath_part, progress_callback=progress_callback)
             local_size = os.stat(local_filepath_part).st_size
 
             if local_size == 0 or local_size != seedbox_size:
@@ -265,6 +274,7 @@ def __exclude_by_pattern(ctx: Context, filepath: str) -> bool:
     Determine if a file should be excluded from synchronization based on patterns.
 
     Args:
+        ctx (Context): The Click context object.
         filepath (str): Path of the file to check.
 
     Returns:

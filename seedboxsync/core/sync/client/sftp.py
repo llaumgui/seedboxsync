@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 """
-Transport client using sFTP protocol.
+Transport client using the SFTP protocol.
 """
 
 import os
@@ -17,7 +17,7 @@ from typing import Generator, Tuple, List
 from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.sync import AbstractSyncClient, _Callback
-from seedboxsync.cli.exception import ConnectionError
+from seedboxsync.core.exception import ConnectionError
 
 
 class SftpClient(AbstractSyncClient):
@@ -39,12 +39,7 @@ class SftpClient(AbstractSyncClient):
     _max_concurrent_prefetch_requests: int
 
     def __init__(self) -> None:
-        """
-        Initialize the SFTP client with connection parameters.
-
-        Args:
-            app (Flask): The Flask application instance.
-        """
+        """Initialize the SFTP client with application connection parameters."""
         self.app = current_app
 
         # Get config
@@ -62,7 +57,7 @@ class SftpClient(AbstractSyncClient):
 
     def _connect_before(self) -> None:
         """
-        Initialize the SFTP transport and client i   f not already connected.
+        Initialize the SFTP transport and client if not already connected.
 
         Raises:
             ConnectionError: If connection or authentication fails.

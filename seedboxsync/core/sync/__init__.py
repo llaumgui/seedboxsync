@@ -6,6 +6,5 @@
 # file that was distributed with this source code.
 #
 from .abstract_sync_client import AbstractSyncClient, _Callback
-from .download_progress import DownloadProgress
 
-__all__ = ["_Callback", "AbstractSyncClient", "DownloadProgress"]
+__all__ = ["_Callback", "AbstractSyncClient"]

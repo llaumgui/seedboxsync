@@ -24,7 +24,7 @@ def info() -> str:
     """
     init_flash()
 
-    # DL stats
+    # Download statistics
     query_stats = Download.select().where(Download.finished != 0)
     total_files = query_stats.count()
     total_size = sum([d.seedbox_size for d in query_stats if d.seedbox_size])
@@ -40,7 +40,7 @@ def info() -> str:
     except Lock.DoesNotExist:  # type: ignore[attr-defined]
         sync_seedbox = False
 
-    # First dl stats
+    # First download statistics
     first_date = Download.select(fn.MIN(Download.finished)).where(Download.finished != 0).scalar()
     first_delta = ""
     if first_date is not None:

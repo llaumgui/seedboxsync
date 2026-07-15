@@ -18,9 +18,13 @@ from seedboxsync.front.apis import api
 @api.errorhandler(NotFound)  # type: ignore[untyped-decorator]
 def api_errorhandler(error: BadRequest | NotFound) -> tuple[dict[str, Any], int]:
     """
-    API error handler.
-    :param e: Exception
-    :return: Rendered error template with status code
+    Handle validation and not-found API errors.
+
+    Args:
+        error (BadRequest | NotFound): HTTP exception to serialize.
+
+    Returns:
+        tuple[dict[str, Any], int]: Empty response body and HTTP status code.
     """
     status_code = error.code if isinstance(error, HTTPException) else 500
 
@@ -39,9 +43,13 @@ def api_errorhandler(error: BadRequest | NotFound) -> tuple[dict[str, Any], int]
 
 def error(exc: Exception) -> tuple[Response, int | None]:
     """
-    Global error handler.
-    :param e: Exception
-    :return: Rendered error template with status code
+    Serialize an exception as a JSON API response.
+
+    Args:
+        exc (Exception): Exception raised while processing the request.
+
+    Returns:
+        tuple[Response, int | None]: JSON response and HTTP status code.
     """
     status_code = exc.code if isinstance(exc, HTTPException) else 500
     title = exc.name if isinstance(exc, HTTPException) else gettext("Internal Server Error")

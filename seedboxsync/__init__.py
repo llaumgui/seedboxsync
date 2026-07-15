@@ -32,6 +32,9 @@ def __handle_http_exception(
     """
     Global 404 handler.
 
+    Args:
+        e (Exception): Exception raised while processing the request.
+
     Returns:
         tuple[Response, int | None] | tuple[str, int | None]: JSON for /api routes, else return frontend template.
     """
@@ -42,7 +45,14 @@ def __handle_http_exception(
 
 def create_app(test_config: dict[str, str] | None = None) -> Flask:
     """
-    Flask create app.
+    Create and configure the SeedboxSync Flask application.
+
+    Args:
+        test_config (dict[str, str] | None): Optional configuration overrides
+            used by tests.
+
+    Returns:
+        Flask: Configured application instance.
     """
     # Create and configure the app
     app = Flask(
@@ -59,17 +69,17 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     if test_config is not None:
         app.config.from_mapping(test_config)  # load the test config if passed in
 
-    # DB loading
+    # Initialize the database
     Database(app)
 
     # Load config
     Config(app)
 
-    # Babel loading
+    # Initialize Babel
     app.config["BABEL_TRANSLATION_DIRECTORIES"] = "front/translations"
     babel.init_app(app, locale_selector=get_locale)
 
-    # Init humanize
+    # Initialize humanize for each request
     @app.before_request
     def init_once() -> None:
         humanize.i18n.activate(get_locale())
@@ -88,7 +98,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
             "locale": str(locale).replace("_", "-"),
         }
 
-    # Cache loading
+    # Initialize the cache
     cache.init_app(app)
 
     # Register blueprint and error handler
@@ -96,7 +106,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     app.register_blueprint(bp_api)
     app.register_error_handler(Exception, __handle_http_exception)  # type: ignore[arg-type]
 
-    # Favicon fix
+    # Serve the favicon from the static directory
     @app.route("/favicon.ico")
     def favicon() -> Response:
         return send_from_directory(os.path.join(app.root_path, "static"), "favicon.png", mimetype="image/png")

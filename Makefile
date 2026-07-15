@@ -47,6 +47,9 @@ hadolint:
 mypy:
 	mypy
 
+black:
+	black tests seedboxsync
+
 npm-lint:
 	npm run test:lint
 

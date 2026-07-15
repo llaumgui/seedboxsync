@@ -20,7 +20,7 @@ class Database(object):
     Database connector using peewee.
 
     Attributes:
-        app (Flask): The database object.
+        app (Flask): The Flask application that owns the database connection.
     """
 
     DATABASE_VERSION = 3
@@ -36,7 +36,7 @@ class Database(object):
         Initialize a new Database instance.
 
         Args:
-            app (Flask): The database object.
+            app (Flask): The Flask application to bind to the database.
         """
         self.app = app
         self._load_database()
@@ -127,7 +127,7 @@ class Database(object):
             return humanize.time.naturaldelta(num, minimum_unit="seconds", months=False)
 
     #
-    # Database creation / migratin
+    # Database creation and migration
     #
     def _create_db_schema(self) -> None:
         """Create all tables and set the initial database version."""

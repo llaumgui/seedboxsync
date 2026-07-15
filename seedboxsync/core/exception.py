@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 """
-Custom exception classes for SeedboxSync Cli.
+Custom exception classes for SeedboxSync.
 
 This module defines the base error hierarchy used throughout the SeedboxSync
 application. All exceptions inherit from `SeedboxSyncError`, which handles
@@ -14,7 +14,7 @@ logging and process termination in case of fatal errors.
 """
 
 import sys
-from flask import current_app
+import logging
 
 
 class SeedboxSyncError(Exception):
@@ -26,11 +26,11 @@ class SeedboxSyncError(Exception):
     that prevent normal operation.
 
     Args:
-        str msg: The error message to log and display before exiting.
+        msg (str): The error message to log and display before exiting.
     """
 
     def __init__(self, msg: str) -> None:
-        current_app.logger.error(msg)
+        logging.exception(msg)
         sys.exit(msg)
 
 
@@ -48,6 +48,15 @@ class SeedboxSyncConfigurationError(SeedboxSyncError):
 class SyncProtocoleError(SeedboxSyncError):
     """
     Exception raised when an unsupported or misconfigured synchronization protocol
+    is specified.
+    """
+
+    pass
+
+
+class PingServiceError(SeedboxSyncError):
+    """
+    Exception raised when an unsupported or misconfigured ping service
     is specified.
     """
 

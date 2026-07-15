@@ -101,7 +101,7 @@ show_error_codes = true
 pretty = true
 
 [tool.flake8]
-ignore = ["W504"]
+ignore = ["W504", "E203"]
 max-line-length = 160
 exclude = [
   "*.egg",

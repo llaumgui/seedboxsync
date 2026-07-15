@@ -1,19 +1,22 @@
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, PropertyMock, patch
 
 import pytest
 
 from seedboxsync.cli import cli
-from seedboxsync.cli.context import Context
 from seedboxsync.core.dao import Download, Lock as LockModel, Torrent
+from seedboxsync.core.flask import SeedboxSyncFlask
 
 
 @pytest.fixture
 def sync_services():
     sync = MagicMock()
     ping = MagicMock()
-    with patch.object(Context, "_init_sync_client", return_value=sync), patch.object(Context, "_init_ping_client", return_value=ping):
+    with (
+        patch.object(SeedboxSyncFlask, "sync", new_callable=PropertyMock, return_value=sync),
+        patch.object(SeedboxSyncFlask, "ping", new_callable=PropertyMock, return_value=ping),
+    ):
         yield sync, ping
 
 
@@ -29,11 +32,11 @@ def test_sync_help_lists_both_workflows(runner):
 def test_disabled_sync_exits_without_initializing_network_client(app, runner, command, config_key):
     app.config[config_key] = False
 
-    with patch.object(Context, "_init_sync_client") as init_sync:
+    with patch.object(SeedboxSyncFlask, "sync", new_callable=PropertyMock) as get_sync:
         result = runner.invoke(cli, ["sync", command])
 
     assert result.exit_code == 0
-    init_sync.assert_not_called()
+    get_sync.assert_not_called()
 
 
 def test_blackhole_uploads_and_records_torrent(app, runner, tmp_path, sync_services):

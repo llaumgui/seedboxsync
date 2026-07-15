@@ -6,7 +6,7 @@
 # file that was distributed with this source code.
 #
 """
-Call back class for follow and store download progression.
+Callback for tracking and persisting download progress.
 """
 
 from seedboxsync.core import current_app
@@ -14,7 +14,7 @@ from seedboxsync.core.dao import Download
 
 
 class DownloadProgress:
-    """Callable class to track download progress and update the Download record in the database."""
+    """Track download progress and update its database record."""
 
     def __init__(self, download: Download) -> None:
         """
@@ -35,7 +35,7 @@ class DownloadProgress:
             transferred: Number of bytes transferred so far.
             total: Total number of bytes to transfer.
         """
-        # Update the Download record in the database if the transferred size has increased by at least 50 MB or if the download is complete.
+        # Persist progress every 50 MiB and when the download completes.
         if transferred == total or transferred - self._last_saved_size >= 50 * 1024 * 1024:
             self._download.local_size = transferred
             self.app.logger.debug("Download progress: %d / %d (%.2f%%)" % (transferred, total, (transferred / total) * 100 if total > 0 else 0))

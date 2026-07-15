@@ -20,9 +20,11 @@ def abspath(path: str, strip_trailing_slash: bool = True) -> str:
 
     Args:
         path (str): The original path to expand.
+        strip_trailing_slash (bool): Retained for API compatibility. This
+            argument currently has no effect.
 
     Returns:
-        str: The fully expanded, absolute path to the given ``path``
+        str: The fully expanded, absolute path to the given ``path``.
 
     Example:
 
@@ -47,7 +49,6 @@ def ensure_dir_exists(path: str) -> None:
         AssertionError: If the directory ``path`` exists, but is not a
         directory.
 
-    Returns: None
     """
 
     path = abspath(path)
@@ -64,10 +65,11 @@ def join(*args: str, **kwargs: Any) -> str:
     item to ensure the final path is complete.
 
     Args:
-        paths (list): A list of paths to join together.
+        *args (str): Path components to join.
+        **kwargs (Any): Additional keyword arguments passed to ``os.path.join``.
 
     Returns:
-        list: The complete and absolute joined path.
+        str: The complete and absolute joined path.
 
     Example:
 
@@ -75,7 +77,7 @@ def join(*args: str, **kwargs: Any) -> str:
 
             from seedboxsync.core.utils import fs
 
-            fs.join('~/some/path', 'some/other/relevant/paht')
+            fs.join('~/some/path', 'some/other/relevant/path')
 
     """
     paths = list(args)
