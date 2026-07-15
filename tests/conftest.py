@@ -5,54 +5,55 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import os
-import pytest
 import shutil
-import tempfile
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from seedboxsync import create_app
 
 
 @pytest.fixture
-def app():
-    """
-    Create app fixture
-    """
-    db_fd, tmp_db = tempfile.mkstemp()
+def app(tmp_path):
+    """Create an application backed by an isolated copy of the test database."""
+    database = tmp_path / "seedboxsync.db"
+    shutil.copy("tests/resources/seedboxsync.db", database)
 
-    # Copy database
-    test_db = os.path.abspath("tests/resources/seedboxsync.db")
-    shutil.copy(test_db, tmp_db)
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE": str(database),
+            "SECRET_KEY": "pytest",
+            "CACHE_TYPE": "NullCache",
+            "BABEL_DEFAULT_LOCALE": "en",
+        }
+    )
 
-    app = create_app({
-        'TESTING': True,
-        'DATABASE': tmp_db,
-        'SECRET_KEY': 'pytest',
-        'CACHE_TYPE': 'NullCache',
-        'BABEL_DEFAULT_LOCALE': 'en',
-    })
-
-    # Can close DB, reopen for test
-    db_wrapper = app.extensions.get("flaskdb") or None
-    if db_wrapper is not None:
-        db = db_wrapper.database
-        if not db.is_closed():
-            db.close()
+    # FlaskDB opens the database while initializing and migrating it. Close
+    # that connection so request and CLI contexts can manage their own.
+    db = app.extensions["flaskdb"].database
+    if not db.is_closed():
+        db.close()
 
     yield app
 
-    # Cleanup
-    os.close(db_fd)
-    os.unlink(tmp_db)
+    if not db.is_closed():
+        db.close()
 
 
 @pytest.fixture
 def client(app):
-    """
-    Create client fixture
-    """
     return app.test_client()
 
 
-@pytest.fixture()
+@pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def mock_urllib():
+    """Prevent Healthchecks tests from issuing HTTP requests."""
+    with patch("seedboxsync.core.ping.client.healthchecks.urllib.request.urlopen") as mock_urlopen:
+        mock_urlopen.return_value = MagicMock()
+        yield mock_urlopen

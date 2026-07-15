@@ -123,7 +123,8 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
     ctx.lock.unlock("sync_blackhole")
 
     # Call ping_success_hook if enabled
-    ctx.ping.success("sync_blackhole")
+    if ping:
+        ctx.ping.success("sync_blackhole")
 
 
 @cli.command("seedbox", help="Sync files from seedbox.")  # type: ignore[untyped-decorator]

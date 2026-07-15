@@ -12,7 +12,6 @@ import os
 import datetime
 from seedboxsync.core import current_app
 from seedboxsync.core.dao import Lock as LockModel
-from seedboxsync.cli.exception import SeedboxSyncError
 
 
 class Lock(object):
@@ -116,11 +115,3 @@ class Lock(object):
             return False
         else:
             return True
-
-
-class LockError(SeedboxSyncError):
-    """
-    Exception raised for lock-related errors.
-    """
-
-    pass
