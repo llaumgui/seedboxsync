@@ -14,13 +14,12 @@ from collections.abc import Iterable
 from functools import cached_property
 from typing import Any
 from importlib import import_module
-from flask import Flask, current_app
 from tabulate import tabulate
 from seedboxsync.cli.exception import SyncProtocoleError
-from seedboxsync.core.config import Config
+from seedboxsync.core import Flask, current_app
 from seedboxsync.core.lock import Lock
-from seedboxsync.core.sync.abstract_sync_client import AbstractSyncClient
-from seedboxsync.core.ping.abstract_ping_client import AbstractPingClient
+from seedboxsync.core.sync import AbstractSyncClient
+from seedboxsync.core.ping import AbstractPingClient
 from seedboxsync.core.ping.client.healthchecks import Healthchecks
 
 
@@ -51,16 +50,6 @@ class Context(click.Context):
             Lock: Lock instance.
         """
         return Lock()
-
-    @cached_property
-    def config(self) -> dict[str, str]:
-        """
-        Get the namespace configuration for SeedboxSync.
-
-        Returns:
-            dict: The configuration.
-        """
-        return self.app.config.get_namespace(Config.CONFIG_NAMESPACE)
 
     @cached_property
     def sync(self) -> AbstractSyncClient:
@@ -106,7 +95,7 @@ class Context(click.Context):
         Returns:
             AbstractSyncClient: Client instance.
         """
-        protocol = self.config.get("seedbox_protocol") or ""
+        protocol = self.app.seedboxsync_config.get("seedbox_protocol") or ""
         client_class = protocol.title() + "Client"
 
         self.app.logger.debug("Using SeedboxSync with sync (%s / %s)" % (protocol, client_class))

@@ -5,7 +5,6 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from .abstract_sync_client import AbstractSyncClient, _Callback
-from .download_progress import DownloadProgress
+from .abstract_ping_client import AbstractPingClient
 
-__all__ = ["_Callback", "AbstractSyncClient", "DownloadProgress"]
+__all__ = ["AbstractPingClient"]

@@ -7,13 +7,12 @@
 #
 import os
 import humanize
-from flask import Flask, Response, request, send_from_directory
+from seedboxsync.core import Flask
+from flask import Response, request, send_from_directory
 from flask_babel import format_datetime
 from datetime import datetime
 from typing import Callable
-from seedboxsync.core.config import Config
-from seedboxsync.core.db import Database
-from seedboxsync.core.logger import configure_logger
+from seedboxsync.core import Config, Database, logger
 from seedboxsync.front.views import bp as bp_frontend, error as error_front
 from seedboxsync.front.apis import bp as bp_api, error as error_api
 from seedboxsync.front.babel import babel, get_locale
@@ -54,7 +53,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     )
 
     # Configure logger for Flask and Click
-    configure_logger(app.logger)
+    logger.configure_logger(app.logger)
 
     # Load test config
     if test_config is not None:

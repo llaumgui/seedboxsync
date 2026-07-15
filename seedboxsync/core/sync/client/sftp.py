@@ -12,12 +12,11 @@ Transport client using sFTP protocol.
 import os
 import paramiko
 import socket
-from flask import Flask, current_app
 from stat import S_ISDIR
 from typing import Generator, Tuple, List
 from paramiko.sftp_attr import SFTPAttributes
-from seedboxsync.core.config import Config
-from seedboxsync.core.sync.abstract_sync_client import AbstractSyncClient, _Callback
+from seedboxsync.core import Flask, current_app
+from seedboxsync.core.sync import AbstractSyncClient, _Callback
 from seedboxsync.cli.exception import ConnectionError
 
 
@@ -48,8 +47,8 @@ class SftpClient(AbstractSyncClient):
         """
         self.app = current_app
 
-        # Get config as namespace
-        config = self.app.config.get_namespace(Config.CONFIG_NAMESPACE)
+        # Get config
+        config = self.app.seedboxsync_config
 
         self._host = config.get("seedbox_host") or ""
         self._login = config.get("seedbox_login") or ""

@@ -69,7 +69,7 @@ class Database(object):
 
         # Check and run migrations if needed
         db_version = int(SeedboxSync.get_db_version())
-        self.app.logger.debug(f'SQLite database version is {db_version}')
+        self.app.logger.debug(f"SQLite database version is {db_version}")
         while db_version < self.DATABASE_VERSION:
             next_version = db_version + 1
             migration_name = f"migrate_to_{next_version}"

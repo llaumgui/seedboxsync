@@ -6,10 +6,10 @@
 # file that was distributed with this source code.
 #
 from typing import Any, Iterable
-from flask import current_app as app, flash, render_template, request
+from flask import flash, render_template, request
 from flask.wrappers import Request
 from flask_babel import gettext
-from seedboxsync.core.config import Config
+from seedboxsync.core import current_app as app, Config
 from seedboxsync.core.dao import SeedboxSync
 from seedboxsync.front.views import bp
 from seedboxsync.front.utils import init_flash
@@ -75,10 +75,7 @@ def _build_form() -> dict[str, Any]:
     Returns:
         Dictionnary of fields.
     """
-    fields = {
-        key: ((1 if value else 0) if key.endswith("_enabled") else (0 if value is False else value))
-        for key, value in app.config.get_namespace(Config.CONFIG_NAMESPACE).items()
-    }
+    fields = {key: ((1 if value else 0) if key.endswith("_enabled") else (0 if value is False else value)) for key, value in app.seedboxsync_config.items()}
     fields.setdefault(
         "seedbox_timeout_enabled",
         "1" if fields.get("seedbox_timeout", "0") not in ["", "0", False] else "0",
@@ -113,7 +110,7 @@ def _save_form(req: Request) -> None:
     """
     seedbox_timeout_enabled = req.form.get("seedbox_timeout_enabled", "0") == "1"
     seedbox_chmod_enabled = req.form.get("seedbox_chmod_enabled", "0") == "1"
-    fields = app.config.get_namespace(Config.CONFIG_NAMESPACE)
+    fields = app.seedboxsync_config
     config_to_db: list[dict[str, str]] = []
     config_to_update: dict[str, Any] = {}
 

@@ -9,7 +9,7 @@
 Call back class for follow and store download progression.
 """
 
-from flask import current_app
+from seedboxsync.core import current_app
 from seedboxsync.core.dao import Download
 
 

@@ -10,9 +10,8 @@ Healthchecks management for SeedboxSync.
 
 import socket
 import urllib.request
-from flask import current_app
-from seedboxsync.core.ping.abstract_ping_client import AbstractPingClient
-from seedboxsync.core.config import Config
+from seedboxsync.core import current_app
+from seedboxsync.core.ping import AbstractPingClient
 
 
 class Healthchecks(AbstractPingClient):
@@ -26,9 +25,6 @@ class Healthchecks(AbstractPingClient):
         """
         self.app = current_app
 
-        # Get config as namespace
-        self._config = self.app.config.get_namespace(Config.CONFIG_NAMESPACE)
-
     def start(self, sub_command: str) -> None:
         """
         Send a start ping to Healthchecks for a given subcommand.
@@ -36,11 +32,11 @@ class Healthchecks(AbstractPingClient):
         Args:
             sub_command (str): The SeedboxSync subcommand to ping.
         """
-        enabled = self._config.get("healthchecks_" + sub_command + "_enabled")
+        enabled = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_enabled")
         if enabled is False:
             self.app.logger.warning('Healthchecks for "%s" disabled by configuration' % sub_command)
         else:
-            ping_url = self._config.get("healthchecks_" + sub_command + "_ping_url") or "" + "/start"
+            ping_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url") or "" + "/start"
             self.app.logger.debug("Ping url: %s" % ping_url)
 
             try:
@@ -56,11 +52,11 @@ class Healthchecks(AbstractPingClient):
         Args:
             sub_command (str): The SeedboxSync subcommand to ping.
         """
-        enabled = self._config.get("healthchecks_" + sub_command + "_enabled")
+        enabled = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_enabled")
         if enabled is False:
             self.app.logger.warning('Healthchecks for "%s" disabled by configuration' % sub_command)
         else:
-            ping_url = self._config.get("healthchecks_" + sub_command + "_ping_url") or ""
+            ping_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url") or ""
             self.app.logger.debug("Ping url: %s" % ping_url)
 
             try:

@@ -17,7 +17,7 @@ import re
 from paramiko import SSHException
 from seedboxsync.core.dao import Download, Torrent
 from seedboxsync.core.utils import get_torrent_infos
-from seedboxsync.core.sync.download_progress import DownloadProgress
+from seedboxsync.core.sync import DownloadProgress
 from seedboxsync.core import fs
 from seedboxsync.cli.exception import SeedboxSyncConfigurationError
 from seedboxsync.cli import group, pass_context, Context
@@ -56,7 +56,7 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
         dry_run (bool): Whether to perform a dry run.
         ping (bool): Whether to ping a service during execution.
     """
-    if not ctx.config.get("sync_blackhole_enabled") or False:
+    if not ctx.app.seedboxsync_config.get("sync_blackhole_enabled") or False:
         ctx.app.logger.info("Blackhole synchronization task is disabled")
         ctx.exit(0)
 
@@ -70,15 +70,15 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
         ctx.exit(0)
 
     # Gather all torrent files
-    local_watch_path = ctx.config.get("local_watch_path") or ""
+    local_watch_path = ctx.app.seedboxsync_config.get("local_watch_path") or ""
     ctx.app.logger.debug('Scanning for torrent files in "%s"' % local_watch_path)
     torrents = glob.glob(fs.join(fs.abspath(local_watch_path), "*.torrent"))
     if len(torrents) > 0:
         for torrent_file in torrents:
             torrent_name = os.path.basename(torrent_file)
             if not dry_run:
-                tmp_path = ctx.config.get("seedbox_tmp_path") or ""
-                watch_path = ctx.config.get("seedbox_watch_path") or ""
+                tmp_path = ctx.app.seedboxsync_config.get("seedbox_tmp_path") or ""
+                watch_path = ctx.app.seedboxsync_config.get("seedbox_watch_path") or ""
 
                 ctx.app.logger.info('Upload torrent: "%s"' % torrent_name)
                 ctx.app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
@@ -87,7 +87,7 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
                     ctx.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
 
                     # Apply chmod if configured
-                    chmod = ctx.config.get("seedbox_chmod") or False
+                    chmod = ctx.app.seedboxsync_config.get("seedbox_chmod") or False
                     if isinstance(chmod, str):
                         ctx.app.logger.debug("Change permissions to %s" % chmod)
                         ctx.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
@@ -117,7 +117,7 @@ def blackhole(ctx: Context, dry_run: bool, ping: bool) -> None:
             else:
                 ctx.app.logger.info('Dry-run: not uploading torrent "%s"' % torrent_name)
     else:
-        ctx.app.logger.info('No torrent files found in "%s"' % ctx.config.get("local_watch_path"))
+        ctx.app.logger.info('No torrent files found in "%s"' % ctx.app.seedboxsync_config.get("local_watch_path"))
 
     # Remove lock
     ctx.lock.unlock("sync_blackhole")
@@ -156,7 +156,7 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
     supports optional dry-run and only-store modes, applies exclusion patterns,
     and persists download information in the database.
     """
-    if not ctx.config.get("sync_seedbox_enabled") or False:
+    if not ctx.app.seedboxsync_config.get("sync_seedbox_enabled") or False:
         ctx.app.logger.info("Seedbox synchronization task is disabled")
         ctx.exit(0)
 
@@ -171,8 +171,8 @@ def seedbox(ctx: Context, dry_run: bool, ping: bool, only_store: bool) -> None:
     if not ctx.lock.lock_or_exit("sync_seedbox"):
         raise ctx.exit(0)
 
-    finished_path = ctx.config.get("seedbox_finished_path") or ""
-    part_suffix = ctx.config.get("seedbox_part_suffix")
+    finished_path = ctx.app.seedboxsync_config.get("seedbox_finished_path") or ""
+    part_suffix = ctx.app.seedboxsync_config.get("seedbox_part_suffix")
     ctx.app.logger.debug('Scanning files in "%s"' % finished_path)
 
     # Walk through all files on the seedbox
@@ -219,8 +219,8 @@ def __get_file(ctx: Context, filepath: str, only_store: bool) -> None:
     Args:
         filepath (str): Path of the file on the seedbox.
     """
-    local_filepath = fs.join(ctx.config.get("local_download_path") or "", filepath)
-    part_suffix = ctx.config.get("seedbox_part_suffix") or ""
+    local_filepath = fs.join(ctx.app.seedboxsync_config.get("local_download_path") or "", filepath)
+    part_suffix = ctx.app.seedboxsync_config.get("seedbox_part_suffix") or ""
     local_filepath_part = local_filepath + part_suffix
     local_path = os.path.dirname(fs.abspath(local_filepath))
 
@@ -272,7 +272,7 @@ def __exclude_by_pattern(ctx: Context, filepath: str) -> bool:
     Raises:
         SeedboxSyncConfigurationError: If the exclude pattern is invalid.
     """
-    pattern = ctx.config.get("seedbox_exclude_syncing") or ""
+    pattern = ctx.app.seedboxsync_config.get("seedbox_exclude_syncing") or ""
     if not pattern:
         return False
 

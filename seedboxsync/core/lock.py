@@ -10,7 +10,7 @@ Lock management for SeedboxSync.
 
 import os
 import datetime
-from flask import current_app
+from seedboxsync.core import current_app
 from seedboxsync.core.dao import Lock as LockModel
 from seedboxsync.cli.exception import SeedboxSyncError
 

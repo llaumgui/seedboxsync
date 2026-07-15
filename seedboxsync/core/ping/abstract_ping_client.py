@@ -13,10 +13,6 @@ providing methods for file operations and session management on a remote server.
 """
 
 from abc import ABCMeta, abstractmethod
-from typing import Callable
-from typing_extensions import TypeAlias
-
-_Callback: TypeAlias = Callable[[int, int], object]
 
 
 class AbstractPingClient:  # pragma: no cover

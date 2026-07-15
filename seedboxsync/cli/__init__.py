@@ -10,9 +10,9 @@ import logging
 import seedboxsync
 from flask.cli import with_appcontext
 from seedboxsync import create_app
-from seedboxsync.cli.cli import Cli, command, group, pass_context
+from .cli import Cli, command, group, pass_context
 from seedboxsync.cli.context import Context
-from seedboxsync.core.db import Database
+from seedboxsync.core import Database
 
 __all__ = [
     "Cli",

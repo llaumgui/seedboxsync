@@ -5,7 +5,8 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from flask import current_app, flash
+from flask import flash
+from seedboxsync.core import current_app
 
 
 def init_flash() -> None:
