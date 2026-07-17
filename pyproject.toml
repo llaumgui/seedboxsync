@@ -28,7 +28,7 @@ requires-python = ">=3.10"
 dependencies = [
   "peewee>=4.2.3",
   "paramiko>=5.0.0",
-  "ftputil>=5.1.0",
+  "ftputil>=5.2.0",
   "tabulate",
   "humanize",
   "bcoding",
