@@ -65,6 +65,20 @@ def is_running_in_docker() -> bool:
         bool: True if in docker envoronment.
 
     """
+    # Test mountinfo
+    if os.path.exists("/proc/self/mountinfo"):
+        with open("/proc/self/mountinfo", "r") as f:
+            if "docker" in f.read() or "overlay" in f.read():
+                return True
+
+    # Test du cgroup
+    if os.path.exists("/proc/1/cgroup"):
+        with open("/proc/1/cgroup", "r") as f:
+            lines = f.read()
+            if "docker" in lines or "kubepods" in lines:
+                return True
+
+    # Test /.dockerenv but not on podman
     return Path("/.dockerenv").exists()
 
 
