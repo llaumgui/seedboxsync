@@ -15,7 +15,7 @@ from seedboxsync.cli import group, pass_context, Context
 from seedboxsync.core.dao import typed_peewee_dicts, Download, Torrent
 
 
-@group("search", help="All search operations.")  # type: ignore[untyped-decorator]
+@group("search", help="Search operations.")  # type: ignore[untyped-decorator]
 @pass_context
 def cli(ctx: Context) -> None:
     pass

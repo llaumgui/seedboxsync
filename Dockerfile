@@ -90,7 +90,7 @@ RUN chmod 755 /etc/s6-overlay/s6-rc.d/*/run && \
     chmod 755 /etc/s6-overlay/s6-rc.d/*/up
 
 # healthcheck
-HEALTHCHECK --interval=1m --start-period=1m CMD ["wget", "--no-verbose", "--tries=1", "-q", "-O", "/dev/null", "http://127.0.0.1:8000/healthcheck"]
+HEALTHCHECK --interval=1m --start-period=1m CMD ["seedboxsync", "health"]
 
 WORKDIR /home/seedboxsync
 EXPOSE 8000

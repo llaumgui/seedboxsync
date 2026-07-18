@@ -18,7 +18,7 @@ from seedboxsync.core.dao import typed_peewee_dicts, Download
 
 @group(
     "stats",
-    help="All stats operations.",
+    help="Stats operations.",
     invoke_without_command=True,
     no_args_is_help=False,
 )  # type: ignore[untyped-decorator]

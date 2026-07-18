@@ -14,7 +14,7 @@ from seedboxsync.cli import group, pass_context, Context
 from seedboxsync.core.taskmanager.utils import load_task_modules
 
 
-@group("task", help="Seedboxsync task operations.")  # type: ignore[untyped-decorator]
+@group("task", help="Task operations on task queue management.")  # type: ignore[untyped-decorator]
 def cli() -> None:
     """Provide commands for task management."""
     pass

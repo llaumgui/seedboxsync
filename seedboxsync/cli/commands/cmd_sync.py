@@ -15,7 +15,7 @@ from seedboxsync.core.sync.services import BLACKHOLE_LOCK_NAME, SEEDBOX_LOCK_NAM
 from seedboxsync.cli import group, pass_context, Context
 
 
-@group("sync", help="All synchronization operations.")  # type: ignore[untyped-decorator]
+@group("sync", help="Run synchronization operations.")  # type: ignore[untyped-decorator]
 def cli() -> None:
     """Provide commands for synchronization operations."""
     pass

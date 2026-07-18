@@ -13,7 +13,7 @@ import click
 from seedboxsync.core.dao import Download
 
 
-@click.group("clean", help="All cleaning operations.")
+@click.group("clean", help="Cleaning operations.")
 def cli() -> None:
     pass
 

@@ -9,8 +9,11 @@
 A collection of utility functions for SeedboxSync.
 """
 
+import os
+from pathlib import Path
 from bcoding import bdecode
 from flask import current_app as app
+from urllib.parse import urlparse
 
 
 def byte_to_gi(bytes_value: float, suffix: str = "B") -> str:
@@ -52,3 +55,61 @@ def get_torrent_infos(torrent_path: str) -> None | str:
             torrent.close()
 
         return torrent_info
+
+
+def is_running_in_docker() -> bool:
+    """
+    Return whether the current process appears to run inside Docker.
+
+    Returns:
+        bool: True if in docker envoronment.
+
+    """
+    return Path("/.dockerenv").exists()
+
+
+def get_web_healthcheck_url() -> str:
+    """
+    Return the URL used to check the local Flask application.
+
+    Returns:
+        str: The healthcheck URL.
+    """
+
+    explicit_url = os.getenv("HEALTHCHECK_URL")
+    if explicit_url:
+        return explicit_url.rstrip("/") + "/healthcheck"
+
+    bind = os.getenv("BIND")
+    if bind:
+        return _healthcheck_url_from_bind(bind)
+
+    port = 8000 if is_running_in_docker() else 5000
+    return f"http://127.0.0.1:{port}/healthcheck"
+
+
+def _healthcheck_url_from_bind(bind: str) -> str:
+    """
+    Build a local healthcheck URL from a Gunicorn bind value.
+
+    Returns:
+        str: The healthcheck URL from BIND.
+    """
+
+    bind = bind.strip()
+
+    if bind.startswith("unix:"):
+        raise ValueError("A Unix socket bind cannot be checked with a standard HTTP URL.")
+
+    # urlparse requires a scheme to correctly parse host and port.
+    parsed = urlparse(f"//{bind}")
+
+    if parsed.port is None:
+        raise ValueError(f"Invalid BIND value: {bind}")
+
+    host = parsed.hostname or "127.0.0.1"
+
+    if host in {"0.0.0.0", "::", "[::]"}:
+        host = "127.0.0.1"
+
+    return f"http://{host}:{parsed.port}/healthcheck"

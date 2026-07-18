@@ -16,7 +16,7 @@ def test_test_database_is_migrated_when_app_is_created(app):
 def test_cli_discovers_commands_dynamically(app):
     with app.test_request_context():
         context = click.Context(cli)
-        assert cli.list_commands(context) == ["clean", "search", "stats", "sync", "task"]
+        assert cli.list_commands(context) == ["clean", "health", "search", "stats", "sync", "task"]
 
 
 def test_cli_uses_custom_command_and_group_classes():
