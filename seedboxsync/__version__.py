@@ -5,6 +5,6 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-__version__ = "4.0.0-a1"
+__version__ = "4.0.0-b1"
 __api_version__ = "1.0"
 __api_path_version__ = "v1"

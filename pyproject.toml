@@ -26,9 +26,9 @@ license-files = ["LICENSE"]
 license = "GPL-3.0-only"
 requires-python = ">=3.10"
 dependencies = [
-  "peewee>=3.17.7",
-  "paramiko>=3.5.1",
-  "ftputil>=5.1.0",
+  "peewee",
+  "paramiko",
+  "ftputil",
   "tabulate",
   "humanize",
   "huey",
