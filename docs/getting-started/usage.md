@@ -16,10 +16,12 @@ Options:
   -h, --help            Show this message and exit.
 
 Commands:
-  clean   All cleaning operations.
-  search  All search operations.
-  stats   All stats operations.
-  sync    All synchronization operations.
+  clean   Cleaning operations.
+  health  Show the health status of the SeedboxSync CLI and web service.
+  search  Search operations.
+  stats   Stats operations.
+  sync    Run synchronization operations.
+  task    Task operations on task queue management.
 ```
 
 * Sync blackhole:

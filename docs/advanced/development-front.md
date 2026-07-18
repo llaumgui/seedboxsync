@@ -25,7 +25,7 @@ If you are working on the frontend within the Python project:
 
 ```bash
 make virtualenv
-. .venv/bin/activate
+source env/bin/activate
 make run
 ```
 

@@ -15,9 +15,22 @@ SeedboxSync is [available on PyPI](https://pypi.org/project/seedboxsync/).
 
 > :warning: **Warning:** Docker is the recommended method.
 
+* Install:
+
 ```bash
 pip install seedboxsync
+```
+
+* Running WebUI:
+
+```bash
 flask flask --app seedboxsync.app:main run
+```
+
+* Running task manager:
+
+```bash
+huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
 ```
 
 Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/).

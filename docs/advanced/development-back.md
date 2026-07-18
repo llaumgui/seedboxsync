@@ -18,6 +18,7 @@ Create a Python virtual environment and install dependencies:
 ```bash
 make virtualenv
 source env/bin/activate
+make run-taskmanager
 ```
 
 ## Development Workflow
