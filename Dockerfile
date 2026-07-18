@@ -57,7 +57,7 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLA
 RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
 
 # ------------------------------------------------------------ SeedboxSync setup
-RUN apk add --update --no-cache shadow
+RUN apk add --update --no-cache shadow su-exec
 RUN addgroup -g ${PGID} seedboxsync && adduser -D -u ${PUID} -G seedboxsync seedboxsync
 
 # System folders
@@ -90,7 +90,7 @@ RUN chmod 755 /etc/s6-overlay/s6-rc.d/*/run && \
     chmod 755 /etc/s6-overlay/s6-rc.d/*/up
 
 # healthcheck
-HEALTHCHECK --interval=1m --start-period=1m CMD ["seedboxsync", "health"]
+HEALTHCHECK --interval=1m --start-period=1m CMD ["su-exec", "seedboxsync", "seedboxsync", "health"]
 
 WORKDIR /home/seedboxsync
 EXPOSE 8000
