@@ -31,6 +31,7 @@ dependencies = [
   "ftputil>=5.1.0",
   "tabulate",
   "humanize",
+  "huey",
   "bcoding",
   "typing-extensions",
   "flask",

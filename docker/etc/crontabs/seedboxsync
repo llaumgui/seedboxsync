@@ -1,3 +1,0 @@
-# min   hour    day     month   weekday command
-*       *       *       *       *       seedboxsync sync blackhole --ping
-*/15    *       *       *       *       seedboxsync sync seedbox --ping

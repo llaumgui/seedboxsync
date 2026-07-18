@@ -15,7 +15,6 @@ from functools import cached_property
 from typing import Any
 from tabulate import tabulate
 from seedboxsync.core import Flask, current_app
-from seedboxsync.core.lock import Lock
 
 
 class Context(click.Context):
@@ -35,16 +34,6 @@ class Context(click.Context):
             Flask: The current Flask application.
         """
         return current_app
-
-    @cached_property
-    def lock(self) -> Lock:
-        """
-        Return a Lock instance.
-
-        Returns:
-            Lock: Lock instance.
-        """
-        return Lock()
 
     def render(self, data: Iterable[Any], headers: Iterable[Any], tablefmt: str = "github") -> Any:
         """

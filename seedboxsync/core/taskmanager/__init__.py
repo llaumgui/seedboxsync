@@ -5,7 +5,9 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from .blackhole import blackhole, LOCK_NAME as BLACKHOLE_LOCK_NAME
-from .seedbox import seedbox, LOCK_NAME as SEEDBOX_LOCK_NAME
+from .manager import Manager
+from .track_taskstatus import track_taskstatus
 
-__all__ = ["BLACKHOLE_LOCK_NAME", "SEEDBOX_LOCK_NAME", "blackhole", "seedbox"]
+__all__ = ["Manager", "track_taskstatus"]
+
+task_manager = Manager()

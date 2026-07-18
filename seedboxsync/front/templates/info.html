@@ -40,7 +40,7 @@
       <td>{{ info.seedboxsync_db_version }}</td>
     </tr>
     <tr class="is-link has-text-centered">
-      <th colspan="2">{{ _('Cron job') }}</th>
+      <th colspan="2">{{ _('Tasks') }}</th>
     </tr>
     <tr>
       <th>{{ _('Blackhole synchronization') }}</th>
@@ -48,10 +48,10 @@
         {% if info.sync_blackhole == False %}
           {{ _('Never executed.') }}
         {% else %}
-          {% if info.sync_blackhole.locked == True %}
-            {{ _('Locked since %(since)s', since=format_datetime(info.sync_blackhole.locked_at) ) }}
+          {% if info.sync_blackhole.running == True %}
+            {{ _('Running since %(since)s', since=format_datetime(info.sync_blackhole.started) ) }}
           {% else %}
-            {{ _('Unlocked since %(since)s', since=format_datetime(info.sync_blackhole.unlocked_at) ) }}
+            {{ _('Finished since %(since)s', since=format_datetime(info.sync_blackhole.finished) ) }}
           {% endif %}
         {% endif %}
       </td>
@@ -62,10 +62,10 @@
         {% if info.sync_seedbox == False %}
           {{ _('Never executed.') }}
         {% else %}
-          {% if info.sync_seedbox.locked == True %}
-            {{ _('Locked since %(since)s', since=format_datetime(info.sync_seedbox.locked_at) ) }}
+          {% if info.sync_seedbox.running == True %}
+            {{ _('Running since %(since)s', since=format_datetime(info.sync_seedbox.started) ) }}
           {% else %}
-            {{ _('Unlocked since %(since)s', since=format_datetime(info.sync_seedbox.unlocked_at) ) }}
+            {{ _('Finished since %(since)s', since=format_datetime(info.sync_seedbox.finished) ) }}
           {% endif %}
         {% endif %}
       </td>

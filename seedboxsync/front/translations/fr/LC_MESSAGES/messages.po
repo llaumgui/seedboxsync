@@ -510,7 +510,7 @@ msgid "Never launched"
 msgstr "Jamais exécuté"
 
 #: seedboxsync/front/templates/components/javascripts.html:2
-msgid "Error loading lock status"
+msgid "Error loading task status"
 msgstr "Erreur lors du chargement du statut"
 
 #: seedboxsync/front/templates/components/modal.html:22

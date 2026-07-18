@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, PropertyMock, patch
 import pytest
 
 from seedboxsync.cli import cli
-from seedboxsync.core.dao import Download, Lock as LockModel, Torrent
+from seedboxsync.core.dao import Download, TaskStatus, Torrent
 from seedboxsync.core.flask import SeedboxSyncFlask
 
 
@@ -53,7 +53,7 @@ def test_blackhole_uploads_and_records_torrent(app, runner, tmp_path, sync_servi
         SEEDBOXSYNC_SEEDBOX_CHMOD="0640",
     )
 
-    with patch("seedboxsync.cli.commands.cmd_sync.get_torrent_infos", return_value={"announce": "https://tracker.example/announce"}):
+    with patch("seedboxsync.core.sync.services.blackhole.get_torrent_infos", return_value={"announce": "https://tracker.example/announce"}):
         result = runner.invoke(cli, ["sync", "blackhole", "--ping"])
 
     assert result.exit_code == 0, result.output
@@ -66,7 +66,9 @@ def test_blackhole_uploads_and_records_torrent(app, runner, tmp_path, sync_servi
     with app.app_context():
         torrent = Torrent.get(Torrent.name == "release.torrent")
         assert torrent.announce == "https://tracker.example/announce"
-        assert LockModel.get_by_id("sync_blackhole").locked is False
+        status = TaskStatus.get_by_id("sync-blackhole")
+        assert status.running is False
+        assert status.finished is not None
 
 
 def test_blackhole_dry_run_keeps_file_and_database_unchanged(app, runner, tmp_path, sync_services):
@@ -100,7 +102,7 @@ def test_blackhole_marks_invalid_torrent_as_failed(app, runner, tmp_path, sync_s
         SEEDBOXSYNC_SEEDBOX_WATCH_PATH="/watch",
     )
 
-    with patch("seedboxsync.cli.commands.cmd_sync.get_torrent_infos", return_value=None):
+    with patch("seedboxsync.core.sync.services.blackhole.get_torrent_infos", return_value=None):
         result = runner.invoke(cli, ["sync", "blackhole"])
 
     assert result.exit_code == 0

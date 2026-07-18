@@ -9,7 +9,7 @@ import humanize
 from flask import render_template
 from peewee import fn
 from datetime import datetime
-from seedboxsync.core.dao import Download, Lock, SeedboxSync
+from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
 from seedboxsync.front.cache import cache
 from seedboxsync.front.views import bp
 from seedboxsync.front.utils import init_flash
@@ -28,16 +28,16 @@ def info() -> str:
     query_stats = Download.select().where(Download.finished != 0)
     total_files = query_stats.count()
     total_size = sum([d.seedbox_size for d in query_stats if d.seedbox_size])
-    sync_blackhole: Lock | bool
-    sync_seedbox: Lock | bool
+    sync_blackhole: TaskStatus | bool
+    sync_seedbox: TaskStatus | bool
 
     try:
-        sync_blackhole = Lock.get(Lock.key == "sync_blackhole")
-    except Lock.DoesNotExist:  # type: ignore[attr-defined]
+        sync_blackhole = TaskStatus.get(TaskStatus.key == "sync-blackhole")
+    except TaskStatus.DoesNotExist:  # type: ignore[attr-defined]
         sync_blackhole = False
     try:
-        sync_seedbox = Lock.get(Lock.key == "sync_seedbox")
-    except Lock.DoesNotExist:  # type: ignore[attr-defined]
+        sync_seedbox = TaskStatus.get(TaskStatus.key == "sync-seedbox")
+    except TaskStatus.DoesNotExist:  # type: ignore[attr-defined]
         sync_seedbox = False
 
     # First download statistics

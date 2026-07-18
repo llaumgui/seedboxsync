@@ -14,7 +14,7 @@ class SeedboxSync(SeedboxSyncModel):
     Data Access Object (DAO) for application metadata and internal configuration.
 
     This table stores key–value pairs used for SeedboxSync's internal state
-    management and configuration, such as locks, versioning, or runtime
+    management and configuration, such as taskstatus, versioning, or runtime
     parameters.
 
     Attributes:

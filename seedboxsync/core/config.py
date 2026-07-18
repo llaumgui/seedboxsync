@@ -59,7 +59,7 @@ class Config(object):
         self.app.config.from_prefixed_env()  # Set from env prefixed by 'FLASK_'
 
         # Load config from database
-        db_config = self._load_config_from_database()
+        db_config = Config._load_config_from_database(self.app)
         self.app.config.from_mapping(db_config)
 
         self._check_config()  # Do all checks
@@ -74,7 +74,8 @@ class Config(object):
         if self.app.config.get("SECRET_KEY") is None and self.app.config["TESTING"] is None:
             self.app.logger.warning("Warning: SECRET_KEY is still not set. Set it in production to secure your sessions.")
 
-    def _load_config_from_database(self) -> dict[str, str]:
+    @staticmethod
+    def _load_config_from_database(app: Flask) -> dict[str, str]:
         """Load application configuration from the database."""
 
         config = Config.DEFAULT_CONFIG.copy()
@@ -90,18 +91,19 @@ class Config(object):
 
         for conf in db_config:
             config_key = Config.CONFIG_NAMESPACE + conf["key"].removeprefix("config_").upper()
-            value = self._convert_config_value(config_key, conf["value"])
+            value = Config._convert_config_value(config_key, conf["value"])
             display_value = "*****" if "PASSWORD" in config_key.upper() else value
 
-            self.app.logger.debug(f"Loading config from database: {config_key} = {display_value}")
+            app.logger.debug(f"Loading config from database: {config_key} = {display_value}")
             if config_key not in Config.DEFAULT_CONFIG:
-                self.app.logger.warning("Ignoring unknown configuration key: %s", conf["key"])
+                app.logger.warning("Ignoring unknown configuration key: %s", conf["key"])
                 continue
             config[config_key] = value
 
         return config
 
-    def _convert_config_value(self, config_key: str, value: Any) -> Any:
+    @staticmethod
+    def _convert_config_value(config_key: str, value: Any) -> Any:
         """
         Convert a raw database configuration value to its expected Python type.
 
@@ -140,3 +142,9 @@ class Config(object):
             return raw_value if raw_value not in ["", "0"] else False
 
         return value
+
+    @staticmethod
+    def reload_config(app: Flask) -> dict[str, str]:
+        """Reload application configuration from the database."""
+
+        return Config._load_config_from_database(app)

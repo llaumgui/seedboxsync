@@ -63,7 +63,7 @@ This image uses [s6-overlay](https://github.com/just-containers/s6-overlay) for:
 * Multi-process container management and customization.
 * Support for changing the UID/GID running the main process.
 
-### Cron Jobs
+### Task manager
 
 * Sync blackhole every minute.
 * Sync seedbox every 15 minutes.
@@ -91,19 +91,8 @@ environment:
 | `FLASK_SECRET_KEY` | The [Flask's secret](https://flask.palletsprojects.com/en/stable/config/#SECRET_KEY) key that will be used for securely signing the session cookie and can be used for any other security related needs by extensions or your application. It should be a long random bytes or str. | `dev` |
 | `GUNICORN_WORKERS` | The number of [Gunicorn worker](https://docs.gunicorn.org/en/stable/run.html#commonly-used-arguments) processes. This number should generally be between 2-4 workers per core in the server. | `1` |
 | `GUNICORN_BIND`    | Specify a server socket to bind. Server sockets can be any of `$(HOST)`, `$(HOST):$(PORT)`, `fd://$(FD)`, or `unix:$(PATH)`. An IP is a valid `$(HOST)`. | `0.0.0.0:8000` |
-
-### Customize cron
-
-You can override [the original crontab file](docker/etc/crontabs/seedboxsync), located at `/etc/crontabs/seedboxsync`, by mounting your own version.
-
-```yaml
-services:
-  seedboxsync:
-    [...]
-    volumes:
-      - /data/seedboxsync/crontabs:/etc/crontabs/seedboxsync
-    [...]
-```
+| `HUEY_WORKERS`     | The number of [Huey](https://huey.readthedocs.io/en/latest/deployment.html) workers. | `2`           |
+| `HUEY_WORKER_TYPE` | Worker execution model (thread, greenlet, process). Use process for CPU-intensive workloads, and greenlet for IO-heavy workloads. When in doubt, thread is the safest choice. | `thread`      |
 
 ## Using the Command Line from the Docker Host
 

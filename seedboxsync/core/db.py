@@ -10,7 +10,7 @@ import humanize
 from flask import Flask
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
-from seedboxsync.core.dao import Download, Lock, SeedboxSync, Torrent
+from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
 from seedboxsync.core.utils import byte_to_gi
 from seedboxsync.core import fs
 
@@ -23,7 +23,7 @@ class Database(object):
         app (Flask): The Flask application that owns the database connection.
     """
 
-    DATABASE_VERSION = 3
+    DATABASE_VERSION = 4
     DB_PATHS = [
         os.path.expanduser("~/.config/seedboxsync/seedboxsync.db"),
         os.path.expanduser("~/.seedboxsync.db"),
@@ -92,7 +92,7 @@ class Database(object):
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
         self.db.foreign_keys = 1
-        self.db.bind([Download, Lock, SeedboxSync, Torrent])
+        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent])
         self.app.logger.debug(
             "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
             self.app.config["DATABASE"],
@@ -131,7 +131,7 @@ class Database(object):
     #
     def _create_db_schema(self) -> None:
         """Create all tables and set the initial database version."""
-        self.db.create_tables([Download, Lock, Torrent, SeedboxSync])
+        self.db.create_tables([Download, Torrent, TaskStatus, SeedboxSync])
         SeedboxSync.set_db_version(str(self.DATABASE_VERSION))
 
     def migrate_to_2(self) -> None:
@@ -139,10 +139,9 @@ class Database(object):
         Migration: rebuild SeedboxSync table and add Lock table.
 
         Fixes compatibility issues between tables created with Peewee v2 and v3.
-        Also introduces the 'Lock' table, replacing legacy '.lock' files.
         """
         self.db.drop_tables([SeedboxSync])
-        self.db.create_tables([Lock, SeedboxSync])
+        self.db.create_tables([SeedboxSync])
         SeedboxSync.set_db_version("2")
 
     def migrate_to_3(self) -> None:
@@ -154,3 +153,13 @@ class Database(object):
             migrator.drop_not_null("torrent", "announce"),
         )
         SeedboxSync.set_db_version("3")
+
+    def migrate_to_4(self) -> None:
+        """
+        Replace 'Lock' table by 'TaskStatus'.
+        """
+        self.db.execute_sql("DROP TABLE IF EXISTS lock;")
+        self.db.execute_sql("DELETE FROM seedboxsync WHERE key = 'version';")
+        self.db.create_tables([TaskStatus])
+
+        SeedboxSync.set_db_version("4")

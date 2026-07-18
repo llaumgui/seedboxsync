@@ -5,8 +5,3 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from .manager import Manager
-
-__all__ = ["Manager"]
-
-task_manager = Manager()

@@ -1,0 +1,13 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Number of workers by default
+export HUEY_WORKERS=${HUEY_WORKERS:-2}
+
+# Type of worker address with default
+export HUEY_WORKER_TYPE=${HUEY_WORKER_TYPE:-thread}
+
+# Launch Gunicorn as seedboxsync
+export HOME=~seedboxsync
+exec s6-setuidgid seedboxsync \
+	huey_consumer seedboxsync.taskmanager.huey -w "${HUEY_WORKERS}" -k "${HUEY_WORKER_TYPE}"

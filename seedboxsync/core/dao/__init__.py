@@ -9,11 +9,11 @@ from collections.abc import Iterable
 from typing import Any, cast, TypeVar
 from seedboxsync.core.dao.model import SeedboxSyncModel
 from seedboxsync.core.dao.download import Download
-from seedboxsync.core.dao.lock import Lock
 from seedboxsync.core.dao.seedboxsync import SeedboxSync
 from seedboxsync.core.dao.torrent import Torrent
+from seedboxsync.core.dao.taskstatus import TaskStatus
 
-__all__ = ["SeedboxSyncModel", "Download", "Lock", "SeedboxSync", "Torrent"]
+__all__ = ["SeedboxSyncModel", "Download", "SeedboxSync", "TaskStatus", "Torrent"]
 
 
 T = TypeVar("T")

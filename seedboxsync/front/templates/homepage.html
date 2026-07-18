@@ -9,21 +9,21 @@
 
   <div class="columns is-desktop">
     {% if config.sync_blackhole_enabled %}
-      <div class="message is-small column is-4" x-data="LockBoxComponent('{{ url_for('api.locks_locks', key='sync_blackhole') }}', '{{ _('Blackhole') }}')">
+      <div class="message is-small column is-4" x-data="TaskStatusBoxComponent('{{ url_for('api.taskstatuses_task_statuses', key='sync-blackhole') }}', '{{ _('Blackhole') }}')">
         <div class="message-header">{{ _('Blackhole') }}</div>
         <div class="message-body">
           <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-          <div x-show="!loading && !error" x-text="lockMessage"></div>
+          <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
           <div x-show="error" class="has-text-danger" x-text="error"></div>
         </div>
       </div>
     {% endif %}
 
-    <div class="message is-small column is-4 is-offset-4" x-data="LockBoxComponent('{{ url_for('api.locks_locks', key='sync_seedbox') }}', '{{ _('Seedbox') }}')">
+    <div class="message is-small column is-4 is-offset-4" x-data="TaskStatusBoxComponent('{{ url_for('api.taskstatuses_task_statuses', key='sync-seedbox') }}', '{{ _('Seedbox') }}')">
       <div class="message-header">{{ _('Seedbox') }}</div>
       <div class="message-body">
         <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-        <div x-show="!loading && !error" x-text="lockMessage"></div>
+        <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
         <div x-show="error" class="has-text-danger" x-text="error"></div>
       </div>
     </div>

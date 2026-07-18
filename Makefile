@@ -12,6 +12,11 @@ run:
 	export FLASK_CACHE_TYPE=NullCache ; \
 	flask --app seedboxsync.app:app run --debug
 
+run-taskmanager:
+	export FLASK_SECRET_KEY=dev ; \
+	export FLASK_CACHE_TYPE=NullCache ; \
+	huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
+
 run-gunicorn:
 	export FLASK_SECRET_KEY=gunicorn ; \
 	gunicorn -w 1 -b 0.0.0.0:5000 seedboxsync.app:app

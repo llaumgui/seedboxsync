@@ -13,7 +13,7 @@ from seedboxsync.__version__ import (
 )
 from seedboxsync.front.apis.resources import DateTimeOrZero, Resource
 from seedboxsync.front.apis.downloads import api as nsDownloads
-from seedboxsync.front.apis.locks import api as nsLocks
+from seedboxsync.front.apis.taskstatus import api as nsTaskStatus
 from seedboxsync.front.apis.uploads import api as nsUploads
 
 bp = Blueprint("api", __name__, url_prefix=f"/api/{api_path_version}")
@@ -29,7 +29,7 @@ api = Api(
 
 # Add namespaces
 api.add_namespace(nsDownloads)
-api.add_namespace(nsLocks)
+api.add_namespace(nsTaskStatus)
 api.add_namespace(nsUploads)
 
 __all__ = ["DateTimeOrZero", "Resource"]

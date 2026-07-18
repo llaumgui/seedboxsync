@@ -83,9 +83,7 @@ class Manager:
                 attribute.
         """
         if self.__instance is None:
-            raise RuntimeError(
-                "The Huey manager has not been initialized with a Flask application."
-            )
+            raise RuntimeError("The Huey manager has not been initialized with a Flask application.")
 
         return getattr(self.__instance, name)
 
@@ -114,30 +112,25 @@ class Manager:
                 database.
         """
         if self.app is None:
-            raise RuntimeError(
-                "The Huey manager has not been initialized with a Flask application."
-            )
+            raise RuntimeError("The Huey manager has not been initialized with a Flask application.")
 
         database_url: str = self.app.config["DATABASE"]
         parsed_url = urlparse(database_url)
 
+        clean_path = parsed_url.path
+        if clean_path.startswith("//"):
+            clean_path = clean_path[1:]
+
         if parsed_url.scheme != "sqlite":
-            raise ValueError(
-                f"Unsupported database scheme: {parsed_url.scheme or '<missing>'}"
-            )
+            raise ValueError(f"Unsupported database scheme: {parsed_url.scheme or '<missing>'}")
 
         if not parsed_url.path:
-            raise ValueError(
-                "The SQLite database URL does not contain a file path."
-            )
+            raise ValueError("The SQLite database URL does not contain a file path.")
 
         if parsed_url.path in {":memory:", "/:memory:"}:
-            raise ValueError(
-                "An in-memory SQLite database cannot be used to derive "
-                "the Huey database path."
-            )
+            raise ValueError("An in-memory SQLite database cannot be used to derive " "the Huey database path.")
 
-        database_path = Path(parsed_url.path)
+        database_path = Path(clean_path)
         huey_database_path = database_path.with_name(self.HUEY_DB_NAME)
 
         self.app.logger.debug(

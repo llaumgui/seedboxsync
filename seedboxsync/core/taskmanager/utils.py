@@ -13,7 +13,7 @@ import importlib
 import pkgutil
 from types import ModuleType
 from seedboxsync.core import current_app as app
-import seedboxsync.core.task as task_package
+import seedboxsync.core.taskmanager.task as task_package
 
 
 def load_task_modules() -> list[ModuleType]:

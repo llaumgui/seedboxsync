@@ -11,7 +11,7 @@ from functools import cached_property
 from flask import current_app, Flask
 from seedboxsync.core import Config
 from seedboxsync.core.exception import PingServiceError, SyncProtocoleError
-from seedboxsync.core.task import task_manager, Manager
+from seedboxsync.core.taskmanager import task_manager, Manager
 from seedboxsync.core.sync import AbstractSyncClient
 from seedboxsync.core.ping import AbstractPingClient
 
@@ -19,7 +19,7 @@ from seedboxsync.core.ping import AbstractPingClient
 class SeedboxSyncFlask(Flask):
     """Flask application with SeedboxSync-specific configuration helpers."""
 
-    @cached_property
+    @property
     def seedboxsync_config(self) -> dict[str, Any]:
         """
         Return the SeedboxSync configuration namespace.

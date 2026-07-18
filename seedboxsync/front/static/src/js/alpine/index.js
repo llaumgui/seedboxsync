@@ -8,13 +8,13 @@ import Alpine from "alpinejs";
 import * as validators from "./validators";
 import { TableComponent } from "./table";
 import { TablePaginedComponent } from "./table_pagined";
-import { LockBoxComponent } from "./lockbox";
+import { TaskStatusBoxComponent } from "./taskstatusbox";
 import { ModalConfirmCallComponent, OpenModalConfirmCall } from "./modal";
 
 // Tables
 window.TableComponent = TableComponent;
 window.TablePaginedComponent = TablePaginedComponent;
-window.LockBoxComponent = LockBoxComponent;
+window.TaskStatusBoxComponent = TaskStatusBoxComponent;
 
 // Modales
 window.ModalConfirmCallComponent = ModalConfirmCallComponent;

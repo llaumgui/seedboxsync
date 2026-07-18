@@ -76,14 +76,16 @@ seedboxsync stats by-month
 seedboxsync stats by-year
 ```
 
-## Use in crontab
+## Use with taskmanager
 
-> :warning: **Warning:** Docker is the recommended method and have a cron feature out-of-the-box.
+> :warning: **Warning:** Docker is the recommended method and have a task manager feature out-of-the-box.
 
 ```bash
-# Sync blackhole every 2mn
-*/2 * * * * root seedboxsync -q sync blackhole --ping
+huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
+```
 
-# Download torrents finished every 15mn
-*/15 * * * * root seedboxsync -q sync seedbox --ping
+or
+
+```bash
+make run-taskmanager
 ```

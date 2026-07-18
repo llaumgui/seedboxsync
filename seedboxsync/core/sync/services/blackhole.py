@@ -6,28 +6,29 @@
 # file that was distributed with this source code.
 #
 """
-All commands related to synchronization operations in SeedboxSync.
+SeedboxSync sync service for blackhole.
 """
 
 import glob
 import os
 from paramiko import SSHException
 from seedboxsync.core.dao import Torrent
+from seedboxsync.core.taskmanager import track_taskstatus
 from seedboxsync.core.utils import get_torrent_infos
 from seedboxsync.core import fs, current_app as app
 
-LOCK_NAME="sync-blackhole"
+LOCK_NAME = "sync-blackhole"
 
+
+@track_taskstatus(LOCK_NAME)
 def blackhole(dry_run: bool, ping: bool) -> None:
     """
     Perform the blackhole synchronization.
 
     Uploads torrent files from the local watch folder to the seedbox.
-    Handles creation of lock files, optional dry-run, file permissions,
-    database persistence, and error handling.
+    Optional dry-run, file permissions, database persistence, and error handling.
 
     Args:
-        ctx (Context): The Click context object.
         dry_run (bool): Whether to perform a dry run.
         ping (bool): Whether to ping a service during execution.
     """

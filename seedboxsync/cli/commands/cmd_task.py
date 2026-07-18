@@ -11,7 +11,7 @@ All commands related to the task queue manager operations.
 
 import click
 from seedboxsync.cli import group, pass_context, Context
-from seedboxsync.core.task.utils import load_task_modules
+from seedboxsync.core.taskmanager.utils import load_task_modules
 
 
 @group("task", help="Seedboxsync task operations.")  # type: ignore[untyped-decorator]
@@ -20,44 +20,40 @@ def cli() -> None:
     pass
 
 
-@cli.command("run-consumer", help="Run the task consumer.")  # type: ignore[untyped-decorator]
-@click.option(
-    "--workers",
-    type=click.IntRange(min=1),
-    default=1,
-    show_default=True,
-    help="Number of task workers.",
-)
-@click.option(
-    "--worker-type",
-    type=click.Choice(
-        ["thread", "process", "greenlet"],
-        case_sensitive=False,
-    ),
-    default="thread",
-    show_default=True,
-    help="Worker execution model.",
-)
-@click.option(
-    "--periodic/--no-periodic",
-    default=True,
-    show_default=True,
-    help="Enable periodic tasks.",
-)
+@cli.command("result", help="List results in the result store. Allows determining the currently running tasks.")  # type: ignore[untyped-decorator]
 @pass_context
-def huey_command(
-    ctx: Context,
-    workers: int,
-    worker_type: str,
-    periodic: bool,
-) -> None:
-    """Run the task consumer."""
-    consumer = ctx.app.task_manager.create_consumer(
-        workers=workers,
-        worker_type=worker_type,
-        periodic=periodic,
-    )
-    load_task_modules()
-    ctx.app.logger.info("Task manager consumer loaded")
+def tasks_result(ctx: Context) -> None:
+    """List all_results() tasks."""
 
-    consumer.run()
+    data = []
+    for task in ctx.app.task_manager.all_results():
+        data.append([task])
+
+    click.echo(ctx.render(data, headers=["Result key"]))
+
+
+@cli.command("pending", help="List pending tasks.")  # type: ignore[untyped-decorator]
+@pass_context
+def tasks_pending(ctx: Context) -> None:
+    """List pending tasks."""
+
+    data = []
+    for task in ctx.app.task_manager.pending():
+        name = getattr(task, "name", str(task).split(": ")[0])
+        task_id = getattr(task, "id", str(task).split(": ")[-1] if ": " in str(task) else str(task))
+        data.append([name, task_id])
+
+    click.echo(ctx.render(data, headers=["Task Name", "Task ID / UUID"]))
+
+
+@cli.command("list", help="List registered tasks.")  # type: ignore[untyped-decorator]
+@pass_context
+def tasks_list(ctx: Context) -> None:
+    """List registered tasks."""
+
+    load_task_modules()
+    data = []
+    for task in ctx.app.task_manager._registry._registry.keys():
+        data.append([task])
+
+    click.echo(ctx.render(data, headers=["Class"]))
