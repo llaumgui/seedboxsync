@@ -19,6 +19,8 @@ with app.app_context():
 
     app.logger.setLevel(logging.INFO)
     app.logger.info("Start huey consumer")
+    app.logger.debug("Flushing old tasks from queue...")
+    huey.flush()
 
     @huey.pre_execute()  # type: ignore[untyped-decorator]
     def setup_worker_logging(task: Any) -> None:
