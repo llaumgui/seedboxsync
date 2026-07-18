@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-07-14 16:25+0200\n"
+"POT-Creation-Date: 2026-07-18 17:22+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: seedboxsync/front/apis/error.py:47 seedboxsync/front/views/error.py:23
+#: seedboxsync/front/apis/error.py:55 seedboxsync/front/views/error.py:23
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
@@ -33,77 +33,79 @@ msgid "List of last files downloaded from the seedbox to the NAS."
 msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 
 #: seedboxsync/front/templates/downloaded.html:15
+#: seedboxsync/front/templates/downloaded.html:16
 #: seedboxsync/front/templates/uploaded.html:15
+#: seedboxsync/front/templates/uploaded.html:16
 msgid "Search"
 msgstr "Recherche"
 
 #: seedboxsync/front/templates/components/modal.html:13
-#: seedboxsync/front/templates/downloaded.html:22
+#: seedboxsync/front/templates/downloaded.html:23
 #: seedboxsync/front/templates/homepage.html:56
 #: seedboxsync/front/templates/homepage.html:87
 #: seedboxsync/front/templates/homepage.html:113
-#: seedboxsync/front/templates/uploaded.html:22
+#: seedboxsync/front/templates/uploaded.html:23
 msgid "Loading..."
 msgstr "Chargement..."
 
 #: seedboxsync/front/templates/components/modal.html:16
-#: seedboxsync/front/templates/downloaded.html:23
+#: seedboxsync/front/templates/downloaded.html:24
 #: seedboxsync/front/templates/homepage.html:57
 #: seedboxsync/front/templates/homepage.html:88
 #: seedboxsync/front/templates/homepage.html:114
-#: seedboxsync/front/templates/uploaded.html:23
+#: seedboxsync/front/templates/uploaded.html:24
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
 
-#: seedboxsync/front/templates/downloaded.html:24
+#: seedboxsync/front/templates/downloaded.html:25
 #: seedboxsync/front/templates/homepage.html:89
 msgid "No files downloaded yet..."
 msgstr "Aucun fichier téléchargé pour le moment..."
 
-#: seedboxsync/front/templates/downloaded.html:30
+#: seedboxsync/front/templates/downloaded.html:31
 #: seedboxsync/front/templates/homepage.html:62
 #: seedboxsync/front/templates/homepage.html:93
 #: seedboxsync/front/templates/homepage.html:119
-#: seedboxsync/front/templates/uploaded.html:30
+#: seedboxsync/front/templates/uploaded.html:31
 msgid "Name"
 msgstr "Nom"
 
-#: seedboxsync/front/templates/downloaded.html:31
+#: seedboxsync/front/templates/downloaded.html:32
 #: seedboxsync/front/templates/homepage.html:94
 msgid "Finished"
 msgstr "Terminé"
 
-#: seedboxsync/front/templates/downloaded.html:32
+#: seedboxsync/front/templates/downloaded.html:33
 #: seedboxsync/front/templates/homepage.html:95
 msgid "Size"
 msgstr "Taille"
 
-#: seedboxsync/front/templates/downloaded.html:47
-#: seedboxsync/front/templates/uploaded.html:45
+#: seedboxsync/front/templates/downloaded.html:48
+#: seedboxsync/front/templates/uploaded.html:46
 msgid "Delete?"
 msgstr "Supprimer ?"
 
-#: seedboxsync/front/templates/downloaded.html:48
+#: seedboxsync/front/templates/downloaded.html:49
 msgid "Do you want to delete this download?"
 msgstr "Voulez-vous supprimer ce téléchargement ?"
 
-#: seedboxsync/front/templates/downloaded.html:49
-#: seedboxsync/front/templates/uploaded.html:47
+#: seedboxsync/front/templates/downloaded.html:50
+#: seedboxsync/front/templates/uploaded.html:48
 msgid "has been deleted"
 msgstr "a été effacé"
 
-#: seedboxsync/front/templates/downloaded.html:51
-#: seedboxsync/front/templates/uploaded.html:49
+#: seedboxsync/front/templates/downloaded.html:52
+#: seedboxsync/front/templates/uploaded.html:50
 msgid "Delete"
 msgstr "Supprimer"
 
-#: seedboxsync/front/templates/downloaded.html:61
-#: seedboxsync/front/templates/uploaded.html:59
+#: seedboxsync/front/templates/downloaded.html:62
+#: seedboxsync/front/templates/uploaded.html:60
 msgid "Previous"
 msgstr "Précédent"
 
-#: seedboxsync/front/templates/downloaded.html:62
-#: seedboxsync/front/templates/uploaded.html:60
+#: seedboxsync/front/templates/downloaded.html:63
+#: seedboxsync/front/templates/uploaded.html:61
 msgid "Next"
 msgstr "Suivant"
 
@@ -174,7 +176,7 @@ msgid "No torrent downloaded yet..."
 msgstr "Pas encore de torrent téléchargé..."
 
 #: seedboxsync/front/templates/homepage.html:120
-#: seedboxsync/front/templates/uploaded.html:31
+#: seedboxsync/front/templates/uploaded.html:32
 msgid "Sent"
 msgstr "Envoyé"
 
@@ -220,8 +222,8 @@ msgid "SeedboxSync database version"
 msgstr "Version de la base de données de SeedboxSync"
 
 #: seedboxsync/front/templates/info.html:43
-msgid "Cron job"
-msgstr "Tâche planifiée"
+msgid "Tasks"
+msgstr "Taches"
 
 #: seedboxsync/front/templates/info.html:46
 msgid "Blackhole synchronization"
@@ -230,14 +232,14 @@ msgstr "Synchronisation de la blackhole"
 #: seedboxsync/front/templates/info.html:52
 #: seedboxsync/front/templates/info.html:66
 #, python-format
-msgid "Locked since %(since)s"
-msgstr "Verrouillé depuis %(since)s"
+msgid "Running since %(since)s"
+msgstr "En cours depuis %(since)s"
 
 #: seedboxsync/front/templates/info.html:54
 #: seedboxsync/front/templates/info.html:68
 #, python-format
-msgid "Unlocked since %(since)s"
-msgstr "Déverrouillé depuis %(since)s"
+msgid "Finished since %(since)s"
+msgstr "Terminé depuis %(since)s"
 
 #: seedboxsync/front/templates/info.html:60
 msgid "Seedbox synchronization"
@@ -297,36 +299,38 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #: seedboxsync/front/templates/settings.html:122
+#: seedboxsync/front/templates/settings.html:123
 msgid "Timeout (in seconds)"
 msgstr "Timeout (en secondes)"
 
-#: seedboxsync/front/templates/settings.html:137
+#: seedboxsync/front/templates/settings.html:138
 msgid "Protocol"
 msgstr "Protocole"
 
-#: seedboxsync/front/templates/settings.html:140
+#: seedboxsync/front/templates/settings.html:141
 msgid "sFTP"
 msgstr "sFTP"
 
-#: seedboxsync/front/templates/settings.html:141
+#: seedboxsync/front/templates/settings.html:142
 msgid "FTP"
 msgstr "FTP"
 
-#: seedboxsync/front/templates/settings.html:157
+#: seedboxsync/front/templates/settings.html:158
+#: seedboxsync/front/templates/settings.html:164
 msgid "chmod (in octal notation)"
 msgstr "chmod (en notation octale)"
 
-#: seedboxsync/front/templates/settings.html:159
+#: seedboxsync/front/templates/settings.html:160
 msgid "Chmod torrent after upload. Use octal notation, e.g. 0o644."
 msgstr ""
 "Chmod du fichier torrent après son téléversement. Utilisez la notation "
 "octale, par exemple 0o644."
 
-#: seedboxsync/front/templates/settings.html:181
+#: seedboxsync/front/templates/settings.html:183
 msgid "Max concurrent prefetch requests"
 msgstr "Nombre maximal de requêtes de préchargement simultanées"
 
-#: seedboxsync/front/templates/settings.html:183
+#: seedboxsync/front/templates/settings.html:185
 msgid ""
 "Only for SFTP (Paramiko). The maximum number of concurrent read requests "
 "to prefetch. When this is None (the default), do not limit the number of "
@@ -345,19 +349,19 @@ msgstr ""
 "téléchargé correctement avec sftp mais que le transfert se bloque avec "
 "Paramiko, il peut être utile de définir une limite."
 
-#: seedboxsync/front/templates/settings.html:200
+#: seedboxsync/front/templates/settings.html:202
 msgid "Path"
 msgstr "Répertoires"
 
-#: seedboxsync/front/templates/settings.html:201
+#: seedboxsync/front/templates/settings.html:203
 msgid "Information about your seedbox paths."
 msgstr "Informations à propos des paths de votre seedbox."
 
-#: seedboxsync/front/templates/settings.html:210
+#: seedboxsync/front/templates/settings.html:212
 msgid "Tempory path"
 msgstr "Répertoire temporaire"
 
-#: seedboxsync/front/templates/settings.html:212
+#: seedboxsync/front/templates/settings.html:214
 msgid ""
 "Use a temporary directory for incomplete transfers (must be created "
 "manually)."
@@ -365,49 +369,49 @@ msgstr ""
 "Utiliser un répertoire temporaire pour les transferts incomplets (doit "
 "être créé manuellement)."
 
-#: seedboxsync/front/templates/settings.html:233
-#: seedboxsync/front/templates/settings.html:359
+#: seedboxsync/front/templates/settings.html:235
+#: seedboxsync/front/templates/settings.html:361
 msgid "Watch path"
 msgstr "Répertoire \"Watch\""
 
-#: seedboxsync/front/templates/settings.html:235
+#: seedboxsync/front/templates/settings.html:237
 msgid "Your BitTorrent client's watch folder (must be created manually)."
 msgstr ""
 "Le répertoire de surveillance de votre client BitTorrent (doit être créé "
 "manuellement)."
 
-#: seedboxsync/front/templates/settings.html:258
+#: seedboxsync/front/templates/settings.html:260
 msgid "Finished path"
 msgstr "Répertoire \"Finished\""
 
-#: seedboxsync/front/templates/settings.html:260
+#: seedboxsync/front/templates/settings.html:262
 msgid "The folder where your BitTorrent client puts finished files."
 msgstr ""
 "Le répertoire dans lequel votre client BitTorrent place les fichiers "
 "terminés."
 
-#: seedboxsync/front/templates/settings.html:281
+#: seedboxsync/front/templates/settings.html:283
 msgid "Prefixed path"
 msgstr "Prefixe des répertoires"
 
-#: seedboxsync/front/templates/settings.html:283
+#: seedboxsync/front/templates/settings.html:285
 msgid "Remove a prefix from the synced path (usually the same as finished_path)."
 msgstr ""
 "Supprimer un préfixe du chemin synchronisé (généralement identique à "
 "finished_path)."
 
-#: seedboxsync/front/templates/settings.html:306
-#: seedboxsync/front/templates/settings.html:329
+#: seedboxsync/front/templates/settings.html:308
+#: seedboxsync/front/templates/settings.html:331
 msgid "Suffix used for .part"
 msgstr "Suffixe utilisé pour les .part"
 
-#: seedboxsync/front/templates/settings.html:308
+#: seedboxsync/front/templates/settings.html:310
 msgid "Exclude files with this suffix (e.g. incomplete downloads)."
 msgstr ""
 "Exclure les fichiers ayant ce suffixe (par exemple, les téléchargements "
 "incomplets)."
 
-#: seedboxsync/front/templates/settings.html:331
+#: seedboxsync/front/templates/settings.html:333
 msgid ""
 "Exclude files from sync using a regular expression (Python re syntax). "
 "Example: .*missing$"
@@ -415,55 +419,55 @@ msgstr ""
 "Exclure des fichiers de la synchronisation à l'aide d'une expression "
 "régulière (syntaxe Python re). Exemple : .*missing$"
 
-#: seedboxsync/front/templates/settings.html:349
+#: seedboxsync/front/templates/settings.html:351
 msgid "Local (NAS)"
 msgstr "Local (NAS)"
 
-#: seedboxsync/front/templates/settings.html:350
+#: seedboxsync/front/templates/settings.html:352
 msgid "Information about local environment (NAS?)."
 msgstr "Informations à propos de votre environnement local (NAS ?)."
 
-#: seedboxsync/front/templates/settings.html:361
+#: seedboxsync/front/templates/settings.html:363
 msgid "Your local watch folder."
 msgstr "Votre répertoire local de surveillance."
 
-#: seedboxsync/front/templates/settings.html:382
+#: seedboxsync/front/templates/settings.html:384
 msgid "Downloads path"
 msgstr "Répertoire de téléchargement"
 
-#: seedboxsync/front/templates/settings.html:384
+#: seedboxsync/front/templates/settings.html:386
 msgid "Path where files are downloaded."
 msgstr "Chemin où les fichiers sont téléchargés"
 
-#: seedboxsync/front/templates/settings.html:402
+#: seedboxsync/front/templates/settings.html:404
 msgid "Healthchecks"
 msgstr "Healthchecks"
 
-#: seedboxsync/front/templates/settings.html:403
+#: seedboxsync/front/templates/settings.html:405
 msgid "Settings Healthchecks service."
 msgstr "Paramètres du service Healthchecks."
 
-#: seedboxsync/front/templates/settings.html:413
+#: seedboxsync/front/templates/settings.html:415
 msgid "Enable for sync_seedbox task?"
 msgstr "Activer pour la tache sync_seedbox ?"
 
-#: seedboxsync/front/templates/settings.html:420
+#: seedboxsync/front/templates/settings.html:422
 msgid "Ping URL for sync_seedbox task"
 msgstr "URL de ping pour la tache sync_seedbox"
 
-#: seedboxsync/front/templates/settings.html:441
+#: seedboxsync/front/templates/settings.html:443
 msgid "Enable for sync_blackhole task?"
 msgstr "Activer pour la tache sync_blackhole ?"
 
-#: seedboxsync/front/templates/settings.html:448
+#: seedboxsync/front/templates/settings.html:450
 msgid "Ping URL for sync_blackhole task"
 msgstr "URL de ping pour la tache sync_blackhole"
 
-#: seedboxsync/front/templates/settings.html:463
+#: seedboxsync/front/templates/settings.html:465
 msgid "Save"
 msgstr "Sauver"
 
-#: seedboxsync/front/templates/settings.html:473
+#: seedboxsync/front/templates/settings.html:475
 msgid "Settings saved."
 msgstr "Paramètres sauvegardés."
 
@@ -479,11 +483,11 @@ msgstr "Statistiques par mois"
 msgid "Statistics by year"
 msgstr "Statistiques par année"
 
-#: seedboxsync/front/templates/uploaded.html:24
+#: seedboxsync/front/templates/uploaded.html:25
 msgid "No files uploaded yet..."
 msgstr "Aucun fichier envoyé pour le moment..."
 
-#: seedboxsync/front/templates/uploaded.html:46
+#: seedboxsync/front/templates/uploaded.html:47
 msgid "Do you want to delete this upload?"
 msgstr "Voulez-vous supprimer cet upload ?"
 
