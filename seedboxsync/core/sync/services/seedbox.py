@@ -55,6 +55,7 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
     # Walk through all files on the seedbox
     try:
         try:
+            app.sync.chdir(None)   # type: ignore[arg-type]
             app.sync.chdir(finished_path)
         except FileNotFoundError as exc:
             app.logger.error(f"{str(exc)}\nFailed to scan directory: {finished_path}")

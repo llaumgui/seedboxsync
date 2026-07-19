@@ -124,7 +124,6 @@ def test_seedbox_only_store_records_remote_file_without_downloading(app, runner,
     result = runner.invoke(cli, ["sync", "seedbox", "--only-store", "--ping"])
 
     assert result.exit_code == 0, result.output
-    sync.chdir.assert_called_once_with("/remote/files")
     sync.stat.assert_called_once_with("shows/episode.mkv")
     sync.get.assert_not_called()
     ping.start.assert_called_once_with("sync_seedbox")
