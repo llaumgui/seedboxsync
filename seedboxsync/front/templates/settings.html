@@ -405,34 +405,6 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
       <p class="is-italic">{{ _('Settings Healthchecks service.') }}</p>
 
       <div class="columns pt-4" x-data="{
-        sync_seedbox_enabled: '{{ form.healthchecks_sync_seedbox_enabled }}',
-        sync_seedbox_ping_url: '{{ form.healthchecks_sync_seedbox_ping_url }}',
-        enabled: {{ 'true' if form.healthchecks_sync_seedbox_enabled else 'false' }},
-        isValid() { return isValidUrl(this.sync_seedbox_ping_url, this.enabled) }
-      }">
-        <div class="column is-6">
-          <div class="field">
-            <label class="label" for="healthchecks_sync_seedbox_enabled">{{ _('Enable for sync_seedbox task?') }}</label>
-            <input id="healthchecks_sync_seedbox_enabled" type="checkbox" name="healthchecks_sync_seedbox_enabled" value="1" checked x-model="enabled" />
-          </div>
-        </div>
-
-        <div class="column is-6">
-          <div class="field">
-            <label class="label" for="healthchecks_sync_seedbox_ping_url">{{ _('Ping URL for sync_seedbox task') }}</label>
-            <div class="control column is-10 p-0 has-icons-left has-icons-right">
-              <input id="healthchecks_sync_seedbox_ping_url" class="input" type="text"
-                    name="healthchecks_sync_seedbox_ping_url" x-model="sync_seedbox_ping_url"
-                    placeholder="https://hc-ping.com/826cb034-14fe-4965-a9d9-bc0bed7b034d"
-                    x-bind:class="{ 'is-danger': !isValid()}"/>
-              <span class="icon is-small is-left"><i class="fas fa-globe"></i></span>
-              <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="columns pt-4" x-data="{
           sync_blackhole_enabled: '{{ form.healthchecks_sync_blackhole_enabled }}',
           enabled: {{ 'true' if form.healthchecks_sync_blackhole_enabled else 'false' }},
           sync_blackhole_ping_url: '{{ form.healthchecks_sync_blackhole_ping_url }}',
@@ -452,6 +424,34 @@ Note: OpenSSH’s sftp internally imposes a limit of 64 concurrent requests, whi
               <input id="healthchecks_sync_blackhole_ping_url" class="input" type="text"
                     name="healthchecks_sync_blackhole_ping_url" x-model="sync_blackhole_ping_url"
                     placeholder="https://hc-ping.com/94db845e-bd7c-42af-9ca8-25e89556b814"
+                    x-bind:class="{ 'is-danger': !isValid()}"/>
+              <span class="icon is-small is-left"><i class="fas fa-globe"></i></span>
+              <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns pt-4" x-data="{
+        sync_seedbox_enabled: '{{ form.healthchecks_sync_seedbox_enabled }}',
+        sync_seedbox_ping_url: '{{ form.healthchecks_sync_seedbox_ping_url }}',
+        enabled: {{ 'true' if form.healthchecks_sync_seedbox_enabled else 'false' }},
+        isValid() { return isValidUrl(this.sync_seedbox_ping_url, this.enabled) }
+      }">
+        <div class="column is-6">
+          <div class="field">
+            <label class="label" for="healthchecks_sync_seedbox_enabled">{{ _('Enable for sync_seedbox task?') }}</label>
+            <input id="healthchecks_sync_seedbox_enabled" type="checkbox" name="healthchecks_sync_seedbox_enabled" value="1" checked x-model="enabled" />
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="field">
+            <label class="label" for="healthchecks_sync_seedbox_ping_url">{{ _('Ping URL for sync_seedbox task') }}</label>
+            <div class="control column is-10 p-0 has-icons-left has-icons-right">
+              <input id="healthchecks_sync_seedbox_ping_url" class="input" type="text"
+                    name="healthchecks_sync_seedbox_ping_url" x-model="sync_seedbox_ping_url"
+                    placeholder="https://hc-ping.com/826cb034-14fe-4965-a9d9-bc0bed7b034d"
                     x-bind:class="{ 'is-danger': !isValid()}"/>
               <span class="icon is-small is-left"><i class="fas fa-globe"></i></span>
               <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
