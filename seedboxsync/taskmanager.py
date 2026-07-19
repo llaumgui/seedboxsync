@@ -13,7 +13,6 @@ from seedboxsync import create_app
 from seedboxsync.core import Config
 from seedboxsync.core.taskmanager.utils import load_task_modules
 
-
 log_level = logging.getLevelNamesMapping().get(os.getenv("HUEY_LOG_LEVEL", "INFO").upper(), logging.INFO)
 app = create_app()
 

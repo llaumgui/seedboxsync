@@ -11,7 +11,7 @@ All commands related to health checks in SeedboxSync.
 
 import click
 from urllib.request import urlopen
-from urllib.error import URLError, HTTPError
+from urllib.error import URLError
 from datetime import datetime, timedelta
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import SeedboxSync, TaskStatus
@@ -70,7 +70,7 @@ def cli(ctx: Context) -> None:
             else:
                 click.secho("WebUI - NOK", fg="red")
                 exit_code = 5
-    except (HTTPError, URLError):
+    except URLError:
         click.secho("WebUI - NOK", fg="red")
         exit_code = 6
 

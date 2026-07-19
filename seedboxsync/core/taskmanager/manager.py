@@ -128,7 +128,7 @@ class Manager:
             raise ValueError("The SQLite database URL does not contain a file path.")
 
         if parsed_url.path in {":memory:", "/:memory:"}:
-            raise ValueError("An in-memory SQLite database cannot be used to derive " "the Huey database path.")
+            raise ValueError("An in-memory SQLite database cannot be used to derive the Huey database path.")
 
         database_path = Path(clean_path)
         huey_database_path = database_path.with_name(self.HUEY_DB_NAME)
