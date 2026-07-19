@@ -15,7 +15,7 @@ ctx = app.app_context()
 minute = os.getenv("SYNC_SEEDBOX_MINUTE", "*/15")
 
 
-@task_manager.periodic_task(crontab(minute="*/15"))  # type: ignore[untyped-decorator]
+@task_manager.periodic_task(crontab(minute=minute))  # type: ignore[untyped-decorator]
 @task_manager.lock_task(LOCK_NAME)  # type: ignore[untyped-decorator]
 def periodic_sync_seedbox() -> None:
     with ctx:
