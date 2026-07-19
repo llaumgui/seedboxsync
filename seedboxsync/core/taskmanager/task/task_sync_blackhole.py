@@ -20,3 +20,10 @@ minute = os.getenv("SYNC_BLACKHOLE_MINUTE", "*")
 def periodic_sync_blackhole() -> None:
     with ctx:
         blackhole_service(False, True)
+
+
+@task_manager.task()  # type: ignore[untyped-decorator]
+@task_manager.lock_task(LOCK_NAME)  # type: ignore[untyped-decorator]
+def sync_blackhole() -> None:
+    with ctx:
+        blackhole_service(False, True)

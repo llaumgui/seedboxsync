@@ -20,3 +20,10 @@ minute = os.getenv("SYNC_SEEDBOX_MINUTE", "*/15")
 def periodic_sync_seedbox() -> None:
     with ctx:
         seedbox_service(False, True, False)
+
+
+@task_manager.task()  # type: ignore[untyped-decorator]
+@task_manager.lock_task(LOCK_NAME)  # type: ignore[untyped-decorator]
+def sync_seedbox() -> None:
+    with ctx:
+        seedbox_service(False, True, False)
