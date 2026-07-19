@@ -88,11 +88,12 @@ environment:
 | `TZ`                    | Timezone configuration                        |               |
 | `PUID`                  | User ID for the main process                  | `1000`        |
 | `PGID`                  | Group ID for the main process                 | `1000`        |
-| `FLASK_SECRET_KEY`      | The [Flask's secret](https://flask.palletsprojects.com/en/stable/config/#SECRET_KEY) key that will be used for securely signing the session cookie and can be used for any other security related needs by extensions or your application. It should be a long random bytes or str. | `dev` |
+| `FLASK_SECRET_KEY`      | The [Flask's secret](https://flask.palletsprojects.com/en/stable/config/#SECRET_KEY) key that will be used for securely signing the session cookie and can be used for any other security related needs by extensions or your application. It should be a long random bytes or str.  | `dev` |
 | `GUNICORN_WORKERS`      | The number of [Gunicorn worker](https://docs.gunicorn.org/en/stable/run.html#commonly-used-arguments) processes. This number should generally be between 2-4 workers per core in the server. | `1` |
-| `GUNICORN_BIND`         | Specify a server socket to bind. Server sockets can be any of `$(HOST)`, `$(HOST):$(PORT)`, `fd://$(FD)`, or `unix:$(PATH)`. An IP is a valid `$(HOST)`. | `0.0.0.0:8000` |
+| `GUNICORN_BIND`         | Specify a server socket to bind. Server sockets can be any of `$(HOST)`, `$(HOST):$(PORT)`, `fd://$(FD)`, or `unix:$(PATH)`. An IP is a valid `$(HOST)`.           | `0.0.0.0:8000` |
 | `HUEY_WORKERS`          | The number of [Huey](https://huey.readthedocs.io/en/latest/deployment.html) workers. | `2`           |
 | `HUEY_WORKER_TYPE`      | Worker execution model (thread, greenlet, process). Use process for CPU-intensive workloads, and greenlet for IO-heavy workloads. When in doubt, thread is the safest choice. | `thread`      |
+| `HUEY_LOG_LEVEL`        | Logging log level for the task manager.       | `INFO`        |
 | `SYNC_BLACKHOLE_MINUTE` | Huey cron minute configuration. By default every minute | `*` |
 | `SYNC_SEEDBOX_MINUTE`   | Huey cron minute configuration. By default every 15 minutes | `*/15` |
 

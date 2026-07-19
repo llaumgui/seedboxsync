@@ -6,21 +6,26 @@
 # file that was distributed with this source code.
 #
 
+import os
 import logging
 from typing import Any
 from seedboxsync import create_app
 from seedboxsync.core import Config
 from seedboxsync.core.taskmanager.utils import load_task_modules
 
+
+log_level = logging.getLevelNamesMapping().get(os.getenv("HUEY_LOG_LEVEL", "INFO").upper(), logging.INFO)
 app = create_app()
 
 with app.app_context():
     huey = app.task_manager
-
-    app.logger.setLevel(logging.INFO)
+    app.logger.setLevel(log_level)
     app.logger.info("Start huey consumer")
-    app.logger.debug("Flushing old tasks from queue...")
-    huey.flush()
+
+    @huey.on_startup()  # type: ignore[untyped-decorator]
+    def flush() -> None:
+        app.logger.debug("Flushing old tasks from queue...")
+        huey.flush()
 
     @huey.pre_execute()  # type: ignore[untyped-decorator]
     def setup_worker_logging(task: Any) -> None:
