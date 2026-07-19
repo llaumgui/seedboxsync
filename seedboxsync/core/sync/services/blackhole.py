@@ -36,8 +36,8 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         app.logger.info("Blackhole synchronization task is disabled")
         return
 
-    app.logger.debug('blackhole dry-run: "%s"' % dry_run)
-    app.logger.debug('blackhole ping: "%s"' % ping)
+    app.logger.debug('sync blackhole dry-run: "%s"' % dry_run)
+    app.logger.debug('sync blackhole ping: "%s"' % ping)
 
     # Call ping.start() if enabled
     if ping:
@@ -98,6 +98,6 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         except SSHException as exc:
             app.logger.warning("SSH client exception > %s" % str(exc))
 
-    # Call ping_success_hook if enabled
+    # Call ping.success() if enabled
     if ping:
         app.ping.success("sync_blackhole")

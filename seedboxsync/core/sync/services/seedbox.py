@@ -40,10 +40,11 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
         app.logger.info("Seedbox synchronization task is disabled")
         return
 
-    app.logger.debug('sync_seedbox dry-run: "%s"' % dry_run)
-    app.logger.debug('sync_seedbox only-store: "%s"' % only_store)
+    app.logger.debug('sync seedbox dry-run: "%s"' % dry_run)
+    app.logger.debug('sync seeddbox only-store: "%s"' % only_store)
+    app.logger.debug('sync seedbox ping: "%s"' % ping)
 
-    # Call ping_start_hook if enabled
+    # Call ping.start() if enabled
     if ping:
         app.ping.start("sync_seedbox")
 
@@ -69,14 +70,16 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
                 elif __exclude_by_pattern(filepath):
                     app.logger.debug('Skipping excluded file "%s"' % filename)
                 else:
-                    if not dry_run:
-                        __get_file(filepath, only_store)
-                    else:
+                    if dry_run:
                         app.logger.info('Dry-run: not downloading "%s"' % filepath)
+                        continue
+
+                    __get_file(filepath, only_store)
+
     except (IOError, FileNotFoundError) as exc:
         app.logger.error('SeedboxSyncError > "%s"' % exc)
 
-    # Call ping_success_hook if enabled
+    # Call ping.success() if enabled
     if ping:
         app.ping.success("sync_seedbox")
 
