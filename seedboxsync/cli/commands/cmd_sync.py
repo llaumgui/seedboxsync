@@ -17,7 +17,7 @@ from seedboxsync.cli import group, pass_context, Context
 
 @group("sync", help="Run synchronization operations.")  # type: ignore[untyped-decorator]
 def cli() -> None:
-    """Provide commands for synchronization operations."""
+    """Empty function for Click sub commands."""
     pass
 
 

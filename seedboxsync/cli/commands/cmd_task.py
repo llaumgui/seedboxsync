@@ -16,7 +16,7 @@ from seedboxsync.core.taskmanager.utils import load_task_modules
 
 @group("task", help="Task operations on task queue management.")  # type: ignore[untyped-decorator]
 def cli() -> None:
-    """Provide commands for task management."""
+    """Empty function for Click sub commands."""
     pass
 
 
@@ -57,3 +57,21 @@ def tasks_list(ctx: Context) -> None:
         data.append([task])
 
     click.echo(ctx.render(data, headers=["Class"]))
+
+
+@cli.command("flush", help="Remove all data from the queue, schedule, and result store.")  # type: ignore[untyped-decorator]
+@pass_context
+def tasks_flush(ctx: Context) -> None:
+    """Remove all data from the queue."""
+
+    ctx.app.task_manager.flush()
+    click.echo("Queue flushed")
+
+
+@cli.command("flush-lock", help="Flush any locks that may be held.")  # type: ignore[untyped-decorator]
+@pass_context
+def tasks_flush_lock(ctx: Context) -> None:
+    """Flush any locks that may be held."""
+
+    ctx.app.task_manager.flush_locks()
+    click.echo("Lock flushed")

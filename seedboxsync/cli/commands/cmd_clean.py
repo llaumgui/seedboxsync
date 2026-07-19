@@ -15,6 +15,7 @@ from seedboxsync.core.dao import Download
 
 @click.group("clean", help="Cleaning operations.")
 def cli() -> None:
+    """Empty function for Click sub commands."""
     pass
 
 

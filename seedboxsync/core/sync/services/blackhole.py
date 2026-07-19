@@ -32,7 +32,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         dry_run (bool): Whether to perform a dry run.
         ping (bool): Whether to ping a service during execution.
     """
-    if not app.seedboxsync_config.get("sync_blackhole_enabled") or False:
+    if not app.seedboxsync_config.get("sync_blackhole_enabled"):
         app.logger.info("Blackhole synchronization task is disabled")
         return
 

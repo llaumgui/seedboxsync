@@ -18,6 +18,7 @@ from seedboxsync.core.dao import typed_peewee_dicts, Download, Torrent
 @group("search", help="Search operations.")  # type: ignore[untyped-decorator]
 @pass_context
 def cli(ctx: Context) -> None:
+    """Empty function for Click sub commands."""
     pass
 
 

@@ -36,7 +36,7 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
         ping (bool): Whether to ping the configured monitoring service.
         only_store (bool): Whether to record remote files without downloading them.
     """
-    if not app.seedboxsync_config.get("sync_seedbox_enabled") or False:
+    if not app.seedboxsync_config.get("sync_seedbox_enabled"):
         app.logger.info("Seedbox synchronization task is disabled")
         return
 

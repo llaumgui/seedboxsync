@@ -87,7 +87,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     # Inject Jinja function / variables
     @app.context_processor
     def inject_formatters() -> dict[str, Callable[[datetime], str]]:
-        return dict(format_datetime=format_datetime)
+        return {"format_datetime": format_datetime}
 
     @app.context_processor
     def inject_globals() -> dict[str, str]:

@@ -18,7 +18,7 @@ export function createBarChart(
 ) {
   const labels = data.map((d) => d[labelField]);
   const filesData = data.map((d) => d.files);
-  const sizeData = data.map((d) => parseFloat(d.total_size));
+  const sizeData = data.map((d) => Number.parseFloat(d.total_size));
 
   return new Chart(ctx, {
     type: "bar",
