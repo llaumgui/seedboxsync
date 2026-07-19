@@ -62,8 +62,16 @@ class SftpClient(AbstractSyncClient):
         Raises:
             ConnectionError: If connection or authentication fails.
         """
-        if self._transport is None:
-            self.app.logger.debug("Init paramiko.Transport")
+        if self._transport is None or not self._transport.is_active():
+            self.app.logger.debug("Init or reload paramiko.Transport")
+
+            # Close inactive connecion
+            if self._transport is not None:
+                try:
+                    self._transport.close()
+                except Exception:
+                    pass
+
             try:
                 self._transport = paramiko.Transport((self._host, int(self._port)))
             except (socket.gaierror, ConnectionRefusedError) as exc:
