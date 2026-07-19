@@ -47,7 +47,7 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
     if ping:
         app.ping.start("sync_seedbox")
 
-    finished_path = app.seedboxsync_config.get("seedbox_finished_path") or ""
+    finished_path = app.seedboxsync_config.get("seedbox_finished_path", "")
     part_suffix = app.seedboxsync_config.get("seedbox_part_suffix")
     app.logger.debug('Scanning files in "%s"' % finished_path)
 
@@ -95,7 +95,7 @@ def __exclude_by_pattern(filepath: str) -> bool:
     Raises:
         SeedboxSyncConfigurationError: If the exclude pattern is invalid.
     """
-    pattern = app.seedboxsync_config.get("seedbox_exclude_syncing") or ""
+    pattern = app.seedboxsync_config.get("seedbox_exclude_syncing", "")
     if not pattern:
         return False
 
@@ -117,8 +117,8 @@ def __get_file(filepath: str, only_store: bool) -> None:
         filepath (str): Path of the file on the seedbox.
         only_store (bool): Whether to record the file without downloading it.
     """
-    local_filepath = fs.join(app.seedboxsync_config.get("local_download_path") or "", filepath)
-    part_suffix = app.seedboxsync_config.get("seedbox_part_suffix") or ""
+    local_filepath = fs.join(app.seedboxsync_config.get("local_download_path", ""), filepath)
+    part_suffix = app.seedboxsync_config.get("seedbox_part_suffix", "")
     local_filepath_part = local_filepath + part_suffix
     local_path = os.path.dirname(fs.abspath(local_filepath))
 

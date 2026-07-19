@@ -45,12 +45,12 @@ class SftpClient(AbstractSyncClient):
         # Get config
         config = self.app.seedboxsync_config
 
-        self._host = config.get("seedbox_host") or ""
-        self._login = config.get("seedbox_login") or ""
-        self._password = config.get("seedbox_password") or ""
-        self._port = config.get("seedbox_port") or ""
-        self._timeout = config.get("seedbox_timeout") or False
-        self._max_concurrent_prefetch_requests = int(config.get("seedbox_max_concurrent_prefetch_requests") or 128)
+        self._host = config.get("seedbox_host", "")
+        self._login = config.get("seedbox_login", "")
+        self._password = config.get("seedbox_password", "")
+        self._port = config.get("seedbox_port", "")
+        self._timeout = config.get("seedbox_timeout", False)
+        self._max_concurrent_prefetch_requests = int(config.get("seedbox_max_concurrent_prefetch_requests", 128))
         self._transport = None
 
         self.app.logger.debug(f"Use sftp://{self._login}:****@{self._host}:{self._port}")

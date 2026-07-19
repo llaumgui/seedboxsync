@@ -43,15 +43,15 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         app.ping.start("sync_blackhole")
 
     # Gather all torrent files
-    local_watch_path = app.seedboxsync_config.get("local_watch_path") or ""
+    local_watch_path = app.seedboxsync_config.get("local_watch_path", "")
     app.logger.debug('Scanning for torrent files in "%s"' % local_watch_path)
     torrents = glob.glob(fs.join(fs.abspath(local_watch_path), "*.torrent"))
     if len(torrents) > 0:
         for torrent_file in torrents:
             torrent_name = os.path.basename(torrent_file)
             if not dry_run:
-                tmp_path = app.seedboxsync_config.get("seedbox_tmp_path") or ""
-                watch_path = app.seedboxsync_config.get("seedbox_watch_path") or ""
+                tmp_path = app.seedboxsync_config.get("seedbox_tmp_path", "")
+                watch_path = app.seedboxsync_config.get("seedbox_watch_path", "")
 
                 app.logger.info('Upload torrent: "%s"' % torrent_name)
                 app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
@@ -60,7 +60,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
                     app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
 
                     # Apply chmod if configured
-                    chmod = app.seedboxsync_config.get("seedbox_chmod") or False
+                    chmod = app.seedboxsync_config.get("seedbox_chmod", False)
                     if isinstance(chmod, str):
                         app.logger.debug("Change permissions to %s" % chmod)
                         app.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
@@ -73,10 +73,10 @@ def blackhole(dry_run: bool, ping: bool) -> None:
                     )
 
                     # Store torrent info in database
-                    torrent_info = get_torrent_infos(torrent_file) or None
+                    torrent_info = get_torrent_infos(torrent_file)
                     torrent = Torrent.create(name=torrent_name)
                     if torrent_info is not None and isinstance(torrent_info, dict):
-                        torrent.announce = torrent_info.get("announce") or None
+                        torrent.announce = torrent_info.get("announce")
                         torrent.save()
 
                         # Remove local torrent file

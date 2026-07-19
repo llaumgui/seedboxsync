@@ -62,11 +62,11 @@ class FtpClient(AbstractSyncClient):
         # Get config
         config = self.app.seedboxsync_config
 
-        self._host = config.get("seedbox_host") or ""
-        self._login = config.get("seedbox_login") or ""
-        self._password = config.get("seedbox_password") or ""
-        self._port = config.get("seedbox_port") or "21"
-        self._timeout = config.get("seedbox_timeout") or False
+        self._host = config.get("seedbox_host", "")
+        self._login = config.get("seedbox_login", "")
+        self._password = config.get("seedbox_password", "")
+        self._port = config.get("seedbox_port", "21")
+        self._timeout = config.get("seedbox_timeout", False)
         self._client = None
 
     def _connect_before(self) -> Any:

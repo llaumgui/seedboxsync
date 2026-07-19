@@ -47,7 +47,7 @@ class Database(object):
 
         if self.app.config.get("DATABASE", False):
             # Load from testing
-            self._db_file = self.app.config.get("DATABASE") or ""
+            self._db_file = self.app.config.get("DATABASE", "")
             self.app.config["DATABASE"] = "sqlite:///" + self._db_file
         else:
             # Get DB from paths, default to first path if none found

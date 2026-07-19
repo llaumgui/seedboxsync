@@ -50,7 +50,7 @@ class SeedboxSyncFlask(Flask):
         Returns:
             AbstractSyncClient: Client instance.
         """
-        protocol = self.seedboxsync_config.get("seedbox_protocol") or ""
+        protocol = self.seedboxsync_config.get("seedbox_protocol", "")
         client_class = protocol.title() + "Client"
 
         self.logger.debug("Using SeedboxSync with sync (%s / %s)" % (protocol, client_class))

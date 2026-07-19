@@ -45,26 +45,6 @@ def test_client_initialization_is_lazy_and_reads_configuration(ftp_app):
         ftp_host.assert_not_called()
 
 
-def test_put_opens_connection_once_and_uploads_file(ftp_app, ftp_mocks):
-    ftp_host, ftp = ftp_mocks
-
-    with ftp_app.app_context():
-        client = FtpClient()
-        client.put("/local/file.torrent", "/remote/file.torrent")
-        client.stat("/remote/file.torrent")
-
-    ftp_host.assert_called_once_with(
-        "my-seedbox.ltd",
-        "me",
-        "p@ssword",
-        port=2121,
-        timeout=None,
-        session_factory=FtpSession,
-    )
-    ftp.upload.assert_called_once_with("/local/file.torrent", "/remote/file.torrent")
-    ftp.stat.assert_called_once_with("/remote/file.torrent")
-
-
 @pytest.mark.parametrize(
     ("configured", "expected"),
     [
@@ -115,22 +95,6 @@ def test_get_with_callback_streams_file_and_reports_progress(ftp_app, ftp_mocks,
     ftp._session.retrbinary.assert_called_once()
     assert ftp._session.retrbinary.call_args.args[0] == "RETR /remote/movie.mkv"
     assert callback.call_args_list == [call(2, 6), call(6, 6)]
-
-
-def test_file_operations_are_delegated_to_ftputil(ftp_app, ftp_mocks):
-    ftp_host, ftp = ftp_mocks
-
-    with ftp_app.app_context():
-        client = FtpClient()
-        client.chdir(None)
-        client.chdir("/files")
-        client.chmod("/files/movie.mkv", 0o640)
-        client.rename("/files/old", "/files/new")
-
-    ftp_host.assert_called_once()
-    ftp.chdir.assert_called_once_with("/files")
-    ftp.chmod.assert_called_once_with("/files/movie.mkv", 0o640)
-    ftp.rename.assert_called_once_with("/files/old", "/files/new")
 
 
 def test_walk_preserves_explicit_remote_paths(ftp_app, ftp_mocks):

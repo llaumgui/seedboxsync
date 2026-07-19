@@ -36,7 +36,7 @@ class Healthchecks(AbstractPingClient):
         if enabled is False:
             self.app.logger.warning('Healthchecks for "%s" disabled by configuration' % sub_command)
         else:
-            base_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url") or ""
+            base_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url", "")
             ping_url = f"{base_url.rstrip('/')}/start"
             self.app.logger.debug("Ping url: %s" % ping_url)
 
@@ -57,7 +57,7 @@ class Healthchecks(AbstractPingClient):
         if enabled is False:
             self.app.logger.warning('Healthchecks for "%s" disabled by configuration' % sub_command)
         else:
-            ping_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url") or ""
+            ping_url = self.app.seedboxsync_config.get("healthchecks_" + sub_command + "_ping_url", "")
             self.app.logger.debug("Ping url: %s" % ping_url)
 
             try:
