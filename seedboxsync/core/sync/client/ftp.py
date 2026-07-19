@@ -76,8 +76,16 @@ class FtpClient(AbstractSyncClient):
         Raises:
             ConnectionError: If connection or authentication fails.
         """
-        if self._client is None:
-            self.app.logger.debug("Init ftputil.FTPHost")
+        if self._client is None or self._client.closed:
+            self.app.logger.debug("Init or reload ftputil.FTPHost")
+
+            # Close inactive connecion
+            if self._client is not None:
+                try:
+                    self._client.close()
+                except Exception:
+                    pass
+
             try:
                 self._client = ftputil.FTPHost(
                     self._host,
