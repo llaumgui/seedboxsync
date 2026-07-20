@@ -50,6 +50,9 @@ def blackhole(dry_run: bool, ping: bool) -> None:
 
     if len(torrents) == 0:
         app.logger.info('No torrent files found in "%s"' % app.seedboxsync_config.get("local_watch_path"))
+        # Call ping.success() if enabled
+        if ping:
+            app.ping.success("sync_blackhole")
         return
 
     for torrent_file in torrents:
