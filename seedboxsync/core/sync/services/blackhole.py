@@ -70,6 +70,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
 
         try:
+            app.sync.chdir(None)   # type: ignore[arg-type]
             app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
 
             # Apply chmod if configured
