@@ -47,7 +47,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v6
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
@@ -132,7 +132,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
     - name: Use Node.js ${{ env.nodeLastVersion }}
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ env.nodeLastVersion }}
     - name: Install Python Dependencies
@@ -281,7 +281,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
         cache: 'pip'
     - name: Use Node.js ${{ env.nodeLastVersion }}
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ env.nodeLastVersion }}
     - name: Install Dependencies
