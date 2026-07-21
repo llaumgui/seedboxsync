@@ -1,19 +1,16 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-A collection of utility functions for SeedboxSync.
-"""
+"""A collection of utility functions for SeedboxSync."""
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 from bcoding import bdecode
 from flask import current_app as app
-from urllib.parse import urlparse
 
 
 def byte_to_gi(bytes_value: float, suffix: str = "B") -> str:
@@ -44,13 +41,13 @@ def get_torrent_infos(torrent_path: str) -> None | str:
     Raises:
         Exception: If the file is not a valid torrent.
     """
-    with open(torrent_path, "rb") as torrent:
+    with Path(torrent_path).open("rb") as torrent:
         torrent_info = None
 
         try:
             torrent_info = bdecode(torrent.read())
-        except Exception as exc:
-            app.logger.error('Not valid torrent: "%s"' + str(exc))
+        except Exception:
+            app.logger.exception("Not valid torrent")
         finally:
             torrent.close()
 
@@ -66,14 +63,14 @@ def is_running_in_docker() -> bool:
 
     """
     # Test mountinfo
-    if os.path.exists("/proc/self/mountinfo"):
-        with open("/proc/self/mountinfo", "r") as f:
+    if Path("/proc/self/mountinfo").exists():
+        with Path("/proc/self/mountinfo").open() as f:
             if "docker" in f.read() or "overlay" in f.read():
                 return True
 
     # Test du cgroup
-    if os.path.exists("/proc/1/cgroup"):
-        with open("/proc/1/cgroup", "r") as f:
+    if Path("/proc/1/cgroup").exists():
+        with Path("/proc/1/cgroup").open() as f:
             lines = f.read()
             if "docker" in lines or "kubepods" in lines:
                 return True
@@ -89,7 +86,6 @@ def get_web_healthcheck_url() -> str:
     Returns:
         str: The healthcheck URL.
     """
-
     explicit_url = os.getenv("HEALTHCHECK_URL")
     if explicit_url:
         return explicit_url.rstrip("/") + "/healthcheck"
@@ -109,7 +105,6 @@ def _healthcheck_url_from_bind(bind: str) -> str:
     Returns:
         str: The healthcheck URL from BIND.
     """
-
     bind = bind.strip()
 
     if bind.startswith("unix:"):

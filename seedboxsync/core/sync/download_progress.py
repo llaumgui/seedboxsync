@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-Callback for tracking and persisting download progress.
-"""
+"""Callback for tracking and persisting download progress."""
 
 from seedboxsync.core import current_app
 from seedboxsync.core.dao import Download
@@ -38,6 +35,7 @@ class DownloadProgress:
         # Persist progress every 50 MiB and when the download completes.
         if transferred == total or transferred - self._last_saved_size >= 50 * 1024 * 1024:
             self._download.local_size = transferred
-            self.app.logger.debug("Download progress: %d / %d (%.2f%%)" % (transferred, total, (transferred / total) * 100 if total > 0 else 0))
+            percent = (transferred / total) * 100 if total > 0 else 0
+            self.app.logger.debug(f"Download progress: {transferred} / {total} ({percent:.2f}%)")
             self._download.save()
             self._last_saved_size = transferred

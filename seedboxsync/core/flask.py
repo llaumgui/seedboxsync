@@ -1,19 +1,19 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from typing import Any, cast
-from importlib import import_module
+"""Flask core initer mobule."""
 from functools import cached_property
-from flask import current_app, Flask
+from importlib import import_module
+from typing import Any, cast
+from flask import Flask, current_app
 from seedboxsync.core import Config
 from seedboxsync.core.exception import PingServiceError, SyncProtocoleError
-from seedboxsync.core.taskmanager import task_manager, Manager
-from seedboxsync.core.sync import AbstractSyncClient
 from seedboxsync.core.ping import AbstractPingClient
+from seedboxsync.core.sync import AbstractSyncClient
+from seedboxsync.core.taskmanager import Manager, task_manager
 
 
 class SeedboxSyncFlask(Flask):
@@ -46,32 +46,32 @@ class SeedboxSyncFlask(Flask):
         """
         Return the configured sync client instance.
 
-
         Returns:
             AbstractSyncClient: Client instance.
         """
         protocol = self.seedboxsync_config.get("seedbox_protocol", "")
         client_class = protocol.title() + "Client"
 
-        self.logger.debug("Using SeedboxSync with sync (%s / %s)" % (protocol, client_class))
+        self.logger.debug(f"Using SeedboxSync with sync ({protocol} / {client_class})")
 
         # Load the client module dynamically
         try:
             client_module = import_module("seedboxsync.core.sync.client." + protocol)
         except ImportError as exc:
-            raise SyncProtocoleError("Unsupported protocol: %s: %s" % (protocol, str(exc)))
+            raise SyncProtocoleError(f"Unsupported protocol: {protocol}: {exc!s}") from exc
 
         # Get the client class from the module
         try:
             transfer_client = getattr(client_module, client_class)
-        except AttributeError:
-            raise SyncProtocoleError('Unsupported protocol module! No class "%s" in module "seedboxsync.core.sync.%s_client"' % (client_class, protocol))
+        except AttributeError as exc:
+            raise SyncProtocoleError(
+                f"Unsupported protocol module! No class \"{client_class}\" in module \"seedboxsync.core.sync.{protocol}_client\"") from exc
 
         # Instantiate the client
         try:
             sync_client = transfer_client()
         except Exception as exc:
-            raise ConnectionError(f"{str(exc)}\nFailed to establish a connection.")
+            raise ConnectionError(f"{exc!s}\nFailed to establish a connection.") from exc
 
         return sync_client  # type: ignore[no-any-return]
 
@@ -86,19 +86,20 @@ class SeedboxSyncFlask(Flask):
         ping_service = "healthchecks"
         client_class = ping_service.title()
 
-        self.logger.debug("Using SeedboxSync with ping (%s / %s)" % (ping_service, client_class))
+        self.logger.debug(f"Using SeedboxSync with ping ({ping_service} / {client_class})")
 
         # Load the client module dynamically
         try:
             client_module = import_module("seedboxsync.core.ping.client." + ping_service)
         except ImportError as exc:
-            raise PingServiceError("Unsupported ping service: %s: %s" % (ping_service, str(exc)))
+            raise PingServiceError(f"Unsupported ping service: {ping_service}: {exc!s}") from exc
 
         # Get the client class from the module
         try:
             ping_client = getattr(client_module, client_class)
-        except AttributeError:
-            raise PingServiceError('Unsupported ping service module! No class "%s" in module "seedboxsync.core.ping.%sclient"' % (client_class, ping_service))
+        except AttributeError as exc:
+            raise PingServiceError(
+                f'Unsupported ping service module! No class "{client_class}" in module "seedboxsync.core.ping.{ping_service}client"') from exc
 
         return ping_client()  # type: ignore[no-any-return]
 

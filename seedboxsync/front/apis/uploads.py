@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from flask_restx import fields, Namespace, reqparse
+"""SeedboxSync api uploads view."""
+
 from typing import Any
+from flask_restx import Namespace, fields, reqparse
 from seedboxsync.core.dao import Torrent
 from seedboxsync.front.apis import Resource
 
@@ -113,7 +114,7 @@ class Uploads(Resource):
 
     @api.doc("get_upload")  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_envelope, code=200, description="Upload element")  # type: ignore[untyped-decorator]
-    def get(self, id: int) -> dict[str, Any]:
+    def get(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Retrieve an uploaded torrent.
 
@@ -126,13 +127,13 @@ class Uploads(Resource):
         try:
             select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(Torrent.id == id).dicts().get()
         except Torrent.DoesNotExist:  # type: ignore[attr-defined]
-            api.abort(404, "Upload {} doesn't exist".format(id))
+            api.abort(404, f"Upload {id} doesn't exist")
 
         return self.build_envelope(select, type="Upload")
 
     @api.doc("delete_upload")  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_message_envelope, code=200, description="Delete upload element")  # type: ignore[untyped-decorator]
-    def delete(self, id: int) -> dict[str, Any]:
+    def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete an uploaded torrent.
 
@@ -144,6 +145,6 @@ class Uploads(Resource):
         """
         count = Torrent.delete().where(Torrent.id == id).execute()
         if count == 0:
-            api.abort(404, "Upload {} doesn't exist".format(id))
+            api.abort(404, f"Upload {id} doesn't exist")
 
-        return self.build_envelope(None, type="Upload", message="Upload {} deleted.".format(id))
+        return self.build_envelope(None, type="Upload", message=f"Upload {id} deleted.")

@@ -1,27 +1,25 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import humanize
-from flask import render_template
-from peewee import fn
+"""SeedboxSync Flask vierw for info."""
 from datetime import datetime
+from flask import render_template
+import humanize
+from peewee import fn
+from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
 from seedboxsync.front.cache import cache
-from seedboxsync.front.views import bp
 from seedboxsync.front.utils import init_flash
-from seedboxsync.__version__ import __version__ as version
+from seedboxsync.front.views import bp
 
 
 @bp.route("/info")
 @cache.cached(timeout=60)
 def info() -> str:
-    """
-    Information page view.
-    """
+    """Information page view."""
     init_flash()
 
     # Download statistics

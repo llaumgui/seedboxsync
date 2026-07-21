@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -7,4 +6,4 @@
 #
 from .abstract_sync_client import AbstractSyncClient, _Callback
 
-__all__ = ["_Callback", "AbstractSyncClient"]
+__all__ = ["AbstractSyncClient", "_Callback"]

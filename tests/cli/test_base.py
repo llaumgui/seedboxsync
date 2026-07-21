@@ -1,7 +1,5 @@
 import logging
-
 import pytest
-
 import seedboxsync
 from seedboxsync.cli import cli
 from seedboxsync.core.db import Database

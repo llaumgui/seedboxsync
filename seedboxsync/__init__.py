@@ -1,27 +1,25 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+from collections.abc import Callable
+from datetime import datetime
 import os
-import humanize
-from seedboxsync.core import Flask
 from flask import Response, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
-from datetime import datetime
-from typing import Callable
-from seedboxsync.core import Config, Database, logger
-from seedboxsync.front.views import bp as bp_frontend, error as error_front
+import humanize
+from seedboxsync.__version__ import (
+    __api_path_version__ as api_path_version,
+    __api_version__ as api_version,
+    __version__ as version,
+)
+from seedboxsync.core import Config, Database, Flask, logger
 from seedboxsync.front.apis import bp as bp_api, error as error_api
 from seedboxsync.front.babel import babel, get_locale
 from seedboxsync.front.cache import cache
-from seedboxsync.__version__ import (
-    __version__ as version,
-    __api_version__ as api_version,
-    __api_path_version__ as api_path_version,
-)
+from seedboxsync.front.views import bp as bp_frontend, error as error_front
 
 __version__ = version
 

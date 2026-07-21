@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""SeedboxSync Flask vierw for errors."""
 from flask import render_template
 from flask_babel import gettext
 from werkzeug.exceptions import HTTPException
@@ -13,6 +13,7 @@ from werkzeug.exceptions import HTTPException
 def error(e: Exception) -> tuple[str, int | None]:
     """
     Global error handler.
+
     Args:
         e (Exception): The exception.
 

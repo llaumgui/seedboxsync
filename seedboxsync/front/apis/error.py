@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import uuid
-from flask import jsonify, Response
-from flask_babel import gettext
-from werkzeug.exceptions import BadRequest, HTTPException, NotFound
+"""SeedboxSync api error module."""
+
 from datetime import datetime
 from typing import Any
+import uuid
+from flask import Response, jsonify
+from flask_babel import gettext
+from werkzeug.exceptions import BadRequest, HTTPException, NotFound
 from seedboxsync.front.apis import api
 
 

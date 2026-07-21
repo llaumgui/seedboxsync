@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -13,10 +12,10 @@ providing methods for file operations and session management on a remote server.
 """
 
 from abc import ABCMeta, abstractmethod
-from typing import Callable
-from typing_extensions import TypeAlias
+from collections.abc import Callable
+from typing import TypeAlias
 
-_Callback: TypeAlias = Callable[[int, int], object]
+type _Callback = Callable[[int, int], object]
 
 
 class AbstractSyncClient:  # pragma: no cover
@@ -31,10 +30,7 @@ class AbstractSyncClient:  # pragma: no cover
 
     @abstractmethod
     def __init__(self) -> None:
-        """
-        Initialize the transport client.
-        """
-        pass
+        """Initialize the transport client."""
 
     @abstractmethod
     def put(self, local_path: str, remote_path: str) -> None:
@@ -46,7 +42,6 @@ class AbstractSyncClient:  # pragma: no cover
             remote_path (str): Destination path on the server including filename.
                                Specifying only a directory must raise an error.
         """
-        pass
 
     @abstractmethod
     def get(
@@ -63,7 +58,6 @@ class AbstractSyncClient:  # pragma: no cover
             local_path (str): Destination path on the local host.
             progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
-        pass
 
     @abstractmethod
     def stat(self, filepath: str) -> None:
@@ -76,7 +70,6 @@ class AbstractSyncClient:  # pragma: no cover
         Args:
             filepath (str): Path to the remote file.
         """
-        pass
 
     @abstractmethod
     def chdir(self, path: str) -> None:
@@ -86,7 +79,6 @@ class AbstractSyncClient:  # pragma: no cover
         Args:
             path (str, optional): New working directory path. Defaults to None.
         """
-        pass
 
     @abstractmethod
     def chmod(self, path: str, mode: int) -> None:
@@ -99,7 +91,6 @@ class AbstractSyncClient:  # pragma: no cover
             path (str): Path to the file on the remote server.
             mode (int): New permissions to set.
         """
-        pass
 
     @abstractmethod
     def rename(self, old_path: str, new_path: str) -> None:
@@ -110,11 +101,7 @@ class AbstractSyncClient:  # pragma: no cover
             old_path (str): Existing path of the file or folder.
             new_path (str): New path or name for the file or folder.
         """
-        pass
 
     @abstractmethod
     def close(self) -> None:
-        """
-        Close the transport session and release resources.
-        """
-        pass
+        """Close the transport session and release resources."""

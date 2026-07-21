@@ -1,25 +1,24 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from typing import Any, Iterable
+"""SeedboxSync Flask vierw for settings."""
+from collections.abc import Iterable
+from typing import Any
 from flask import flash, render_template, request
 from flask.wrappers import Request
 from flask_babel import gettext
-from seedboxsync.core import current_app as app, Config
+from seedboxsync.core import Config, current_app as app
 from seedboxsync.core.dao import SeedboxSync
-from seedboxsync.front.views import bp
 from seedboxsync.front.utils import init_flash
+from seedboxsync.front.views import bp
 
 
 @bp.route("/settings", methods=("GET", "POST"))
 def settings() -> str:
-    """
-    Manage settings: load configuration, display form, persist changes.
-    """
+    """Manage settings: load configuration, display form, persist changes."""
     init_flash()
     saved = False
 
@@ -49,12 +48,11 @@ def settings() -> str:
 # -------------------------
 def _required_form_fields() -> Iterable[str]:
     """
-    List of all requitred fields
+    List of all requitred fields.
 
     Returns:
         True if the value represents an enabled/true state, otherwise False.
     """
-
     return [
         "seedbox_host",
         "seedbox_port",
@@ -70,7 +68,7 @@ def _required_form_fields() -> Iterable[str]:
 
 def _build_form() -> dict[str, Any]:
     """
-    Build form fields
+    Build form fields.
 
     Returns:
         Dictionnary of fields.
@@ -105,16 +103,14 @@ def _as_bool(value: str | None) -> bool:
 
 
 def _save_form(req: Request) -> None:
-    """
-    Save form data to the configuration file.
-    """
+    """Save form data to the configuration file."""
     seedbox_timeout_enabled = req.form.get("seedbox_timeout_enabled", "0") == "1"
     seedbox_chmod_enabled = req.form.get("seedbox_chmod_enabled", "0") == "1"
     fields = app.seedboxsync_config
     config_to_db: list[dict[str, str]] = []
     config_to_update: dict[str, Any] = {}
 
-    for key in fields.keys():
+    for key in fields:
         value: str | bool
         if key in req.form:
             value = str(req.form[key] or "").strip()

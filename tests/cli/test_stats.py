@@ -1,5 +1,4 @@
 import pytest
-
 from seedboxsync.cli import cli
 from seedboxsync.core.dao import Download
 

@@ -1,27 +1,22 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2025-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-A module to manage SeedboxSync configuration from Database or environment variables.
-"""
+"""A module to manage SeedboxSync configuration from Database or environment variables."""
 
+from typing import Any, ClassVar
 from flask import Flask
-from typing import Any
-from seedboxsync.core.dao import typed_peewee_dicts, SeedboxSync
+from seedboxsync.core.dao import SeedboxSync, typed_peewee_dicts
 
 
-class Config(object):
-    """
-    Config.
-    """
+class Config:
+    """Config."""
 
     DB_CONFIG_PREFIX = "config_"
     CONFIG_NAMESPACE = "SEEDBOXSYNC_"
-    DEFAULT_CONFIG: dict[str, Any] = {
+    DEFAULT_CONFIG: ClassVar[dict[str, Any]] = {
         CONFIG_NAMESPACE + "SYNC_BLACKHOLE_ENABLED": False,
         CONFIG_NAMESPACE + "SYNC_SEEDBOX_ENABLED": False,
         CONFIG_NAMESPACE + "SEEDBOX_HOST": "my-seedbox.ltd",
@@ -46,7 +41,7 @@ class Config(object):
         CONFIG_NAMESPACE + "HEALTHCHECKS_SYNC_BLACKHOLE_PING_URL": "",
     }
 
-    def __init__(self, app: Flask, test_config: dict[str, str] | None = None):
+    def __init__(self, app: Flask, test_config: dict[str, str] | None = None) -> None:
         """
         Initialize a new Config instance.
 
@@ -54,7 +49,6 @@ class Config(object):
             app (Flask): The Flask application to configure.
             test_config (dict[str, str] | None): Configuration for testing.
         """
-
         self.app = app
         self.app.config.from_prefixed_env()  # Set from env prefixed by 'FLASK_'
 
@@ -77,7 +71,6 @@ class Config(object):
     @staticmethod
     def _load_config_from_database(app: Flask) -> dict[str, str]:
         """Load application configuration from the database."""
-
         config = Config.DEFAULT_CONFIG.copy()
 
         db_config = typed_peewee_dicts(
@@ -146,5 +139,4 @@ class Config(object):
     @staticmethod
     def reload_config(app: Flask) -> dict[str, str]:
         """Reload application configuration from the database."""
-
         return Config._load_config_from_database(app)

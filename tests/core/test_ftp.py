@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock, call, patch
-
 import pytest
-
 from seedboxsync.core.sync.client.ftp import FtpClient, FtpSession
 
 

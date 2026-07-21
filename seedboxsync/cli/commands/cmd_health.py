@@ -1,22 +1,19 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-All commands related to health checks in SeedboxSync.
-"""
+"""All commands related to health checks in SeedboxSync."""
 
-import click
-from urllib.request import urlopen
-from urllib.error import URLError
 from datetime import datetime, timedelta
+from urllib.error import URLError
+from urllib.request import urlopen
+import click
 from seedboxsync.__version__ import __version__ as version
+from seedboxsync.cli import Context, pass_context
 from seedboxsync.core.dao import SeedboxSync, TaskStatus
 from seedboxsync.core.utils import get_web_healthcheck_url
-from seedboxsync.cli import pass_context, Context
 
 
 @click.command("health")

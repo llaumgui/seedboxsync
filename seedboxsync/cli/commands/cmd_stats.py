@@ -1,19 +1,16 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-All commands related to statistics operations in SeedboxSync.
-"""
+"""All commands related to statistics operations in SeedboxSync."""
 
 import click
 import humanize
 from peewee import fn
-from seedboxsync.cli import group, pass_context, Context
-from seedboxsync.core.dao import typed_peewee_dicts, Download
+from seedboxsync.cli import Context, group, pass_context
+from seedboxsync.core.dao import Download, typed_peewee_dicts
 
 
 @group(
@@ -30,7 +27,6 @@ def cli(ctx: Context) -> None:
     Args:
         ctx (Context): The Click context object.
     """
-
     if ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())
         click.echo()

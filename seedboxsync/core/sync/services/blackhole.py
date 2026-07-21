@@ -1,21 +1,19 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-SeedboxSync sync service for blackhole.
-"""
+"""SeedboxSync sync service for blackhole."""
 
 import glob
 import os
+from pathlib import Path
 from paramiko import SSHException
+from seedboxsync.core import current_app as app, fs
 from seedboxsync.core.dao import Torrent
 from seedboxsync.core.taskmanager import track_taskstatus
 from seedboxsync.core.utils import get_torrent_infos
-from seedboxsync.core import fs, current_app as app
 
 LOCK_NAME = "sync-blackhole"
 
@@ -36,8 +34,8 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         app.logger.info("Blackhole synchronization task is disabled")
         return
 
-    app.logger.debug('sync blackhole dry-run: "%s"' % dry_run)
-    app.logger.debug('sync blackhole ping: "%s"' % ping)
+    app.logger.debug(f'sync blackhole dry-run: "{dry_run}"')
+    app.logger.debug(f'sync blackhole ping: "{ping}"')
 
     # Call ping.start() if enabled
     if ping:
@@ -45,11 +43,11 @@ def blackhole(dry_run: bool, ping: bool) -> None:
 
     # Gather all torrent files
     local_watch_path = app.seedboxsync_config.get("local_watch_path", "")
-    app.logger.debug('Scanning for torrent files in "%s"' % local_watch_path)
+    app.logger.debug(f'Scanning for torrent files in "{local_watch_path}"')
     torrents = glob.glob(fs.join(fs.abspath(local_watch_path), "*.torrent"))
 
     if len(torrents) == 0:
-        app.logger.info('No torrent files found in "%s"' % app.seedboxsync_config.get("local_watch_path"))
+        app.logger.info('No torrent files found in "{}"'.format(app.seedboxsync_config.get("local_watch_path")))
         # Call ping.success() if enabled
         if ping:
             app.ping.success("sync_blackhole")
@@ -60,14 +58,14 @@ def blackhole(dry_run: bool, ping: bool) -> None:
 
         # Dry-run mode
         if dry_run:
-            app.logger.info('Dry-run: not uploading torrent "%s"' % torrent_name)
+            app.logger.info(f'Dry-run: not uploading torrent "{torrent_name}"')
             continue
 
         tmp_path = app.seedboxsync_config.get("seedbox_tmp_path", "")
         watch_path = app.seedboxsync_config.get("seedbox_watch_path", "")
 
-        app.logger.info('Upload torrent: "%s"' % torrent_name)
-        app.logger.debug('Upload "%s" to "%s"' % (torrent_file, tmp_path))
+        app.logger.info(f'Upload torrent: "{torrent_name}"')
+        app.logger.debug(f'Upload "{torrent_file}" to "{tmp_path}"')
 
         try:
             app.sync.chdir(None)   # type: ignore[arg-type]
@@ -76,11 +74,11 @@ def blackhole(dry_run: bool, ping: bool) -> None:
             # Apply chmod if configured
             chmod = app.seedboxsync_config.get("seedbox_chmod", False)
             if isinstance(chmod, str):
-                app.logger.debug("Change permissions to %s" % chmod)
+                app.logger.debug(f"Change permissions to {chmod}")
                 app.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
 
             # Move file from tmp to watch directory
-            app.logger.debug('Move from "%s" to "%s"' % (tmp_path, watch_path))
+            app.logger.debug(f'Move from "{tmp_path}" to "{watch_path}"')
             app.sync.rename(
                 os.path.join(tmp_path, torrent_name),
                 os.path.join(watch_path, torrent_name),
@@ -94,13 +92,13 @@ def blackhole(dry_run: bool, ping: bool) -> None:
                 torrent.save()
 
                 # Remove local torrent file
-                app.logger.debug('Remove local torrent "%s"' % torrent_file)
-                os.remove(torrent_file)
+                app.logger.debug(f'Remove local torrent "{torrent_file}"')
+                Path(torrent_file).unlink()
             else:
-                app.logger.warning('Rename local "%s" to .torrent.fail' % torrent_file)
-                os.rename(torrent_file, torrent_file + ".fail")
+                app.logger.warning(f'Rename local "{torrent_file}" to .torrent.fail')
+                Path(torrent_file).rename(torrent_file + ".fail")
         except SSHException as exc:
-            app.logger.warning("SSH client exception > %s" % str(exc))
+            app.logger.warning(f"SSH client exception > {exc!s}")
 
     # Call ping.success() if enabled
     if ping:

@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""SeedboxSync api package."""
+
 from flask import Blueprint
 from flask_restx import Api
 from seedboxsync.__version__ import (
-    __api_version__ as api_version,
     __api_path_version__ as api_path_version,
+    __api_version__ as api_version,
 )
-from seedboxsync.front.apis.resources import DateTimeOrZero, Resource
+
+from seedboxsync.front.apis.resources import DateTimeOrZero, Resource  # isort: skip
 from seedboxsync.front.apis.downloads import api as nsDownloads
 from seedboxsync.front.apis.taskstatus import api as nsTaskStatus
 from seedboxsync.front.apis.uploads import api as nsUploads

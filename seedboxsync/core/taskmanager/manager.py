@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""Taskmanager Manager module."""
 
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
-
 from flask import Flask
 from huey import SqliteHuey
 

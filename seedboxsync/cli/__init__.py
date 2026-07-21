@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import click
 import logging
-import seedboxsync
+import click
 from flask.cli import with_appcontext
+import seedboxsync
 from seedboxsync import create_app
-from .cli import Cli, command, group, pass_context
 from seedboxsync.cli.context import Context
 from seedboxsync.core import Database
+from .cli import Cli, command, group, pass_context
 
 __all__ = [
     "Cli",
@@ -25,13 +24,10 @@ __all__ = [
 CONTEXT_SETTINGS = {
     "help_option_names": ["-h", "--help"],
 }
-VERSION_BANNER = """Script for performing sync operations between your NAS and your seedbox.
+VERSION_BANNER = f"""Script for performing sync operations between your NAS and your seedbox.
 
-SeedboxSync %s
-SeedboxSync database %s""" % (
-    seedboxsync.__version__,
-    Database.DATABASE_VERSION,
-)
+SeedboxSync {seedboxsync.__version__}
+SeedboxSync database {Database.DATABASE_VERSION}"""
 
 
 @click.group(

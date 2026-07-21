@@ -22,9 +22,9 @@ ENV \
 WORKDIR /src
 COPY . /src
 
-RUN apk add --no-cache make && \
+RUN apk add --no-cache just && \
     pip install --no-cache-dir -e .[dev] && \
-    make i18n-compile
+    just i18n-compile
 
 
 ################################################################################
@@ -73,7 +73,7 @@ COPY . /app
 RUN pip install --no-cache-dir -e . && \
     pip install --no-cache-dir gunicorn && \
     # Cleanup \
-    rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/Makefile
+    rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/justfile
 COPY --from=builder-node /src/seedboxsync/front/static/dist /app/seedboxsync/front/static/dist
 COPY --from=builder-python /src/seedboxsync/front/translations /app/seedboxsync/front/translations
 

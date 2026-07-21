@@ -2,10 +2,8 @@ import socket
 import stat
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
-
 import paramiko
 import pytest
-
 from seedboxsync.core.sync.client.sftp import SftpClient
 
 

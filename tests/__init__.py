@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2025-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #

@@ -1,21 +1,19 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
-"""
-Setup logger for Flask.
-"""
+"""Setup logger for Flask."""
 
 import logging
+from typing import ClassVar
 import click
 
 
 class ColorFormatter(logging.Formatter):
     """Format log records with colors based on their level."""
 
-    COLORS = {
+    COLORS: ClassVar[dict[int, str]] = {
         logging.DEBUG: "bright_black",
         logging.INFO: "blue",
         logging.WARNING: "yellow",

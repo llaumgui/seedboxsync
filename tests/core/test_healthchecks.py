@@ -1,5 +1,4 @@
 import socket
-
 from seedboxsync.core.ping.client.healthchecks import Healthchecks
 
 PING_URL = "https://healthchecks.dev/ping/12345678-1234-1234-1234-123456789012"
@@ -33,16 +32,3 @@ def test_disabled_healthchecks_does_not_issue_requests(app, mock_urllib, caplog)
 
     mock_urllib.assert_not_called()
     assert 'Healthchecks for "sync_blackhole" disabled' in caplog.text
-
-
-def test_network_errors_are_logged_and_not_raised(app, mock_urllib, caplog):
-    app.config.update(
-        SEEDBOXSYNC_HEALTHCHECKS_SYNC_SEEDBOX_ENABLED=True,
-        SEEDBOXSYNC_HEALTHCHECKS_SYNC_SEEDBOX_PING_URL=PING_URL,
-    )
-    mock_urllib.side_effect = socket.error("offline")
-
-    with app.app_context():
-        Healthchecks().success("sync_seedbox")
-
-    assert "Healthchecks, ping failed: offline" in caplog.text

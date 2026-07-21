@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import uuid
-from flask_restx import fields, Model, Namespace, Resource as RestXResource
-from typing import Any
+"""SeedboxSync front RestXResource module."""
+
 from datetime import datetime
+from typing import Any
+import uuid
+from flask_restx import Model, Namespace, Resource as RestXResource, fields
 
 
 class Resource(RestXResource):  # type: ignore[misc]
@@ -33,7 +34,7 @@ class Resource(RestXResource):  # type: ignore[misc]
         """
         if limit < 5:
             return 5
-        elif limit > 1000:
+        if limit > 1000:
             return 1000
         return limit
 
@@ -41,7 +42,7 @@ class Resource(RestXResource):  # type: ignore[misc]
         self,
         data: Any,
         *,
-        type: str = "about:blank",
+        type: str = "about:blank",  # noqa: A002
         status_code: int = 200,
         message: str | None = None,
         data_total: int | None = None,
@@ -92,6 +93,7 @@ class Resource(RestXResource):  # type: ignore[misc]
             nested_model (Model): The Flask-RestX model representing the resource.
             as_list (bool): If True, the 'data' field will be a list of nested resources.
             as_message (bool): The response is a message only.
+
         Returns:
             Model: A new Flask-RestX model representing the envelope.
         """

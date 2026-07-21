@@ -1,29 +1,26 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-Transport client using FTP protocol.
-"""
-
+"""Transport client using FTP protocol."""
+from collections.abc import Generator
+import contextlib
 import ftplib
+from pathlib import Path
+from typing import Any
 import ftputil
 import ftputil.error
-from typing import Any, Generator, List, Tuple
 from seedboxsync.core import Flask, current_app
+from seedboxsync.core.exception import SeedboxsyncConnectionError
 from seedboxsync.core.sync import AbstractSyncClient, _Callback
-from seedboxsync.core.exception import ConnectionError
 
 
 class FtpSession(ftplib.FTP):
-    """
-    FTP session factory for ftputil with explicit port and timeout support.
-    """
+    """FTP session factory for ftputil with explicit port and timeout support."""
 
-    def __init__(self, host: str, user: str, password: str, port: int = 21, timeout: float = -999):
+    def __init__(self, host: str, user: str, password: str, port: int = 21, timeout: float = -999) -> None:
         """
         Connect and authenticate an FTP session.
 
@@ -74,17 +71,15 @@ class FtpClient(AbstractSyncClient):
         Initialize the FTP client if not already connected.
 
         Raises:
-            ConnectionError: If connection or authentication fails.
+            SeedboxsyncConnectionError: If connection or authentication fails.
         """
         if self._client is None or self._client.closed:
             self.app.logger.debug("Init or reload ftputil.FTPHost")
 
             # Close inactive connecion
             if self._client is not None:
-                try:
+                with contextlib.suppress(Exception):
                     self._client.close()
-                except Exception:
-                    pass
 
             try:
                 self._client = ftputil.FTPHost(
@@ -102,14 +97,12 @@ class FtpClient(AbstractSyncClient):
                 EOFError,
                 ValueError,
             ) as exc:
-                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. " "Ensure the host, port, login and password are correct.")
+                raise SeedboxsyncConnectionError(f"{exc!s}\nFailed to establish a connection. Ensure the host, port, login and password are correct.") from exc
 
         return self._client
 
     def _normalize_timeout(self) -> float | None:
-        """
-        Convert the configured timeout into a socket-compatible value.
-        """
+        """Convert the configured timeout into a socket-compatible value."""
         if self._timeout is False or self._timeout is None:
             return None
 
@@ -154,9 +147,9 @@ class FtpClient(AbstractSyncClient):
 
         total_size = client.stat(remote_path).st_size
         transferred = 0
-        ftp_session = client._session  # noqa: SLF001 - ftputil internal session used to access retrbinary.
+        ftp_session = client._session
 
-        with open(local_path, "wb") as local_file:
+        with Path(local_path).open("wb") as local_file:
 
             def on_block(data: bytes) -> None:
                 nonlocal transferred
@@ -215,7 +208,7 @@ class FtpClient(AbstractSyncClient):
         client = self._connect_before()
         client.rename(old_path, new_path)
 
-    def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:
+    def walk(self, remote_path: str) -> Generator[tuple[str, list[str], list[str]]]:
         """
         Walk through remote directories, yielding paths, folders, and files.
 
@@ -223,7 +216,7 @@ class FtpClient(AbstractSyncClient):
             remote_path (str): Remote directory to traverse.
 
         Yields:
-            Tuple[str, List[str], List[str]]: (current_path, folders, files)
+            tuple[str, list[str], list[str]]: (current_path, folders, files)
         """
         client = self._connect_before()
         walk_path = remote_path if remote_path != "" else client.curdir
@@ -254,9 +247,7 @@ class FtpClient(AbstractSyncClient):
         return path
 
     def close(self) -> None:
-        """
-        Close the FTP client and underlying connection.
-        """
+        """Close the FTP client and underlying connection."""
         if self._client is not None:
             self.app.logger.debug("Close ftputil.FTPHost client")
             self._client.close()

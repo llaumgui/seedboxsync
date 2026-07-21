@@ -1,23 +1,21 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-SeedboxSync sync service for seedbox.
-"""
+"""SeedboxSync sync service for seedbox."""
 
 import datetime
 import os
+from pathlib import Path
 import re
 from paramiko import SSHException
-from seedboxsync.core import fs, current_app as app
+from seedboxsync.core import current_app as app, fs
 from seedboxsync.core.dao import Download
-from seedboxsync.core.taskmanager import track_taskstatus
-from seedboxsync.core.sync.download_progress import DownloadProgress
 from seedboxsync.core.exception import SeedboxSyncConfigurationError
+from seedboxsync.core.sync.download_progress import DownloadProgress
+from seedboxsync.core.taskmanager import track_taskstatus
 
 LOCK_NAME = "sync-seedbox"
 
@@ -40,9 +38,9 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
         app.logger.info("Seedbox synchronization task is disabled")
         return
 
-    app.logger.debug('sync seedbox dry-run: "%s"' % dry_run)
-    app.logger.debug('sync seeddbox only-store: "%s"' % only_store)
-    app.logger.debug('sync seedbox ping: "%s"' % ping)
+    app.logger.debug(f'sync seedbox dry-run: "{dry_run}"')
+    app.logger.debug(f'sync seeddbox only-store: "{only_store}"')
+    app.logger.debug(f'sync seedbox ping: "{ping}"')
 
     # Call ping.start() if enabled
     if ping:
@@ -50,7 +48,7 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
 
     finished_path = app.seedboxsync_config.get("seedbox_finished_path", "")
     part_suffix = app.seedboxsync_config.get("seedbox_part_suffix")
-    app.logger.debug('Scanning files in "%s"' % finished_path)
+    app.logger.debug(f'Scanning files in "{finished_path}"')
 
     # Walk through all files on the seedbox
     try:
@@ -58,27 +56,27 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
             app.sync.chdir(None)   # type: ignore[arg-type]
             app.sync.chdir(finished_path)
         except FileNotFoundError as exc:
-            app.logger.error(f"{str(exc)}\nFailed to scan directory: {finished_path}")
+            app.logger.error(f"{exc!s}\nFailed to scan directory: {finished_path}")
             return
 
         for walker in app.sync.walk(""):  # type: ignore[attr-defined]
             for filename in walker[2]:
                 filepath = os.path.join(walker[0], filename)
-                if os.path.splitext(filename)[1] == part_suffix:
-                    app.logger.debug('Skipping part file "%s"' % filename)
+                if Path(filename).suffix == part_suffix:
+                    app.logger.debug(f'Skipping part file "{filename}"')
                 elif Download.is_already_download(filepath):
-                    app.logger.debug('Skipping already downloaded file "%s"' % filename)
+                    app.logger.debug(f'Skipping already downloaded file "{filename}"')
                 elif __exclude_by_pattern(filepath):
-                    app.logger.debug('Skipping excluded file "%s"' % filename)
+                    app.logger.debug(f'Skipping excluded file "{filename}"')
                 else:
                     if dry_run:
-                        app.logger.info('Dry-run: not downloading "%s"' % filepath)
+                        app.logger.info(f'Dry-run: not downloading "{filepath}"')
                         continue
 
                     __get_file(filepath, only_store)
 
-    except (IOError, FileNotFoundError) as exc:
-        app.logger.error('SeedboxSyncError > "%s"' % exc)
+    except (OSError, FileNotFoundError) as exc:
+        app.logger.error(f'SeedboxSyncError > "{exc}"')
 
     # Call ping.success() if enabled
     if ping:
@@ -105,8 +103,8 @@ def __exclude_by_pattern(filepath: str) -> bool:
 
     try:
         return re.search(pattern, filepath) is not None
-    except re.error:
-        raise SeedboxSyncConfigurationError("Invalid configuration for exclude_syncing! See https://docs.python.org/3/library/re.html")
+    except re.error as exc:
+        raise SeedboxSyncConfigurationError("Invalid configuration for exclude_syncing! See https://docs.python.org/3/library/re.html") from exc
 
 
 def __get_file(filepath: str, only_store: bool) -> None:
@@ -129,32 +127,32 @@ def __get_file(filepath: str, only_store: bool) -> None:
     # Create local directory tree if necessary
     if not only_store:
         fs.ensure_dir_exists(local_path)
-    app.logger.debug('Download: "%s" to "%s"' % (filepath, local_path))
+    app.logger.debug(f'Download: "{filepath}" to "{local_path}"')
 
     try:
         seedbox_size = app.sync.stat(filepath).st_size  # type: ignore[attr-defined]
         if seedbox_size == 0:
-            app.logger.warning('Empty file: "%s" (%s)' % (filepath, str(seedbox_size)))
+            app.logger.warning(f'Empty file: "{filepath}" ({seedbox_size!s})')
 
         download = Download.create(path=filepath, seedbox_size=seedbox_size)
         download.save()
 
         if not only_store:
-            app.logger.info('Downloading "%s"' % filepath)
+            app.logger.info(f'Downloading "{filepath}"')
             progress_callback = DownloadProgress(download)
             app.sync.get(filepath, local_filepath_part, progress_callback=progress_callback)
-            local_size = os.stat(local_filepath_part).st_size
+            local_size = Path(local_filepath_part).stat().st_size
 
             if local_size == 0 or local_size != seedbox_size:
-                app.logger.error('Download failed: "%s" (%s/%s)' % (filepath, str(local_size), str(seedbox_size)))
+                app.logger.error(f'Download failed: "{filepath}" ({local_size!s}/{seedbox_size!s})')
 
-            os.rename(local_filepath_part, local_filepath)
+            Path(local_filepath_part).rename(local_filepath)
         else:
-            app.logger.info('Marking as downloaded "%s"' % filepath)
+            app.logger.info(f'Marking as downloaded "{filepath}"')
             local_size = seedbox_size
 
         download.local_size = local_size
         download.finished = datetime.datetime.now()
         download.save()
     except SSHException as exc:
-        app.logger.error("Download failed: %s" % str(exc))
+        app.logger.error(f"Download failed: {exc!s}")

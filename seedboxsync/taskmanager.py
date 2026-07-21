@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-
-import os
+"""SeedboxSync sync service for seedbox."""
 import logging
+import os
 from typing import Any
 from seedboxsync import create_app
 from seedboxsync.core import Config
@@ -23,11 +22,13 @@ with app.app_context():
 
     @huey.on_startup()  # type: ignore[untyped-decorator]
     def flush() -> None:
+        """Flush queue on startup."""
         app.logger.debug("Flushing old tasks from queue...")
         huey.flush()
 
     @huey.pre_execute()  # type: ignore[untyped-decorator]
     def setup_worker_logging(task: Any) -> None:
+        """Configure the Huey logger from Flask."""
         huey_logger = logging.getLogger("huey")
         huey_logger.handlers = []
         for handler in app.logger.handlers:
@@ -35,6 +36,7 @@ with app.app_context():
 
     @huey.pre_execute()  # type: ignore[untyped-decorator]
     def reload_config(task: Any) -> None:
+        """Reload Flask DB config."""
         config = Config.reload_config(app)
         app.config.from_mapping(config)
 

@@ -1,17 +1,18 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from flask_restx import fields, inputs, Namespace, reqparse
-from peewee import fn
+"""SeedboxSync api error module."""
+
 from typing import Any
-from seedboxsync.front.cache import cache
-from seedboxsync.core.dao import typed_peewee_dicts, Download
-from seedboxsync.front.apis import DateTimeOrZero, Resource
+from flask_restx import Namespace, fields, inputs, reqparse
+from peewee import fn
+from seedboxsync.core.dao import Download, typed_peewee_dicts
 from seedboxsync.core.utils import byte_to_gi
+from seedboxsync.front.apis import DateTimeOrZero, Resource
+from seedboxsync.front.cache import cache
 
 api = Namespace("downloads", description="Operations related to download management")
 
@@ -209,17 +210,12 @@ class DownloadsList(Resource):
 
 @api.route("/progress")
 class DownloadsProgress(Resource):
-    """
-    Endpoint for managing downloads progress.
-    """
+    """Endpoint for managing downloads progress."""
 
     @api.doc("delete_downloads_progress")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Downloads in progress deleted")  # type: ignore[untyped-decorator]
     def delete(self) -> dict[str, Any]:
-        """
-        Delete progress downloads.
-        """
-
+        """Delete progress downloads."""
         count = Download.delete().where(Download.finished == 0).execute()
         return self.build_envelope(None, type="Download", message=f"{count} download(s) deleted.")
 
@@ -236,7 +232,7 @@ class Downloads(Resource):
 
     @api.doc("get_download")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_envelope, code=200, description="Download element")  # type: ignore[untyped-decorator]
-    def get(self, id: int) -> dict[str, Any]:
+    def get(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Retrieve a download.
 
@@ -267,13 +263,13 @@ class Downloads(Resource):
                 .get()
             )
         except Download.DoesNotExist:  # type: ignore[attr-defined]
-            api.abort(404, "Download {} doesn't exist".format(id))
+            api.abort(404, f"Download {id} doesn't exist")
 
         return self.build_envelope(select, type="Download")
 
     @api.doc("delete_download")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Delete download element")  # type: ignore[untyped-decorator]
-    def delete(self, id: int) -> dict[str, Any]:
+    def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete a download.
 
@@ -285,16 +281,14 @@ class Downloads(Resource):
         """
         count = Download.delete().where(Download.id == id).execute()
         if count == 0:
-            api.abort(404, "Download {} doesn't exist".format(id))
+            api.abort(404, f"Download {id} doesn't exist")
 
-        return self.build_envelope(None, type="Download", message="Download {} deleted.".format(id))
+        return self.build_envelope(None, type="Download", message=f"Download {id} deleted.")
 
 
 @api.route("/stats/month")
 class DownloadsStatsByMonth(Resource):
-    """
-    Endpoint to retrieve monthly download statistics.
-    """
+    """Endpoint to retrieve monthly download statistics."""
 
     @cache.cached(timeout=3600)
     @api.doc("stats_downloads_by_month")  # type: ignore[untyped-decorator]
@@ -310,9 +304,7 @@ class DownloadsStatsByMonth(Resource):
 
 @api.route("/stats/year")
 class DownloadsStatsByYear(Resource):
-    """
-    Endpoint to retrieve yearly download statistics.
-    """
+    """Endpoint to retrieve yearly download statistics."""
 
     @cache.cached(timeout=3600)
     @api.doc("stats_downloads_by_year")  # type: ignore[untyped-decorator]

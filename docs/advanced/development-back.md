@@ -8,19 +8,20 @@ This section covers development for the **SeedboxSync backend**.
 ## Tech Stack
 
 * **Python 3**
-* **Click** for CLI framework
-* **Peewee** ORM
+* **[Click(https://click.palletsprojects.com/en/stable/)]** for CLI framework
+* **[Peewee](https://docs.peewee-orm.com/en/latest/)** ORM
+* **[just](https://github.com/casey/just)** as task launcher
 
 ## Installation
 
 Create a Python virtual environment and install dependencies:
 
 ```bash
-make virtualenv
+just virtualenv
 source env/bin/activate
-make run-taskmanager
+just run-taskmanager
 ```
 
 ## Development Workflow
 
-The project includes several helpers in the `Makefile` to streamline common development tasks (e.g., running the app, linting, testing).
+The project includes several helpers in the `justfile` to streamline common development tasks (e.g., running the app, linting, testing).

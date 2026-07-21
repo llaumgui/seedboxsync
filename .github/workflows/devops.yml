@@ -24,8 +24,9 @@ jobs:
       uses: actions/checkout@v7
     - name: Install Dependencies
       run: pip install -e ".[dev]"
-    - name: Make all tests with make
-      run: make test-ci
+    - uses: taiki-e/install-action@just
+    - name: Make all tests with just
+      run: just test-ci
     - uses: actions/upload-artifact@v7
       with:
         name: coverage-${{ matrix.python-version }}
@@ -134,8 +135,9 @@ jobs:
       run: pip install -e ".[dev]"
     - name: Install Node Dependencies
       run: npm install
+    - uses: taiki-e/install-action@just
     - name: Package
-      run: make dist
+      run: just dist
     - name: Archive package
       uses: actions/upload-artifact@v7
       with:
@@ -282,8 +284,9 @@ jobs:
       run: pip install -e ".[dev]"
     - name: Install Node Dependencies
       run: npm install
+    - uses: taiki-e/install-action@just
     - name: Package
-      run: make dist
+      run: just dist
     - name: Create GitHub release
       id: create_release
       uses: actions/create-release@v1

@@ -1,7 +1,5 @@
 from unittest.mock import patch
-
 import click
-
 from seedboxsync.cli import cli
 from seedboxsync.cli.cli import Cli, Command, Group
 from seedboxsync.core.dao import SeedboxSync

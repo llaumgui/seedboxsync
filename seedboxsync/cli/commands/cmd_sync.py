@@ -1,24 +1,25 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-All commands related to synchronization operations in SeedboxSync.
-"""
+"""All commands related to synchronization operations in SeedboxSync."""
 
 import click
 from huey.exceptions import TaskLockedException
-from seedboxsync.core.sync.services import BLACKHOLE_LOCK_NAME, SEEDBOX_LOCK_NAME, blackhole as blackhole_service, seedbox as seedbox_service
-from seedboxsync.cli import group, pass_context, Context
+from seedboxsync.cli import Context, group, pass_context
+from seedboxsync.core.sync.services import (
+    BLACKHOLE_LOCK_NAME,
+    SEEDBOX_LOCK_NAME,
+    blackhole as blackhole_service,
+    seedbox as seedbox_service,
+)
 
 
 @group("sync", help="Run synchronization operations.")  # type: ignore[untyped-decorator]
 def cli() -> None:
     """Empty function for Click sub commands."""
-    pass
 
 
 @cli.command("blackhole", help="Sync torrent from blackhole to seedbox.")  # type: ignore[untyped-decorator]

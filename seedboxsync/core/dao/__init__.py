@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -6,20 +5,21 @@
 # file that was distributed with this source code.
 #
 from collections.abc import Iterable
-from typing import Any, cast, TypeVar
-from seedboxsync.core.dao.model import SeedboxSyncModel
+from typing import Any, TypeVar, cast
+
+from seedboxsync.core.dao.model import SeedboxSyncModel  # isort: skip
 from seedboxsync.core.dao.download import Download
 from seedboxsync.core.dao.seedboxsync import SeedboxSync
-from seedboxsync.core.dao.torrent import Torrent
 from seedboxsync.core.dao.taskstatus import TaskStatus
+from seedboxsync.core.dao.torrent import Torrent
 
-__all__ = ["SeedboxSyncModel", "Download", "SeedboxSync", "TaskStatus", "Torrent"]
+__all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent"]
 
 
 T = TypeVar("T")
 
 
-def typed_peewee_dicts(query: T) -> Iterable[dict[str, Any]]:
+def typed_peewee_dicts[T](query: T) -> Iterable[dict[str, Any]]:
     """
     Cast a Peewee query configured with ``dicts()`` to dictionary rows.
 

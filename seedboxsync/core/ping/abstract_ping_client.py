@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -27,8 +26,7 @@ class AbstractPingClient:  # pragma: no cover
 
     @abstractmethod
     def __init__(self) -> None:
-        """ """
-        pass
+        """Init method."""
 
     @abstractmethod
     def start(self, sub_command: str) -> None:
@@ -38,7 +36,6 @@ class AbstractPingClient:  # pragma: no cover
         Args:
             sub_command (str): The SeedboxSync subcommand to ping.
         """
-        pass
 
     @abstractmethod
     def success(self, sub_command: str) -> None:
@@ -48,4 +45,3 @@ class AbstractPingClient:  # pragma: no cover
         Args:
             sub_command (str): The SeedboxSync subcommand to ping.
         """
-        pass

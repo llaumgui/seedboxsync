@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-Build a context used by Click.
-"""
+"""Build a context used by Click."""
 
-import click
 from collections.abc import Iterable
 from functools import cached_property
 from typing import Any
+import click
 from tabulate import tabulate
 from seedboxsync.core import Flask, current_app
 

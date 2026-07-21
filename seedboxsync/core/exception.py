@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -13,9 +12,10 @@ application. All exceptions inherit from `SeedboxSyncError`, which handles
 logging and process termination in case of fatal errors.
 """
 
-import sys
 import logging
+import sys
 
+logger = logging.getLogger(__name__)
 
 class SeedboxSyncError(Exception):
     """
@@ -30,7 +30,8 @@ class SeedboxSyncError(Exception):
     """
 
     def __init__(self, msg: str) -> None:
-        logging.exception(msg)
+        """SeedboxSyncError init."""
+        logger.exception(msg)
         sys.exit(msg)
 
 
@@ -42,7 +43,6 @@ class SeedboxSyncConfigurationError(SeedboxSyncError):
     invalid, missing, or inconsistent settings.
     """
 
-    pass
 
 
 class SyncProtocoleError(SeedboxSyncError):
@@ -51,7 +51,6 @@ class SyncProtocoleError(SeedboxSyncError):
     is specified.
     """
 
-    pass
 
 
 class PingServiceError(SeedboxSyncError):
@@ -60,12 +59,8 @@ class PingServiceError(SeedboxSyncError):
     is specified.
     """
 
-    pass
 
 
-class ConnectionError(SeedboxSyncError):
-    """
-    Exception raised when the connection to the remote seedbox fails.
-    """
+class SeedboxsyncConnectionError(SeedboxSyncError):
+    """Exception raised when the connection to the remote seedbox fails."""
 
-    pass

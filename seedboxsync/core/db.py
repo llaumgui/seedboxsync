@@ -1,21 +1,23 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""Database module."""
 import os
-import humanize
+from pathlib import Path
+from typing import ClassVar
 from flask import Flask
+import humanize
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
+from seedboxsync.core import fs
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
 from seedboxsync.core.utils import byte_to_gi
-from seedboxsync.core import fs
 
 
-class Database(object):
+class Database:
     """
     Database connector using peewee.
 
@@ -24,14 +26,14 @@ class Database(object):
     """
 
     DATABASE_VERSION = 4
-    DB_PATHS = [
+    DB_PATHS: ClassVar[list[str]] = [
         os.path.expanduser("~/.config/seedboxsync/seedboxsync.db"),
         os.path.expanduser("~/.seedboxsync.db"),
         os.path.expanduser("~/.seedboxsync/config/seedboxsync.db"),
         "/etc/seedboxsync/seedboxsync.db",
     ]
 
-    def __init__(self, app: Flask):
+    def __init__(self, app: Flask) -> None:
         """
         Initialize a new Database instance.
 
@@ -44,7 +46,6 @@ class Database(object):
 
     def _load_database(self) -> None:
         """Load SeedboxSync DB from SeedboxSyncFront."""
-
         if self.app.config.get("DATABASE", False):
             # Load from testing
             self._db_file = self.app.config.get("DATABASE", "")
@@ -53,13 +54,13 @@ class Database(object):
             # Get DB from paths, default to first path if none found
             self.app.config.setdefault("DATABASE", Database.DB_PATHS[0])  # default path
             for path in Database.DB_PATHS:
-                if os.path.exists(path) and os.path.isfile(path) and os.access(path, os.W_OK):
+                if Path(path).exists() and Path(path).is_file() and os.access(path, os.W_OK):
                     self.app.config.setdefault("DATABASE", path)
                     self.app.logger.debug("Use database path %s", path)
             self._db_file = self.app.config["DATABASE"]
             self.app.config["DATABASE"] = "sqlite:///" + self._db_file
 
-        if not os.path.exists(self._db_file):
+        if not Path(self._db_file).exists():
             self.app.logger.warning(f'Database "{self._db_file}" not found — creating new file...')
             fs.ensure_dir_exists(os.path.dirname(self._db_file))
             self._init_and_bind()
@@ -85,7 +86,6 @@ class Database(object):
 
     def _init_and_bind(self) -> None:
         """Initialize and bind Peewee models to the SQLite database."""
-
         db_wrapper = FlaskDB(self.app)
         self.db = db_wrapper.database
         self.app.extensions["flaskdb"] = db_wrapper
@@ -145,9 +145,7 @@ class Database(object):
         SeedboxSync.set_db_version("2")
 
     def migrate_to_3(self) -> None:
-        """
-        Migration: allow null values for the 'announce' field in the torrent table.
-        """
+        """Migration: allow null values for the 'announce' field in the torrent table."""
         migrator = SchemaMigrator.from_database(self.db)
         migrate(
             migrator.drop_not_null("torrent", "announce"),
@@ -155,9 +153,7 @@ class Database(object):
         SeedboxSync.set_db_version("3")
 
     def migrate_to_4(self) -> None:
-        """
-        Replace 'Lock' table by 'TaskStatus'.
-        """
+        """Replace 'Lock' table by 'TaskStatus'."""
         self.db.execute_sql("DROP TABLE IF EXISTS lock;")
         self.db.execute_sql("DELETE FROM seedboxsync WHERE key = 'version';")
         self.db.create_tables([TaskStatus])

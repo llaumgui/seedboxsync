@@ -1,25 +1,21 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-All commands related to search operations in SeedboxSync.
-"""
+"""All commands related to search operations in SeedboxSync."""
 
 import click
 from peewee import fn
-from seedboxsync.cli import group, pass_context, Context
-from seedboxsync.core.dao import typed_peewee_dicts, Download, Torrent
+from seedboxsync.cli import Context, group, pass_context
+from seedboxsync.core.dao import Download, Torrent, typed_peewee_dicts
 
 
 @group("search", help="Search operations.")  # type: ignore[untyped-decorator]
 @pass_context
 def cli(ctx: Context) -> None:
     """Empty function for Click sub commands."""
-    pass
 
 
 @cli.command("uploaded", help="Search last torrents uploaded from blackhole.")  # type: ignore[untyped-decorator]
@@ -41,10 +37,7 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
         search (str): An optional search term to filter torrent names.
     """
     # Build "where" expression
-    if search:
-        where = Torrent.name.contains(search)
-    else:
-        where = ~(Torrent.id.contains("not_a_int"))
+    where = Torrent.name.contains(search) if search else ~Torrent.id.contains("not_a_int")
 
     # DB query
     data = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(where).limit(number).order_by(Torrent.sent.desc()).dicts()
@@ -77,10 +70,7 @@ def downloaded(ctx: Context, number: int, search: str) -> None:
         search (str): An optional search term to filter torrent names.
     """
     # Build "where" expression
-    if search:
-        where = (Download.finished != 0) & (Download.path.contains(search))
-    else:
-        where = Download.finished != 0
+    where = (Download.finished != 0) & Download.path.contains(search) if search else Download.finished != 0
 
     # DB query
     data = (
@@ -130,10 +120,7 @@ def progress(ctx: Context, number: int, search: str) -> None:
         search (str): An optional search term to filter torrent names.
     """
     # Build "where" expression
-    if search:
-        where = (Download.finished == 0) & (Download.path.contains(search))
-    else:
-        where = Download.finished == 0
+    where = (Download.finished == 0) & Download.path.contains(search) if search else Download.finished == 0
 
     # Calculate columns
     progress_expr = 100.0 * Download.local_size / fn.NULLIF(Download.seedbox_size, 0)

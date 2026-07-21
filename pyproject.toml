@@ -1,3 +1,6 @@
+#
+# Project
+#
 [project]
 name = "seedboxsync"
 description = "Application for sync operations between your NAS and your seedbox"
@@ -48,9 +51,7 @@ Source = "https://github.com/llaumgui/seedboxsync/"
 
 [project.optional-dependencies]
 dev = [
-  "flake8",
-  "Flake8-pyproject",
-  "black",
+  "ruff",
   "pytest",
   "pytest-cov",
   "coverage",
@@ -63,10 +64,16 @@ dev = [
 [project.scripts]
 seedboxsync = "seedboxsync.cli:cli"
 
+#
+# Build
+#
 [build-system]
 requires = ["flit_core<4"]
 build-backend = "flit_core.buildapi"
 
+#
+# flit
+#
 [tool.flit.sdist]
 include = [
   "seedboxsync/front/static/dist/**",
@@ -87,13 +94,16 @@ exclude = [
   ".hadolint.yaml",
   ".markdownlint.yaml",
   "Dockerfile",
-  "Makefile",
+  "justfile",
   "package.json",
   "package-lock.json",
   "sonar-project.properties",
   "vite.config.js",
 ]
 
+#
+# mypy
+#
 [tool.mypy]
 files = ["seedboxsync"]
 ignore_missing_imports = true
@@ -101,19 +111,113 @@ strict = true
 show_error_codes = true
 pretty = true
 
-[tool.flake8]
-ignore = ["W504", "E203"]
-max-line-length = 160
+#
+# ruff
+#
+[tool.ruff]
+line-length = 160
+target-version = "py314"
+src = ["seedboxsync", "tests"]
+
+[tool.ruff.lint]
+select = [
+    # Core
+    "E",      # pycodestyle errors
+    "F",      # pyflakes
+    "W",      # pycodestyle warnings
+
+    # Imports
+    "I",      # isort
+
+    # Bugs
+    "B",      # flake8-bugbear
+    "A",      # builtins
+    "C4",     # comprehensions
+    "SIM",    # simplify
+    "RET",    # return
+    "RSE",    # raise
+    "TRY",    # tryceratops
+
+    # Good practices
+    "UP",     # pyupgrade
+    "PIE",    # misc improvements
+    "T20",    # print()
+    "PTH",    # pathlib
+    "G",      # logging
+    "LOG",    # logging
+    "RUF",    # Ruff-specific
+    "ISC",    # implicit string concat
+
+    # Documentation
+    "D",      # pydocstyle
+
+    # Type annotations
+    "ANN",
+
+]
+ignore = [
+    # Docstrings
+    "D203",
+    "D205",
+    "D212",
+
+    # Too opinionated
+    "TRY003",
+    "EM101",
+    "EM102",
+
+    # logging
+    "G004",
+
+    # pathlib
+    "PTH100",
+    "PTH111",
+    "PTH118",
+    "PTH119",
+    "PTH120",
+    "PTH207",
+    "PTH208",
+
+    # Type hints
+    "ANN401",     # Any
+
+    # __init__.py exports
+    "F401",
+
+    # cls
+    "N805",
+]
 exclude = [
   "*.egg",
   "build/*",
   "docs/*"
 ]
-select = ["E", "W", "F"]
 
-[tool.black]
-line-length = 160
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
+[tool.ruff.lint.isort]
+known-first-party = ["seedboxsync"]
+no-lines-before = ["standard-library", "third-party", "first-party", "local-folder"]
+force-sort-within-sections = true
+combine-as-imports = true
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 160
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "D",
+    "ANN",
+]
+"**/__init__.py" = [
+    "F401",
+    "D104"
+]
+
+#
+# PyTest coverage
+#
 [tool.coverage.report]
 omit = [
     "*/templates/*",

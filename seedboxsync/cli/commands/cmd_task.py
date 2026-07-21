@@ -1,30 +1,25 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-All commands related to the task queue manager operations.
-"""
+"""All commands related to the task queue manager operations."""
 
 import click
-from seedboxsync.cli import group, pass_context, Context
+from seedboxsync.cli import Context, group, pass_context
 from seedboxsync.core.taskmanager.utils import load_task_modules
 
 
 @group("task", help="Task operations on task queue management.")  # type: ignore[untyped-decorator]
 def cli() -> None:
     """Empty function for Click sub commands."""
-    pass
 
 
 @cli.command("result", help="List results in the result store. Allows determining the currently running tasks.")  # type: ignore[untyped-decorator]
 @pass_context
 def tasks_result(ctx: Context) -> None:
     """List all_results() tasks."""
-
     data = []
     for task in ctx.app.task_manager.all_results():
         data.append([task])
@@ -36,7 +31,6 @@ def tasks_result(ctx: Context) -> None:
 @pass_context
 def tasks_pending(ctx: Context) -> None:
     """List pending tasks."""
-
     data = []
     for task in ctx.app.task_manager.pending():
         name = getattr(task, "name", str(task).split(": ")[0])
@@ -50,10 +44,9 @@ def tasks_pending(ctx: Context) -> None:
 @pass_context
 def tasks_list(ctx: Context) -> None:
     """List registered tasks."""
-
     load_task_modules()
     data = []
-    for task in ctx.app.task_manager._registry._registry.keys():
+    for task in ctx.app.task_manager._registry._registry:
         data.append([task])
 
     click.echo(ctx.render(data, headers=["Class"]))
@@ -63,7 +56,6 @@ def tasks_list(ctx: Context) -> None:
 @pass_context
 def tasks_flush(ctx: Context) -> None:
     """Remove all data from the queue."""
-
     ctx.app.task_manager.flush()
     click.echo("Queue flushed")
 
@@ -72,7 +64,6 @@ def tasks_flush(ctx: Context) -> None:
 @pass_context
 def tasks_flush_lock(ctx: Context) -> None:
     """Flush any locks that may be held."""
-
     ctx.app.task_manager.flush_locks()
     click.echo("Lock flushed")
 

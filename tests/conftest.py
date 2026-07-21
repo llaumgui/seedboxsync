@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2025-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
@@ -7,9 +6,7 @@
 #
 import shutil
 from unittest.mock import MagicMock, patch
-
 import pytest
-
 from seedboxsync import create_app
 
 

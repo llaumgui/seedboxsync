@@ -89,5 +89,5 @@ huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
 or
 
 ```bash
-make run-taskmanager
+just run-taskmanager
 ```

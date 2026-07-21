@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-import os
-import click
+"""Cli module."""
 from importlib import import_module
-from typing import cast, Any
+import os
+from typing import Any, ClassVar, cast
+import click
 from flask.cli import FlaskGroup
 from seedboxsync.cli.context import Context
 
@@ -39,7 +39,12 @@ class Cli(FlaskGroup):
 
     context_class = Context
     _CMD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "commands"))
-    _HIDDEN_FLASK_OPTIONS = {"--app", "-A", "--env-file", "-e"}
+    _HIDDEN_FLASK_OPTIONS: ClassVar[frozenset[str]] = frozenset({
+        "--app",
+        "-A",
+        "--env-file",
+        "-e",
+    })
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """
@@ -159,23 +164,19 @@ class Cli(FlaskGroup):
         """
         try:
             return super().invoke(ctx)
-        except KeyboardInterrupt:
+        except KeyboardInterrupt as exc:
             click.secho("\nInterrupted by user.", fg="yellow")
-            raise ctx.exit(130)
+            raise ctx.exit(130) from exc
 
 
 class Command(click.Command):
-    """
-    SeedboxSync Click command using the custom context implementation.
-    """
+    """SeedboxSync Click command using the custom context implementation."""
 
     context_class = Context
 
 
 class Group(click.Group):
-    """
-    SeedboxSync Click command group using the custom context implementation.
-    """
+    """SeedboxSync Click command group using the custom context implementation."""
 
     context_class = Context
 

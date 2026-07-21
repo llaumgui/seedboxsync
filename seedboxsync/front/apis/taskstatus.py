@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-from flask_restx import fields, Namespace
+"""SeedboxSync api TaskStatus view."""
 from typing import Any
+from flask_restx import Namespace, fields
 from seedboxsync.core.dao import TaskStatus
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 
@@ -60,9 +60,7 @@ class TaskStatusList(Resource):
     @api.doc("list_taskstatus")  # type: ignore[untyped-decorator]
     @api.marshal_with(taskstatus_list_envelope, code=200, description="List of taskstatuses")  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
-        """
-        Retrieve a list of taskstatus.
-        """
+        """Retrieve a list of taskstatus."""
         select = TaskStatus.select(
             TaskStatus.key,
             TaskStatus.running,
@@ -108,6 +106,6 @@ class TaskStatuses(Resource):
                 .get()
             )
         except TaskStatus.DoesNotExist:  # type: ignore[attr-defined]
-            api.abort(404, "TaskStatus {} doesn't exist".format(key))
+            api.abort(404, f"TaskStatus {key} doesn't exist")
 
         return self.build_envelope(select, type="TaskStatus")

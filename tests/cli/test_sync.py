@@ -1,9 +1,7 @@
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, PropertyMock, patch
-
 import pytest
-
 from seedboxsync.cli import cli
 from seedboxsync.core.dao import Download, TaskStatus, Torrent
 from seedboxsync.core.flask import SeedboxSyncFlask

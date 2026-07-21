@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-A collection of fs utility functions from Cement for SeedboxSync.
-"""
+"""A collection of fs utility functions from Cement for SeedboxSync."""
 
 import os
+from pathlib import Path
 from typing import Any
 
 
 def abspath(path: str, strip_trailing_slash: bool = True) -> str:
     """
-    Return an absolute path, while also expanding the ``~`` user directory
-    shortcut.
+    Return an absolute path.
+
+    While also expanding the ``~`` user directory shortcut.
 
     Args:
         path (str): The original path to expand.
@@ -50,19 +49,20 @@ def ensure_dir_exists(path: str) -> None:
         directory.
 
     """
-
     path = abspath(path)
 
-    if os.path.exists(path) and not os.path.isdir(path):
+    if Path(path).exists() and not Path(path).is_dir():
         raise AssertionError(f"Path `{path}` exists but is not a directory!")
-    elif not os.path.exists(path):
-        os.makedirs(path)
+    if not Path(path).exists():
+        Path(path).mkdir()
 
 
 def join(*args: str, **kwargs: Any) -> str:
     """
-    Return a complete, joined path, by first calling ``abspath()`` on the first
-    item to ensure the final path is complete.
+    Return a complete, joined path.
+
+    By first calling ``abspath()`` on the first item, the returned path is
+    guaranteed to be absolute.
 
     Args:
         *args (str): Path components to join.
@@ -70,15 +70,6 @@ def join(*args: str, **kwargs: Any) -> str:
 
     Returns:
         str: The complete and absolute joined path.
-
-    Example:
-
-        .. code-block:: python
-
-            from seedboxsync.core.utils import fs
-
-            fs.join('~/some/path', 'some/other/relevant/path')
-
     """
     paths = list(args)
     first_path = abspath(paths.pop(0))

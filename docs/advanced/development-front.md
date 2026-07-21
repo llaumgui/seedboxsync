@@ -7,8 +7,9 @@ SeedboxSync also includes a frontend called SeedboxSync Front, available on [Git
 ## Tech Stack
 
 * **Python 3**
-* **Flask** / Flask-Caching / Flask-Babel / Flask-RESTX
-* **Peewee** ORM
+* **[Flask](https://flask.palletsprojects.com/en/stable/)** / Flask-Caching / Flask-Babel / Flask-RESTX
+* **[Peewee](https://docs.peewee-orm.com/en/latest/)** ORM
+* **[just](https://github.com/casey/just)** as task launcher
 
 ## Frontend Development
 
@@ -24,11 +25,11 @@ npm run build
 If you are working on the frontend within the Python project:
 
 ```bash
-make virtualenv
+just virtualenv
 source env/bin/activate
-make run
+just run
 ```
 
 ## Development Workflow
 
-The project includes several helpers in the `Makefile` to streamline common development tasks (e.g., running the app, linting, testing).
+The project includes several helpers in the `justfile` to streamline common development tasks (e.g., running the app, linting, testing).

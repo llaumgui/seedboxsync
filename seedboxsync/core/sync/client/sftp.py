@@ -1,23 +1,20 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 #
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""
-Transport client using the SFTP protocol.
-"""
-
+"""Transport client using the SFTP protocol."""
+from collections.abc import Generator
+import contextlib
 import os
-import paramiko
 import socket
 from stat import S_ISDIR
-from typing import Generator, Tuple, List
+import paramiko
 from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core import Flask, current_app
+from seedboxsync.core.exception import SeedboxsyncConnectionError
 from seedboxsync.core.sync import AbstractSyncClient, _Callback
-from seedboxsync.core.exception import ConnectionError
 
 
 class SftpClient(AbstractSyncClient):
@@ -60,29 +57,27 @@ class SftpClient(AbstractSyncClient):
         Initialize the SFTP transport and client if not already connected.
 
         Raises:
-            ConnectionError: If connection or authentication fails.
+            SeedboxsyncConnectionError: If connection or authentication fails.
         """
         if self._transport is None or not self._transport.is_active():
             self.app.logger.debug("Init or reload paramiko.Transport")
 
             # Close inactive connecion
             if self._transport is not None:
-                try:
+                with contextlib.suppress(Exception):
                     self._transport.close()
-                except Exception:
-                    pass
 
             try:
                 self._transport = paramiko.Transport((self._host, int(self._port)))
             except (socket.gaierror, ConnectionRefusedError) as exc:
-                raise ConnectionError(
-                    f"{str(exc)}\nFailed to establish a connection. " + "Ensure the host and port are correct, and that no firewall is blocking access."
-                )
+                raise SeedboxsyncConnectionError(
+                    f"{exc!s}\nFailed to establish a connection. " + "Ensure the host and port are correct, and that no firewall is blocking access."
+                ) from exc
 
             try:
                 self._transport.connect(username=self._login, password=self._password)
             except paramiko.ssh_exception.AuthenticationException as exc:
-                raise ConnectionError(f"{str(exc)}\nFailed to establish a connection. Ensure the login and password are correct.")
+                raise SeedboxsyncConnectionError(f"{exc!s}\nFailed to establish a connection. Ensure the login and password are correct.") from exc
 
             self.app.logger.debug("Init paramiko.SFTPClient from transport")
             self._client = paramiko.SFTPClient.from_transport(self._transport)
@@ -91,7 +86,7 @@ class SftpClient(AbstractSyncClient):
             if self._timeout:
                 channel = self._client.get_channel()
                 channel.settimeout(self._timeout)
-                self.app.logger.debug("Timeout is set to %s" % channel.gettimeout())
+                self.app.logger.debug(f"Timeout is set to {channel.gettimeout()}")
 
     def put(self, local_path: str, remote_path: str) -> SFTPAttributes:
         """
@@ -175,7 +170,7 @@ class SftpClient(AbstractSyncClient):
         self._connect_before()
         self._client.posix_rename(old_path, new_path)
 
-    def walk(self, remote_path: str) -> Generator[Tuple[str, List[str], List[str]], None, None]:
+    def walk(self, remote_path: str) -> Generator[tuple[str, list[str], list[str]]]:
         """
         Walk through remote directories, yielding paths, folders, and files.
 
@@ -183,7 +178,7 @@ class SftpClient(AbstractSyncClient):
             remote_path (str): Remote directory to traverse.
 
         Yields:
-            Tuple[str, List[str], List[str]]: (current_path, folders, files)
+            tuple[str, list[str], list[str]]: (current_path, folders, files)
 
         Note:
             Simplified version of os.walk for SFTP. Efficient for large directories.
@@ -193,8 +188,8 @@ class SftpClient(AbstractSyncClient):
         """
         self._connect_before()
         path = remote_path
-        files: List[str] = []
-        folders: List[str] = []
+        files: list[str] = []
+        folders: list[str] = []
         for f in self._client.listdir_attr(remote_path):
             if S_ISDIR(f.st_mode):
                 folders.append(f.filename)
@@ -204,13 +199,10 @@ class SftpClient(AbstractSyncClient):
 
         for folder in folders:
             new_path = os.path.join(remote_path, folder)
-            for x in self.walk(new_path):
-                yield x
+            yield from self.walk(new_path)
 
     def close(self) -> None:
-        """
-        Close the SFTP transport client and underlying connection.
-        """
+        """Close the SFTP transport client and underlying connection."""
         if self._transport is not None:
             self.app.logger.debug("Close paramiko.Transport client")
             self._transport.close()
