@@ -14,6 +14,7 @@
   * ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
   * ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
   * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disable sync.
+  * ✨ Allow to launch task from webui.
 * CI/CD and quality features:
   * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just.
   * 🧪 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.

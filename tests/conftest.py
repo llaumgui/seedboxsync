@@ -34,6 +34,10 @@ def app(tmp_path):
 
     yield app
 
+    huey = app.extensions.get("huey")
+    if huey is not None:
+        huey.storage.close()
+
     if not db.is_closed():
         db.close()
 

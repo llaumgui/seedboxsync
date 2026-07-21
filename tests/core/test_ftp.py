@@ -18,6 +18,7 @@ def ftp_app(app):
 @pytest.fixture
 def ftp_mocks():
     ftp = MagicMock()
+    ftp.closed = False
     ftp.curdir = "/home/me"
     ftp.sep = "/"
     with patch("seedboxsync.core.sync.client.ftp.ftputil.FTPHost", return_value=ftp) as ftp_host:
@@ -93,6 +94,48 @@ def test_get_with_callback_streams_file_and_reports_progress(ftp_app, ftp_mocks,
     ftp._session.retrbinary.assert_called_once()
     assert ftp._session.retrbinary.call_args.args[0] == "RETR /remote/movie.mkv"
     assert callback.call_args_list == [call(2, 6), call(6, 6)]
+
+
+def test_file_operations_are_delegated_to_ftputil(ftp_app, ftp_mocks):
+    ftp_host, ftp = ftp_mocks
+    attributes = object()
+    ftp.stat.return_value = attributes
+
+    with ftp_app.app_context():
+        client = FtpClient()
+        client.put("/local/file.torrent", "/remote/file.torrent")
+        result = client.stat("/remote/file.torrent")
+        client.chdir("/remote/downloads")
+        client.chdir(None)
+        client.chmod("/remote/file.torrent", 0o640)
+        client.rename("/remote/file.torrent", "/remote/file.done")
+
+    assert result is attributes
+    ftp_host.assert_called_once()
+    ftp.upload.assert_called_once_with("/local/file.torrent", "/remote/file.torrent")
+    ftp.stat.assert_called_once_with("/remote/file.torrent")
+    ftp.chdir.assert_called_once_with("/remote/downloads")
+    ftp.chmod.assert_called_once_with("/remote/file.torrent", 0o640)
+    ftp.rename.assert_called_once_with("/remote/file.torrent", "/remote/file.done")
+
+
+def test_closed_connection_is_cleaned_up_and_replaced(ftp_app):
+    closed_client = MagicMock(closed=False)
+    replacement_client = MagicMock(closed=False)
+
+    with (
+        patch("seedboxsync.core.sync.client.ftp.ftputil.FTPHost", side_effect=[closed_client, replacement_client]) as ftp_host,
+        ftp_app.app_context(),
+    ):
+        client = FtpClient()
+        client.chdir("/first")
+        closed_client.closed = True
+        client.chdir("/second")
+
+    assert ftp_host.call_count == 2
+    closed_client.close.assert_called_once_with()
+    closed_client.chdir.assert_called_once_with("/first")
+    replacement_client.chdir.assert_called_once_with("/second")
 
 
 def test_walk_preserves_explicit_remote_paths(ftp_app, ftp_mocks):

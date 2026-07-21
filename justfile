@@ -47,6 +47,12 @@ format *args:
 npm-lint:
     npm run test:lint
 
+npm-dev:
+    npm run dev
+
+npm-build:
+    npm run build
+
 lint: comply mypy markdownlint hadolint npm-lint
 
 lint-ci: comply mypy

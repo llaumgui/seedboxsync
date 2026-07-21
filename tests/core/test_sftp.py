@@ -23,6 +23,7 @@ def sftp_app(app):
 @pytest.fixture
 def paramiko_mocks():
     transport = MagicMock()
+    transport.is_active.return_value = True
     client = MagicMock()
     with (
         patch("seedboxsync.core.sync.client.sftp.paramiko.Transport", return_value=transport) as transport_factory,
@@ -144,6 +145,37 @@ def test_close_is_safe_before_connection_and_closes_connected_transport(sftp_app
         client.close()
 
     transport.close.assert_called_once_with()
+
+
+def test_inactive_transport_is_closed_and_replaced(sftp_app):
+    inactive_transport = MagicMock()
+    inactive_transport.is_active.return_value = False
+    replacement_transport = MagicMock()
+    replacement_transport.is_active.return_value = True
+    first_sftp = MagicMock()
+    replacement_sftp = MagicMock()
+
+    with (
+        patch(
+            "seedboxsync.core.sync.client.sftp.paramiko.Transport",
+            side_effect=[inactive_transport, replacement_transport],
+        ) as transport_factory,
+        patch(
+            "seedboxsync.core.sync.client.sftp.paramiko.SFTPClient.from_transport",
+            side_effect=[first_sftp, replacement_sftp],
+        ) as client_factory,
+        sftp_app.app_context(),
+    ):
+        client = SftpClient()
+        client.chdir("/first")
+        client.chdir("/second")
+
+    assert transport_factory.call_count == 2
+    assert client_factory.call_args_list[0].args == (inactive_transport,)
+    assert client_factory.call_args_list[1].args == (replacement_transport,)
+    inactive_transport.close.assert_called_once_with()
+    first_sftp.chdir.assert_called_once_with("/first")
+    replacement_sftp.chdir.assert_called_once_with("/second")
 
 
 def test_connection_failure_is_reported_without_creating_sftp_client(sftp_app):
