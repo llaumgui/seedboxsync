@@ -69,9 +69,9 @@
           <tr>
             <td class="is-overflow-anywhere" x-text="row.path"></td>
             <td class="is-hidden-mobile" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
-            <td class="is-hidden-mobile">
+            <td>
               <div class="is-flex is-align-items-center is-justify-content-center" style="gap: 15px;">
-                <progress class="progress is-primary mb-0" :value="row.progress" max="100" x-text="row.progress + '%'"></progress>
+                <progress class="is-hidden-mobile progress is-primary mb-0" :value="row.progress" max="100" x-text="row.progress + '%'"></progress>
                 <span class="is-size-7" x-text="row.progress + '%'"></span>
               </div>
             </td>
