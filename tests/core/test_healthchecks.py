@@ -1,4 +1,3 @@
-import socket
 from seedboxsync.core.ping.client.healthchecks import Healthchecks
 
 PING_URL = "https://healthchecks.dev/ping/12345678-1234-1234-1234-123456789012"

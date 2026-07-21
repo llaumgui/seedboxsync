@@ -5,7 +5,6 @@
 # file that was distributed with this source code.
 """Healthchecks management for SeedboxSync."""
 
-import socket
 import urllib.request
 from seedboxsync.core import current_app
 from seedboxsync.core.ping import AbstractPingClient

@@ -13,7 +13,6 @@ providing methods for file operations and session management on a remote server.
 
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable
-from typing import TypeAlias
 
 type _Callback = Callable[[int, int], object]
 

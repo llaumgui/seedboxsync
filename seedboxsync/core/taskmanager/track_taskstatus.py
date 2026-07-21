@@ -15,6 +15,26 @@ from seedboxsync.core.dao import TaskStatus
 P = ParamSpec("P")
 R = TypeVar("R")
 
+def heartbeat() -> None:
+    """
+    Task manager heartbeat.
+
+    Update the TaskStatus with key "heartbeat".
+    """
+    started = datetime.now()
+    TaskStatus.insert(
+        key="heartbeat",
+        running=False,
+        started=started,
+        finished=started,
+    ).on_conflict(
+        conflict_target=[TaskStatus.key],
+        update={
+            TaskStatus.running: False,
+            TaskStatus.started: started,
+            TaskStatus.finished: started,
+        },
+    ).execute()
 
 def track_taskstatus(key: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """
@@ -45,6 +65,8 @@ def track_taskstatus(key: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
                     TaskStatus.finished: None,
                 },
             ).execute()
+            # Call heartbeat()
+            heartbeat()
 
             try:
                 return function(*args, **kwargs)
@@ -55,6 +77,8 @@ def track_taskstatus(key: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
                 ).where(
                     TaskStatus.key == key,
                 ).execute()
+                # Call heartbeat()
+                heartbeat()
 
         return wrapper
 

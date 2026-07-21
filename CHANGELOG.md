@@ -2,21 +2,23 @@
 
 ## 4.0.0
 
-**Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
+**⚠️ Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
+
+**⚠️ Configuration is no in database. You must reconfigure the application.**
 
 * Major code rewrite and structural changes:
   * ✨ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync & SeedboxSyncFront all in one.
   * ✨ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
   * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Allow service healthchecks for the Docker image.
 * New user-facing features:
-* ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
-* ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
-* ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disable sync.
+  * ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
+  * ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
+  * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disable sync.
 * CI/CD and quality features:
-* 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just.
-* 🧪 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
-* 🧪 Use isort in ruff.
-* 👷 Use `ruff check --fix`.
+  * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just.
+  * 🧪 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
+  * 🧪 Use isort in ruff.
+  * 👷 Use `ruff check --fix`.
 
 ## 3.4.1 - Jun 14, 2026
 

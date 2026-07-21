@@ -52,7 +52,7 @@ def cli(ctx: Context) -> None:
     if heartbeat is None:
         click.secho("Task manager - NOK", fg="red")
         exit_code = 2
-    elif datetime.now() - heartbeat["finished"] > timedelta(minutes=2):
+    elif datetime.now() - heartbeat["finished"] > timedelta(minutes=5):
         click.secho("Task manager - NOK", fg="red")
         exit_code = 3
     else:

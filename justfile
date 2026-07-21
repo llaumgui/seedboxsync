@@ -1,6 +1,7 @@
 set export
 FLASK_SECRET_KEY := "dev"
 FLASK_CACHE_TYPE := "NullCache"
+HUEY_LOG_LEVEL := "DEBUG"
 
 default:
     @just --list

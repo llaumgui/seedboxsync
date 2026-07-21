@@ -157,14 +157,11 @@ select = [
 ]
 ignore = [
     # Docstrings
-    "D203",
     "D205",
     "D212",
 
     # Too opinionated
     "TRY003",
-    "EM101",
-    "EM102",
 
     # logging
     "G004",
@@ -180,12 +177,6 @@ ignore = [
 
     # Type hints
     "ANN401",     # Any
-
-    # __init__.py exports
-    "F401",
-
-    # cls
-    "N805",
 ]
 exclude = [
   "*.egg",
@@ -211,7 +202,6 @@ max-line-length = 160
     "ANN",
 ]
 "**/__init__.py" = [
-    "F401",
     "D104"
 ]
 
