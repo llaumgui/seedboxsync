@@ -7,8 +7,9 @@ default:
     @just --list
 
 virtualenv:
-    virtualenv --prompt '|> seedboxsync <| ' env
-    env/bin/pip install -e ".[dev]"
+    rm -rf env
+    uv venv --prompt "|> seedboxsync <|" env
+    uv pip install --python env/bin/python -e ".[dev]"
     @echo
     @echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
     @echo
