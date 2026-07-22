@@ -12,8 +12,8 @@ from urllib.request import urlopen
 import click
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.cli import Context, pass_context
+from seedboxsync.core import utils
 from seedboxsync.core.dao import SeedboxSync, TaskStatus
-from seedboxsync.core.utils import get_web_healthcheck_url
 
 
 @click.command("health")
@@ -59,7 +59,7 @@ def cli(ctx: Context) -> None:
         click.secho("Task manager - OK", fg="green")
 
     # Flask WebUI part
-    health_url = get_web_healthcheck_url()
+    health_url = utils.get_web_healthcheck_url()
     try:
         with urlopen(health_url, timeout=5) as response:
             if response.status == 200:

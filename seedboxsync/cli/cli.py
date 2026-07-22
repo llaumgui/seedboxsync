@@ -5,8 +5,9 @@
 # file that was distributed with this source code.
 #
 """Cli module."""
+
 from importlib import import_module
-import os
+from pathlib import Path
 from typing import Any, ClassVar, cast
 import click
 from flask.cli import FlaskGroup
@@ -38,13 +39,15 @@ class Cli(FlaskGroup):
     """
 
     context_class = Context
-    _CMD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "commands"))
-    _HIDDEN_FLASK_OPTIONS: ClassVar[frozenset[str]] = frozenset({
-        "--app",
-        "-A",
-        "--env-file",
-        "-e",
-    })
+    _CMD_FOLDER = Path(__file__).resolve().parent / "commands"
+    _HIDDEN_FLASK_OPTIONS: ClassVar[frozenset[str]] = frozenset(
+        {
+            "--app",
+            "-A",
+            "--env-file",
+            "-e",
+        }
+    )
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """
@@ -127,9 +130,11 @@ class Cli(FlaskGroup):
             A sorted list of available command names.
         """
         rv = []
-        for filename in os.listdir(self._CMD_FOLDER):
-            if filename.endswith(".py") and filename.startswith("cmd_"):
-                rv.append(filename[4:-3])
+
+        for path in self._CMD_FOLDER.iterdir():
+            if path.is_file() and path.suffix == ".py" and path.stem.startswith("cmd_"):
+                rv.append(path.stem[4:])
+
         rv.sort()
         return rv
 

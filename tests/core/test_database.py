@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 import pytest
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
@@ -8,9 +9,7 @@ def test_registered_database_functions_handle_valid_and_invalid_values(app):
     database = app.extensions["flaskdb"].database
 
     with app.app_context():
-        row = database.execute_sql(
-            "SELECT byte_to_gi(1073741824, 'B'), humanize('invalid'), naturaldelta('invalid')"
-        ).fetchone()
+        row = database.execute_sql("SELECT byte_to_gi(1073741824, 'B'), humanize('invalid'), naturaldelta('invalid')").fetchone()
 
     assert row == ("1.0GiB", "0 Bytes", "a moment")
 
@@ -22,7 +21,7 @@ def test_database_discovers_a_writable_existing_database():
     database.app = app
 
     with (
-        patch.object(Database, "DB_PATHS", ["/data/seedboxsync.db"]),
+        patch.object(Database, "DB_PATHS", [Path("/data/seedboxsync.db")]),
         patch("seedboxsync.core.db.Path.exists", return_value=True),
         patch("seedboxsync.core.db.Path.is_file", return_value=True),
         patch("seedboxsync.core.db.os.access", return_value=True),
@@ -45,14 +44,14 @@ def test_database_creates_schema_when_configured_file_is_missing(tmp_path):
 
     with (
         patch("seedboxsync.core.db.Path.exists", return_value=False),
-        patch("seedboxsync.core.db.fs.ensure_dir_exists") as ensure_directory,
+        patch("seedboxsync.core.utils.ensure_dir_exists") as ensure_directory,
         patch.object(database, "_init_and_bind") as init_and_bind,
         patch.object(database, "_create_db_schema") as create_schema,
         patch("seedboxsync.core.db.SeedboxSync.get_db_version", return_value="4"),
     ):
         database._load_database()
 
-    ensure_directory.assert_called_once_with(str(database_file.parent))
+    ensure_directory.assert_called_once_with(database_file.parent)
     init_and_bind.assert_called_once_with()
     create_schema.assert_called_once_with()
 

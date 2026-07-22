@@ -116,7 +116,7 @@ pretty = true
 #
 [tool.ruff]
 line-length = 160
-target-version = "py314"
+target-version = "py311"
 src = ["seedboxsync", "tests"]
 
 [tool.ruff.lint]
@@ -166,17 +166,8 @@ ignore = [
     # logging
     "G004",
 
-    # pathlib
-    "PTH100",
-    "PTH111",
-    "PTH118",
-    "PTH119",
-    "PTH120",
-    "PTH207",
-    "PTH208",
-
     # Type hints
-    "ANN401",     # Any
+    "ANN401",  # Any
 ]
 exclude = [
   "*.egg",

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for settings."""
+
 from collections.abc import Iterable
 from typing import Any
 from flask import flash, render_template, request

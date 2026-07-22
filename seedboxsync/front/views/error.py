@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for errors."""
+
 from flask import render_template
 from flask_babel import gettext
 from werkzeug.exceptions import HTTPException

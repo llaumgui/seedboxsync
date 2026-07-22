@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for homepage."""
+
 from flask import render_template
 from seedboxsync.core import current_app as app
 from seedboxsync.front.cache import cache

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for healthcheck."""
+
 from flask import Response, jsonify
 from seedboxsync.front.views import bp
 

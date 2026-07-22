@@ -74,6 +74,7 @@ def tasks_sync_blackhole(ctx: Context) -> None:
     """Launch asynchrone task sync blackhole."""
     with ctx.app.app_context():
         from seedboxsync.core.taskmanager.task.task_sync_blackhole import sync_blackhole
+
         sync_blackhole()
     click.echo("Task sync blackhole launched in task manager")
 
@@ -84,5 +85,6 @@ def tasks_sync_seedbox(ctx: Context) -> None:
     """Launch asynchrone task sync seedbox."""
     with ctx.app.app_context():
         from seedboxsync.core.taskmanager.task.task_sync_seedbox import sync_seedbox
+
         sync_seedbox()
     click.echo("Task sync seedbox launched in task manager")

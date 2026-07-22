@@ -6,14 +6,12 @@
 #
 """SeedboxSync sync service for blackhole."""
 
-import glob
-import os
+from os import fspath
 from pathlib import Path
 from paramiko import SSHException
-from seedboxsync.core import current_app as app, fs
+from seedboxsync.core import current_app as app, utils
 from seedboxsync.core.dao import Torrent
 from seedboxsync.core.taskmanager import track_taskstatus
-from seedboxsync.core.utils import get_torrent_infos
 
 LOCK_NAME = "sync-blackhole"
 
@@ -44,7 +42,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
     # Gather all torrent files
     local_watch_path = app.seedboxsync_config.get("local_watch_path", "")
     app.logger.debug(f'Scanning for torrent files in "{local_watch_path}"')
-    torrents = glob.glob(fs.join(fs.abspath(local_watch_path), "*.torrent"))
+    torrents = list(Path(local_watch_path).expanduser().resolve().glob("*.torrent"))
 
     if len(torrents) == 0:
         app.logger.info('No torrent files found in "{}"'.format(app.seedboxsync_config.get("local_watch_path")))
@@ -54,7 +52,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         return
 
     for torrent_file in torrents:
-        torrent_name = os.path.basename(torrent_file)
+        torrent_name = torrent_file.name
 
         # Dry-run mode
         if dry_run:
@@ -68,24 +66,24 @@ def blackhole(dry_run: bool, ping: bool) -> None:
         app.logger.debug(f'Upload "{torrent_file}" to "{tmp_path}"')
 
         try:
-            app.sync.chdir(None)   # type: ignore[arg-type]
-            app.sync.put(torrent_file, os.path.join(tmp_path, torrent_name))
+            app.sync.chdir(None)  # type: ignore[arg-type]
+            app.sync.put(torrent_file, Path(tmp_path) / torrent_name)
 
             # Apply chmod if configured
             chmod = app.seedboxsync_config.get("seedbox_chmod", False)
             if isinstance(chmod, str):
                 app.logger.debug(f"Change permissions to {chmod}")
-                app.sync.chmod(os.path.join(tmp_path, torrent_name), int(chmod, 8))
+                app.sync.chmod(Path(tmp_path) / torrent_name, int(chmod, 8))
 
             # Move file from tmp to watch directory
             app.logger.debug(f'Move from "{tmp_path}" to "{watch_path}"')
             app.sync.rename(
-                os.path.join(tmp_path, torrent_name),
-                os.path.join(watch_path, torrent_name),
+                Path(tmp_path) / torrent_name,
+                Path(watch_path) / torrent_name,
             )
 
             # Store torrent info in database
-            torrent_info = get_torrent_infos(torrent_file)
+            torrent_info = utils.get_torrent_infos(torrent_file)
             torrent = Torrent.create(name=torrent_name)
             if torrent_info is not None and isinstance(torrent_info, dict):
                 torrent.announce = torrent_info.get("announce")
@@ -96,7 +94,7 @@ def blackhole(dry_run: bool, ping: bool) -> None:
                 Path(torrent_file).unlink()
             else:
                 app.logger.warning(f'Rename local "{torrent_file}" to .torrent.fail')
-                Path(torrent_file).rename(torrent_file + ".fail")
+                Path(torrent_file).rename(fspath(torrent_file) + ".fail")
         except SSHException as exc:
             app.logger.warning(f"SSH client exception > {exc!s}")
 

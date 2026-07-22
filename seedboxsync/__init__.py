@@ -6,7 +6,7 @@
 #
 from collections.abc import Callable
 from datetime import datetime
-import os
+from pathlib import Path
 from flask import Response, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
 import humanize
@@ -107,6 +107,6 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     # Serve the favicon from the static directory
     @app.route("/favicon.ico")
     def favicon() -> Response:
-        return send_from_directory(os.path.join(app.root_path, "static"), "favicon.png", mimetype="image/png")
+        return send_from_directory(Path(app.root_path) / "static", "favicon.png", mimetype="image/png")
 
     return app

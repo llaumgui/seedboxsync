@@ -7,11 +7,11 @@
 """SeedboxSync sync service for seedbox."""
 
 import datetime
-import os
+from os import PathLike, fspath
 from pathlib import Path
 import re
 from paramiko import SSHException
-from seedboxsync.core import current_app as app, fs
+from seedboxsync.core import current_app as app, utils
 from seedboxsync.core.dao import Download
 from seedboxsync.core.exception import SeedboxSyncConfigurationError
 from seedboxsync.core.sync.download_progress import DownloadProgress
@@ -53,16 +53,19 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
     # Walk through all files on the seedbox
     try:
         try:
-            app.sync.chdir(None)   # type: ignore[arg-type]
+            app.sync.chdir(None)  # type: ignore[arg-type]
             app.sync.chdir(finished_path)
         except FileNotFoundError as exc:
             app.logger.error(f"{exc!s}\nFailed to scan directory: {finished_path}")
             return
 
-        for walker in app.sync.walk(""):  # type: ignore[attr-defined]
-            for filename in walker[2]:
-                filepath = os.path.join(walker[0], filename)
-                if Path(filename).suffix == part_suffix:
+        for root, _, filenames in app.sync.walk(""):  # type: ignore[attr-defined]
+            root = Path(root)
+
+            for filename in filenames:
+                filepath = root / filename
+
+                if filepath.suffix == part_suffix:
                     app.logger.debug(f'Skipping part file "{filename}"')
                 elif Download.is_already_download(filepath):
                     app.logger.debug(f'Skipping already downloaded file "{filename}"')
@@ -83,13 +86,13 @@ def seedbox(dry_run: bool, ping: bool, only_store: bool) -> None:
         app.ping.success("sync_seedbox")
 
 
-def __exclude_by_pattern(filepath: str) -> bool:
+def __exclude_by_pattern(filepath: str | PathLike[str]) -> bool:
     """
     Determine if a file should be excluded from synchronization based on patterns.
 
     Args:
         ctx (Context): The Click context object.
-        filepath (str): Path of the file to check.
+        filepath (str | PathLike[str]): Path of the file to check.
 
     Returns:
         bool: True if the file matches the exclude pattern, False otherwise.
@@ -98,6 +101,7 @@ def __exclude_by_pattern(filepath: str) -> bool:
         SeedboxSyncConfigurationError: If the exclude pattern is invalid.
     """
     pattern = app.seedboxsync_config.get("seedbox_exclude_syncing", "")
+    filepath = fspath(filepath)
     if not pattern:
         return False
 
@@ -107,7 +111,7 @@ def __exclude_by_pattern(filepath: str) -> bool:
         raise SeedboxSyncConfigurationError("Invalid configuration for exclude_syncing! See https://docs.python.org/3/library/re.html") from exc
 
 
-def __get_file(filepath: str, only_store: bool) -> None:
+def __get_file(filepath: str | PathLike[str], only_store: bool) -> None:
     """
     Download a single file from the seedbox.
 
@@ -119,14 +123,15 @@ def __get_file(filepath: str, only_store: bool) -> None:
         filepath (str): Path of the file on the seedbox.
         only_store (bool): Whether to record the file without downloading it.
     """
-    local_filepath = fs.join(app.seedboxsync_config.get("local_download_path", ""), filepath)
+    filepath = fspath(filepath)
+    local_filepath = Path(app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filepath
     part_suffix = app.seedboxsync_config.get("seedbox_part_suffix", "")
-    local_filepath_part = local_filepath + part_suffix
-    local_path = os.path.dirname(fs.abspath(local_filepath))
+    local_filepath_part = local_filepath.with_suffix(part_suffix)
+    local_path = local_filepath.expanduser().resolve().parent
 
     # Create local directory tree if necessary
     if not only_store:
-        fs.ensure_dir_exists(local_path)
+        utils.ensure_dir_exists(local_path)
     app.logger.debug(f'Download: "{filepath}" to "{local_path}"')
 
     try:

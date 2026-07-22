@@ -8,6 +8,7 @@
 
 from seedboxsync.core import current_app
 from seedboxsync.core.dao import Download
+from seedboxsync.core.taskmanager.track_taskstatus import heartbeat
 
 
 class DownloadProgress:
@@ -32,8 +33,9 @@ class DownloadProgress:
             transferred: Number of bytes transferred so far.
             total: Total number of bytes to transfer.
         """
-        # Persist progress every 50 MiB and when the download completes.
-        if transferred == total or transferred - self._last_saved_size >= 50 * 1024 * 1024:
+        # Persist progress every 100 MiB and when the download completes.
+        if transferred == total or transferred - self._last_saved_size >= 100 * 1024 * 1024:
+            heartbeat()  # Call heartbeat
             self._download.local_size = transferred
             percent = (transferred / total) * 100 if total > 0 else 0
             self.app.logger.debug(f"Download progress: {transferred} / {total} ({percent:.2f}%)")

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Flask core initer mobule."""
+
 from functools import cached_property
 from importlib import import_module
 from typing import Any, cast
@@ -64,8 +65,7 @@ class SeedboxSyncFlask(Flask):
         try:
             transfer_client = getattr(client_module, client_class)
         except AttributeError as exc:
-            raise SyncProtocoleError(
-                f"Unsupported protocol module! No class \"{client_class}\" in module \"seedboxsync.core.sync.{protocol}_client\"") from exc
+            raise SyncProtocoleError(f'Unsupported protocol module! No class "{client_class}" in module "seedboxsync.core.sync.{protocol}_client"') from exc
 
         # Instantiate the client
         try:
@@ -99,7 +99,8 @@ class SeedboxSyncFlask(Flask):
             ping_client = getattr(client_module, client_class)
         except AttributeError as exc:
             raise PingServiceError(
-                f'Unsupported ping service module! No class "{client_class}" in module "seedboxsync.core.ping.{ping_service}client"') from exc
+                f'Unsupported ping service module! No class "{client_class}" in module "seedboxsync.core.ping.{ping_service}client"'
+            ) from exc
 
         return ping_client()  # type: ignore[no-any-return]
 

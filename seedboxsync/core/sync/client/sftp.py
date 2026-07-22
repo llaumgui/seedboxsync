@@ -5,16 +5,18 @@
 # file that was distributed with this source code.
 #
 """Transport client using the SFTP protocol."""
+
 from collections.abc import Generator
 import contextlib
-import os
+from os import fspath
+from pathlib import Path
 import socket
 from stat import S_ISDIR
 import paramiko
 from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.exception import SeedboxsyncConnectionError
-from seedboxsync.core.sync import AbstractSyncClient, _Callback
+from seedboxsync.core.sync import AbstractSyncClient, PathType, _Callback
 
 
 class SftpClient(AbstractSyncClient):
@@ -88,35 +90,41 @@ class SftpClient(AbstractSyncClient):
                 channel.settimeout(self._timeout)
                 self.app.logger.debug(f"Timeout is set to {channel.gettimeout()}")
 
-    def put(self, local_path: str, remote_path: str) -> SFTPAttributes:
+    def put(self, local_path: PathType, remote_path: PathType) -> SFTPAttributes:
         """
         Upload a local file to the SFTP server.
 
         Args:
-            local_path (str): Path to the local file.
-            remote_path (str): Destination path on the server (including filename).
+            local_path (PathType): Path to the local file.
+            remote_path (PathType): Destination path on the server (including filename).
 
         Returns:
             SFTPAttributes: Metadata of the uploaded file.
         """
         self._connect_before()
+        local_path = fspath(local_path)
+        remote_path = fspath(remote_path)
+
         return self._client.put(local_path, remote_path)
 
     def get(
         self,
-        remote_path: str,
-        local_path: str,
+        remote_path: PathType,
+        local_path: PathType,
         progress_callback: _Callback | None = None,
     ) -> None:
         """
         Download a remote file from the SFTP server.
 
         Args:
-            remote_path (str): Path of the remote file.
-            local_path (str): Destination path on the local host.
+            remote_path (PathType): Path of the remote file.
+            local_path (PathType): Destination path on the local host.
             progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
         """
         self._connect_before()
+        remote_path = fspath(remote_path)
+        local_path = fspath(local_path)
+
         self._client.get(
             remote_path,
             local_path,
@@ -124,58 +132,64 @@ class SftpClient(AbstractSyncClient):
             max_concurrent_prefetch_requests=self._max_concurrent_prefetch_requests,
         )
 
-    def stat(self, filepath: str) -> SFTPAttributes:
+    def stat(self, filepath: PathType) -> SFTPAttributes:
         """
         Retrieve metadata for a remote file.
 
         Args:
-            filepath (str): Remote file path.
+            filepath (PathType): Remote file path.
 
         Returns:
             SFTPAttributes: Object with attributes similar to Python's os.stat:
                 st_mode, st_size, st_uid, st_gid, st_atime, st_mtime.
         """
         self._connect_before()
+        filepath = fspath(filepath)
+
         return self._client.stat(filepath)
 
-    def chdir(self, path: str | None = None) -> None:
+    def chdir(self, path: PathType | None = None) -> None:
         """
         Change the current working directory of the SFTP session.
 
         Args:
-            path (Optional[str]): Target directory. If None, no change occurs.
+            path (Optional[PathType]): Target directory. If None, no change occurs.
         """
         self._connect_before()
+        path = path and fspath(path)
         self._client.chdir(path)
 
-    def chmod(self, path: str, mode: int) -> None:
+    def chmod(self, path: PathType, mode: int) -> None:
         """
         Change the mode (permissions) of a remote file.
 
         Args:
-            path (str): Path of the file.
+            path (PathType): Path of the file.
             mode (int): Unix-style permissions (like os.chmod).
         """
         self._connect_before()
+        path = fspath(path)
         self._client.chmod(path, mode)
 
-    def rename(self, old_path: str, new_path: str) -> None:
+    def rename(self, old_path: PathType, new_path: PathType) -> None:
         """
         Rename a file or directory on the remote server.
 
         Args:
-            old_path (str): Existing path.
-            new_path (str): New path.
+            old_path (PathType): Existing path.
+            new_path (PathType): New path.
         """
         self._connect_before()
+        old_path = fspath(old_path)
+        new_path = fspath(new_path)
         self._client.posix_rename(old_path, new_path)
 
-    def walk(self, remote_path: str) -> Generator[tuple[str, list[str], list[str]]]:
+    def walk(self, remote_path: PathType) -> Generator[tuple[str, list[str], list[str]]]:
         """
         Walk through remote directories, yielding paths, folders, and files.
 
         Args:
-            remote_path (str): Remote directory to traverse.
+            remote_path (PathType): Remote directory to traverse.
 
         Yields:
             tuple[str, list[str], list[str]]: (current_path, folders, files)
@@ -187,6 +201,7 @@ class SftpClient(AbstractSyncClient):
             https://gist.github.com/johnfink8/2190472
         """
         self._connect_before()
+        remote_path = fspath(remote_path)
         path = remote_path
         files: list[str] = []
         folders: list[str] = []
@@ -198,7 +213,7 @@ class SftpClient(AbstractSyncClient):
         yield path, folders, files
 
         for folder in folders:
-            new_path = os.path.join(remote_path, folder)
+            new_path = str(Path(remote_path) / folder)
             yield from self.walk(new_path)
 
     def close(self) -> None:

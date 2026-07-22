@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for uploaded torrents."""
+
 from flask import render_template
 from seedboxsync.front.cache import cache
 from seedboxsync.front.utils import init_flash

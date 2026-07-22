@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for stats."""
+
 from flask import render_template
 import humanize
 from seedboxsync.core.dao import Download

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Peewee DAO model for Torrent."""
+
 import datetime
 from peewee import AutoField, DateTimeField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel

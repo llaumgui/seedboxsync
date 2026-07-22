@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync API Task view."""
+
 from typing import Any
 from flask_restx import Namespace
 from seedboxsync.front.apis import Resource

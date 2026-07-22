@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync front utils module."""
+
 from flask import flash
 from seedboxsync.core import current_app
 

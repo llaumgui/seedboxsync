@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Package "view" initialization."""
+
 import importlib
 import pkgutil
 from flask import Blueprint

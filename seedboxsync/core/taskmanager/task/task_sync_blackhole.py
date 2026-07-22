@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Define a huey tasks for blackhole synchronization."""
+
 import os
 from huey import crontab
 from seedboxsync.core import current_app as app

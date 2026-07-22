@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """All used version in 1 place."""
+
 __version__ = "4.0.0-b1"
 __api_version__ = "1.0"
 __api_path_version__ = "v1"

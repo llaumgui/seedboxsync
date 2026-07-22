@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Peewee DAO model for Download."""
+
 import datetime
 from peewee import AutoField, DateTimeField, IntegerField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel

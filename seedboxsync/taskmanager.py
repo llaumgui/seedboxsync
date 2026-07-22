@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync sync service for seedbox."""
+
 import logging
 import os
 from typing import Any

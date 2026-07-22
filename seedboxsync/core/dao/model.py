@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Peewee model."""
+
 from peewee import Model
 
 

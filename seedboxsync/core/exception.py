@@ -17,6 +17,7 @@ import sys
 
 logger = logging.getLogger(__name__)
 
+
 class SeedboxSyncError(Exception):
     """
     Base exception class for all SeedboxSync errors.
@@ -44,13 +45,11 @@ class SeedboxSyncConfigurationError(SeedboxSyncError):
     """
 
 
-
 class SyncProtocoleError(SeedboxSyncError):
     """
     Exception raised when an unsupported or misconfigured synchronization protocol
     is specified.
     """
-
 
 
 class PingServiceError(SeedboxSyncError):
@@ -60,7 +59,5 @@ class PingServiceError(SeedboxSyncError):
     """
 
 
-
 class SeedboxsyncConnectionError(SeedboxSyncError):
     """Exception raised when the connection to the remote seedbox fails."""
-

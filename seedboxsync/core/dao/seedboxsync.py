@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Peewee DAO model for SeedboxSync."""
+
 from peewee import CharField, TextField
 from seedboxsync.core.dao import SeedboxSyncModel
 

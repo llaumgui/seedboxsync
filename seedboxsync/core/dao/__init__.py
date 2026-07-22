@@ -19,7 +19,7 @@ __all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent
 T = TypeVar("T")
 
 
-def typed_peewee_dicts[T](query: T) -> Iterable[dict[str, Any]]:
+def typed_peewee_dicts(query: T) -> Iterable[dict[str, Any]]:
     """
     Cast a Peewee query configured with ``dicts()`` to dictionary rows.
 

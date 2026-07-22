@@ -9,8 +9,8 @@
 from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
+from seedboxsync.core import utils
 from seedboxsync.core.dao import Download, typed_peewee_dicts
-from seedboxsync.core.utils import byte_to_gi
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 from seedboxsync.front.cache import cache
 
@@ -361,7 +361,7 @@ def stats_by_period(period: str) -> list[dict[str, str | float]]:
         {
             period: key,
             "files": tmp[key]["files"],
-            "total_size": byte_to_gi(tmp[key]["total_size"]),
+            "total_size": utils.byte_to_gi(tmp[key]["total_size"]),
         }
         for key in sorted(tmp)
     ]

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """app module."""
+
 from seedboxsync import create_app
 
 app = create_app()

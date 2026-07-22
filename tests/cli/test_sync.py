@@ -51,14 +51,14 @@ def test_blackhole_uploads_and_records_torrent(app, runner, tmp_path, sync_servi
         SEEDBOXSYNC_SEEDBOX_CHMOD="0640",
     )
 
-    with patch("seedboxsync.core.sync.services.blackhole.get_torrent_infos", return_value={"announce": "https://tracker.example/announce"}):
+    with patch("seedboxsync.core.utils.get_torrent_infos", return_value={"announce": "https://tracker.example/announce"}):
         result = runner.invoke(cli, ["sync", "blackhole", "--ping"])
 
     assert result.exit_code == 0, result.output
     assert not torrent_file.exists()
-    sync.put.assert_called_once_with(str(torrent_file), "/remote/tmp/release.torrent")
-    sync.chmod.assert_called_once_with("/remote/tmp/release.torrent", 0o640)
-    sync.rename.assert_called_once_with("/remote/tmp/release.torrent", "/remote/watch/release.torrent")
+    sync.put.assert_called_once_with(Path(torrent_file), Path("/remote/tmp/release.torrent"))
+    sync.chmod.assert_called_once_with(Path("/remote/tmp/release.torrent"), 0o640)
+    sync.rename.assert_called_once_with(Path("/remote/tmp/release.torrent"), Path("/remote/watch/release.torrent"))
     ping.start.assert_called_once_with("sync_blackhole")
     ping.success.assert_called_once_with("sync_blackhole")
     with app.app_context():
@@ -100,7 +100,7 @@ def test_blackhole_marks_invalid_torrent_as_failed(app, runner, tmp_path, sync_s
         SEEDBOXSYNC_SEEDBOX_WATCH_PATH="/watch",
     )
 
-    with patch("seedboxsync.core.sync.services.blackhole.get_torrent_infos", return_value=None):
+    with patch("seedboxsync.core.utils.get_torrent_infos", return_value=None):
         result = runner.invoke(cli, ["sync", "blackhole"])
 
     assert result.exit_code == 0

@@ -15,6 +15,7 @@ from seedboxsync.core.dao import TaskStatus
 P = ParamSpec("P")
 R = TypeVar("R")
 
+
 def heartbeat() -> None:
     """
     Task manager heartbeat.
@@ -35,6 +36,7 @@ def heartbeat() -> None:
             TaskStatus.finished: started,
         },
     ).execute()
+
 
 def track_taskstatus(key: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """

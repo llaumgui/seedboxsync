@@ -5,16 +5,18 @@
 # file that was distributed with this source code.
 #
 """Transport client using FTP protocol."""
+
 from collections.abc import Generator
 import contextlib
 import ftplib
+from os import fspath
 from pathlib import Path
 from typing import Any
 import ftputil
 import ftputil.error
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.exception import SeedboxsyncConnectionError
-from seedboxsync.core.sync import AbstractSyncClient, _Callback
+from seedboxsync.core.sync import AbstractSyncClient, PathType, _Callback
 
 
 class FtpSession(ftplib.FTP):
@@ -114,32 +116,36 @@ class FtpClient(AbstractSyncClient):
 
         return float(self._timeout)
 
-    def put(self, local_path: str, remote_path: str) -> None:
+    def put(self, local_path: PathType, remote_path: PathType) -> None:
         """
         Upload a local file to the FTP server.
 
         Args:
-            local_path (str): Path to the local file.
-            remote_path (str): Destination path on the server (including filename).
+            local_path (PathType): Path to the local file.
+            remote_path (PathType): Destination path on the server (including filename).
         """
         client = self._connect_before()
+        local_path = fspath(local_path)
+        remote_path = fspath(remote_path)
         client.upload(local_path, remote_path)
 
     def get(
         self,
-        remote_path: str,
-        local_path: str,
+        remote_path: PathType,
+        local_path: PathType,
         progress_callback: _Callback | None = None,
     ) -> None:
         """
         Download a remote file from the FTP server.
 
         Args:
-            remote_path (str): Path of the remote file.
-            local_path (str): Destination path on the local host.
+            remote_path (PathType): Path of the remote file.
+            local_path (PathType): Destination path on the local host.
             progress_callback (_Callback | None): Optional callback receiving bytes_transferred and total_bytes.
         """
         client = self._connect_before()
+        remote_path = fspath(remote_path)
+        local_path = fspath(local_path)
 
         if progress_callback is None:
             client.download(remote_path, local_path)
@@ -162,63 +168,69 @@ class FtpClient(AbstractSyncClient):
                 on_block,
             )
 
-    def stat(self, filepath: str) -> Any:
+    def stat(self, filepath: PathType) -> Any:
         """
         Retrieve metadata for a remote file.
 
         Args:
-            filepath (str): Remote file path.
+            filepath (PathType): Remote file path.
 
         Returns:
             Any: Object with attributes similar to Python's os.stat.
         """
         client = self._connect_before()
+        filepath = fspath(filepath)
+
         return client.stat(filepath)
 
-    def chdir(self, path: str | None = None) -> None:
+    def chdir(self, path: PathType | None = None) -> None:
         """
         Change the current working directory of the FTP session.
 
         Args:
-            path (Optional[str]): Target directory. If None, no change occurs.
+            path (Optional[PathType]): Target directory. If None, no change occurs.
         """
         client = self._connect_before()
         if path is not None:
-            client.chdir(path)
+            client.chdir(fspath(path))
 
-    def chmod(self, path: str, mode: int) -> None:
+    def chmod(self, path: PathType, mode: int) -> None:
         """
         Change the mode (permissions) of a remote file.
 
         Args:
-            path (str): Path of the file.
+            path (PathType): Path of the file.
             mode (int): Unix-style permissions (like os.chmod).
         """
         client = self._connect_before()
+        path = fspath(path)
         client.chmod(path, mode)
 
-    def rename(self, old_path: str, new_path: str) -> None:
+    def rename(self, old_path: PathType, new_path: PathType) -> None:
         """
         Rename a file or directory on the remote server.
 
         Args:
-            old_path (str): Existing path.
-            new_path (str): New path.
+            old_path (PathType): Existing path.
+            new_path (PathType): New path.
         """
         client = self._connect_before()
+        old_path = fspath(old_path)
+        new_path = fspath(new_path)
         client.rename(old_path, new_path)
 
-    def walk(self, remote_path: str) -> Generator[tuple[str, list[str], list[str]]]:
+    def walk(self, remote_path: PathType) -> Generator[tuple[str, list[str], list[str]]]:
         """
         Walk through remote directories, yielding paths, folders, and files.
 
         Args:
-            remote_path (str): Remote directory to traverse.
+            remote_path (PathType): Remote directory to traverse.
 
         Yields:
             tuple[str, list[str], list[str]]: (current_path, folders, files)
         """
         client = self._connect_before()
+        remote_path = fspath(remote_path)
         walk_path = remote_path if remote_path != "" else client.curdir
         for path, folders, files in client.walk(walk_path):
             if remote_path == "":

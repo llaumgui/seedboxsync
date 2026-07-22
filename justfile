@@ -42,6 +42,7 @@ mypy:
     mypy
 
 format *args:
+    ruff format
     ruff check --fix {{args}}
 
 npm-lint:

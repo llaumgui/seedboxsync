@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync Flask vierw for info."""
+
 from datetime import datetime
 from flask import render_template
 import humanize

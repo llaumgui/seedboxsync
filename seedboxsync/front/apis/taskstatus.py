@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync api TaskStatus view."""
+
 from typing import Any
 from flask_restx import Namespace, fields
 from seedboxsync.core.dao import TaskStatus

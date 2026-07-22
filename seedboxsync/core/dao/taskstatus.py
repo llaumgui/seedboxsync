@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Peewee DAO model for TaskStatus."""
+
 from peewee import BooleanField, CharField, DateTimeField
 from seedboxsync.core.dao import SeedboxSyncModel
 

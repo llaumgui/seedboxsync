@@ -48,11 +48,13 @@ def test_settings_persists_cleaned_form_values(app, client):
         stored = {
             row.key: row.value
             for row in SeedboxSync.select().where(
-                SeedboxSync.key.in_([
-                    "config_seedbox_host",
-                    "config_seedbox_timeout",
-                    "config_seedbox_chmod",
-                ])
+                SeedboxSync.key.in_(
+                    [
+                        "config_seedbox_host",
+                        "config_seedbox_timeout",
+                        "config_seedbox_chmod",
+                    ]
+                )
             )
         }
     assert stored == {

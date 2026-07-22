@@ -18,10 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
+        python-version: ['3.11', '3.12', '3.13', '3.14']
     steps:
     - name: Git checkout
       uses: actions/checkout@v7
+    - uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
     - name: Install Dependencies
       run: pip install -e ".[dev]"
     - uses: taiki-e/install-action@just

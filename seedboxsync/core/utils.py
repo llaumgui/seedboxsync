@@ -7,6 +7,7 @@
 """A collection of utility functions for SeedboxSync."""
 
 import os
+from os import PathLike
 from pathlib import Path
 from urllib.parse import urlparse
 from bcoding import bdecode
@@ -28,12 +29,32 @@ def byte_to_gi(bytes_value: float, suffix: str = "B") -> str:
     return f"{gib:.1f}Gi{suffix}"
 
 
-def get_torrent_infos(torrent_path: str) -> None | str:
+def ensure_dir_exists(path: str | PathLike[str]) -> None:
+    """
+    Ensure the directory ``path`` exists, and if not create it.
+
+    Args:
+        path (str): The filesystem path of a directory.
+
+    Raises:
+        AssertionError: If the directory ``path`` exists, but is not a
+        directory.
+
+    """
+    path = Path(path).expanduser().resolve()
+
+    if path.exists() and not path.is_dir():
+        raise AssertionError(f"Path `{path}` exists but is not a directory!")
+    if not path.exists():
+        path.mkdir()
+
+
+def get_torrent_infos(torrent_path: str | PathLike[str]) -> None | str:
     """
     Extracts information from a torrent file.
 
     Args:
-        torrent_path (str): Path to the torrent file.
+        torrent_path (str | PathLike[str]): Path to the torrent file.
 
     Returns:
         str: Decoded torrent information.

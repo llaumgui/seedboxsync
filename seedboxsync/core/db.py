@@ -5,16 +5,17 @@
 # file that was distributed with this source code.
 #
 """Database module."""
+
 import os
+from os import fspath
 from pathlib import Path
 from typing import ClassVar
 from flask import Flask
 import humanize
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
-from seedboxsync.core import fs
+from seedboxsync.core import utils
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
-from seedboxsync.core.utils import byte_to_gi
 
 
 class Database:
@@ -26,11 +27,11 @@ class Database:
     """
 
     DATABASE_VERSION = 4
-    DB_PATHS: ClassVar[list[str]] = [
-        os.path.expanduser("~/.config/seedboxsync/seedboxsync.db"),
-        os.path.expanduser("~/.seedboxsync.db"),
-        os.path.expanduser("~/.seedboxsync/config/seedboxsync.db"),
-        "/etc/seedboxsync/seedboxsync.db",
+    DB_PATHS: ClassVar[list[Path]] = [
+        Path("~/.config/seedboxsync/seedboxsync.db").expanduser().resolve(),
+        Path("~/.seedboxsync.db").expanduser().resolve(),
+        Path("~/.seedboxsync/config/seedboxsync.db").expanduser().resolve(),
+        Path("/etc/seedboxsync/seedboxsync.db"),
     ]
 
     def __init__(self, app: Flask) -> None:
@@ -52,17 +53,17 @@ class Database:
             self.app.config["DATABASE"] = "sqlite:///" + self._db_file
         else:
             # Get DB from paths, default to first path if none found
-            self.app.config.setdefault("DATABASE", Database.DB_PATHS[0])  # default path
+            self.app.config.setdefault("DATABASE", fspath(Database.DB_PATHS[0]))  # default path
             for path in Database.DB_PATHS:
-                if Path(path).exists() and Path(path).is_file() and os.access(path, os.W_OK):
-                    self.app.config.setdefault("DATABASE", path)
+                if path.exists() and path.is_file() and os.access(path, os.W_OK):
+                    self.app.config.setdefault("DATABASE", fspath(path))
                     self.app.logger.debug("Use database path %s", path)
             self._db_file = self.app.config["DATABASE"]
             self.app.config["DATABASE"] = "sqlite:///" + self._db_file
 
         if not Path(self._db_file).exists():
             self.app.logger.warning(f'Database "{self._db_file}" not found — creating new file...')
-            fs.ensure_dir_exists(os.path.dirname(self._db_file))
+            utils.ensure_dir_exists(Path(self._db_file).parent)
             self._init_and_bind()
             self._create_db_schema()
         else:
@@ -106,7 +107,7 @@ class Database:
 
         @self.db.func("byte_to_gi")  # type: ignore
         def db_byte_to_gi(num: float, suffix: str = "B") -> str:
-            return byte_to_gi(num, suffix)
+            return utils.byte_to_gi(num, suffix)
 
         @self.db.func("humanize")  # type: ignore
         def db_humanize(num: float) -> str:
