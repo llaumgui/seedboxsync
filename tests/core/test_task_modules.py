@@ -12,11 +12,10 @@ def _identity_decorator(*args, **kwargs):
 
 
 @pytest.mark.parametrize(
-    ("module_name", "periodic_name", "task_name", "service_name", "service_args", "environment_name", "environment_value"),
+    ("module_name", "task_name", "service_name", "service_args", "environment_name", "environment_value"),
     [
         (
             "seedboxsync.core.taskmanager.task.task_sync_blackhole",
-            "periodic_sync_blackhole",
             "sync_blackhole",
             "blackhole_service",
             (False, True),
@@ -25,7 +24,6 @@ def _identity_decorator(*args, **kwargs):
         ),
         (
             "seedboxsync.core.taskmanager.task.task_sync_seedbox",
-            "periodic_sync_seedbox",
             "sync_seedbox",
             "seedbox_service",
             (False, True, False),
@@ -34,11 +32,10 @@ def _identity_decorator(*args, **kwargs):
         ),
     ],
 )
-def test_task_modules_register_and_execute_periodic_and_manual_tasks(
+def test_task_modules_register_and_execute_single_task_per_module(
     app,
     monkeypatch,
     module_name,
-    periodic_name,
     task_name,
     service_name,
     service_args,
@@ -58,12 +55,11 @@ def test_task_modules_register_and_execute_periodic_and_manual_tasks(
         service = MagicMock()
         setattr(module, service_name, service)
 
-        getattr(module, periodic_name)()
         getattr(module, task_name)()
 
     assert module.minute == environment_value
-    manager.periodic_task.assert_called_once()
+    manager.periodic_task.assert_not_called()
     manager.lock_task.assert_called()
     manager.task.assert_called_once_with()
+    assert len(service.call_args_list) == 1
     assert service.call_args_list[0].args == service_args
-    assert service.call_args_list[1].args == service_args
