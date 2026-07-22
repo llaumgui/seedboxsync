@@ -9,14 +9,16 @@ import { toast } from "bulma-toast";
 
 /**
  * Build AlpineJS taskstatus box components.
- * @param {string} apiUrl
+ * @param {string} urlInfo API url call
+ * @param {string} urlLaunch API url call
  * @param {string} title
  * @param {number} refreshMs
  * @returns
  */
-export function TaskStatusBoxComponent(url, title, refreshMs = 30000) {
+export function TaskStatusBoxComponent(urlInfo, urlLaunch, title, refreshMs = 30000) {
   return {
     loading: true,
+    tasking: false,
     error: null,
     taskStatusData: null,
     taskStatusMessage: "",
@@ -35,7 +37,7 @@ export function TaskStatusBoxComponent(url, title, refreshMs = 30000) {
       this.loading = true;
       this.error = null;
       try {
-        const res = await fetch(url);
+        const res = await fetch(urlInfo);
 
         if (res.status === 404) {
           // Specific handling for never launched
@@ -43,7 +45,7 @@ export function TaskStatusBoxComponent(url, title, refreshMs = 30000) {
           this.updateLockMessage(Translations.never_launched);
           this.loading = false;
           return;
-        };
+        }
 
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const json = await res.json();
@@ -52,14 +54,14 @@ export function TaskStatusBoxComponent(url, title, refreshMs = 30000) {
         if (this.taskStatusData.running) {
           this.updateLockMessage(
             `${Translations.in_progress_since} ${new Date(
-              this.taskStatusData.started
-            ).toLocaleString(undefined, dateTimeOption)}`
+              this.taskStatusData.started,
+            ).toLocaleString(undefined, dateTimeOption)}`,
           );
         } else {
           this.updateLockMessage(
             `${Translations.completed_since} ${new Date(
-              this.taskStatusData.finished
-            ).toLocaleString(undefined, dateTimeOption)}`
+              this.taskStatusData.finished,
+            ).toLocaleString(undefined, dateTimeOption)}`,
           );
         }
       } catch (e) {
@@ -72,14 +74,39 @@ export function TaskStatusBoxComponent(url, title, refreshMs = 30000) {
 
     updateLockMessage(newMessage) {
       // Trigger toast if message changed
-      if (this.taskStatusMessage !== "" && this.taskStatusMessage !== newMessage) {
+      if (
+        this.taskStatusMessage !== "" &&
+        this.taskStatusMessage !== newMessage
+      ) {
         toast({
-          message: "<strong>" + this.taskStatusTitle + "</strong>\n<br>" + newMessage,
+          message: `<strong>${this.taskStatusTitle}</strong>\n<br>${newMessage}`,
           type: "is-info",
         });
       }
       this.previousLockMessage = this.taskStatusMessage;
       this.taskStatusMessage = newMessage;
-    }
+    },
+
+    async taskLaunch() {
+      try {
+        this.tasking = true;
+        const res = await fetch(urlLaunch, { method: "POST" });
+        if (res.status === 202) {
+        toast({
+          message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_scheduled}`,
+          type: "is-success",
+        });
+        } else {
+         toast({
+           message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_not_scheduled}`,
+           type: "is-danger",
+         });
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.tasking = false;
+      }
+    },
   };
 }

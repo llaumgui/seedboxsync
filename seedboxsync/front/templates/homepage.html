@@ -9,26 +9,21 @@
 
   <div class="columns is-desktop">
     {% if config.sync_blackhole_enabled %}
-      <div class="message is-small column is-4" x-data="TaskStatusBoxComponent('{{ url_for('api.taskstatuses_task_statuses', key='sync-blackhole') }}', '{{ _('Blackhole') }}')">
+      <div class="message is-small column is-4" x-data="TaskStatusBoxComponent(
+        '{{ url_for('api.taskstatuses_task_statuses', key='sync-blackhole') }}',
+        '{{ url_for('api.tasks_tasks', key='blackhole') }}',
+        '{{ _('Blackhole') }}')">
         <div class="message-header">
           {{ _('Blackhole') }}
           <button
             class="button is-small is-rounded"
-            :disabled="loading"
-            @click="
-            loading = true;
-            try {
-                await fetch('{{ url_for('api.tasks_tasks', key='blackhole') }}', {
-                    method: 'POST'
-                });
-            } finally {
-              loading = false;
-            }">
+            :disabled="tasking"
+            @click="taskLaunch()">
             <span class="icon">
-                <template x-if="!loading">
+                <template x-if="!tasking">
                     <i class="fas fa-play"></i>
                 </template>
-                <template x-if="loading">
+                <template x-if="tasking">
                     <i class="fas fa-spinner fa-spin"></i>
                 </template>
             </span>
@@ -42,26 +37,21 @@
       </div>
     {% endif %}
 
-    <div class="message is-small column is-4 is-offset-4" x-data="TaskStatusBoxComponent('{{ url_for('api.taskstatuses_task_statuses', key='sync-seedbox') }}', '{{ _('Seedbox') }}')">
+    <div class="message is-small column is-4 is-offset-4" x-data="TaskStatusBoxComponent(
+      '{{ url_for('api.taskstatuses_task_statuses', key='sync-seedbox') }}',
+      '{{ url_for('api.tasks_tasks', key='seedbox') }}',
+      '{{ _('Seedbox') }}')">
       <div class="message-header">
         {{ _('Seedbox') }}
         <button
             class="button is-small is-rounded"
-            :disabled="loading"
-            @click="
-            loading = true;
-            try {
-                await fetch('{{ url_for('api.tasks_tasks', key='seedbox') }}', {
-                    method: 'POST'
-                });
-            } finally {
-              loading = false;
-            }">
+            :disabled="tasking"
+            @click="taskLaunch()">
             <span class="icon">
-                <template x-if="!loading">
+                <template x-if="!tasking">
                     <i class="fas fa-play"></i>
                 </template>
-                <template x-if="loading">
+                <template x-if="tasking">
                     <i class="fas fa-spinner fa-spin"></i>
                 </template>
             </span>
