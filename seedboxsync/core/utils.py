@@ -49,7 +49,7 @@ def ensure_dir_exists(path: str | PathLike[str]) -> None:
         path.mkdir()
 
 
-def get_torrent_infos(torrent_path: str | PathLike[str]) -> None | str:
+def get_torrent_infos(torrent_path: str | PathLike[str]) -> str | None:
     """
     Extracts information from a torrent file.
 

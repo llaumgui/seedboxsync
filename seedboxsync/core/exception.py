@@ -32,7 +32,7 @@ class SeedboxSyncError(Exception):
 
     def __init__(self, msg: str) -> None:
         """SeedboxSyncError init."""
-        logger.exception(msg)
+        logger.exception(msg)  # noqa LOG004
         sys.exit(msg)
 
 
