@@ -4,19 +4,21 @@
 
 **⚠️ Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
 
-**⚠️ Configuration is no in database. You must reconfigure the application.**
+**⚠️ Configuration is now stored in the database. You must reconfigure the application.**
 
 * Major code rewrite and structural changes:
-  * ✨ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync & SeedboxSyncFront all in one.
+  * ✨ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync and SeedboxSyncFront in a single application.
   * ✨ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
-  * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Allow service healthchecks for the Docker image.
+  * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Add a new all services healthcheck to the Docker image.
+  * ⚡️ Enable SQLite WAL mode to improve concurrent reads and writes.
 * New user-facing features:
   * ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
   * ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
-  * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disable sync.
-  * ✨ Allow to launch task from webui.
+  * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disabling sync.
+  * ✨ Allow launching tasks from the web UI.
+  * ✨ Allow configuring the theme and language in the web UI.
 * CI/CD and quality features:
-  * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just.
+  * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just for task automation.
   * 🧪 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
   * 🧪 Use isort in ruff.
   * 👷 Use `ruff check --fix`.
