@@ -1,0 +1,39 @@
+@use "nord/src/sass/nord" as nord;
+@use "sass:color";
+
+@mixin theme-dark {
+  // base colors
+  --bulma-black: #{nord.$nord4};
+  --bulma-black-bis: #{color.adjust(nord.$nord4, $lightness: -10%)};
+  --bulma-black-ter: #{color.adjust(nord.$nord4, $lightness: -20%)};
+
+  --bulma-white-ter: #{nord.$nord2};
+  --bulma-white-bis: #{color.adjust(nord.$nord1, $lightness: 2%)};
+  --bulma-white: #{nord.$nord0};
+  --bulma-body-background-color: #{color.adjust(nord.$nord0, $lightness: -10%)};
+
+  --bulma-grey-darker: #{nord.$nord4};
+  --bulma-grey-dark: #{color.mix(nord.$nord4, nord.$nord5)};
+  --bulma-grey: #{nord.$nord5};
+  --bulma-grey-light: #{color.mix(nord.$nord5, nord.$nord6)};
+  --bulma-grey-lighter: #{nord.$nord6};
+
+  // invert
+  --bulma-yellow-invert: #{rgba(hsl(221, 14%, 100%), 0.7)};
+  --bulma-primary-invert: #{rgba(hsl(221, 14%, 100%), 0.7)};
+
+  .table {
+    --bulma-table-head-background-color: #{color.adjust(nord.$nord0, $lightness: 5%)};
+  }
+
+  .navbar {
+    --bulma-navbar-background-color: #{nord.$nord1};
+    .navbar-menu .navbar-item.is-active {
+      background-color: #{nord.$nord3};
+    }
+  }
+
+  .footer {
+    --bulma-footer-background-color: #{nord.$nord0};
+  }
+}

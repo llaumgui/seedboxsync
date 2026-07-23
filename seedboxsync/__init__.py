@@ -90,8 +90,10 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     @app.context_processor
     def inject_globals() -> dict[str, str]:
         locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
+        theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
         return {
             "version": version,
+            "theme": theme,
             "api_version": api_version,
             "locale": str(locale).replace("_", "-"),
         }

@@ -39,6 +39,8 @@ class Config:
         CONFIG_NAMESPACE + "HEALTHCHECKS_SYNC_SEEDBOX_PING_URL": "",
         CONFIG_NAMESPACE + "HEALTHCHECKS_SYNC_BLACKHOLE_ENABLED": False,
         CONFIG_NAMESPACE + "HEALTHCHECKS_SYNC_BLACKHOLE_PING_URL": "",
+        CONFIG_NAMESPACE + "WEBUI_THEME": "auto",
+        CONFIG_NAMESPACE + "WEBUI_LANGUAGE": "auto",
     }
 
     def __init__(self, app: Flask, test_config: dict[str, str] | None = None) -> None:

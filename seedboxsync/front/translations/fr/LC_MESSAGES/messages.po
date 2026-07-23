@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-07-22 18:54+0200\n"
+"POT-Creation-Date: 2026-07-23 20:40+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -121,7 +121,7 @@ msgstr "Blackhole"
 
 #: seedboxsync/front/templates/homepage.html:43
 #: seedboxsync/front/templates/homepage.html:45
-#: seedboxsync/front/templates/settings.html:39
+#: seedboxsync/front/templates/settings.html:70
 msgid "Seedbox"
 msgstr "Seedbox"
 
@@ -275,62 +275,83 @@ msgid "Enable the seedbox synchronization task"
 msgstr "Activer la tâche de synchronisation de la seedbox"
 
 #: seedboxsync/front/templates/settings.html:40
+msgid "Theme of the WebUI"
+msgstr "Thème de l'interface web"
+
+#: seedboxsync/front/templates/settings.html:43
+#: seedboxsync/front/templates/settings.html:57
+msgid "Automatic"
+msgstr "Automatique"
+
+#: seedboxsync/front/templates/settings.html:44
+msgid "Dark"
+msgstr "Sombre"
+
+#: seedboxsync/front/templates/settings.html:45
+msgid "Light"
+msgstr "Clair"
+
+#: seedboxsync/front/templates/settings.html:54
+msgid "Language of the WebUI"
+msgstr "Langue de l'interface web"
+
+#: seedboxsync/front/templates/settings.html:71
 msgid "Connection"
 msgstr "Connexion"
 
-#: seedboxsync/front/templates/settings.html:41
+#: seedboxsync/front/templates/settings.html:72
 msgid "Information about your seedbox connection."
 msgstr "Informations à propos de la connexion de votre seedbox."
 
-#: seedboxsync/front/templates/settings.html:49
+#: seedboxsync/front/templates/settings.html:80
 msgid "Hostname"
 msgstr "Hostname"
 
-#: seedboxsync/front/templates/settings.html:66
+#: seedboxsync/front/templates/settings.html:97
 msgid "Port"
 msgstr "Port"
 
-#: seedboxsync/front/templates/settings.html:85
+#: seedboxsync/front/templates/settings.html:116
 msgid "Login"
 msgstr "Login"
 
-#: seedboxsync/front/templates/settings.html:102
+#: seedboxsync/front/templates/settings.html:133
 msgid "Password"
 msgstr "Mot de passe"
 
-#: seedboxsync/front/templates/settings.html:122
-#: seedboxsync/front/templates/settings.html:123
+#: seedboxsync/front/templates/settings.html:153
+#: seedboxsync/front/templates/settings.html:154
 msgid "Timeout (in seconds)"
 msgstr "Timeout (en secondes)"
 
-#: seedboxsync/front/templates/settings.html:138
+#: seedboxsync/front/templates/settings.html:169
 msgid "Protocol"
 msgstr "Protocole"
 
-#: seedboxsync/front/templates/settings.html:141
+#: seedboxsync/front/templates/settings.html:172
 msgid "sFTP"
 msgstr "sFTP"
 
-#: seedboxsync/front/templates/settings.html:142
+#: seedboxsync/front/templates/settings.html:173
 msgid "FTP"
 msgstr "FTP"
 
-#: seedboxsync/front/templates/settings.html:158
-#: seedboxsync/front/templates/settings.html:164
+#: seedboxsync/front/templates/settings.html:189
+#: seedboxsync/front/templates/settings.html:195
 msgid "chmod (in octal notation)"
 msgstr "chmod (en notation octale)"
 
-#: seedboxsync/front/templates/settings.html:160
+#: seedboxsync/front/templates/settings.html:191
 msgid "Chmod torrent after upload. Use octal notation, e.g. 0o644."
 msgstr ""
 "Chmod du fichier torrent après son téléversement. Utilisez la notation "
 "octale, par exemple 0o644."
 
-#: seedboxsync/front/templates/settings.html:183
+#: seedboxsync/front/templates/settings.html:214
 msgid "Max concurrent prefetch requests"
 msgstr "Nombre maximal de requêtes de préchargement simultanées"
 
-#: seedboxsync/front/templates/settings.html:185
+#: seedboxsync/front/templates/settings.html:216
 msgid ""
 "Only for SFTP (Paramiko). The maximum number of concurrent read requests "
 "to prefetch. When this is None (the default), do not limit the number of "
@@ -349,19 +370,19 @@ msgstr ""
 "téléchargé correctement avec sftp mais que le transfert se bloque avec "
 "Paramiko, il peut être utile de définir une limite."
 
-#: seedboxsync/front/templates/settings.html:202
+#: seedboxsync/front/templates/settings.html:233
 msgid "Path"
 msgstr "Répertoires"
 
-#: seedboxsync/front/templates/settings.html:203
+#: seedboxsync/front/templates/settings.html:234
 msgid "Information about your seedbox paths."
 msgstr "Informations à propos des paths de votre seedbox."
 
-#: seedboxsync/front/templates/settings.html:212
+#: seedboxsync/front/templates/settings.html:243
 msgid "Tempory path"
 msgstr "Répertoire temporaire"
 
-#: seedboxsync/front/templates/settings.html:214
+#: seedboxsync/front/templates/settings.html:245
 msgid ""
 "Use a temporary directory for incomplete transfers (must be created "
 "manually)."
@@ -369,49 +390,49 @@ msgstr ""
 "Utiliser un répertoire temporaire pour les transferts incomplets (doit "
 "être créé manuellement)."
 
-#: seedboxsync/front/templates/settings.html:235
-#: seedboxsync/front/templates/settings.html:361
+#: seedboxsync/front/templates/settings.html:266
+#: seedboxsync/front/templates/settings.html:392
 msgid "Watch path"
 msgstr "Répertoire \"Watch\""
 
-#: seedboxsync/front/templates/settings.html:237
+#: seedboxsync/front/templates/settings.html:268
 msgid "Your BitTorrent client's watch folder (must be created manually)."
 msgstr ""
 "Le répertoire de surveillance de votre client BitTorrent (doit être créé "
 "manuellement)."
 
-#: seedboxsync/front/templates/settings.html:260
+#: seedboxsync/front/templates/settings.html:291
 msgid "Finished path"
 msgstr "Répertoire \"Finished\""
 
-#: seedboxsync/front/templates/settings.html:262
+#: seedboxsync/front/templates/settings.html:293
 msgid "The folder where your BitTorrent client puts finished files."
 msgstr ""
 "Le répertoire dans lequel votre client BitTorrent place les fichiers "
 "terminés."
 
-#: seedboxsync/front/templates/settings.html:283
+#: seedboxsync/front/templates/settings.html:314
 msgid "Prefixed path"
 msgstr "Prefixe des répertoires"
 
-#: seedboxsync/front/templates/settings.html:285
+#: seedboxsync/front/templates/settings.html:316
 msgid "Remove a prefix from the synced path (usually the same as finished_path)."
 msgstr ""
 "Supprimer un préfixe du chemin synchronisé (généralement identique à "
 "finished_path)."
 
-#: seedboxsync/front/templates/settings.html:308
-#: seedboxsync/front/templates/settings.html:331
+#: seedboxsync/front/templates/settings.html:339
+#: seedboxsync/front/templates/settings.html:362
 msgid "Suffix used for .part"
 msgstr "Suffixe utilisé pour les .part"
 
-#: seedboxsync/front/templates/settings.html:310
+#: seedboxsync/front/templates/settings.html:341
 msgid "Exclude files with this suffix (e.g. incomplete downloads)."
 msgstr ""
 "Exclure les fichiers ayant ce suffixe (par exemple, les téléchargements "
 "incomplets)."
 
-#: seedboxsync/front/templates/settings.html:333
+#: seedboxsync/front/templates/settings.html:364
 msgid ""
 "Exclude files from sync using a regular expression (Python re syntax). "
 "Example: .*missing$"
@@ -419,55 +440,55 @@ msgstr ""
 "Exclure des fichiers de la synchronisation à l'aide d'une expression "
 "régulière (syntaxe Python re). Exemple : .*missing$"
 
-#: seedboxsync/front/templates/settings.html:351
+#: seedboxsync/front/templates/settings.html:382
 msgid "Local (NAS)"
 msgstr "Local (NAS)"
 
-#: seedboxsync/front/templates/settings.html:352
+#: seedboxsync/front/templates/settings.html:383
 msgid "Information about local environment (NAS?)."
 msgstr "Informations à propos de votre environnement local (NAS ?)."
 
-#: seedboxsync/front/templates/settings.html:363
+#: seedboxsync/front/templates/settings.html:394
 msgid "Your local watch folder."
 msgstr "Votre répertoire local de surveillance."
 
-#: seedboxsync/front/templates/settings.html:384
+#: seedboxsync/front/templates/settings.html:415
 msgid "Downloads path"
 msgstr "Répertoire de téléchargement"
 
-#: seedboxsync/front/templates/settings.html:386
+#: seedboxsync/front/templates/settings.html:417
 msgid "Path where files are downloaded."
 msgstr "Chemin où les fichiers sont téléchargés"
 
-#: seedboxsync/front/templates/settings.html:404
+#: seedboxsync/front/templates/settings.html:435
 msgid "Healthchecks"
 msgstr "Healthchecks"
 
-#: seedboxsync/front/templates/settings.html:405
+#: seedboxsync/front/templates/settings.html:436
 msgid "Settings Healthchecks service."
 msgstr "Paramètres du service Healthchecks."
 
-#: seedboxsync/front/templates/settings.html:415
+#: seedboxsync/front/templates/settings.html:446
 msgid "Enable for sync_blackhole task?"
 msgstr "Activer pour la tache sync_blackhole ?"
 
-#: seedboxsync/front/templates/settings.html:422
+#: seedboxsync/front/templates/settings.html:453
 msgid "Ping URL for sync_blackhole task"
 msgstr "URL de ping pour la tache sync_blackhole"
 
-#: seedboxsync/front/templates/settings.html:443
+#: seedboxsync/front/templates/settings.html:474
 msgid "Enable for sync_seedbox task?"
 msgstr "Activer pour la tache sync_seedbox ?"
 
-#: seedboxsync/front/templates/settings.html:450
+#: seedboxsync/front/templates/settings.html:481
 msgid "Ping URL for sync_seedbox task"
 msgstr "URL de ping pour la tache sync_seedbox"
 
-#: seedboxsync/front/templates/settings.html:465
+#: seedboxsync/front/templates/settings.html:496
 msgid "Save"
 msgstr "Sauver"
 
-#: seedboxsync/front/templates/settings.html:475
+#: seedboxsync/front/templates/settings.html:506
 msgid "Settings saved."
 msgstr "Paramètres sauvegardés."
 
@@ -549,12 +570,12 @@ msgstr "Info"
 msgid "Stats"
 msgstr "Statistiques"
 
-#: seedboxsync/front/views/settings.py:32
+#: seedboxsync/front/views/settings.py:34
 #, python-format
 msgid "Missing required fields: %(missing)s"
 msgstr "Il manque les champs requis: {%(missing)s}"
 
-#: seedboxsync/front/views/settings.py:42
+#: seedboxsync/front/views/settings.py:44
 msgid "Failed to save configuration."
 msgstr "Échec de l’enregistrement de la configuration."
 

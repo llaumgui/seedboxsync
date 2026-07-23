@@ -23,6 +23,7 @@ run-taskmanager:
 i18n-extract:
     pybabel extract -F babel.cfg -o seedboxsync/front/messages.pot .
     @just i18n-update
+    @just i18n-compile
 
 i18n-update:
     pybabel update -i seedboxsync/front/messages.pot -d seedboxsync/front/translations

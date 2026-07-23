@@ -13,6 +13,7 @@ from flask.wrappers import Request
 from flask_babel import gettext
 from seedboxsync.core import Config, current_app as app
 from seedboxsync.core.dao import SeedboxSync
+from seedboxsync.front.babel import ALLOWED_LANGUAGES
 from seedboxsync.front.utils import init_flash
 from seedboxsync.front.views import bp
 
@@ -22,6 +23,7 @@ def settings() -> str:
     """Manage settings: load configuration, display form, persist changes."""
     init_flash()
     saved = False
+    languages_list = ALLOWED_LANGUAGES
 
     form = _build_form()
 
@@ -41,7 +43,7 @@ def settings() -> str:
                 app.logger.exception("Failed to save config", exc_info=e)
                 flash(gettext("Failed to save configuration."), "error")
 
-    return render_template("settings.html", form=form, saved=saved)
+    return render_template("settings.html", form=form, saved=saved, languages_list=languages_list)
 
 
 # -------------------------

@@ -72,18 +72,29 @@ def test_healthcheck(client):  # Is OK
     assert response.json["status"] == "ok"
 
 
-def test_translation(client):
-    # Is default language
+def test_translation_uses_accepted_language_in_auto_mode(client):
+    # Uses the default language when none is requested.
     response = client.get("/")
-    assert b'<html lang="en">' in response.data
+    assert b'<html lang="en"' in response.data
     assert b'<h1 class="title is-hidden">Dashboard</h1>' in response.data
-    # Is defallbackfault language
+
+    # Falls back to the default language when the requested one is unsupported.
     response = client.get("/", headers={"Accept-Language": "zz"})
-    assert b'<html lang="en">' in response.data
+    assert b'<html lang="en"' in response.data
     assert b'<h1 class="title is-hidden">Dashboard</h1>' in response.data
-    # Is fr language
+
+    # Uses a supported requested language.
     response = client.get("/", headers={"Accept-Language": "fr"})
-    assert b'<html lang="fr">' in response.data
+    assert b'<html lang="fr"' in response.data
+    assert b'<h1 class="title is-hidden">Tableau de bord</h1>' in response.data
+
+
+def test_translation_uses_configured_language(app, client):
+    app.config["SEEDBOXSYNC_WEBUI_LANGUAGE"] = "fr"
+
+    response = client.get("/", headers={"Accept-Language": "en"})
+
+    assert b'<html lang="fr"' in response.data
     assert b'<h1 class="title is-hidden">Tableau de bord</h1>' in response.data
 
 

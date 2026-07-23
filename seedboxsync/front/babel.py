@@ -8,8 +8,10 @@
 
 from flask import request
 from flask_babel import Babel
+from seedboxsync.core import Config, current_app as app
 
 babel = Babel()
+ALLOWED_LANGUAGES = ["fr", "en"]
 
 
 def get_locale() -> str | None:
@@ -19,4 +21,7 @@ def get_locale() -> str | None:
     Returns:
         str: The local.
     """
-    return request.accept_languages.best_match(["fr", "en"])
+    locale = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_LANGUAGE", "auto")
+    if locale != "auto":
+        return str(locale)
+    return request.accept_languages.best_match(ALLOWED_LANGUAGES)

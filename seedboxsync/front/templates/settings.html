@@ -33,6 +33,37 @@
           </div>
         </div>
       </div>
+
+      <div class="columns pt-4">
+        <div class="column is-6">
+          <div class="field" x-data="{ theme: '{{ form.webui_theme }}' }">
+            <label class="label" for="webui_theme">{{ _('Theme of the WebUI') }}</label>
+            <div class="control select">
+              <select id="webui_theme" name="webui_theme" x-model="theme">
+                <option value="auto">{{ _('Automatic') }}</option>
+                <option value="dark">{{ _('Dark') }}</option>
+                <option value="light">{{ _('Light') }}</option>
+              </select>
+            </div>
+            <input type="hidden" name="webui_theme" :value="theme">
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="field" x-data="{ language: '{{ form.webui_language }}' }">
+            <label class="label" for="webui_language">{{ _('Language of the WebUI') }}</label>
+            <div class="control select">
+              <select id="webui_language" name="webui_language" x-model="language">
+                <option value="auto">{{ _('Automatic') }}</option>
+                {% for language in languages_list %}
+                  <option value="{{ language }}">{{ language }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <input type="hidden" name="webui_language" :value="language">
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="box">
