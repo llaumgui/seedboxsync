@@ -96,7 +96,7 @@ exclude = [
   "Dockerfile",
   "justfile",
   "package.json",
-  "package-lock.json",
+  "pnpm-lock.yaml",
   "sonar-project.properties",
   "vite.config.js",
 ]

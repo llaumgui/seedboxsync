@@ -16,8 +16,8 @@ SeedboxSync also includes a frontend called SeedboxSync Front, available on [Git
 The frontend is built with [Bulma](https://bulma.io/), [Alpine.js](https://alpinejs.dev/) and [Vite](https://vite.dev):
 
 ```bash
-npm i
-npm run build
+pnpm i
+pnpm run build
 ```
 
 ## Python Development (Frontend Integration)

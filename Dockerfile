@@ -8,8 +8,9 @@ FROM node:lts-alpine AS builder-node
 WORKDIR /src
 
 COPY . /src
-RUN npm install
-RUN npm run build
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
 
 # ------------------------------------------------ Build python and translations
