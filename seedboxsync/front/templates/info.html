@@ -1,8 +1,24 @@
+{% macro render_status_row(title, task) %}
+<tr>
+  <th>{{ title }}</th>
+  <td>
+    {% if not task %}
+      {{ _('Never executed.') }}
+    {% elif task.running %}
+      {{ _('Running since %(since)s', since=format_datetime(task.started)) }}
+    {% else %}
+      {{ _('Finished since %(since)s', since=format_datetime(task.finished)) }}
+    {% endif %}
+  </td>
+</tr>
+{% endmacro %}
+
 {% extends 'base.html' %}
 
 {% block header %}
   <h1 class="title">{% block title %}{{ _('Informations') }}{% endblock %}</h1>
 {% endblock %}
+
 
 {% block content %}
 <div class="content">
@@ -42,33 +58,8 @@
     <tr class="is-link has-text-centered">
       <th colspan="2">{{ _('Tasks') }}</th>
     </tr>
-    <tr>
-      <th>{{ _('Blackhole synchronization') }}</th>
-      <td>
-        {% if info.sync_blackhole == False %}
-          {{ _('Never executed.') }}
-        {% else %}
-          {% if info.sync_blackhole.running == True %}
-            {{ _('Running since %(since)s', since=format_datetime(info.sync_blackhole.started) ) }}
-          {% else %}
-            {{ _('Finished since %(since)s', since=format_datetime(info.sync_blackhole.finished) ) }}
-          {% endif %}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <th>{{ _('Seedbox synchronization') }}</th>
-      <td>
-        {% if info.sync_seedbox == False %}
-          {{ _('Never executed.') }}
-        {% else %}
-          {% if info.sync_seedbox.running == True %}
-            {{ _('Running since %(since)s', since=format_datetime(info.sync_seedbox.started) ) }}
-          {% else %}
-            {{ _('Finished since %(since)s', since=format_datetime(info.sync_seedbox.finished) ) }}
-          {% endif %}
-        {% endif %}
-      </td>
-    </tr>
+    {{ render_status_row(_('Blackhole synchronization'), info.sync_blackhole) }}
+    {{ render_status_row(_('Seedbox synchronization'), info.sync_seedbox) }}
+    {{ render_status_row(_('Heartbeat'), info.heartbeat) }}
   </table>
 {% endblock %}

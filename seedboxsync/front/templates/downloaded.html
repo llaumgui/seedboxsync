@@ -1,3 +1,5 @@
+{% import 'components/macros.html' as macro %}
+
 {% extends 'base.html' %}
 
 {% block header %}
@@ -11,13 +13,7 @@
   <div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true')">
 
     {# Search #}
-    <div class="mb-4 control has-icons-left has-icons-right">
-      <label for="download-search" class="is-sr-only">{{ _('Search') }}</label>
-      <input id="download-search" class="input" type="text" placeholder="{{ _('Search') }}" x-model="search" @input.debounce.300ms="load()" />
-      <span class="icon is-small is-left">
-        <i class="fas fa-search"></i>
-      </span>
-    </div>
+    {{ macro.render_search() }}
 
     {# Messages #}
     <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
@@ -58,22 +54,8 @@
     </table>
 
     {# Pagination controls #}
-    <nav class="pagination is-right" role="navigation" aria-label="pagination">
-      <a href="#" class="pagination-previous" :class="{ 'is-disabled': page === 1 }" @click.prevent="prevPage()">{{ _('Previous') }}</a>
-      <a href="#" class="pagination-next" :class="{ 'is-disabled': page === totalPages }" @click.prevent="nextPage()">{{ _('Next') }}</a>
+    {{ macro.render_pagination() }}
 
-      <ul class="pagination-list">
-        <template x-for="pObj in visiblePages" :key="pObj.page ?? Math.random()">
-          <li>
-            <a href="#" class="pagination-link"
-              :class="{ 'is-current': page === pObj.page, 'is-disabled': pObj.isEllipsis }"
-              @click.prevent="if(!pObj.isEllipsis) goToPage(pObj.page)"
-              x-text="pObj.isEllipsis ? '…' : pObj.page">
-            </a>
-          </li>
-        </template>
-      </ul>
-    </nav>
   </div>
 </div>
 {% endblock %}

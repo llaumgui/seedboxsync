@@ -1,3 +1,32 @@
+{% macro task_box(title, status_key, task_key, extra_classes='') %}
+<div class="message is-small column is-4 {{ extra_classes }}" x-data="TaskStatusBoxComponent(
+  '{{ url_for('api.taskstatuses_task_statuses', key=status_key) }}',
+  '{{ url_for('api.tasks_tasks', key=task_key) }}',
+  '{{ title }}')">
+  <div class="message-header">
+    {{ title }}
+    <button
+      class="button is-small is-rounded"
+      :disabled="tasking"
+      @click="taskLaunch()">
+      <span class="icon">
+        <template x-if="!tasking">
+          <i class="fas fa-play"></i>
+        </template>
+        <template x-if="tasking">
+          <i class="fas fa-spinner fa-spin"></i>
+        </template>
+      </span>
+    </button>
+  </div>
+  <div class="message-body">
+    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+    <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
+    <div x-show="error" class="has-text-danger" x-text="error"></div>
+  </div>
+</div>
+{% endmacro %}
+
 {% extends 'base.html' %}
 
 {% block header %}
@@ -9,60 +38,11 @@
 
   <div class="columns is-desktop">
     {% if config.sync_blackhole_enabled %}
-      <div class="message is-small column is-4" x-data="TaskStatusBoxComponent(
-        '{{ url_for('api.taskstatuses_task_statuses', key='sync-blackhole') }}',
-        '{{ url_for('api.tasks_tasks', key='blackhole') }}',
-        '{{ _('Blackhole') }}')">
-        <div class="message-header">
-          {{ _('Blackhole') }}
-          <button
-            class="button is-small is-rounded"
-            :disabled="tasking"
-            @click="taskLaunch()">
-            <span class="icon">
-                <template x-if="!tasking">
-                    <i class="fas fa-play"></i>
-                </template>
-                <template x-if="tasking">
-                    <i class="fas fa-spinner fa-spin"></i>
-                </template>
-            </span>
-        </button>
-        </div>
-        <div class="message-body">
-          <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-          <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
-          <div x-show="error" class="has-text-danger" x-text="error"></div>
-        </div>
-      </div>
+      {{ task_box(_('Blackhole'), 'sync-blackhole', 'blackhole') }}
     {% endif %}
 
-    <div class="message is-small column is-4 is-offset-4" x-data="TaskStatusBoxComponent(
-      '{{ url_for('api.taskstatuses_task_statuses', key='sync-seedbox') }}',
-      '{{ url_for('api.tasks_tasks', key='seedbox') }}',
-      '{{ _('Seedbox') }}')">
-      <div class="message-header">
-        {{ _('Seedbox') }}
-        <button
-            class="button is-small is-rounded"
-            :disabled="tasking"
-            @click="taskLaunch()">
-            <span class="icon">
-                <template x-if="!tasking">
-                    <i class="fas fa-play"></i>
-                </template>
-                <template x-if="tasking">
-                    <i class="fas fa-spinner fa-spin"></i>
-                </template>
-            </span>
-        </button>
-      </div>
-      <div class="message-body">
-        <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-        <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
-        <div x-show="error" class="has-text-danger" x-text="error"></div>
-      </div>
-    </div>
+    {% set seedbox_offset = 'is-offset-4' if config.sync_blackhole_enabled else '' %}
+    {{ task_box(_('Seedbox'), 'sync-seedbox', 'seedbox', extra_classes=seedbox_offset) }}
   </div>
 
   <div class="has-text-right">

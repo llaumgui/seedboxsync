@@ -30,14 +30,12 @@ def info() -> str:
     sync_blackhole: TaskStatus | bool
     sync_seedbox: TaskStatus | bool
 
-    try:
-        sync_blackhole = TaskStatus.get(TaskStatus.key == "sync-blackhole")
-    except TaskStatus.DoesNotExist:  # type: ignore[attr-defined]
-        sync_blackhole = False
-    try:
-        sync_seedbox = TaskStatus.get(TaskStatus.key == "sync-seedbox")
-    except TaskStatus.DoesNotExist:  # type: ignore[attr-defined]
-        sync_seedbox = False
+    # Get statues
+    keys = ["sync-blackhole", "sync-seedbox", "heartbeat"]
+    statuses = {ts.key: ts for ts in TaskStatus.select().where(TaskStatus.key.in_(keys))}
+    sync_blackhole = statuses.get("sync-blackhole", False)
+    sync_seedbox = statuses.get("sync-seedbox", False)
+    heartbeat = statuses.get("heartbeat", False)
 
     # First download statistics
     first_date = Download.select(fn.MIN(Download.finished)).where(Download.finished != 0).scalar()
@@ -55,6 +53,7 @@ def info() -> str:
         "seedboxsync_db_version": SeedboxSync.get_db_version(),
         "sync_blackhole": sync_blackhole,
         "sync_seedbox": sync_seedbox,
+        "heartbeat": heartbeat,
     }
 
     return render_template("info.html", info=info)
