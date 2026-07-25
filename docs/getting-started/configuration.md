@@ -24,7 +24,7 @@ Supported qlite database file locations:
 
 ## Settings
 
-> :information_source: Since SeedboxSync v4, all configuration is stored in the database, and settings have been moved to the web UI.
+> :information_source: Since SeedboxSync v4, all configurations is stored in the database, and settings have been moved to the [web UI](../frontend.md).
 
 **Notes:**
 

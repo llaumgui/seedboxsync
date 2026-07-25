@@ -71,8 +71,8 @@ nav:
     - getting-started/usage.md
   - frontend.md
   - Advanced:
-    - advanced/development-back.md
-    - advanced/development-front.md
+    - advanced/migrate_from_v3.md
+    - advanced/development.md
 
 plugins:
   - search
