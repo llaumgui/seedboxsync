@@ -10,7 +10,7 @@ WORKDIR /src
 COPY . /src
 RUN corepack enable
 RUN pnpm install --frozen-lockfile
-RUN pnpm run build
+RUN pnpm build
 
 
 # ------------------------------------------------ Build python and translations

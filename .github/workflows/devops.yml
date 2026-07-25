@@ -63,7 +63,7 @@ jobs:
     - name: Install nodejs dependencies
       run: pnpm install --frozen-lockfile
     - name: Run nodejs tests
-      run: pnpm run test:lint
+      run: pnpm test:lint
 
   ##############################################################################
   # Markdownlint

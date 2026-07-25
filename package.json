@@ -1,27 +1,26 @@
 {
-  "name": "seedboxsync-frontend",
-  "title": "Frontend for SeedboxSync",
-  "description": "The frontend for SeedboxSync.",
+  "name": "seedboxsync",
+  "title": "SeedboxSync",
+  "description": "The frontend assets and scripts for SeedboxSync.",
   "type": "module",
-  "homepage": "https://github.com/llaumgui/seedboxsync-front",
+  "homepage": "https://github.com/llaumgui/seedboxsync",
   "author": {
     "name": "Guillaume Kulakowski",
-    "url": "http://blog.kulakowski.fr/"
+    "url": "https://blog.kulakowski.fr/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/llaumgui/seedboxsync-front.git"
+    "url": "https://github.com/llaumgui/seedboxsync.git"
   },
   "keywords": [
     "seedbox",
     "sync",
-    "seedboxsync",
-    "frontend"
+    "seedboxsync"
   ],
   "bugs": {
-    "url": "https://github.com/llaumgui/seedboxsync-front/issues"
+    "url": "https://github.com/llaumgui/seedboxsync/issues"
   },
-  "license": "GPL 3.0",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.0",
     "alpinejs": "^3.15.12",
@@ -34,14 +33,15 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.7.0",
+    "eslint-plugin-package-json": "^1.6.1",
     "globals": "^17.7.0",
     "sass": "^1.101.0",
     "vite": "^8.1.4"
   },
   "scripts": {
-    "test:lint": "eslint seedboxsync/front/static/src/",
-    "dev": "vite build --watch",
     "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite build --watch",
+    "preview": "vite preview",
+    "test:lint": "eslint ."
   }
 }

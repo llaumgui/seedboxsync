@@ -4,10 +4,10 @@ import { resolve } from "path";
 export default defineConfig({
   base: "/static/dist/",
   build: {
-    outDir: resolve(__dirname, "seedboxsync/front/static/dist"),
+    outDir: resolve(import.meta.dirname, "seedboxsync/front/static/dist"),
     emptyOutDir: true,
     rollupOptions: {
-      input: resolve(__dirname, "seedboxsync/front/static/src/main.js"),
+      input: resolve(import.meta.dirname, "seedboxsync/front/static/src/main.js"),
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,

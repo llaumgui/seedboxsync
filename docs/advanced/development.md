@@ -65,13 +65,13 @@ seedboxsync --help
 Build on change:
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
 Simple build:
 
 ```bash
-pnpm run build
+pnpm build
 ```
 
 ## Testing

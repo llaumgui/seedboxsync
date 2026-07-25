@@ -48,13 +48,13 @@ format *args:
     ruff check --fix {{args}}
 
 nodejs-lint:
-    pnpm run test:lint
+    pnpm test:lint
 
 nodejs-dev:
-    pnpm run dev
+    pnpm dev
 
 nodejs-build:
-    pnpm run build
+    pnpm build
 
 lint: comply mypy markdownlint hadolint nodejs-lint
 
@@ -82,7 +82,7 @@ clean:
 
 dist: clean
     rm -rf dist/*
-    pnpm run build
+    pnpm build
     flit build
 
 publish: dist
