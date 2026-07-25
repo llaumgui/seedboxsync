@@ -8,9 +8,9 @@ FROM node:lts-alpine AS builder-node
 WORKDIR /src
 
 COPY . /src
-RUN corepack enable
-RUN pnpm install --frozen-lockfile
-RUN pnpm build
+RUN corepack enable && \
+    pnpm install --frozen-lockfile && \
+    pnpm build
 
 
 # ------------------------------------------------ Build python and translations
@@ -23,8 +23,13 @@ ENV \
 WORKDIR /src
 COPY . /src
 
+# Install uv
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+ENV PATH="/root/.local/bin/:$PATH"
+
 RUN apk add --no-cache just && \
-    pip install --no-cache-dir -e .[dev] && \
+    uv sync --locked && \
     just i18n-compile
 
 
@@ -68,11 +73,16 @@ RUN mkdir /config && \
     mkdir /app && \
     chown -R seedboxsync:seedboxsync /config /downloads /watch
 
+# Install uv
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+ENV PATH="/root/.local/bin/:$PATH"
+
 # Install app
 WORKDIR /app
 COPY . /app
-RUN pip install --no-cache-dir -e . && \
-    pip install --no-cache-dir gunicorn && \
+RUN uv sync --locked && \
+    uv pip install --no-cache gunicorn && \
     # Cleanup \
     rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/justfile
 COPY --from=builder-node /src/seedboxsync/front/static/dist /app/seedboxsync/front/static/dist

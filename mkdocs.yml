@@ -70,12 +70,16 @@ nav:
     - getting-started/configuration.md
     - getting-started/usage.md
   - frontend.md
-  - Advanced:
-    - advanced/migrate_from_v3.md
-    - advanced/development.md
+  - Upgrade:
+    - upgrade/from_v3_to_v4.md
+  - Development:
+    - development/development.md
+    - development/ai_usage.md
+    - development/changelog.md
 
 plugins:
   - search
+  - include-markdown
 
 markdown_extensions:
   - pymdownx.highlight:

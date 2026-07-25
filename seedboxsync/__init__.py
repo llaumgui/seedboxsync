@@ -10,6 +10,7 @@ from pathlib import Path
 from flask import Response, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
 import humanize
+from slugify import slugify
 from seedboxsync.__version__ import (
     __api_path_version__ as api_path_version,
     __api_version__ as api_version,
@@ -100,6 +101,9 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
 
     # Initialize the cache
     cache.init_app(app)
+
+    # Register jinja filter
+    app.jinja_env.filters["slugify"] = slugify
 
     # Register blueprint and error handler
     app.register_blueprint(bp_frontend)

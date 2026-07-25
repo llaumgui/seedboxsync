@@ -34,10 +34,10 @@ export default defineConfig([
   },
   {
     ignores: [
+      ".venv/",
       "**/dist/",
       "**/node_modules/",
       "coverage-report/",
-      "env/",
       "site/",
     ],
   },

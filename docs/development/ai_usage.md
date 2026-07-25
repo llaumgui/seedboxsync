@@ -1,4 +1,7 @@
-# AI Usage Policy
+---
+title: AI Usage Policy
+summary: Usage policy about AI in this project.
+---
 
 This project welcomes AI-assisted contributions, provided they are reviewed, tested, and comply with the project's coding standards and license requirements.
 

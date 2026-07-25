@@ -9,7 +9,7 @@ node_modules
 screenshots
 .git
 .vscode
-env
+.venv
 .dockerignore
 .editorconfig
 .flake8

@@ -1,6 +1,6 @@
 {% macro render_status_row(title, task) %}
 <tr>
-  <th>{{ title }}</th>
+  <th id="{{ title | slugify }}">{{ title }}</th>
   <td>
     {% if not task %}
       {{ _('Never executed.') }}

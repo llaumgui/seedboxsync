@@ -1,5 +1,5 @@
 ---
-title: Migration from v3 to v4
+title: Upgrade from v3 to v4
 summary: Upgrade guide for Seedboxsync from v3 to v4
 ---
 
