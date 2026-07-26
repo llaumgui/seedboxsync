@@ -27,11 +27,13 @@ def heartbeat_startup() -> None:
         key="heartbeat",
         running=True,
         started=started,
+        finished=started,
     ).on_conflict(
         conflict_target=[TaskStatus.key],
         update={
             TaskStatus.running: True,
             TaskStatus.started: started,
+            TaskStatus.finished: started,
         },
     ).execute()
 
