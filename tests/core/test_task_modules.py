@@ -60,6 +60,8 @@ def test_task_modules_register_and_execute_single_task_per_module(
     assert module.minute == environment_value
     manager.periodic_task.assert_not_called()
     manager.lock_task.assert_called()
-    manager.task.assert_called_once_with()
+    assert manager.task.call_count == 1
+    assert manager.task.call_args.args == ()
+    assert manager.task.call_args.kwargs["priority"] == module.PRIORITY
     assert len(service.call_args_list) == 1
     assert service.call_args_list[0].args == service_args

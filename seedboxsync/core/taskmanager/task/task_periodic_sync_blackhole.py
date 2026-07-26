@@ -11,6 +11,7 @@ from huey import crontab
 from seedboxsync.core import current_app as app
 from seedboxsync.core.sync.services import (
     BLACKHOLE_LOCK_NAME as LOCK_NAME,
+    BLACKHOLE_PRIORITY as PRIORITY,
     blackhole as blackhole_service,
 )
 
@@ -19,7 +20,7 @@ ctx = app.app_context()
 minute = os.getenv("SYNC_BLACKHOLE_MINUTE", "*")
 
 
-@task_manager.periodic_task(crontab(minute=minute))  # type: ignore[untyped-decorator]
+@task_manager.periodic_task(crontab(minute=minute), priority=PRIORITY)  # type: ignore[untyped-decorator]
 @task_manager.lock_task(LOCK_NAME)  # type: ignore[untyped-decorator]
 def periodic_sync_blackhole() -> None:
     """Define a huey periodic task."""

@@ -18,6 +18,7 @@ from seedboxsync.core.sync.download_progress import DownloadProgress
 from seedboxsync.core.taskmanager import track_taskstatus
 
 LOCK_NAME = "sync-seedbox"
+PRIORITY = 5
 
 
 @track_taskstatus(LOCK_NAME)

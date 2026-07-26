@@ -14,6 +14,7 @@ from seedboxsync.core.dao import Torrent
 from seedboxsync.core.taskmanager import track_taskstatus
 
 LOCK_NAME = "sync-blackhole"
+PRIORITY = 10
 
 
 @track_taskstatus(LOCK_NAME)
