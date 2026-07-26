@@ -81,8 +81,8 @@ ENV PATH="/root/.local/bin/:$PATH"
 # Install app
 WORKDIR /app
 COPY . /app
-RUN uv sync --locked && \
-    uv pip install --no-cache gunicorn && \
+RUN uv pip install --system --no-cache-dir -e . && \
+    uv pip install --system --no-cache-dir gunicorn && \
     # Cleanup \
     rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/justfile /app/*.lock
 COPY --from=builder-node /src/seedboxsync/front/static/dist /app/seedboxsync/front/static/dist
