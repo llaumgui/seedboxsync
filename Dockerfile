@@ -84,7 +84,7 @@ COPY . /app
 RUN uv sync --locked && \
     uv pip install --no-cache gunicorn && \
     # Cleanup \
-    rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/justfile
+    rm -rf /app/docker /app/*.json /app/*.js /app/*.cfg /app/justfile /app/*.lock
 COPY --from=builder-node /src/seedboxsync/front/static/dist /app/seedboxsync/front/static/dist
 COPY --from=builder-python /src/seedboxsync/front/translations /app/seedboxsync/front/translations
 

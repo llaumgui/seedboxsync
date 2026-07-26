@@ -11,7 +11,7 @@ import seedboxsync
 from seedboxsync import create_app
 from seedboxsync.cli.context import Context
 from seedboxsync.core import Database
-from .cli import Cli, command, group, pass_context
+from .cli import Cli, check_root_warning, command, group, pass_context
 
 __all__ = [
     "Cli",
@@ -51,6 +51,7 @@ def cli(ctx: Context) -> None:
     Args:
         ctx (Context): The Click context object.
     """
+    check_root_warning()
     if ctx.app.debug:
         ctx.app.logger.setLevel(logging.DEBUG)
     else:

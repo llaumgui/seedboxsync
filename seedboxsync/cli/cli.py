@@ -7,6 +7,7 @@
 """Cli module."""
 
 from importlib import import_module
+import os
 from pathlib import Path
 from typing import Any, ClassVar, cast
 import click
@@ -242,3 +243,23 @@ def group(*args: Any, **kwargs: Any) -> Any:
     """
     kwargs.setdefault("cls", Group)
     return click.group(*args, **kwargs)
+
+
+def check_root_warning() -> None:
+    """
+    Check if the script is being run as root and display a warning message.
+
+    This function checks the effective user ID (UID) on POSIX systems.
+    If the process is executed with root privileges (UID 0), a warning
+    is printed to stderr advising against running as root and providing
+    guidance for Docker container usage.
+    """
+    if hasattr(os, "geteuid") and os.geteuid() == 0:
+        click.secho(
+            "⚠️  Warning: You are running SeedboxSync as root. This is discouraged. "
+            "If you are using Docker, you may have forgotten to pass the --user flag "
+            "with the appropriate UID.",
+            fg="yellow",
+            bold=True,
+            err=True,
+        )
