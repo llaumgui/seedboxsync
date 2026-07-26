@@ -15,12 +15,7 @@ from seedboxsync.core import Flask, current_app
 
 
 class Context(click.Context):
-    """
-    SeedboxSync Click context.
-
-    Args:
-        ctx (click.Context): The Click context object.
-    """
+    """SeedboxSync Click context."""
 
     @cached_property
     def app(self) -> Flask:

@@ -4,6 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""The SeedboxSync main package."""
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path

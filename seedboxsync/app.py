@@ -4,7 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""app module."""
+"""The Flask app module."""
 
 from seedboxsync import create_app
 

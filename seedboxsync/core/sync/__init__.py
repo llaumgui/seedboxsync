@@ -4,6 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+"""SeedboxSync sync package."""
 from .abstract_sync_client import AbstractSyncClient, PathType, ProgressCallback
 
 __all__ = ["AbstractSyncClient", "PathType", "ProgressCallback"]

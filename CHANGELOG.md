@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.0.0
+## 4.0.0 - Not released yet, only avalaible on develop and main, not in stable
 
 **⚠️ Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
 
@@ -81,7 +81,7 @@
 
 ## 3.0.0 (Cement / peewee full rebuild) - Sep 23, 2020
 
-*SeedboxSync v1 was the first release on Python 2, SeedboxSync v2 was port from Python 2 code to a compatible Python 3 code and SeedboxSync v3 is a full rewrite on [https://builtoncement.com/](Cement framework) and Peepee ORM.*
+*SeedboxSync v1 was the first release on Python 2, SeedboxSync v2 was port from Python 2 code to a compatible Python 3 code and SeedboxSync v3 is a full rewrite on [Cement framework](https://builtoncement.com/) and Peepee ORM.*
 
 Change since v2 serie:
 

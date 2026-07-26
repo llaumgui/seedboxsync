@@ -95,13 +95,17 @@ test: comply type-checking markdownlint hadolint nodejs-lint pytest
 # Run the full validation and testing pipeline for CI
 test-ci: comply type-checking i18n-compile pytest-ci
 
-# Build static documentation site using MkDocs
-docs:
-    mkdocs build
+# Build static documentation site using ProperDocs
+docs: pytest
+    properdocs build
 
-# Serve live documentation preview with auto-reloading
+# Serve live documentation preview with auto-reloading using ProperDocs
 docs-serve:
-    mkdocs serve
+    properdocs serve
+
+# Prepare coverage and deploy on GitHub the static documentation site using ProperDocs
+docs-gh-deploy: i18n-compile pytest
+    properdocs gh-deploy --force
 
 # Remove Python bytecode files (*.pyc) and build artifacts
 clean:

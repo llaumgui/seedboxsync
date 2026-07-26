@@ -38,8 +38,7 @@ def ensure_dir_exists(path: str | PathLike[str]) -> None:
         path (str): The filesystem path of a directory.
 
     Raises:
-        AssertionError: If the directory ``path`` exists, but is not a
-        directory.
+        AssertionError: If the directory ``path`` exists, but is not a directory.
 
     """
     path = Path(path).expanduser().resolve()

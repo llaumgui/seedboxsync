@@ -5,19 +5,32 @@ on:
     tags: ['*']
     #branches:
     #  - develop
+    #  - main
+
+env:
+  pythonLastVersion: '3.14'
 
 permissions:
   contents: write
 
 jobs:
   deploy:
+    name: Deploy documentation using ProperDocs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      # Setup Python
+      - name: Install Just
+        uses: taiki-e/install-action@just
+      - name: Setup Python ${{ env.pythonLastVersion }} with uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: 3.x
+          python-version: ${{ env.pythonLastVersion }}
+      # Instal & run task
+      - name: Install Python dependencies
+        run: uv sync --locked --extra dev
+      # Deploy documentation
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v6
         with:
@@ -25,7 +38,5 @@ jobs:
           path: ~/.cache
           restore-keys: |
             mkdocs-material-
-      - name: Install mkdocs-material
-        run: pip install mkdocs-material
-      - name: Deploy mkdoc
-        run: mkdocs gh-deploy --force
+      - name: Deploy ProperDocs
+        run: just docs-gh-deploy
