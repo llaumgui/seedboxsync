@@ -9,7 +9,7 @@
 from datetime import datetime
 from typing import Any
 import uuid
-from flask_restx import Model, Namespace, Resource as RestXResource, fields
+from flask_restx import Model, Namespace, OrderedModel, Resource as RestXResource, fields
 
 
 class Resource(RestXResource):  # type: ignore[misc]
@@ -77,10 +77,10 @@ class Resource(RestXResource):  # type: ignore[misc]
         api: Namespace,
         name: str,
         *,
-        nested_model: Model | None = None,
+        nested_model: Model | OrderedModel | None = None,
         as_list: bool = True,
         as_message: bool = False,
-    ) -> Model:
+    ) -> Model | OrderedModel:
         """
         Build a Flask-RestX model for a standard API response envelope.
 
@@ -90,12 +90,12 @@ class Resource(RestXResource):  # type: ignore[misc]
         Args:
             api (Namespace): The Flask-RestX namespace.
             name (str): The name of the nested resource model.
-            nested_model (Model): The Flask-RestX model representing the resource.
+            nested_model (Model | OrderedModel): The Flask-RestX model representing the resource.
             as_list (bool): If True, the 'data' field will be a list of nested resources.
             as_message (bool): The response is a message only.
 
         Returns:
-            Model: A new Flask-RestX model representing the envelope.
+            Model | OrderedModel: A new Flask-RestX model representing the envelope.
         """
         if as_message is False:
             if as_list:

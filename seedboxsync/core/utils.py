@@ -9,6 +9,7 @@
 import os
 from os import PathLike
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 from bcoding import bdecode
 from flask import current_app as app
@@ -49,7 +50,7 @@ def ensure_dir_exists(path: str | PathLike[str]) -> None:
         path.mkdir()
 
 
-def get_torrent_infos(torrent_path: str | PathLike[str]) -> str | None:
+def get_torrent_infos(torrent_path: str | PathLike[str]) -> Any | None:
     """
     Extracts information from a torrent file.
 

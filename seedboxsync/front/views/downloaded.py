@@ -13,7 +13,7 @@ from seedboxsync.front.views import bp
 
 
 @bp.route("/downloaded")
-@cache.cached(timeout=300)
+@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def downloaded() -> str:
     """Downloaded list view."""
     init_flash()

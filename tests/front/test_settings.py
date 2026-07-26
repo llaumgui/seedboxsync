@@ -1,6 +1,5 @@
 from unittest.mock import patch
 from seedboxsync.core.dao import SeedboxSync
-from seedboxsync.front.views.settings import _as_bool
 
 
 def _valid_settings_form(app):
@@ -70,9 +69,3 @@ def test_settings_reports_persistence_errors(app, client):
 
     assert response.status_code == 200
     assert b"Failed to save configuration" in response.data
-
-
-def test_settings_boolean_parser_accepts_only_enabled_form_value():
-    assert _as_bool(" 1 ") is True
-    assert _as_bool("true") is False
-    assert _as_bool(None) is False

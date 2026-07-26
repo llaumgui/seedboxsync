@@ -16,7 +16,7 @@ import paramiko
 from paramiko.sftp_attr import SFTPAttributes
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.exception import SeedboxsyncConnectionError
-from seedboxsync.core.sync import AbstractSyncClient, PathType, _Callback
+from seedboxsync.core.sync import AbstractSyncClient, PathType, ProgressCallback
 
 
 class SftpClient(AbstractSyncClient):
@@ -32,8 +32,8 @@ class SftpClient(AbstractSyncClient):
     _login: str
     _password: str
     _port: str
-    _timeout: str | bool
-    _transport = paramiko.Transport
+    _timeout: float | None
+    _transport: paramiko.Transport | None
     _client: paramiko.SFTPClient
     _max_concurrent_prefetch_requests: int
 
@@ -48,7 +48,10 @@ class SftpClient(AbstractSyncClient):
         self._login = config.get("seedbox_login", "")
         self._password = config.get("seedbox_password", "")
         self._port = config.get("seedbox_port", "")
-        self._timeout = config.get("seedbox_timeout", False)
+
+        raw_timeout = config.get("seedbox_timeout", False)
+        self._timeout = float(raw_timeout) if raw_timeout else None
+
         self._max_concurrent_prefetch_requests = int(config.get("seedbox_max_concurrent_prefetch_requests", 128))
         self._transport = None
 
@@ -78,17 +81,21 @@ class SftpClient(AbstractSyncClient):
 
             try:
                 self._transport.connect(username=self._login, password=self._password)
-            except paramiko.ssh_exception.AuthenticationException as exc:
+            except paramiko.AuthenticationException as exc:
                 raise SeedboxsyncConnectionError(f"{exc!s}\nFailed to establish a connection. Ensure the login and password are correct.") from exc
 
             self.app.logger.debug("Init paramiko.SFTPClient from transport")
-            self._client = paramiko.SFTPClient.from_transport(self._transport)
+            client = paramiko.SFTPClient.from_transport(self._transport)
+            if client is None:
+                raise SeedboxsyncConnectionError("Failed to initialize SFTPClient from transport.")
+            self._client = client
 
             # Setup timeout
-            if self._timeout:
+            if self._timeout is not None:
                 channel = self._client.get_channel()
-                channel.settimeout(self._timeout)
-                self.app.logger.debug(f"Timeout is set to {channel.gettimeout()}")
+                if channel is not None:
+                    channel.settimeout(self._timeout)
+                    self.app.logger.debug(f"Timeout is set to {channel.gettimeout()}")
 
     def put(self, local_path: PathType, remote_path: PathType) -> SFTPAttributes:
         """
@@ -111,7 +118,7 @@ class SftpClient(AbstractSyncClient):
         self,
         remote_path: PathType,
         local_path: PathType,
-        progress_callback: _Callback | None = None,
+        progress_callback: ProgressCallback | None = None,
     ) -> None:
         """
         Download a remote file from the SFTP server.
@@ -119,7 +126,7 @@ class SftpClient(AbstractSyncClient):
         Args:
             remote_path (PathType): Path of the remote file.
             local_path (PathType): Destination path on the local host.
-            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
+            progress_callback (ProgressCallback | None): Optional callback receiving bytes_transferred.
         """
         self._connect_before()
         remote_path = fspath(remote_path)
@@ -156,7 +163,7 @@ class SftpClient(AbstractSyncClient):
             path (Optional[PathType]): Target directory. If None, no change occurs.
         """
         self._connect_before()
-        path = path and fspath(path)
+        path = fspath(path) if path is not None else None
         self._client.chdir(path)
 
     def chmod(self, path: PathType, mode: int) -> None:
@@ -206,7 +213,7 @@ class SftpClient(AbstractSyncClient):
         files: list[str] = []
         folders: list[str] = []
         for f in self._client.listdir_attr(remote_path):
-            if S_ISDIR(f.st_mode):
+            if f.st_mode is not None and S_ISDIR(f.st_mode):
                 folders.append(f.filename)
             else:
                 files.append(f.filename)

@@ -94,6 +94,7 @@ class TaskStatuses(Resource):
         Returns:
             dict[str, Any]: API response envelope containing the taskstatus.
         """
+        select: TaskStatus | None = None
         try:
             select = (
                 TaskStatus.select(

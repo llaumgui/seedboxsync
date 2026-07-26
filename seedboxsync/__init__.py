@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from flask import Response, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
-import humanize
+from humanize import i18n as humanize_i18n
 from slugify import slugify
 from seedboxsync.__version__ import (
     __api_path_version__ as api_path_version,
@@ -80,16 +80,16 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
 
     # Initialize humanize for each request
     @app.before_request
-    def init_once() -> None:
-        humanize.i18n.activate(get_locale())
+    def init_once() -> None:  # pyright: ignore [reportUnusedFunction]
+        humanize_i18n.activate(get_locale())
 
     # Inject Jinja function / variables
     @app.context_processor
-    def inject_formatters() -> dict[str, Callable[[datetime], str]]:
+    def inject_formatters() -> dict[str, Callable[[datetime], str]]:  # pyright: ignore [reportUnusedFunction]
         return {"format_datetime": format_datetime}
 
     @app.context_processor
-    def inject_globals() -> dict[str, str]:
+    def inject_globals() -> dict[str, str]:  # pyright: ignore [reportUnusedFunction]
         locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
         theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
         return {
@@ -112,7 +112,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
 
     # Serve the favicon from the static directory
     @app.route("/favicon.ico")
-    def favicon() -> Response:
+    def favicon() -> Response:  # pyright: ignore [reportUnusedFunction]
         return send_from_directory(Path(app.root_path) / "static", "favicon.png", mimetype="image/png")
 
     return app

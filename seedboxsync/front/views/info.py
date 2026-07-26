@@ -8,7 +8,7 @@
 
 from datetime import datetime
 from flask import render_template
-import humanize
+from humanize import filesize, precisedelta
 from peewee import fn
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
@@ -18,7 +18,7 @@ from seedboxsync.front.views import bp
 
 
 @bp.route("/info")
-@cache.cached(timeout=60)
+@cache.cached(timeout=60)  # pyright: ignore [reportUntypedFunctionDecorator]
 def info() -> str:
     """Information page view."""
     init_flash()
@@ -42,11 +42,11 @@ def info() -> str:
     first_delta = ""
     if first_date is not None:
         first_delta = datetime.now() - first_date
-        first_delta = humanize.precisedelta(first_delta, minimum_unit="days")
+        first_delta = precisedelta(first_delta, minimum_unit="days")
 
     info = {
         "stats_total_files": total_files,
-        "stats_total_size": humanize.filesize.naturalsize(total_size, True),
+        "stats_total_size": filesize.naturalsize(total_size, True),
         "stats_first": first_date,
         "stats_first_delta": first_delta,
         "version": version,

@@ -167,7 +167,7 @@ class DownloadsList(Resource):
         """
         args = parser.parse_args()
         offset = args.get("offset")
-        limit = self.set_limit(args.get("limit"))
+        limit = self.set_limit(args.get("limit", 50))
         search = args.get("search")
         finished = args.get("finished")
 
@@ -242,6 +242,7 @@ class Downloads(Resource):
         Returns:
             dict[str, Any]: API response envelope containing the download.
         """
+        select: Download | None = None
         try:
             select = (
                 Download.select(
@@ -290,7 +291,7 @@ class Downloads(Resource):
 class DownloadsStatsByMonth(Resource):
     """Endpoint to retrieve monthly download statistics."""
 
-    @cache.cached(timeout=3600)
+    @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_month")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_month_envelope, code=200, description="Download statistics aggregated by month")  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
@@ -306,7 +307,7 @@ class DownloadsStatsByMonth(Resource):
 class DownloadsStatsByYear(Resource):
     """Endpoint to retrieve yearly download statistics."""
 
-    @cache.cached(timeout=3600)
+    @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_year")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_year_envelope, code=200, description="Download statistics aggregated by year")  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:

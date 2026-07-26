@@ -57,8 +57,12 @@ hadolint:
 mypy:
     uv run mypy
 
+# Run static type checking on Python source code using basedpyright
 basedpyright:
     uv run basedpyright
+
+# Run static type checking on Python source code
+type-checking: mypy basedpyright
 
 # Format Python code and automatically fix safe issues using Ruff
 format *args:
@@ -86,10 +90,10 @@ pytest-ci:
     uv run python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
 
 # Run all local linters followed by the full test suite
-test: comply mypy markdownlint hadolint nodejs-lint pytest
+test: comply type-checking markdownlint hadolint nodejs-lint pytest
 
 # Run the full validation and testing pipeline for CI
-test-ci: comply mypy i18n-compile pytest-ci
+test-ci: comply type-checking i18n-compile pytest-ci
 
 # Build static documentation site using MkDocs
 docs:

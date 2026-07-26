@@ -13,7 +13,7 @@ from seedboxsync.front.views import bp
 
 
 @bp.route("/uploaded")
-@cache.cached(timeout=300)
+@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def uploaded() -> str:
     """Uploaded list view."""
     init_flash()

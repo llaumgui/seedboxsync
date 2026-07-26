@@ -27,7 +27,7 @@ def api_errorhandler(error: BadRequest | NotFound) -> tuple[dict[str, Any], int]
     Returns:
         tuple[dict[str, Any], int]: Empty response body and HTTP status code.
     """
-    status_code = error.code if isinstance(error, HTTPException) else 500
+    status_code = error.code or 500
 
     error.data = {  # type: ignore[union-attr]
         "type": "about:blank",

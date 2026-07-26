@@ -9,9 +9,10 @@
 import os
 from os import fspath
 from pathlib import Path
-from typing import ClassVar
+from typing import ClassVar, cast
 from flask import Flask
-import humanize
+from humanize import filesize, time
+from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
 from seedboxsync.core import utils
@@ -33,6 +34,7 @@ class Database:
         Path("~/.seedboxsync/config/seedboxsync.db").expanduser().resolve(),
         Path("/etc/seedboxsync/seedboxsync.db"),
     ]
+    db: SqliteDatabase
 
     def __init__(self, app: Flask) -> None:
         """
@@ -88,7 +90,7 @@ class Database:
     def _init_and_bind(self) -> None:
         """Initialize and bind Peewee models to the SQLite database."""
         db_wrapper = FlaskDB(self.app)
-        self.db = db_wrapper.database
+        self.db = cast(SqliteDatabase, db_wrapper.database)
         self.app.extensions["flaskdb"] = db_wrapper
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
@@ -105,27 +107,27 @@ class Database:
     def _register_functions(self) -> None:
         """Register DB functions."""
 
-        @self.db.func("byte_to_gi")  # type: ignore
-        def db_byte_to_gi(num: float, suffix: str = "B") -> str:
+        @self.db.func("byte_to_gi")
+        def db_byte_to_gi(num: float, suffix: str = "B") -> str:  # pyright: ignore [reportUnusedFunction]
             return utils.byte_to_gi(num, suffix)
 
-        @self.db.func("humanize")  # type: ignore
-        def db_humanize(num: float) -> str:
+        @self.db.func("humanize")
+        def db_humanize(num: float) -> str:  # pyright: ignore [reportUnusedFunction]
             try:
                 # Treat None or invalid type as 0
                 num = float(num or 0)
             except (ValueError, TypeError):
                 num = 0.0
-            return humanize.filesize.naturalsize(num, True)
+            return filesize.naturalsize(num, True)
 
-        @self.db.func("naturaldelta")  # type: ignore
-        def db_naturaldelta(num: float) -> str:
+        @self.db.func("naturaldelta")
+        def db_naturaldelta(num: float) -> str:  # pyright: ignore [reportUnusedFunction]
             try:
                 # Treat None or invalid type as 0
                 num = float(num or 0)
             except (ValueError, TypeError):
                 num = 0.0
-            return humanize.time.naturaldelta(num, minimum_unit="seconds", months=False)
+            return time.naturaldelta(num, minimum_unit="seconds", months=False)
 
     #
     # Database creation and migration
@@ -155,8 +157,8 @@ class Database:
 
     def migrate_to_4(self) -> None:
         """Replace 'Lock' table by 'TaskStatus'."""
-        self.db.execute_sql("DROP TABLE IF EXISTS lock;")
-        self.db.execute_sql("DELETE FROM seedboxsync WHERE key = 'version';")
+        self.db.execute_sql("DROP TABLE IF EXISTS lock;")  # type: ignore[no-untyped-call]
+        self.db.execute_sql("DELETE FROM seedboxsync WHERE key = 'version';")  # type: ignore[no-untyped-call]
         self.db.create_tables([TaskStatus])
 
         SeedboxSync.set_db_version("4")

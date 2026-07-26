@@ -89,22 +89,6 @@ def _build_form() -> dict[str, Any]:
     return fields
 
 
-def _as_bool(value: str | None) -> bool:
-    """
-    Convert a form value to a boolean.
-
-    Args:
-        value: The raw form value.
-
-    Returns:
-        True if the value represents an enabled/true state, otherwise False.
-    """
-    if value is None:
-        return False
-
-    return value.strip().lower() in {"1"}
-
-
 def _save_form(req: Request) -> None:
     """Save form data to the configuration file."""
     seedbox_timeout_enabled = req.form.get("seedbox_timeout_enabled", "0") == "1"
@@ -112,9 +96,10 @@ def _save_form(req: Request) -> None:
     fields = app.seedboxsync_config
     config_to_db: list[dict[str, str]] = []
     config_to_update: dict[str, Any] = {}
+    db_value: str = "0"
+    value: str | bool = False
 
     for key in fields:
-        value: str | bool
         if key in req.form:
             value = str(req.form[key] or "").strip()
             db_value = value

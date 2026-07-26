@@ -14,7 +14,7 @@ from seedboxsync.front.views import bp
 
 
 @bp.route("/")
-@cache.cached(timeout=300)
+@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def homepage() -> str:
     """Home page view."""
     init_flash()

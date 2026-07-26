@@ -14,8 +14,9 @@ providing methods for file operations and session management on a remote server.
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable
 from os import PathLike
+from typing import Any
 
-_Callback = Callable[[int, int], object]
+ProgressCallback = Callable[[int, int], object]
 
 PathType = str | PathLike[str]
 
@@ -35,7 +36,7 @@ class AbstractSyncClient:  # pragma: no cover
         """Initialize the transport client."""
 
     @abstractmethod
-    def put(self, local_path: PathType, remote_path: PathType) -> None:
+    def put(self, local_path: PathType, remote_path: PathType) -> Any:
         """
         Upload a local file to the remote server.
 
@@ -50,7 +51,7 @@ class AbstractSyncClient:  # pragma: no cover
         self,
         remote_path: PathType,
         local_path: PathType,
-        progress_callback: _Callback | None = None,
+        progress_callback: ProgressCallback | None = None,
     ) -> None:
         """
         Download a file from the remote server to the local host.
@@ -58,11 +59,11 @@ class AbstractSyncClient:  # pragma: no cover
         Args:
             remote_path (PathType): Path to the remote file to copy.
             local_path (PathType): Destination path on the local host.
-            progress_callback (_Callback | None): Optional callback receiving bytes_transferred.
+            progress_callback (ProgressCallback | None): Optional callback receiving bytes_transferred.
         """
 
     @abstractmethod
-    def stat(self, filepath: PathType) -> None:
+    def stat(self, filepath: PathType) -> Any:
         """
         Retrieve metadata about a file on the remote system.
 

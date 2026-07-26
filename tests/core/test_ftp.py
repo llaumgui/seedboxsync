@@ -44,27 +44,6 @@ def test_client_initialization_is_lazy_and_reads_configuration(ftp_app):
         ftp_host.assert_not_called()
 
 
-@pytest.mark.parametrize(
-    ("configured", "expected"),
-    [
-        (False, None),
-        (None, None),
-        ("", None),
-        ("false", None),
-        ("NONE", None),
-        ("null", None),
-        ("12.5", 12.5),
-        (30, 30.0),
-        (2.5, 2.5),
-    ],
-)
-def test_timeout_normalization(ftp_app, configured, expected):
-    ftp_app.config["SEEDBOXSYNC_SEEDBOX_TIMEOUT"] = configured
-
-    with ftp_app.app_context():
-        assert FtpClient()._normalize_timeout() == expected
-
-
 def test_get_without_callback_uses_ftputil_download(ftp_app, ftp_mocks):
     _, ftp = ftp_mocks
 

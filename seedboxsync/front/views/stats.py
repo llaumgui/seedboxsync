@@ -7,7 +7,7 @@
 """SeedboxSync Flask vierw for stats."""
 
 from flask import render_template
-import humanize
+from humanize import filesize
 from seedboxsync.core.dao import Download
 from seedboxsync.front.cache import cache
 from seedboxsync.front.utils import init_flash
@@ -15,7 +15,7 @@ from seedboxsync.front.views import bp
 
 
 @bp.route("/stats")
-@cache.cached(timeout=300)
+@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def stats() -> str:
     """Stats page view."""
     init_flash()
@@ -26,7 +26,7 @@ def stats() -> str:
 
     stats_total = {
         "files": total_files,
-        "total_size": humanize.filesize.naturalsize(total_size, True),
+        "total_size": filesize.naturalsize(total_size, True),
     }
 
     return render_template("stats.html", stats_total=stats_total)

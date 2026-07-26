@@ -89,7 +89,7 @@ class UploadsList(Resource):
         """
         args = parser.parse_args()
         offset = args.get("offset")
-        limit = self.set_limit(args.get("limit"))
+        limit = self.set_limit(args.get("limit", 50))
         search = args.get("search")
 
         count = Torrent.select()
@@ -124,6 +124,7 @@ class Uploads(Resource):
         Returns:
             dict[str, Any]: API response envelope containing the upload.
         """
+        select: Torrent | None = None
         try:
             select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(Torrent.id == id).dicts().get()
         except Torrent.DoesNotExist:  # type: ignore[attr-defined]

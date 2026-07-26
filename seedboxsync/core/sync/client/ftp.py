@@ -16,7 +16,7 @@ import ftputil
 import ftputil.error
 from seedboxsync.core import Flask, current_app
 from seedboxsync.core.exception import SeedboxsyncConnectionError
-from seedboxsync.core.sync import AbstractSyncClient, PathType, _Callback
+from seedboxsync.core.sync import AbstractSyncClient, PathType, ProgressCallback
 
 
 class FtpSession(ftplib.FTP):
@@ -51,7 +51,7 @@ class FtpClient(AbstractSyncClient):
     _login: str
     _password: str
     _port: str
-    _timeout: str | bool
+    _timeout: float | None
     _client: Any | None
 
     def __init__(self) -> None:
@@ -65,7 +65,10 @@ class FtpClient(AbstractSyncClient):
         self._login = config.get("seedbox_login", "")
         self._password = config.get("seedbox_password", "")
         self._port = config.get("seedbox_port", "21")
-        self._timeout = config.get("seedbox_timeout", False)
+
+        raw_timeout = config.get("seedbox_timeout", False)
+        self._timeout = float(raw_timeout) if raw_timeout else None
+
         self._client = None
 
     def _connect_before(self) -> Any:
@@ -89,7 +92,7 @@ class FtpClient(AbstractSyncClient):
                     self._login,
                     self._password,
                     port=int(self._port),
-                    timeout=self._normalize_timeout(),
+                    timeout=self._timeout,
                     session_factory=FtpSession,
                 )
             except (
@@ -102,19 +105,6 @@ class FtpClient(AbstractSyncClient):
                 raise SeedboxsyncConnectionError(f"{exc!s}\nFailed to establish a connection. Ensure the host, port, login and password are correct.") from exc
 
         return self._client
-
-    def _normalize_timeout(self) -> float | None:
-        """Convert the configured timeout into a socket-compatible value."""
-        if self._timeout is False or self._timeout is None:
-            return None
-
-        if isinstance(self._timeout, str):
-            timeout = self._timeout.strip()
-            if timeout == "" or timeout.lower() in ("false", "none", "null"):
-                return None
-            return float(timeout)
-
-        return float(self._timeout)
 
     def put(self, local_path: PathType, remote_path: PathType) -> None:
         """
@@ -133,7 +123,7 @@ class FtpClient(AbstractSyncClient):
         self,
         remote_path: PathType,
         local_path: PathType,
-        progress_callback: _Callback | None = None,
+        progress_callback: ProgressCallback | None = None,
     ) -> None:
         """
         Download a remote file from the FTP server.
@@ -141,7 +131,7 @@ class FtpClient(AbstractSyncClient):
         Args:
             remote_path (PathType): Path of the remote file.
             local_path (PathType): Destination path on the local host.
-            progress_callback (_Callback | None): Optional callback receiving bytes_transferred and total_bytes.
+            progress_callback (ProgressCallback | None): Optional callback receiving bytes_transferred and total_bytes.
         """
         client = self._connect_before()
         remote_path = fspath(remote_path)

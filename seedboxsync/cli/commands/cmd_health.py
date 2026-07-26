@@ -7,13 +7,14 @@
 """All commands related to health checks in SeedboxSync."""
 
 from datetime import datetime, timedelta
+from typing import Any
 from urllib.error import URLError
 from urllib.request import urlopen
 import click
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.cli import Context, pass_context
 from seedboxsync.core import utils
-from seedboxsync.core.dao import SeedboxSync, TaskStatus
+from seedboxsync.core.dao import SeedboxSync, TaskStatus, typed_peewee_dict
 
 
 @click.command("health")
@@ -34,8 +35,9 @@ def cli(ctx: Context) -> None:
     click.secho("CLI - OK", fg="green")
 
     # Task manager part
+    heartbeat: dict[str, Any] | None = None
     try:
-        heartbeat = (
+        heartbeat = typed_peewee_dict(
             TaskStatus.select(
                 TaskStatus.key,
                 TaskStatus.running,

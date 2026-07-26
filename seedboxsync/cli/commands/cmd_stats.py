@@ -7,7 +7,7 @@
 """All commands related to statistics operations in SeedboxSync."""
 
 import click
-import humanize
+from humanize import filesize
 from peewee import fn
 from seedboxsync.cli import Context, group, pass_context
 from seedboxsync.core.dao import Download, typed_peewee_dicts
@@ -75,7 +75,7 @@ def total(ctx: Context) -> None:
     stats = [
         {
             "files": total_files,
-            "total_size": humanize.filesize.naturalsize(total_size, True),
+            "total_size": filesize.naturalsize(total_size, True),
         }
     ]
 
@@ -122,7 +122,7 @@ def _stats_by_period(ctx: Context, period: str, header_label: str) -> None:
         {
             period: key,
             "files": tmp[key]["files"],
-            "total_size": humanize.filesize.naturalsize(tmp[key]["total_size"], True),
+            "total_size": filesize.naturalsize(tmp[key]["total_size"], True),
         }
         for key in sorted(tmp)
     ]

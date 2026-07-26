@@ -6,7 +6,7 @@
 #
 """Build a context used by Click."""
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from functools import cached_property
 from typing import Any
 import click
@@ -32,7 +32,7 @@ class Context(click.Context):
         """
         return current_app
 
-    def render(self, data: Iterable[Any], headers: Iterable[Any], tablefmt: str = "github") -> Any:
+    def render(self, data: Iterable[Any], headers: str | dict[str, str] | Sequence[str], tablefmt: str = "github") -> Any:
         """
         Render tabular data using the specified output format.
 

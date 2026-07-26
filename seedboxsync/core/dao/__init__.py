@@ -5,7 +5,7 @@
 # file that was distributed with this source code.
 #
 from collections.abc import Iterable
-from typing import Any, TypeVar, cast
+from typing import Any, cast
 
 from seedboxsync.core.dao.model import SeedboxSyncModel  # isort: skip
 from seedboxsync.core.dao.download import Download
@@ -16,10 +16,7 @@ from seedboxsync.core.dao.torrent import Torrent
 __all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent"]
 
 
-T = TypeVar("T")
-
-
-def typed_peewee_dicts(query: T) -> Iterable[dict[str, Any]]:
+def typed_peewee_dicts(query: Any) -> Iterable[dict[str, Any]]:
     """
     Cast a Peewee query configured with ``dicts()`` to dictionary rows.
 
@@ -33,3 +30,19 @@ def typed_peewee_dicts(query: T) -> Iterable[dict[str, Any]]:
         An iterable of dictionary-based query results.
     """
     return cast(Iterable[dict[str, Any]], query)
+
+
+def typed_peewee_dict(query: Any) -> dict[str, Any]:
+    """
+    Cast a Peewee query configured with ``first()`` (or others) to dictionary rows.
+
+    This helper works around Peewee's incomplete type annotations, which may
+    still report model instances even when ``first()`` (or others) is used.
+
+    Args:
+        query: A Peewee query configured to return rows as dictionaries.
+
+    Returns:
+        An dictionary-based query results.
+    """
+    return cast(dict[str, Any], query)

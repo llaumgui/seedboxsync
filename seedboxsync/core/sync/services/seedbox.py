@@ -136,7 +136,7 @@ def __get_file(filepath: str | PathLike[str], only_store: bool) -> None:
     app.logger.debug(f'Download: "{filepath}" to "{local_path}"')
 
     try:
-        seedbox_size = app.sync.stat(filepath).st_size  # type: ignore[attr-defined]
+        seedbox_size = app.sync.stat(filepath).st_size
         if seedbox_size == 0:
             app.logger.warning(f'Empty file: "{filepath}" ({seedbox_size!s})')
 
