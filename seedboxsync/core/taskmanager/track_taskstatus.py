@@ -16,7 +16,7 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
-def heartbeat() -> None:
+def heartbeat_startup() -> None:
     """
     Task manager heartbeat.
 
@@ -25,15 +25,51 @@ def heartbeat() -> None:
     started = datetime.now()
     TaskStatus.insert(
         key="heartbeat",
-        running=False,
+        running=True,
         started=started,
-        finished=started,
+    ).on_conflict(
+        conflict_target=[TaskStatus.key],
+        update={
+            TaskStatus.running: True,
+            TaskStatus.started: started,
+        },
+    ).execute()
+
+
+def heartbeat_shutdown() -> None:
+    """
+    Task manager heartbeat.
+
+    Update the TaskStatus with key "heartbeat".
+    """
+    finished = datetime.now()
+    TaskStatus.insert(
+        key="heartbeat",
+        running=False,
+        finished=finished,
     ).on_conflict(
         conflict_target=[TaskStatus.key],
         update={
             TaskStatus.running: False,
-            TaskStatus.started: started,
-            TaskStatus.finished: started,
+            TaskStatus.finished: finished,
+        },
+    ).execute()
+
+
+def heartbeat() -> None:
+    """
+    Task manager heartbeat.
+
+    Update the TaskStatus with key "heartbeat".
+    """
+    finished = datetime.now()
+    TaskStatus.insert(
+        key="heartbeat",
+        finished=finished,
+    ).on_conflict(
+        conflict_target=[TaskStatus.key],
+        update={
+            TaskStatus.finished: finished,
         },
     ).execute()
 

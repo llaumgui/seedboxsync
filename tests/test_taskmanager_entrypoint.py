@@ -32,7 +32,7 @@ def test_taskmanager_entrypoint_registers_worker_hooks(app, monkeypatch):
         sys.modules.pop("seedboxsync.taskmanager", None)
         module = importlib.import_module("seedboxsync.taskmanager")
 
-        module.flush()
+        module.on_startup()
         worker_logger = MagicMock()
         app.logger.handlers = [MagicMock(), MagicMock()]
         with patch("seedboxsync.taskmanager.logging.getLogger", return_value=worker_logger):

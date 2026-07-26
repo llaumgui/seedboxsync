@@ -8,7 +8,7 @@
 
 from seedboxsync.core import current_app
 from seedboxsync.core.dao import Download
-from seedboxsync.core.taskmanager.track_taskstatus import heartbeat
+from seedboxsync.core.taskmanager import heartbeat
 
 
 class DownloadProgress:

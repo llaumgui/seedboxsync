@@ -5,8 +5,8 @@
 # file that was distributed with this source code.
 #
 from .manager import Manager
-from .track_taskstatus import track_taskstatus
+from .track_taskstatus import heartbeat, heartbeat_shutdown, heartbeat_startup, track_taskstatus
 
-__all__ = ["Manager", "track_taskstatus"]
+__all__ = ["Manager", "heartbeat", "heartbeat_shutdown", "heartbeat_startup", "track_taskstatus"]
 
 task_manager = Manager()
