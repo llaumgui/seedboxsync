@@ -57,6 +57,9 @@ hadolint:
 mypy:
     uv run mypy
 
+basedpyright:
+    uv run basedpyright
+
 # Format Python code and automatically fix safe issues using Ruff
 format *args:
     uv run ruff format

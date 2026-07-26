@@ -114,6 +114,18 @@ show_error_codes = true
 pretty = true
 
 #
+# basedpyright
+#
+[tool.basedpyright]
+include = ["seedboxsync"]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportMissingImports = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+
+#
 # ruff
 #
 [tool.ruff]
@@ -205,4 +217,9 @@ max-line-length = 160
 omit = [
     "*/templates/*",
     "*/static/*",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.39.9",
 ]
