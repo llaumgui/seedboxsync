@@ -7,19 +7,26 @@
 **⚠️ Configuration is now stored in the database. You must reconfigure the application.**
 
 * Major code rewrite and structural changes:
-  * ✨ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync and SeedboxSyncFront in a single application.
-  * ✨ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
+  * ♻️ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync and SeedboxSyncFront in a single application.
+  * ♻️ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
+  * ♻️  [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
   * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Add a new all services healthcheck to the Docker image.
   * ⚡️ Enable SQLite WAL mode to improve concurrent reads and writes.
 * New user-facing features:
   * ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
-  * ✨ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
   * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disabling sync.
   * ✨ Allow launching tasks from the web UI.
   * ✨ Allow configuring the theme and language in the web UI.
+* Documentation:
+  * 📝 Big update with news v4 features.
+  * 🚚 Move from MKDocs to ProperDocs.
+  * ✨ Add Changelog in documentation.
+  * ✨ Add API reference in documentation.
+  * ✨ Add code coverage in documentation.
 * CI/CD and quality features:
   * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just for task automation.
-  * 🧪 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
+  * 🚚 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
+  * 🧪 [Issue #133](https://github.com/llaumgui/seedboxsync/issues/133): Add basedpyright in complemnt of mypy.
   * 🧪 Use isort in ruff.
   * 👷 Use `ruff check --fix`.
 
