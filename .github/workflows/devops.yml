@@ -55,7 +55,7 @@ jobs:
       uses: actions/checkout@v6
     # Setup Node.js
     - name: Install pnpm
-      uses: pnpm/action-setup@v6.0.9
+      uses: pnpm/action-setup@v6.0.10
       with:
         version: 10
         cache: true
@@ -154,7 +154,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
     # Setup Node.js
     - name: Install pnpm
-      uses: pnpm/action-setup@v6.0.9
+      uses: pnpm/action-setup@v6.0.10
       with:
         version: 10
         cache: true
@@ -309,7 +309,7 @@ jobs:
         python-version: ${{ env.pythonLastVersion }}
     # Setup Node.js
     - name: Install pnpm
-      uses: pnpm/action-setup@v6.0.9
+      uses: pnpm/action-setup@v6.0.10
       with:
         version: 10
         cache: true
