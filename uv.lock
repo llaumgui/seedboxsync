@@ -742,11 +742,11 @@ wheels = [
 
 [[package]]
 name = "huey"
-version = "3.3.2"
+version = "3.3.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ea/b5/bae403797e8bd33014ba4ec57ec4af80d9866414922966243e8c0b4d629b/huey-3.3.2.tar.gz", hash = "sha256:f8fd7610baec0fdf9359b0e033a02566ccbba9c865139086ba644e03c426e4af", size = 613763, upload-time = "2026-08-01T01:18:33.534Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/67/adfd477458ad70b73ce8311bbe84b1befbf986d0134fff2a1a55669ecd50/huey-3.3.4.tar.gz", hash = "sha256:6de196c6ece2e38b5173f7510600091ab035c0e86b0958d0e5b38a82b9984666", size = 614249, upload-time = "2026-08-05T12:51:51.836Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7d/3c/69bd929aa5b7e8a56bd8adfd739d2f55a415fd1080d6a803f9270d296a68/huey-3.3.2-py3-none-any.whl", hash = "sha256:73e2d4f11b19be0e8d698ba952438588af8cd51d9be19240800b57127cbc82d7", size = 123785, upload-time = "2026-08-01T01:18:32.281Z" },
+    { url = "https://files.pythonhosted.org/packages/30/49/7b49afcb523431db7bcb7b83d9911c754ee8138c3b5939830507359655d6/huey-3.3.4-py3-none-any.whl", hash = "sha256:a6e2e9a8fbda15c2dfb8e33b23a5e6e228326ea8e0087c11027957ef7c210e96", size = 123919, upload-time = "2026-08-05T12:51:50.539Z" },
 ]
 
 [[package]]
@@ -2143,7 +2143,7 @@ requires-dist = [
     { name = "flask-restx", specifier = ">=1.3.2" },
     { name = "flit", marker = "extra == 'dev'", specifier = ">=3.12.0" },
     { name = "ftputil", specifier = ">=5.2.0" },
-    { name = "huey", specifier = ">=3.3.2" },
+    { name = "huey", specifier = ">=3.3.4" },
     { name = "humanize", specifier = ">=4.16.0" },
     { name = "mkdocs-coverage", marker = "extra == 'dev'", specifier = ">=2.0.0" },
     { name = "mkdocs-include-markdown-plugin", marker = "extra == 'dev'", specifier = ">=7.3.0" },
