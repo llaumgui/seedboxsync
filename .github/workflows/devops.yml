@@ -97,7 +97,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v7
     - name: hadolint
-      uses: hadolint/hadolint-action@v3.3.0
+      uses: hadolint/hadolint-action@v3.4.0
       with:
         recursive: true
 
