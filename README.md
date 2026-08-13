@@ -89,7 +89,7 @@ Released under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 [ico-bluesky]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=208bfe&logo=bluesky&style=flat-square
 [link-bluesky]: https://bsky.app/profile/llaumgui.kulakowski.fr
-[ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/seedboxsync/devops.yml?branch=main&style=flat-square&logo=github&label=DevOps
+[ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/seedboxsync/build-test-deploy.yml?branch=main&style=flat-square&logo=github&label=Build
 [link-ghactions]: https://github.com/llaumgui/seedboxsync/actions
 [ico-pypi-version]: https://img.shields.io/pypi/v/seedboxsync?include_prereleases&label=Package%20version&style=flat-square&logo=python
 [link-pypi]:https://pypi.org/project/seedboxsync/

@@ -4,21 +4,31 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    target-branch: "develop"
+    commit-message:
+      prefix: "⬆️ [Actions] "
 
-  # Maintain dependencies for uv
+  # Maintain dependencies for Python (uv)
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "daily"
+    target-branch: "develop"
+    commit-message:
+      prefix: "⬆️ [Python] "
 
-  # Maintain dependencies for npm
+  # Maintain dependencies for NodeJS (pnpm)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+    target-branch: "develop"
+    commit-message:
+      prefix: "⬆️ [Node.js] "

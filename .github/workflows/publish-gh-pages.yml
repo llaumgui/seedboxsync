@@ -1,4 +1,4 @@
-name: GitHub Pages
+name: Publish GitHub Pages
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
           python-version: ${{ env.pythonLastVersion }}
       # Instal & run task
       - name: Install Python dependencies
-        run: uv sync --locked --extra dev
+        run: just python-install-dev
       # Deploy documentation
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v6
@@ -39,4 +39,4 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - name: Deploy ProperDocs
-        run: just docs-gh-deploy
+        run: just doc-gh-deploy

@@ -8,9 +8,10 @@ FROM node:lts-alpine AS builder-node
 WORKDIR /src
 
 COPY . /src
-RUN corepack enable && \
-    pnpm install --frozen-lockfile && \
-    pnpm build
+RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
+    corepack enable && \
+    just nodejs-install && \
+    just nodejs-build
 
 
 # ------------------------------------------------ Build python and translations
@@ -28,8 +29,8 @@ ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
 
-RUN apk add --no-cache just && \
-    uv sync --locked && \
+RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
+    just python-install && \
     just i18n-compile
 
 

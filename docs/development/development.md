@@ -85,32 +85,52 @@ just test
 ```bash
 $ just
 Available recipes:
-    basedpyright    # Run static type checking on Python source code using basedpyright
-    clean           # Remove Python bytecode files (*.pyc) and build artifacts
-    comply          # Check Python code quality and style using Ruff
-    default         # Display available recipes and their descriptions
-    dist            # Build frontend assets and package the Python distribution via Flit
-    doc-gh-deploy   # Deploy on GitHub the static documentation site using ProperDocs
-    docker-build    # Build the Docker container image
-    docs            # Build static documentation site using ProperDocs
-    docs-serve      # Serve live documentation preview with auto-reloading using ProperDocs
-    format *args    # Format Python code and automatically fix safe issues using Ruff
-    hadolint        # Lint the Dockerfile for best practices and security issues (need hadolint)
-    i18n-compile    # Compile translation catalog files (.po to .mo)
-    i18n-extract    # Extract translatable strings to .pot, update .po catalog files, and compile .mo binaries
-    i18n-update     # Update existing translation files (.po) against the template (.pot)
-    markdownlint    # Lint Markdown files for syntax and formatting rules (need markdownlint)
-    mypy            # Run static type checking on Python source code using Mypy
-    nodejs-build    # Build and bundle frontend assets for production
-    nodejs-dev      # Start Node.js frontend development server
-    nodejs-lint     # Run linter for Node.js frontend code/assets
-    publish         # Build distribution packages and publish to PyPI using Flit
-    pytest          # Run Pytest suite with terminal output and HTML coverage report
-    pytest-ci       # Run Pytest suite for CI with XML coverage output
-    run-front       # Run the Flask development server with hot-reloading enabled
-    run-taskmanager # Run the Huey background task worker with 2 threads
-    test            # Run all local linters followed by the full test suite
-    test-ci         # Run the full validation and testing pipeline for CI
-    type-checking   # Run static type checking on Python source code
-    virtualenv      # Recreate the Python virtual environment (.venv) using uv and install dependencies in editable mode
+    clean                # Remove Python bytecode files (*.pyc) and build artifacts [alias: c]
+    dist                 # Build frontend assets and package the Python distribution via uv [alias: d]
+    dist-update          # Update both Python and Node.js dependencies to their latest versions [alias: update]
+    docker-build         # Build the Docker container image [alias: docker]
+    publish              # Build distribution packages and publish to PyPI using uv
+    virtualenv           # Recreate the Python virtual environment (.venv) using uv and install dependencies in editable mode
+
+    [🌐 internationalization]
+    i18n-compile         # Compile translation catalog files (.po to .mo)
+    i18n-extract         # Extract translatable strings to .pot, update .po catalog files, and compile .mo binaries
+    i18n-update          # Update existing translation files (.po) against the template (.pot)
+
+    [🎨 Frontend]
+    nodejs-build         # Build and bundle frontend assets for production
+    nodejs-dev           # Start Node.js frontend development server
+    nodejs-dist-update   # Update Node.js dependencies to their latest versions
+    nodejs-install       # Install Node.js dependencies using pnpm
+    nodejs-lint          # Run linter for Node.js frontend code/assets
+
+    [🐍 Python]
+    python-dist-update   # Update Python dependencies to their latest versions
+    python-install *args # Install Python dependencies in the virtual environment using uv
+    python-install-dev   # Install Python dependencies in the virtual environment using uv with extra dev dependencies
+
+    [📚 Documentation]
+    doc                  # Build static documentation site using ProperDocs
+    doc-gh-deploy        # Prepare coverage and deploy on GitHub the static documentation site using ProperDocs
+    doc-serve            # Serve live documentation preview with auto-reloading using ProperDocs
+
+    [🚀 launcher]
+    run-front            # Run the Flask development server with hot-reloading enabled [alias: front]
+    run-taskmanager      # Run the Huey background task worker with 2 threads [alias: task]
+
+    [🛠️ code quality & linting]
+    basedpyright         # Run static type checking on Python source code using basedpyright
+    comply               # Check Python code quality and style using Ruff
+    format *args         # Format Python code and automatically fix safe issues using Ruff
+    hadolint             # Lint the Dockerfile for best practices and security issues (need hadolint)
+    markdownlint         # Lint Markdown files for syntax and formatting rules (need markdownlint)
+    mypy                 # Run static type checking on Python source code using Mypy
+    nodejs-lint          # Run linter for Node.js frontend code/assets
+    type-checking        # Run static type checking on Python source code
+
+    [🧪 Testing & CI]
+    pytest               # Run Pytest suite with terminal output and HTML coverage report
+    pytest-ci            # Run Pytest suite for CI with XML coverage output
+    test                 # Run all local linters followed by the full test suite
+    test-ci              # Run the full validation and testing pipeline for CI
 ```
