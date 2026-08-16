@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.0.0 - Not released yet, only avalaible on develop and main, not in stable
+## 4.0.0 - Aug 16, 2026
 
 **⚠️ Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**
 
