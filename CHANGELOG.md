@@ -9,7 +9,7 @@
 * Major code rewrite and structural changes:
   * ♻️ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync and SeedboxSyncFront in a single application.
   * ♻️ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
-  * ♻️  [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
+  * ♻️ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
   * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Add a new all services healthcheck to the Docker image.
   * ⚡️ Enable SQLite WAL mode to improve concurrent reads and writes.
 * New user-facing features:
