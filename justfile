@@ -16,7 +16,9 @@ alias d := dist
 alias docker := docker-build
 alias front := run-front
 alias task := run-taskmanager
-alias update := dist-update
+alias update := dependencies-update
+alias nodejs-update := nodejs-dependencies-update
+alias python-update := python-dependencies-update
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -33,7 +35,7 @@ virtualenv: clean
     @echo
 
 # Update both Python and Node.js dependencies to their latest versions
-dist-update: python-dist-update nodejs-dist-update
+dependencies-update: python-dependencies-update nodejs-dependencies-update
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -169,7 +171,7 @@ nodejs-test-ci:
 
 # Update Python dependencies to their latest versions
 [group('🐍 Python')]
-python-dist-update:
+python-dependencies-update:
     uv lock --upgrade
     @just python-install
 
@@ -205,7 +207,7 @@ nodejs-build:
 
 # Update Node.js dependencies to their latest versions
 [group('🎨 Node.js')]
-nodejs-dist-update:
+nodejs-dependencies-update:
     pnpm update --latest
 
 # ══════════════════════════════════════════════════════════════════════════════
