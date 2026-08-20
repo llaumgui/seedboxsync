@@ -74,8 +74,10 @@ jobs:
     # Instal & run tasks
     - name: Install Node.js dependencies
       run: just nodejs-install
-    - name: Run Node.js tests
+    - name: Run Node.js linter
       run: just nodejs-lint
+    - name: Run Node.js tests
+      run: just nodejs-test-ci
 
 
   ##############################################################################

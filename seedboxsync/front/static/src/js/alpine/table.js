@@ -19,9 +19,9 @@ export function TableComponent(apiUrl, refreshMs = 30000) {
     load() {
       this.loading = true;
       this.error = false;
-      fetch(apiUrl)
+      return fetch(apiUrl)
         .then((r) => {
-          if (!r.ok) throw new Error();
+          if (!r.ok) throw new Error("Fetch failed");
           return r.json();
         })
         .then((json) => {

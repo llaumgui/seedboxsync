@@ -6,7 +6,10 @@ import packageJson from "eslint-plugin-package-json";
 export default defineConfig([
   js.configs.recommended,
   {
-    files: ["seedboxsync/front/static/src/**/*.{js,mjs,cjs}"],
+    files: [
+      "seedboxsync/front/static/src/**/*.{js,mjs,cjs}",
+      "tests/front/static/**/*.{js,mjs,cjs}"
+    ],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

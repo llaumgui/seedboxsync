@@ -79,6 +79,7 @@ i18n-compile:
 
 # Check Python code quality and style using Ruff
 [group('🛠️ Code quality & linting')]
+[group('🐍 Python')]
 comply:
     uv run ruff check
 
@@ -94,23 +95,33 @@ hadolint:
 
 # Run static type checking on Python source code using Mypy
 [group('🛠️ Code quality & linting')]
+[group('🐍 Python')]
 mypy:
     uv run mypy
 
 # Run static type checking on Python source code using basedpyright
 [group('🛠️ Code quality & linting')]
+[group('🐍 Python')]
 basedpyright:
     uv run basedpyright
 
 # Run static type checking on Python source code
 [group('🛠️ Code quality & linting')]
+[group('🐍 Python')]
 type-checking: mypy basedpyright
 
 # Format Python code and automatically fix safe issues using Ruff
 [group('🛠️ Code quality & linting')]
+[group('🐍 Python')]
 format *args:
     uv run ruff format
     uv run ruff check --fix {{args}}
+
+# Run linter for Node.js frontend code/assets
+[group('🛠️ Code quality & linting')]
+[group('🎨 Node.js')]
+nodejs-lint:
+    pnpm lint
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -119,21 +130,37 @@ format *args:
 
 # Run Pytest suite with terminal output and HTML coverage report
 [group('🧪 Testing & CI')]
+[group('🐍 Python')]
 pytest:
     uv run python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
 
 # Run Pytest suite for CI with XML coverage output
 [group('🧪 Testing & CI')]
+[group('🐍 Python')]
 pytest-ci:
     uv run python -m pytest -v --cov=seedboxsync --cov-report=term --cov-report=xml --capture=sys tests/
 
 # Run all local linters followed by the full test suite
 [group('🧪 Testing & CI')]
+[group('🐍 Python')]
 test: comply type-checking markdownlint hadolint nodejs-lint pytest
 
 # Run the full validation and testing pipeline for CI
 [group('🧪 Testing & CI')]
+[group('🐍 Python')]
 test-ci: comply type-checking i18n-compile pytest-ci
+
+# Run Node.js frontend tests using Vitest
+[group('🧪 Testing & CI')]
+[group('🎨 Node.js')]
+nodejs-test:
+    pnpm test
+
+# Run Node.js frontend tests using Vitest for CI with coverage report
+[group('🧪 Testing & CI')]
+[group('🎨 Node.js')]
+nodejs-test-ci:
+    pnpm test:ci
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -158,35 +185,28 @@ python-install-dev:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 🎨 FRONTEND (NODE.JS / PNPM)
+# 🎨 NODE.JS / PNPM (Frontend)
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Start Node.js frontend development server
-[group('🎨 Frontend')]
+[group('🎨 Node.js')]
 nodejs-dev:
     pnpm dev
 
 # Install Node.js dependencies using pnpm
-[group('🎨 Frontend')]
+[group('🎨 Node.js')]
 nodejs-install:
     pnpm install --frozen-lockfile
 
 # Build and bundle frontend assets for production
-[group('🎨 Frontend')]
+[group('🎨 Node.js')]
 nodejs-build:
     pnpm build
 
 # Update Node.js dependencies to their latest versions
-[group('🎨 Frontend')]
+[group('🎨 Node.js')]
 nodejs-dist-update:
     pnpm update --latest
-
-# Run linter for Node.js frontend code/assets
-[group('🛠️ Code quality & linting')]
-[group('🎨 Frontend')]
-nodejs-lint:
-    pnpm test:lint
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 📚 DOCUMENTATION
