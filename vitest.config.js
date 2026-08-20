@@ -15,11 +15,8 @@ export default defineConfig({
   },
   test: {
     include: ["tests/front/static/**/*.test.js"],
-    reporters: [
-      "minimal",
-      ["vitest-sonar-reporter", { outputFile: "vitest-report.xml" }],
-    ],
     coverage: {
+      reporter: ["text", "lcov", "html"],
       include: ["seedboxsync/front/static/src/js/**/*.js"],
     },
   },

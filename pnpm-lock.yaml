@@ -54,9 +54,6 @@ importers:
       vitest:
         specifier: ^4.1.11
         version: 4.1.11(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(vite@8.2.1(sass@1.102.0))
-      vitest-sonar-reporter:
-        specifier: ^3.0.0
-        version: 3.0.0(vitest@4.1.11)
 
 packages:
 
@@ -1028,12 +1025,6 @@ packages:
       yaml:
         optional: true
 
-  vitest-sonar-reporter@3.0.0:
-    resolution: {integrity: sha512-QRT5m9Z/3Kt0WVDVcFHm5LC9Ba89yDP4twlX2QUAJ9PdqfJBkLAh/kXj7m6U3i0k6GxnIEiwCc295bmAYokmZg==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    peerDependencies:
-      vitest: '>=3'
-
   vitest@4.1.11:
     resolution: {integrity: sha512-fhACrNXUidIbGSBr5FlbuBkO7VWC1ZyLl0DO4CU2DrQoAPxX84Ysxs+HeGQpii5lZWV1Q4gBZTTu49mF+A6Edw==}
     engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
@@ -1908,10 +1899,6 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
       sass: 1.102.0
-
-  vitest-sonar-reporter@3.0.0(vitest@4.1.11):
-    dependencies:
-      vitest: 4.1.11(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(vite@8.2.1(sass@1.102.0))
 
   vitest@4.1.11(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(vite@8.2.1(sass@1.102.0)):
     dependencies:
