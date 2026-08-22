@@ -1,0 +1,37 @@
+{% set current_path = request.path %}
+
+{% macro menu_link(title, link) %}
+<a class="{% if current_path == url_for(link) %}is-active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
+{% endmacro %}
+
+<div class="column is-2 settings-sidebar">
+
+  <h1 class="title is-4 ">{{ _('Settings') }}</h1>
+
+  <aside class="menu">
+    <p class="menu-label">{{ _('General') }}</p>
+    <ul class="menu-list">
+      <li>{{ menu_link( _('SeedboxSync'), 'frontend.settings') }}</li>
+    </ul>
+
+    <p class="menu-label mt-5 mb-1">{{ _('Synchronization') }}</p>
+    <ul class="menu-list">
+      <li>{{ menu_link( _('Seedbox'), 'frontend.settings_seedbox') }}</li>
+      <li>{{ menu_link( _('Local (NAS)'), 'frontend.settings_nas') }}</li>
+      <li>{{ menu_link( _('Ping'), 'frontend.settings_ping') }}</li>
+    </ul>
+
+    <p class="menu-label mt-5 mb-1">{{ _('Authentication') }}</p>
+    <ul class="menu-list">
+      <li>{{ menu_link( _('Users'), 'frontend.settings_users') }}</li>
+    </ul>
+  </aside>
+
+  <div class="settings-help notification mt-4 p-2">
+    <p class="">ⓘ {{ _('Need help?') }}</p>
+    <p class="is-size-7">
+      {{ _('<a title="SeedboxSync configuration documentation" href="https://llaumgui.github.io/seedboxsync/getting-started/configuration/">The documentation</a> contains all the information you need.') }}
+    </p>
+  </div>
+
+</div>

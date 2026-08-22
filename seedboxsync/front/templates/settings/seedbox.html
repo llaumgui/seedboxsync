@@ -1,0 +1,205 @@
+{% from 'components/macros_form.html' import form_error, form_toast, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Seedbox') }}{% endblock %}</h2>
+
+      <form method="post">
+        {{ form.csrf_token }}
+
+        {{ form_error(form) }}
+
+        <div class="box">
+
+          <h3 class="subtitle is-4">{{ _('Connection') }}</h3>
+          <p class="is-italic">{{ _('Information about your seedbox connection.') }}</p>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_host: '{{ form.seedbox_host.data }}',
+                  isValid() { return isValidHost(this.seedbox_host) }
+              }">
+                {{ render_field(form.seedbox_host) }}
+              </div>
+            </div>
+
+            <div class="column is-3">
+              <div class="field" x-data="{
+                  seedbox_port: '{{ form.seedbox_port.data }}',
+                  isValid() { return isValidPort(this.seedbox_port) }
+              }">
+                {{ render_field(form.seedbox_port) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_login: '{{ form.seedbox_login.data }}',
+                  isValid() { return isRequired(this.seedbox_login) }
+              }">
+                {{ render_field(form.seedbox_login) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_password: '{{ form.seedbox_password.data }}',
+                  isValid() { return isRequired(this.seedbox_password) }
+              }">
+                {{ render_field(form.seedbox_password) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_timeout: '{{ form.seedbox_timeout.data }}',
+                  enabled: {{ 'true' if form.seedbox_timeout.data == 1 else 'false' }},
+                  isValid() { return isValidTimeout(this.seedbox_timeout) }
+                }">
+                <label class="label" for="{{ form.seedbox_timeout.id }}">{{ form.seedbox_timeout.label }}</label>
+                <label class="is-sr-only" for="seedbox_timeout_enabled">{{ form.seedbox_timeout.label }}</label>
+                <input id="{{ form.seedbox_timeout.id }}_enabled" type="checkbox" name="{{ form.seedbox_timeout.id }}_enabled" value="1" checked x-model="enabled"/>
+                <div class="control column is-5 p-0 has-icons-left has-icons-right"  x-show="enabled" x-transition>
+                  <input id="{{ form.seedbox_timeout.id }}" class="input" type="number"
+                        name="{{ form.seedbox_timeout.name }}" x-model="{{ form.seedbox_timeout.id }}"
+                        placeholder="{{ form.seedbox_timeout.render_kw['placeholder'] }}"
+                        x-bind:class="{ 'is-danger': !isValid()}"/>
+                  <span class="icon is-small is-left"><i class="fas {{ form.seedbox_timeout.render_kw['icon'] }}"></i></span>
+                  <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{ seedbox_protocol: '{{ form.seedbox_protocol.data }}' }">
+                {{ render_field(form.seedbox_protocol) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_chmod: '{{ form.seedbox_chmod.data }}',
+                  enabled: {{ 'true' if form.seedbox_chmod.data == 1 else 'false' }},
+                  isValid() { return isOctalChmod(this.seedbox_chmod) }
+                }">
+                <label class="label" for="{{ form.seedbox_chmod.id }}">
+                  {{ form.seedbox_chmod.label }}
+                  <a class="icon has-text-grey"
+                    title="{{ form.seedbox_chmod.render_kw['help'] }}">
+                    <i class="fas fa-circle-info"></i>
+                  </a>
+                </label>
+                <label class="is-sr-only" for="{{ form.seedbox_chmod.id }}_enabled">{{ form.seedbox_chmod.label }}</label>
+                <input id="{{ form.seedbox_chmod.id }}_enabled" type="checkbox" name="seedbox_chmod_enabled" value="1" checked x-model="enabled" />
+                <div class="control column is-5 p-0 has-icons-left has-icons-right" x-show="enabled" x-transition>
+                  <input id="{{ form.seedbox_chmod.id }}" class="input" type="text"
+                        name="{{ form.seedbox_timeout.name }}" x-model="{{ form.seedbox_chmod.id }}"
+                        placeholder="{{ form.seedbox_chmod.render_kw['placeholder'] }}"
+                        x-bind:class="{ 'is-danger': !isValid()}"/>
+                  <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+                  <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas {{ form.seedbox_chmod.render_kw['icon'] }} has-text-success"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_max_concurrent_prefetch_requests: '{{ form.seedbox_max_concurrent_prefetch_requests.data }}',
+                  isValid() { return isValidMaxConcPrefetchReq(this.seedbox_max_concurrent_prefetch_requests) }
+              }">
+                {{ render_field(form.seedbox_max_concurrent_prefetch_requests) }}
+              </div>
+            </div>
+          </div>
+
+          <h3 class="subtitle is-4 pt-4">{{ _('Path') }}</h3>
+          <p class="is-italic">{{ _('Information about your seedbox paths.') }}</p>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_tmp_path: '{{ form.seedbox_tmp_path.data }}',
+                  isValid() { return isRequired(this.seedbox_tmp_path) }
+                }">
+                {{ render_field(form.seedbox_tmp_path) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_watch_path: '{{ form.seedbox_watch_path.data }}',
+                  isValid() { return isRequired(this.seedbox_watch_path) }
+              }">
+                {{ render_field(form.seedbox_watch_path) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_finished_path: '{{ form.seedbox_finished_path.data }}',
+                  isValid() { return isRequired(this.seedbox_finished_path) }
+              }">
+                {{ render_field(form.seedbox_finished_path) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_prefixed_path: '{{ form.seedbox_prefixed_path.data }}',
+                  isValid() { return isRequired(this.seedbox_prefixed_path) }
+              }">
+                {{ render_field(form.seedbox_prefixed_path) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_part_suffix: '{{ form.seedbox_part_suffix.data }}',
+                  isValid() { return isRequired(this.seedbox_part_suffix) }
+              }">
+                {{ render_field(form.seedbox_part_suffix) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  seedbox_exclude_syncing: '{{ form.seedbox_exclude_syncing.data }}',
+                  isValid() { return true }
+              }">
+                {{ render_field(form.seedbox_exclude_syncing) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control has-text-right">
+          <button class="button is-primary">{{ _('Save') }}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ form_toast(saved) }}
+
+{% endblock %}

@@ -17,6 +17,7 @@ class Config:
     DB_CONFIG_PREFIX = "config_"
     CONFIG_NAMESPACE = "SEEDBOXSYNC_"
     DEFAULT_CONFIG: ClassVar[dict[str, Any]] = {
+        CONFIG_NAMESPACE + "LOGIN_DISABLED": True,
         CONFIG_NAMESPACE + "SYNC_BLACKHOLE_ENABLED": False,
         CONFIG_NAMESPACE + "SYNC_SEEDBOX_ENABLED": False,
         CONFIG_NAMESPACE + "SEEDBOX_HOST": "my-seedbox.ltd",
@@ -63,6 +64,7 @@ class Config:
         self.app.config.setdefault("CACHE_TYPE", "SimpleCache")  # Init Flask Cache
         self.app.config.setdefault("SWAGGER_UI_DOC_EXPANSION", "list")  # Expense swager namespaces
         self.app.config.setdefault("PROPAGATE_EXCEPTIONS", False)
+        self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", False))  # Disable login
 
     def _check_config(self) -> None:
         """Check all configurations needed."""

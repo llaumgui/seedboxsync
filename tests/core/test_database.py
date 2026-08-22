@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 import pytest
-from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
+from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent, User
 from seedboxsync.core.db import Database
 
 
@@ -26,7 +26,7 @@ def test_database_discovers_a_writable_existing_database():
         patch("seedboxsync.core.db.Path.is_file", return_value=True),
         patch("seedboxsync.core.db.os.access", return_value=True),
         patch.object(database, "_init_and_bind") as init_and_bind,
-        patch("seedboxsync.core.db.SeedboxSync.get_db_version", return_value="4"),
+        patch("seedboxsync.core.db.SeedboxSync.get_db_version", return_value="5"),
     ):
         database._load_database()
 
@@ -47,7 +47,7 @@ def test_database_creates_schema_when_configured_file_is_missing(tmp_path):
         patch("seedboxsync.core.utils.ensure_dir_exists") as ensure_directory,
         patch.object(database, "_init_and_bind") as init_and_bind,
         patch.object(database, "_create_db_schema") as create_schema,
-        patch("seedboxsync.core.db.SeedboxSync.get_db_version", return_value="4"),
+        patch("seedboxsync.core.db.SeedboxSync.get_db_version", return_value="5"),
     ):
         database._load_database()
 
@@ -81,7 +81,7 @@ def test_schema_creation_and_v2_migration_update_expected_tables():
         database._create_db_schema()
         database.migrate_to_2()
 
-    assert database.db.create_tables.call_args_list[0].args == ([Download, Torrent, TaskStatus, SeedboxSync],)
+    assert database.db.create_tables.call_args_list[0].args == ([Download, SeedboxSync, TaskStatus, Torrent, User],)
     assert database.db.drop_tables.call_args.args == ([SeedboxSync],)
     assert database.db.create_tables.call_args_list[1].args == ([SeedboxSync],)
-    assert [item.args[0] for item in set_version.call_args_list] == ["4", "2"]
+    assert [item.args[0] for item in set_version.call_args_list] == ["5", "2"]

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """DAO package with all Peewee models."""
+
 from collections.abc import Iterable
 from typing import Any, cast
 
@@ -13,8 +14,9 @@ from seedboxsync.core.dao.download import Download
 from seedboxsync.core.dao.seedboxsync import SeedboxSync
 from seedboxsync.core.dao.taskstatus import TaskStatus
 from seedboxsync.core.dao.torrent import Torrent
+from seedboxsync.core.dao.user import User
 
-__all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent"]
+__all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent", "User"]
 
 
 def typed_peewee_dicts(query: Any) -> Iterable[dict[str, Any]]:

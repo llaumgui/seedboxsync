@@ -4,7 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for info."""
+"""SeedboxSync Flask view for info."""
 
 from datetime import datetime
 from flask import render_template
@@ -13,11 +13,13 @@ from peewee import fn
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
 from seedboxsync.front.cache import cache
+from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.utils import init_flash
 from seedboxsync.front.views import bp
 
 
 @bp.route("/info")
+@login_required  # type: ignore[untyped-decorator]
 @cache.cached(timeout=60)  # pyright: ignore [reportUntypedFunctionDecorator]
 def info() -> str:
     """Information page view."""

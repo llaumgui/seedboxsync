@@ -4,139 +4,138 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for settings."""
+"""SeedboxSync Flask view for settings."""
 
-from collections.abc import Iterable
 from typing import Any
 from flask import flash, render_template, request
-from flask.wrappers import Request
-from flask_babel import gettext
+from flask_wtf import FlaskForm
 from seedboxsync.core import Config, current_app as app
 from seedboxsync.core.dao import SeedboxSync
-from seedboxsync.front.babel import ALLOWED_LANGUAGES
+from seedboxsync.front.babel import gettext as _
+from seedboxsync.front.forms import SettingsNasForm, SettingsPingForm, SettingsSeedboxForm, SettingsSeedboxSyncForm
+from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.utils import init_flash
 from seedboxsync.front.views import bp
 
+msg_logger_error = "Failed to save config"
+msg_flash_error = _("Failed to save config")
+
 
 @bp.route("/settings", methods=("GET", "POST"))
+@login_required  # type: ignore[untyped-decorator]
 def settings() -> str:
     """Manage settings: load configuration, display form, persist changes."""
     init_flash()
     saved = False
-    languages_list = ALLOWED_LANGUAGES
+    form = SettingsSeedboxSyncForm(data=app.seedboxsync_config)
 
-    form = _build_form()
+    if form.validate_on_submit():
+        try:
+            _save_form(form)
+            saved = True
+        except Exception as e:
+            app.logger.exception(msg_logger_error, exc_info=e)
+            flash(msg_flash_error, "error")
 
-    if request.method == "POST":
-        missing = [f for f in _required_form_fields() if not request.form.get(f)]
-        if missing:
-            flash(
-                gettext("Missing required fields: %(missing)s", missing=", ".join(missing)),
-                "error",
-            )
-        else:
-            try:
-                _save_form(request)
-                form = _build_form()  # reload cleaned values
-                saved = True
-            except Exception as e:
-                app.logger.exception("Failed to save config", exc_info=e)
-                flash(gettext("Failed to save configuration."), "error")
+    return render_template("settings/seedboxsync.html", form=form, saved=saved)
 
-    return render_template("settings.html", form=form, saved=saved, languages_list=languages_list)
+
+@bp.route("/settings/seedbox", methods=("GET", "POST"))
+@login_required  # type: ignore[untyped-decorator]
+def settings_seedbox() -> str:
+    """Manage settings: load configuration, display form, persist changes."""
+    init_flash()
+    saved = False
+    form = SettingsSeedboxForm(data=app.seedboxsync_config)
+
+    if form.validate_on_submit():
+        try:
+            _save_form(form)
+            saved = True
+        except Exception as e:
+            app.logger.exception(msg_logger_error, exc_info=e)
+            flash(msg_flash_error, "error")
+
+    return render_template("settings/seedbox.html", form=form, saved=saved)
+
+
+@bp.route("/settings/nas", methods=("GET", "POST"))
+@login_required  # type: ignore[untyped-decorator]
+def settings_nas() -> str:
+    """Manage settings: load configuration, display form, persist changes."""
+    init_flash()
+    saved = False
+    form = SettingsNasForm(data=app.seedboxsync_config)
+
+    if form.validate_on_submit():
+        try:
+            _save_form(form)
+            saved = True
+        except Exception as e:
+            app.logger.exception(msg_logger_error, exc_info=e)
+            flash(msg_flash_error, "error")
+
+    return render_template("settings/nas.html", form=form, saved=saved)
+
+
+@bp.route("/settings/ping", methods=("GET", "POST"))
+@login_required  # type: ignore[untyped-decorator]
+def settings_ping() -> str:
+    """Manage settings: load configuration, display form, persist changes."""
+    init_flash()
+    saved = False
+    form = SettingsPingForm(data=app.seedboxsync_config)
+
+    if form.validate_on_submit():
+        try:
+            _save_form(form)
+            saved = True
+        except Exception as e:
+            app.logger.exception(msg_logger_error, exc_info=e)
+            flash(msg_flash_error, "error")
+
+    return render_template("settings/ping.html", form=form, saved=saved)
 
 
 # -------------------------
 # Helpers
 # -------------------------
-def _required_form_fields() -> Iterable[str]:
-    """
-    List of all requitred fields.
-
-    Returns:
-        True if the value represents an enabled/true state, otherwise False.
-    """
-    return [
-        "seedbox_host",
-        "seedbox_port",
-        "seedbox_login",
-        "seedbox_password",
-        "seedbox_protocol",
-        "seedbox_tmp_path",
-        "seedbox_watch_path",
-        "seedbox_finished_path",
-        "seedbox_part_suffix",
-    ]
-
-
-def _build_form() -> dict[str, Any]:
-    """
-    Build form fields.
-
-    Returns:
-        Dictionnary of fields.
-    """
-    fields = {key: ((1 if value else 0) if key.endswith("_enabled") else (0 if value is False else value)) for key, value in app.seedboxsync_config.items()}
-    fields.setdefault(
-        "seedbox_timeout_enabled",
-        "1" if fields.get("seedbox_timeout", "0") not in ["", "0", False] else "0",
-    )
-    fields.setdefault(
-        "seedbox_chmod_enabled",
-        "1" if fields.get("seedbox_chmod", "0") not in ["", "0", False] else "0",
-    )
-
-    return fields
-
-
-def _save_form(req: Request) -> None:
+def _save_form(form: FlaskForm) -> None:
     """Save form data to the configuration file."""
-    seedbox_timeout_enabled = req.form.get("seedbox_timeout_enabled", "0") == "1"
-    seedbox_chmod_enabled = req.form.get("seedbox_chmod_enabled", "0") == "1"
-    fields = app.seedboxsync_config
+    seedbox_timeout_enabled = request.form.get("seedbox_timeout_enabled", "0") == "1"
+    seedbox_chmod_enabled = request.form.get("seedbox_chmod_enabled", "0") == "1"
     config_to_db: list[dict[str, str]] = []
     config_to_update: dict[str, Any] = {}
-    db_value: str = "0"
-    value: str | bool = False
 
-    for key in fields:
-        if key in req.form:
-            value = str(req.form[key] or "").strip()
-            db_value = value
-            if key.endswith("_enabled"):
-                value = bool(int(value))
-        elif key not in req.form and key.endswith("_enabled"):
-            value = False
-            db_value = "0"
+    # Load data from form
+    for field in form:
+        key = field.name
+
+        if key in {"csrf_token", "submit"}:
+            continue
+
+        if key.endswith("_enabled"):  # Boolean
+            value = bool(int(field.data))
+            db_value = int(field.data)
+        else:
+            value = field.data
+            db_value = field.data
 
         app.logger.debug(f"Updated config[{Config.CONFIG_NAMESPACE}{key.upper()}] = {value}")
         config_to_update[f"{Config.CONFIG_NAMESPACE}{key.upper()}"] = value
-        config_to_db.append(
-            {
-                "key": f"{Config.DB_CONFIG_PREFIX}{key}",
-                "value": db_value,
-            }
-        )
+        config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}{key}", "value": str(db_value)})
 
-    if not seedbox_timeout_enabled:
-        app.logger.debug(f"Updated config[{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT] = False")
+    # Override seedbox_timeout & seedbox_chmod
+    if "seedbox_timeout" in form and not seedbox_timeout_enabled:
+        app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT] = False")
         config_to_update[f"{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT"] = False
-        config_to_db.append(
-            {
-                "key": f"{Config.DB_CONFIG_PREFIX}seedbox_timeout",
-                "value": "0",
-            }
-        )
-
-    if not seedbox_chmod_enabled:
-        app.logger.debug(f"Updated config[{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD] = False")
+        config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}seedbox_timeout", "value": "0"})
+        form["seedbox_timeout"].data = "0"
+    if "seedbox_chmod" in form and not seedbox_chmod_enabled:
+        app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD] = False")
         config_to_update[f"{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD"] = False
-        config_to_db.append(
-            {
-                "key": f"{Config.DB_CONFIG_PREFIX}seedbox_chmod",
-                "value": "0",
-            }
-        )
+        config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}seedbox_chmod", "value": "0"})
+        form["seedbox_chmod"].data = "0"
 
     # Update config in Flask app
     app.config.from_mapping(config_to_update)

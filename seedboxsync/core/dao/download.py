@@ -20,12 +20,12 @@ class Download(SeedboxSyncModel):
     the download started and finished.
     """
 
-    id = AutoField()
-    path = TextField()
-    seedbox_size = IntegerField()
-    local_size = IntegerField(default=0)
-    started = DateTimeField(default=datetime.datetime.now)
-    finished = DateTimeField(default=0)
+    id = AutoField(help_text="Unique identifier of the download")
+    path = TextField(help_text="Path of the downloaded file")
+    seedbox_size = IntegerField(help_text="Size of the file on the seedbox in bytes")
+    local_size = IntegerField(default=0, help_text="Size of the downloaded file stored locally in bytes")
+    started = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the download started")
+    finished = DateTimeField(default=0, help_text="Timestamp when the download finished")
 
     @staticmethod
     def is_already_download(filepath: str) -> bool:

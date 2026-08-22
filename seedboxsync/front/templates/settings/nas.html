@@ -1,0 +1,55 @@
+{% from 'components/macros_form.html' import form_error, form_toast, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Local (NAS)') }}{% endblock %}</h2>
+
+      <form method="post">
+        {{ form.csrf_token }}
+
+        {{ form_error(form) }}
+
+        <div class="box">
+          <p class="is-italic">{{ _('Information about local environment (NAS?).') }}</p>
+
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  local_watch_path: '{{ form.local_watch_path.data }}',
+                  isValid() { return isRequired(this.local_watch_path) }
+              }">
+                {{ render_field(form.local_watch_path) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  local_download_path: '{{ form.local_download_path.data }}',
+                  isValid() { return isRequired(this.local_download_path) }
+              }">
+                {{ render_field(form.local_download_path) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control has-text-right">
+          <button class="button is-primary">{{ _('Save') }}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ form_toast(saved) }}
+
+{% endblock %}

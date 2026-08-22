@@ -16,7 +16,7 @@ from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
 from seedboxsync.core import utils
-from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
+from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent, User
 
 
 class Database:
@@ -27,7 +27,7 @@ class Database:
         app (Flask): The Flask application that owns the database connection.
     """
 
-    DATABASE_VERSION = 4
+    DATABASE_VERSION = 5
     DB_PATHS: ClassVar[list[Path]] = [
         Path("~/.config/seedboxsync/seedboxsync.db").expanduser().resolve(),
         Path("~/.seedboxsync.db").expanduser().resolve(),
@@ -95,7 +95,7 @@ class Database:
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
         self.db.foreign_keys = 1
-        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent])
+        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent, User])
         self.app.logger.debug(
             "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
             self.app.config["DATABASE"],
@@ -134,7 +134,7 @@ class Database:
     #
     def _create_db_schema(self) -> None:
         """Create all tables and set the initial database version."""
-        self.db.create_tables([Download, Torrent, TaskStatus, SeedboxSync])
+        self.db.create_tables([Download, SeedboxSync, TaskStatus, Torrent, User])
         SeedboxSync.set_db_version(str(self.DATABASE_VERSION))
 
     def migrate_to_2(self) -> None:
@@ -162,3 +162,15 @@ class Database:
         self.db.create_tables([TaskStatus])
 
         SeedboxSync.set_db_version("4")
+
+    def migrate_to_5(self) -> None:
+        """Add user table."""
+        self.db.create_tables([User])
+        User.create(
+            username="admin",
+            password="scrypt:32768:8:1$2xZqYGaVsWgvXn8Q$b0ef299478983c1ce62090ae4a7830a09fedff434835cb983ad96a2"
+            "e3719d180bf2256fe0109cf89a6d01f5ffe0159450d527ad331bb5e29e9392565c6782417",  # sonar:python:S2068=false
+            email="admin@admin.ltd",
+        )
+
+        SeedboxSync.set_db_version("5")

@@ -1,0 +1,36 @@
+{% from 'components/macros_form.html' import render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="content">
+
+  <form method="post" class="box column is-6 is-offset-3">
+    {{ form.csrf_token }}
+
+    <h1 class="title">{% block title %}{{ _('Login') }}{% endblock %}</h1>
+
+    <div class="field" x-data="{
+        login: '{{ form.login.data or "" }}',
+        isValid() { return isRequired(this.login) }
+      }">
+      {{ render_field(form.login) }}
+    </div>
+
+    <div class="field" x-data="{
+        password: '{{ form.password.data or "" }}',
+        isValid() { return isRequired(this.password) }
+      }">
+      {{ render_field(form.password) }}
+    </div>
+
+    <div class="control">
+      <button class="button is-primary">{{ _('Save') }}</button>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

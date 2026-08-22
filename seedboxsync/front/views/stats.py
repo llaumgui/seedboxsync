@@ -4,17 +4,19 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for stats."""
+"""SeedboxSync Flask view for stats."""
 
 from flask import render_template
 from humanize import filesize
 from seedboxsync.core.dao import Download
 from seedboxsync.front.cache import cache
+from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.utils import init_flash
 from seedboxsync.front.views import bp
 
 
 @bp.route("/stats")
+@login_required  # type: ignore[untyped-decorator]
 @cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def stats() -> str:
     """Stats page view."""

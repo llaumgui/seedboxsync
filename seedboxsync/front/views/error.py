@@ -4,7 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for errors."""
+"""SeedboxSync Flask view for errors."""
 
 from flask import render_template
 from flask_babel import gettext

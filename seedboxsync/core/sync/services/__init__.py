@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Package with all sync servces."""
+
 from .blackhole import LOCK_NAME as BLACKHOLE_LOCK_NAME, PRIORITY as BLACKHOLE_PRIORITY, blackhole
 from .seedbox import LOCK_NAME as SEEDBOX_LOCK_NAME, PRIORITY as SEEDBOX_PRIORITY, seedbox
 

@@ -25,7 +25,7 @@ class Torrent(SeedboxSyncModel):
         sent (datetime): Timestamp indicating when the torrent was sent or created.
     """
 
-    id = AutoField()
-    name = TextField()
-    announce = TextField(null=True)
-    sent = DateTimeField(default=datetime.datetime.now)
+    id = AutoField(help_text="Unique identifier of the torrent")
+    name = TextField(help_text="Name of the torrent")
+    announce = TextField(null=True, help_text="Tracker announce URL of the torrent")
+    sent = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the torrent was sent")

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """The SeedboxSync main package."""
+
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,7 @@ from seedboxsync.core import Config, Database, Flask, logger
 from seedboxsync.front.apis import bp as bp_api, error as error_api
 from seedboxsync.front.babel import babel, get_locale
 from seedboxsync.front.cache import cache
+from seedboxsync.front.login_manager import login_manager
 from seedboxsync.front.views import bp as bp_frontend, error as error_front
 
 __version__ = version
@@ -102,6 +104,9 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
 
     # Initialize the cache
     cache.init_app(app)
+
+    # Initialize the login manager
+    login_manager.init_app(app)
 
     # Register jinja filter
     app.jinja_env.filters["slugify"] = slugify

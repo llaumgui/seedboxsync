@@ -4,7 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for healthcheck."""
+"""SeedboxSync Flask view for healthcheck."""
 
 from flask import Response, jsonify
 from seedboxsync.front.views import bp

@@ -39,3 +39,14 @@
 .is-overflow-anywhere {
   overflow-wrap: anywhere;
 }
+
+
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid hsl(221, 14%, 24%);
+}
+
+.settings-help {
+    margin-top: auto;
+}

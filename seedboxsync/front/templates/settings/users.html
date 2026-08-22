@@ -1,0 +1,52 @@
+{% from 'components/macros_form.html' import form_error, form_toast, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Users list') }}{% endblock %}</h2>
+
+      <form method="post">
+
+        <div class="box">
+
+          {# Table #}
+          <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>{{ _('Username') }}</th>
+                <th class="is-hidden-mobile">{{ _('E-mail') }}</th>
+                <th class="is-hidden-mobile">{{ _('Created') }}</th>
+                <th>{{ _('Last login') }}</th>
+                <th class="is-narrow"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td>{{ user.username }}</td>
+                  <td class="is-hidden-mobile">{{ user.email }}</td>
+                  <td class="is-hidden-mobile">{{ format_datetime(user.created) }}</td>
+                  <td>{{ format_datetime(user.last_login) }}</td>
+                  <td class="has-text-right"></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{{ form_toast(saved) }}
+
+{% endblock %}
