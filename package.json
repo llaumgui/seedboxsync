@@ -33,7 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@vitest/coverage-v8": "4.1.11",
-    "eslint": "^10.9.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-package-json": "^1.7.1",
     "globals": "^17.11.0",
     "sass": "^1.103.1",
