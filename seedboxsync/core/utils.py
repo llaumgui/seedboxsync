@@ -10,7 +10,7 @@ import os
 from os import PathLike
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit
 from bcoding import bdecode
 from flask import current_app as app
 
@@ -143,3 +143,22 @@ def _healthcheck_url_from_bind(bind: str) -> str:
         host = "127.0.0.1"
 
     return f"http://{host}:{parsed.port}/healthcheck"
+
+
+def is_safe_redirect_url(target: str) -> bool:
+    """
+    Check whether a target URL is safe for redirection.
+
+    Validates that the target is a local absolute path to prevent
+    Open Redirect vulnerabilities (e.g., scheme-relative URLs like '//evil.com').
+
+    Args:
+        target: The target URL string to validate.
+
+    Returns:
+        bool: True if the target URL is a safe local absolute path,
+            False otherwise.
+    """
+    url = urlsplit(target)
+
+    return not url.scheme and not url.netloc and url.path.startswith("/") and not url.path.startswith("//")

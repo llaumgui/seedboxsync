@@ -32,7 +32,7 @@ def unauthorized() -> Any | int | Response:
         abort(401)
 
     # Default behavior for the frontend
-    return redirect(url_for("frontend.login", next=request.url))
+    return redirect(url_for("frontend.login", next=request.path))
 
 
 @login_manager.request_loader  # type: ignore[untyped-decorator]

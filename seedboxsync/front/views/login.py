@@ -10,6 +10,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user
 from werkzeug.wrappers.response import Response
 from seedboxsync.core.dao.user import User
+from seedboxsync.core.utils import is_safe_redirect_url
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import LoginForm
 from seedboxsync.front.views import bp
@@ -31,6 +32,9 @@ def login() -> str | Response:
         login = request.form.get("login") or ""
         password = request.form.get("password") or ""
         next_url = request.args.get("next") or ""
+
+        if not is_safe_redirect_url(next_url):
+            next_url = ""
 
         user = User.authenticate(login, password)
 
