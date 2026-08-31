@@ -106,7 +106,7 @@ class Resource(RestXResource):  # type: ignore[misc]
                 )
             else:
                 data_field = fields.Nested(nested_model, required=True, description=f"The {name} object")
-            data_total = fields.Integer(required=False, description=f"Total of {name} object")
+            data_total = fields.Integer(required=False, description=f"Total of {name} object", example=1)
             message_field = None
         else:
             data_field = None

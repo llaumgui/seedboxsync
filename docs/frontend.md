@@ -5,8 +5,7 @@ hide:
   - navigation
 ---
 
-:warning: Currently, the front-end does not implement any authentication method.
-You are responsible for handling authentication through a reverse proxy or another solution.
+:warning: The default frontend login & password are `admin` / `seedboxsync`.
 
 <div align="center">
     <table>

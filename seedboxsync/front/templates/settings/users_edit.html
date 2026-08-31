@@ -1,0 +1,84 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ action }}{% endblock %}</h2>
+
+      <form method="post" x-data="validators.form()">
+        {{ form.csrf_token }}
+        {{ form_error(form) }}
+
+        <div class="box">
+
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  username: '{{ form.username.data or '' }}',
+                  touched: false,
+                  isValid() { return validators.Length(this.touched, this.username, 4, 25) && validators.isRequired(this.touched, this.username) }
+              }">
+                {{ render_field(form.username) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  email: '{{ form.email.data or '' }}',
+                  touched: false,
+                  isValid() { return validators.Length(this.touched, this.email, 8, 35) && validators.isRequired(this.touched, this.email) }
+              }">
+                {{ render_field(form.email) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="columns pt-4" x-data="{
+                  password: '{{ form.password.data or '' }}',
+                  password2: '{{ form.password.data or '' }}',
+                  touched: false,
+                  isValid() { return (validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) && validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
+              }"
+          >
+            <div class="column is-6">
+              <div class="field">
+                {{ render_field(form.password) }}
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="field">
+                <label class="label" for="{{ form.password.id }}2">{{ _('Confirm password') }}</label>
+                <div class="control column p-0 has-icons-left has-icons-right">
+                  <input id="{{ form.password.id }}2" class="input" type="{{ form.password.widget.input_type }}"
+                          name="{{ form.password.name }}2" x-model="{{ form.password.id }}2"
+                          placeholder="{{ form.password.render_kw['placeholder'] }}"
+                          x-bind:class="{ 'is-danger': !isValid()}"/>
+                  <span class="icon is-small is-left"><i class="fas {{ form.password.render_kw['icon'] }}"></i></span>
+                  <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="control has-text-right">
+          <button class="button is-success" :disabled="!canSubmit()">
+            <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

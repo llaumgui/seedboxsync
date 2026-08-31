@@ -13,6 +13,7 @@ from seedboxsync.core import utils
 from seedboxsync.core.dao import Download, typed_peewee_dicts
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 from seedboxsync.front.cache import cache
+from seedboxsync.front.login_manager import login_required
 
 api = Namespace("downloads", description="Operations related to download management")
 
@@ -155,6 +156,7 @@ class DownloadsList(Resource):
     @api.doc("list_downloads")  # type: ignore[untyped-decorator]
     @api.expect(parser)  # type: ignore[untyped-decorator]
     @api.marshal_with(download_list_envelope, code=200, description="List of downloads")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
         Retrieve a list of recent downloads.
@@ -214,6 +216,7 @@ class DownloadsProgress(Resource):
 
     @api.doc("delete_downloads_progress")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Downloads in progress deleted")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def delete(self) -> dict[str, Any]:
         """Delete progress downloads."""
         count = Download.delete().where(Download.finished == 0).execute()
@@ -231,7 +234,8 @@ class Downloads(Resource):
     """
 
     @api.doc("get_download")  # type: ignore[untyped-decorator]
-    @api.marshal_with(download_envelope, code=200, description="Download element")  # type: ignore[untyped-decorator]
+    @api.marshal_with(download_envelope, skip_none=True, code=200, description="Download element")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Retrieve a download.
@@ -270,6 +274,7 @@ class Downloads(Resource):
 
     @api.doc("delete_download")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Delete download element")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete a download.
@@ -294,13 +299,15 @@ class DownloadsStatsByMonth(Resource):
     @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_month")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_month_envelope, code=200, description="Download statistics aggregated by month")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
         Return download statistics grouped by month.
 
         Returns the number of files downloaded and total size per month.
         """
-        return self.build_envelope(stats_by_period("month"), type="StatsMonth")
+        stats = stats_by_period("month")
+        return self.build_envelope(stats, data_total=len(stats), type="StatsMonth")
 
 
 @api.route("/stats/year")
@@ -310,13 +317,15 @@ class DownloadsStatsByYear(Resource):
     @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_year")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_year_envelope, code=200, description="Download statistics aggregated by year")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
         Return download statistics grouped by year.
 
         Returns the number of files downloaded and total size per year.
         """
-        return self.build_envelope(stats_by_period("year"), type="StatsYear")
+        stats = stats_by_period("year")
+        return self.build_envelope(stats, data_total=len(stats), type="StatsYear")
 
 
 # ==========================

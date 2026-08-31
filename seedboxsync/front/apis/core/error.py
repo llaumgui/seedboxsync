@@ -10,31 +10,42 @@ from datetime import datetime
 from typing import Any
 import uuid
 from flask import Response, jsonify
-from flask_babel import gettext
-from werkzeug.exceptions import BadRequest, HTTPException, NotFound
+from werkzeug.exceptions import BadRequest, HTTPException, NotFound, Unauthorized
 from seedboxsync.front.apis import api
+from seedboxsync.front.babel import gettext as _
 
 
 @api.errorhandler(BadRequest)  # type: ignore[untyped-decorator]
 @api.errorhandler(NotFound)  # type: ignore[untyped-decorator]
-def api_errorhandler(error: BadRequest | NotFound) -> tuple[dict[str, Any], int]:
+@api.errorhandler(Unauthorized)  # type: ignore[untyped-decorator]
+def api_errorhandler(error: BadRequest | NotFound | Unauthorized) -> tuple[dict[str, Any], int]:
     """
     Handle validation and not-found API errors.
 
     Args:
-        error (BadRequest | NotFound): HTTP exception to serialize.
+        error (BadRequest | NotFound | Unauthorized): HTTP exception to serialize.
 
     Returns:
         tuple[dict[str, Any], int]: Empty response body and HTTP status code.
     """
     status_code = error.code or 500
 
+    # Get Flask-RESTX error data or build it from the HTTP exception
+    data = getattr(
+        error,
+        "data",
+        {
+            "message": error.name,
+            "errors": error.description,
+        },
+    )
+
     error.data = {  # type: ignore[union-attr]
         "type": "about:blank",
         "success": False,
         "status": status_code,
-        "title": error.data.get("message", ""),  # type: ignore[union-attr]
-        **({"message": error.data["errors"]} if "errors" in error.data else {}),  # type: ignore[union-attr]
+        "title": data.get("message", ""),
+        **({"message": data["errors"]} if "errors" in data else {}),
         "timestamp": datetime.now().astimezone().isoformat(),
         "traceId": str(uuid.uuid4()),
     }
@@ -53,7 +64,7 @@ def error(exc: Exception) -> tuple[Response, int | None]:
         tuple[Response, int | None]: JSON response and HTTP status code.
     """
     status_code = exc.code if isinstance(exc, HTTPException) else 500
-    title = exc.name if isinstance(exc, HTTPException) else gettext("Internal Server Error")
+    title = exc.name if isinstance(exc, HTTPException) else _("Internal Server Error")
     message = exc.description if isinstance(exc, HTTPException) else str(exc)
 
     return (

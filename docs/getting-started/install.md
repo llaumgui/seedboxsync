@@ -33,4 +33,4 @@ flask flask --app seedboxsync.app:main run
 huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
 ```
 
-Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/).
+Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/) with default login & password: `admin` / `seedboxsync`.

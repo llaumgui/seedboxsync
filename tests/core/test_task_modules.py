@@ -65,3 +65,45 @@ def test_task_modules_register_and_execute_single_task_per_module(
     assert manager.task.call_args.kwargs["priority"] == module.PRIORITY
     assert len(service.call_args_list) == 1
     assert service.call_args_list[0].args == service_args
+
+
+@pytest.mark.parametrize(
+    ("module_name", "task_name", "service_name", "service_args", "environment_name", "environment_value"),
+    [
+        (
+            "seedboxsync.core.taskmanager.task.task_periodic_sync_blackhole",
+            "periodic_sync_blackhole",
+            "blackhole_service",
+            (False, True),
+            "SYNC_BLACKHOLE_MINUTE",
+            "5",
+        ),
+        (
+            "seedboxsync.core.taskmanager.task.task_periodic_sync_seedbox",
+            "periodic_sync_seedbox",
+            "seedbox_service",
+            (False, True, False),
+            "SYNC_SEEDBOX_MINUTE",
+            "25",
+        ),
+    ],
+)
+def test_periodic_task_modules_register_and_execute(app, monkeypatch, module_name, task_name, service_name, service_args, environment_name, environment_value):
+    manager = MagicMock()
+    manager.periodic_task.side_effect = _identity_decorator
+    manager.lock_task.side_effect = _identity_decorator
+    app.__dict__["task_manager"] = manager
+    monkeypatch.setenv(environment_name, environment_value)
+
+    with patch.dict(sys.modules), app.app_context():
+        sys.modules.pop(module_name, None)
+        module = importlib.import_module(module_name)
+        service = MagicMock()
+        setattr(module, service_name, service)
+
+        getattr(module, task_name)()
+
+    assert module.minute == environment_value
+    manager.periodic_task.assert_called_once()
+    manager.lock_task.assert_called_once_with(module.LOCK_NAME)
+    assert service.call_args.args == service_args

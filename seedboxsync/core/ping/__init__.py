@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Ping package with all ping features."""
+
 from .abstract_ping_client import AbstractPingClient
 
 __all__ = ["AbstractPingClient"]

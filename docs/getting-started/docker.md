@@ -44,7 +44,7 @@ services:
       - /data/seedboxsync/downloads:/downloads
 ```
 
-Once installed, you can access to the frontend: [http://127.0.0.1:8000](http://127.0.0.1:8000/).
+Once installed, you can access to the frontend: [http://127.0.0.1:8000](http://127.0.0.1:8000/) with default login & password: `admin` / `seedboxsync`.
 
 ### Docker tags
 

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """SeedboxSync taskmanager using Huey package."""
+
 from .manager import Manager
 from .track_taskstatus import heartbeat, heartbeat_shutdown, heartbeat_startup, track_taskstatus
 

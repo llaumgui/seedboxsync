@@ -103,4 +103,4 @@ def test_flash(app, client):
         app.config["INIT_ERROR"] = "Error display with flash"
         response = client.get("/")
         assert response.status_code == 200
-        assert b"<li>Error display with flash</li>" in response.data
+        assert b"`Error display with flash`" in response.data

@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """Seedbox Core package."""
+
 from . import logger
 from .config import Config
 from .db import Database

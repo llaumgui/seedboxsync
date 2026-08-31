@@ -5,6 +5,7 @@
 # file that was distributed with this source code.
 #
 """CLI package using Click framework."""
+
 import logging
 import click
 from flask.cli import with_appcontext

@@ -7,7 +7,7 @@ from seedboxsync.core.taskmanager.utils import load_task_modules
 
 def test_manager_initializes_huey_next_to_application_database(app, tmp_path):
     database = tmp_path / "data" / "seedboxsync.db"
-    app.config["DATABASE"] = f"sqlite:///{database}"
+    app.config["DATABASE"] = f"sqlite:///{database.as_posix()}"
     huey = MagicMock()
 
     with patch("seedboxsync.core.taskmanager.manager.SqliteHuey", return_value=huey) as sqlite_huey:

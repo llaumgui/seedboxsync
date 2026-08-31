@@ -5,10 +5,11 @@
 # file that was distributed with this source code.
 #
 """The SeedboxSync main package."""
+
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
-from flask import Response, request, send_from_directory
+from flask import Response, flash, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
 from humanize import i18n as humanize_i18n
 from slugify import slugify
@@ -18,9 +19,11 @@ from seedboxsync.__version__ import (
     __version__ as version,
 )
 from seedboxsync.core import Config, Database, Flask, logger
-from seedboxsync.front.apis import bp as bp_api, error as error_api
+from seedboxsync.front.apis import register_api_blueprint
+from seedboxsync.front.apis.core import error as error_api
 from seedboxsync.front.babel import babel, get_locale
 from seedboxsync.front.cache import cache
+from seedboxsync.front.login_manager import login_manager
 from seedboxsync.front.views import bp as bp_frontend, error as error_front
 
 __version__ = version
@@ -84,6 +87,13 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     def init_once() -> None:  # pyright: ignore [reportUnusedFunction]
         humanize_i18n.activate(get_locale())
 
+    # Display init / boot error on flash
+    @app.before_request
+    def check_init_error() -> None:  # pyright: ignore [reportUnusedFunction]
+        init_error = app.config.pop("INIT_ERROR", None)
+        if init_error:
+            flash(init_error, "danger")
+
     # Inject Jinja function / variables
     @app.context_processor
     def inject_formatters() -> dict[str, Callable[[datetime], str]]:  # pyright: ignore [reportUnusedFunction]
@@ -103,12 +113,15 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     # Initialize the cache
     cache.init_app(app)
 
+    # Initialize the login manager
+    login_manager.init_app(app)
+
     # Register jinja filter
     app.jinja_env.filters["slugify"] = slugify
 
     # Register blueprint and error handler
     app.register_blueprint(bp_frontend)
-    app.register_blueprint(bp_api)
+    register_api_blueprint(app)
     app.register_error_handler(Exception, __handle_http_exception)  # type: ignore[arg-type]
 
     # Serve the favicon from the static directory

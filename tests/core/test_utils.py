@@ -1,4 +1,5 @@
 from io import StringIO
+from pathlib import Path
 from unittest.mock import patch
 import pytest
 from seedboxsync.core import utils
@@ -53,10 +54,12 @@ def test_is_running_in_docker_checks_runtime_markers(mountinfo, cgroup, dockeren
     }
 
     def exists(path):
-        return str(path) in files or (str(path) == "/.dockerenv" and dockerenv)
+        path = Path(path).as_posix()
+        return path in files or (path == "/.dockerenv" and dockerenv)
 
     def open_file(path, *args, **kwargs):
-        return StringIO(files[str(path)])
+        path = Path(path).as_posix()
+        return StringIO(files[path])
 
     with patch.object(utils.Path, "exists", exists), patch.object(utils.Path, "open", open_file):
         assert utils.is_running_in_docker() is expected

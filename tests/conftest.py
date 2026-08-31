@@ -4,6 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
+from pathlib import Path
 import shutil
 from unittest.mock import MagicMock, patch
 import pytest
@@ -13,18 +14,10 @@ from seedboxsync import create_app
 @pytest.fixture
 def app(tmp_path):
     """Create an application backed by an isolated copy of the test database."""
-    database = tmp_path / "seedboxsync.db"
+    database = Path(tmp_path / "seedboxsync.db")
     shutil.copy("tests/resources/seedboxsync.db", database)
 
-    app = create_app(
-        {
-            "TESTING": True,
-            "DATABASE": str(database),
-            "SECRET_KEY": "pytest",
-            "CACHE_TYPE": "NullCache",
-            "BABEL_DEFAULT_LOCALE": "en",
-        }
-    )
+    app = create_app({"TESTING": True, "DATABASE": str(database), "SECRET_KEY": "pytest", "CACHE_TYPE": "NullCache", "BABEL_DEFAULT_LOCALE": "en"})
 
     # FlaskDB opens the database while initializing and migrating it. Close
     # that connection so request and CLI contexts can manage their own.

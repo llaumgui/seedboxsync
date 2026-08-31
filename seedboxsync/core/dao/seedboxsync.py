@@ -23,8 +23,8 @@ class SeedboxSync(SeedboxSyncModel):
         value (str): Stored value associated with the key.
     """
 
-    key = CharField(primary_key=True)
-    value = TextField()
+    key = CharField(primary_key=True, help_text="Unique identifier for the configuration entry")
+    value = TextField(help_text="Value associated with the configuration entry")
 
     @staticmethod
     def get_db_version() -> str:

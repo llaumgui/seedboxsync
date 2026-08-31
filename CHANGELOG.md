@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 4.1.0 - Sep xx, 2026
+
+* ✨ [Issue #127](https://github.com/llaumgui/seedboxsync/issues/127): **Authentication**: User management and authentication features powered by [Flask-Login](https://flask-login.readthedocs.io/en/latest/).
+* ♻️ **Configuration**: Rewrote settings handling across multiple pages using [WTForms](https://wtforms.readthedocs.io/) and [Flask-WTF](https://flask-wtf.readthedocs.io/en/1.2.x/).
+
 ## 4.0.0 - Aug 16, 2026
 
 **⚠️ Complete rewrite of the command-line interface using Click, allowing the web frontend and CLI to be integrated into a single application.**

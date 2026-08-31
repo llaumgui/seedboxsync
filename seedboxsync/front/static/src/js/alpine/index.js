@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025 Guillaume Kulakowski <guillaume@kulakowski.fr>
+ * Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,13 +21,7 @@ window.ModalConfirmCallComponent = ModalConfirmCallComponent;
 window.OpenModalConfirmCall = OpenModalConfirmCall;
 
 // Validators
-window.isValidHost = validators.isValidHost;
-window.isValidPort = validators.isValidPort;
-window.isOctalChmod = validators.isOctalChmod;
-window.isRequired = validators.isRequired;
-window.isValidTimeout = validators.isValidTimeout;
-window.isValidUrl = validators.isValidUrl;
-window.isValidMaxConcPrefetchReq = validators.isValidMaxConcPrefetchReq;
+window.validators = validators;
 
 window.Alpine = Alpine;
 Alpine.start();

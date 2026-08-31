@@ -6,9 +6,11 @@
 #
 """Taskmanager Manager module."""
 
+import os
 from pathlib import Path
+import re
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 from flask import Flask
 from huey import SqliteHuey
 
@@ -116,7 +118,12 @@ class Manager:
         database_url: str = self.app.config["DATABASE"]
         parsed_url = urlparse(database_url)
 
-        clean_path = parsed_url.path
+        clean_path = unquote(parsed_url.path)
+
+        # SQLite URI represents Windows drive paths as /C:/...
+        if os.name == "nt" and re.match(r"^/[A-Za-z]:/", clean_path):
+            clean_path = clean_path[1:]
+
         if clean_path.startswith("//"):
             clean_path = clean_path[1:]
 

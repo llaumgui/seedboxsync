@@ -1,14 +1,9 @@
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class="container">
-  <div x-data="{ show: true }" x-show="show" class="notification is-danger mt-4">
-    <button class="delete" @click="show = false"></button>
-    <ul>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  </div>
-</div>
-{% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+<script>document.addEventListener("DOMContentLoaded", () => {
+{% for category, message in messages %}
+bulmaToast.toast({ message: `{{ message }}`, type: "is-{{ category }}" });
+{% endfor %}
+});</script>
+  {% endif %}
 {% endwith %}

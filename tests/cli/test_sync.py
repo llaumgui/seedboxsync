@@ -1,6 +1,7 @@
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, PropertyMock, patch
+from paramiko import SSHException
 import pytest
 from seedboxsync.cli import cli
 from seedboxsync.core.dao import Download, TaskStatus, Torrent
@@ -108,6 +109,36 @@ def test_blackhole_marks_invalid_torrent_as_failed(app, runner, tmp_path, sync_s
     assert Path(f"{torrent_file}.fail").exists()
 
 
+def test_blackhole_empty_watch_directory_reports_success(app, runner, tmp_path, sync_services):
+    sync, ping = sync_services
+    app.config.update(SEEDBOXSYNC_SYNC_BLACKHOLE_ENABLED=True, SEEDBOXSYNC_LOCAL_WATCH_PATH=str(tmp_path))
+
+    result = runner.invoke(cli, ["sync", "blackhole", "--ping"])
+
+    assert result.exit_code == 0
+    sync.put.assert_not_called()
+    ping.start.assert_called_once_with("sync_blackhole")
+    ping.success.assert_called_once_with("sync_blackhole")
+
+
+def test_blackhole_keeps_file_when_upload_fails(app, runner, tmp_path, sync_services):
+    sync, _ = sync_services
+    torrent_file = tmp_path / "failed.torrent"
+    torrent_file.write_bytes(b"torrent")
+    sync.put.side_effect = SSHException("upload failed")
+    app.config.update(
+        SEEDBOXSYNC_SYNC_BLACKHOLE_ENABLED=True,
+        SEEDBOXSYNC_LOCAL_WATCH_PATH=str(tmp_path),
+        SEEDBOXSYNC_SEEDBOX_TMP_PATH="/tmp",
+        SEEDBOXSYNC_SEEDBOX_WATCH_PATH="/watch",
+    )
+
+    result = runner.invoke(cli, ["sync", "blackhole"])
+
+    assert result.exit_code == 0
+    assert torrent_file.exists()
+
+
 def test_seedbox_only_store_records_remote_file_without_downloading(app, runner, sync_services):
     sync, ping = sync_services
     sync.walk.return_value = [("shows", [], ["episode.mkv", "partial.part"])]
@@ -122,12 +153,12 @@ def test_seedbox_only_store_records_remote_file_without_downloading(app, runner,
     result = runner.invoke(cli, ["sync", "seedbox", "--only-store", "--ping"])
 
     assert result.exit_code == 0, result.output
-    sync.stat.assert_called_once_with("shows/episode.mkv")
+    sync.stat.assert_called_once_with(str(Path("shows/episode.mkv")))
     sync.get.assert_not_called()
     ping.start.assert_called_once_with("sync_seedbox")
     ping.success.assert_called_once_with("sync_seedbox")
     with app.app_context():
-        download = Download.get(Download.path == "shows/episode.mkv")
+        download = Download.get(Download.path == str(Path("shows/episode.mkv")))
         assert download.seedbox_size == 4096
         assert download.local_size == 4096
         assert download.finished != 0
@@ -202,3 +233,56 @@ def test_seedbox_rejects_invalid_exclusion_regex(app, runner, sync_services):
     assert result.exit_code == 1
     assert isinstance(result.exception, SystemExit)
     assert "Invalid configuration for exclude_syncing" in str(result.exception)
+
+
+def test_seedbox_returns_when_finished_directory_is_missing(app, runner, sync_services):
+    sync, ping = sync_services
+    sync.chdir.side_effect = [None, FileNotFoundError("missing")]
+    app.config["SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED"] = True
+
+    result = runner.invoke(cli, ["sync", "seedbox", "--ping"])
+
+    assert result.exit_code == 0
+    sync.walk.assert_not_called()
+    ping.success.assert_not_called()
+
+
+def test_seedbox_dry_run_does_not_inspect_remote_file(app, runner, sync_services):
+    sync, _ = sync_services
+    sync.walk.return_value = [("", [], ["movie.mkv"])]
+    app.config.update(
+        SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED=True,
+        SEEDBOXSYNC_SEEDBOX_PART_SUFFIX=".part",
+        SEEDBOXSYNC_SEEDBOX_EXCLUDE_SYNCING="",
+    )
+
+    result = runner.invoke(cli, ["sync", "seedbox", "--dry-run"])
+
+    assert result.exit_code == 0
+    sync.stat.assert_not_called()
+
+
+def test_seedbox_handles_walk_error(app, runner, sync_services):
+    sync, ping = sync_services
+    sync.walk.side_effect = OSError("walk failed")
+    app.config["SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED"] = True
+
+    result = runner.invoke(cli, ["sync", "seedbox", "--ping"])
+
+    assert result.exit_code == 0
+    ping.success.assert_called_once_with("sync_seedbox")
+
+
+def test_seedbox_handles_download_ssh_error(app, runner, sync_services):
+    sync, _ = sync_services
+    sync.walk.return_value = [("", [], ["movie.mkv"])]
+    sync.stat.side_effect = SSHException("download failed")
+    app.config.update(
+        SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED=True,
+        SEEDBOXSYNC_SEEDBOX_PART_SUFFIX=".part",
+        SEEDBOXSYNC_SEEDBOX_EXCLUDE_SYNCING="",
+    )
+
+    result = runner.invoke(cli, ["sync", "seedbox"])
+
+    assert result.exit_code == 0

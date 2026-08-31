@@ -1,3 +1,4 @@
+from pathlib import Path
 import socket
 import stat
 from types import SimpleNamespace
@@ -125,12 +126,15 @@ def test_walk_recurses_into_remote_directories(sftp_app, paramiko_mocks):
     with sftp_app.app_context():
         result = list(SftpClient().walk("shows"))
 
+    root_path = str(Path("shows"))
+    season_path = str(Path("shows") / "season")
+
     assert result == [
-        ("shows", ["season"], ["cover.jpg"]),
-        ("shows/season", [], ["episode.mkv"]),
+        (root_path, ["season"], ["cover.jpg"]),
+        (season_path, [], ["episode.mkv"]),
     ]
-    assert sftp.listdir_attr.call_args_list[0].args == ("shows",)
-    assert sftp.listdir_attr.call_args_list[1].args == ("shows/season",)
+    assert sftp.listdir_attr.call_args_list[0].args == (root_path,)
+    assert sftp.listdir_attr.call_args_list[1].args == (season_path,)
 
 
 def test_close_is_safe_before_connection_and_closes_connected_transport(sftp_app, paramiko_mocks):

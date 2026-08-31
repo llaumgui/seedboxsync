@@ -10,6 +10,7 @@ from typing import Any
 from flask_restx import Namespace, fields, reqparse
 from seedboxsync.core.dao import Torrent
 from seedboxsync.front.apis import Resource
+from seedboxsync.front.login_manager import login_required
 
 api = Namespace("uploads", description="Operations related to uploaded torrents management")
 
@@ -78,6 +79,7 @@ class UploadsList(Resource):
     @api.doc("list_uploads")  # type: ignore[untyped-decorator]
     @api.expect(parser)  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_list_envelope, code=200, description="List of uploaded torrents")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
         Retrieve the most recent uploaded torrents.
@@ -113,7 +115,8 @@ class Uploads(Resource):
     """
 
     @api.doc("get_upload")  # type: ignore[untyped-decorator]
-    @api.marshal_with(upload_envelope, code=200, description="Upload element")  # type: ignore[untyped-decorator]
+    @api.marshal_with(upload_envelope, skip_none=True, code=200, description="Upload element")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Retrieve an uploaded torrent.
@@ -134,6 +137,7 @@ class Uploads(Resource):
 
     @api.doc("delete_upload")  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_message_envelope, code=200, description="Delete upload element")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete an uploaded torrent.

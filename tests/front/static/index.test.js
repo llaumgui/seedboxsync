@@ -32,7 +32,7 @@ describe("frontend entry points", () => {
     expect(window.TablePaginedComponent).toBeTypeOf("function");
     expect(window.TaskStatusBoxComponent).toBeTypeOf("function");
     expect(window.ModalConfirmCallComponent).toBeTypeOf("function");
-    expect(window.isValidHost).toBeTypeOf("function");
-    expect(window.isValidUrl).toBeTypeOf("function");
+    expect(window.validators).toBeTypeOf("object");
+    expect(window.validators.isValidUrl).toBeTypeOf("function");
   });
 });

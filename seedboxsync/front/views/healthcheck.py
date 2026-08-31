@@ -4,7 +4,7 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for healthcheck."""
+"""SeedboxSync Flask view for healthcheck."""
 
 from flask import Response, jsonify
 from seedboxsync.front.views import bp
@@ -12,5 +12,10 @@ from seedboxsync.front.views import bp
 
 @bp.route("/healthcheck")
 def healthcheck() -> tuple[Response, int]:
-    """Healthcheck view."""
+    """
+    Perform a basic HTTP health check.
+
+    Returns:
+        tuple[Response, int]: JSON response with health status ("ok") and HTTP status code 200.
+    """
     return jsonify({"status": "ok"}), 200

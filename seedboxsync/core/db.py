@@ -16,18 +16,24 @@ from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
 from seedboxsync.core import utils
-from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent
+from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent, User
 
 
 class Database:
     """
-    Database connector using peewee.
+    Database manager for SeedboxSync using Peewee ORM.
+
+    Handles database path resolution, connection binding, SQLite optimization
+    pragmas, schema migrations, and custom SQLite functions.
 
     Attributes:
-        app (Flask): The Flask application that owns the database connection.
+        DATABASE_VERSION (int): Current schema version target.
+        DB_PATHS (ClassVar[list[Path]]): Candidate database paths checked in order of preference.
+        app (Flask): The Flask application instance bound to this database.
+        db (SqliteDatabase): The initialized Peewee SQLite database instance.
     """
 
-    DATABASE_VERSION = 4
+    DATABASE_VERSION = 5
     DB_PATHS: ClassVar[list[Path]] = [
         Path("~/.config/seedboxsync/seedboxsync.db").expanduser().resolve(),
         Path("~/.seedboxsync.db").expanduser().resolve(),
@@ -48,11 +54,20 @@ class Database:
         self._register_functions()
 
     def _load_database(self) -> None:
-        """Load SeedboxSync DB from SeedboxSyncFront."""
+        """
+        Locate, configure, and initialize the SQLite database.
+
+        Checks candidate file paths or pre-configured settings, creates parent
+        directories if necessary, builds the schema for new files, and executes
+        pending migrations.
+
+        Raises:
+            RuntimeError: If a required migration method is missing.
+        """
         if self.app.config.get("DATABASE", False):
             # Load from testing
             self._db_file = self.app.config.get("DATABASE", "")
-            self.app.config["DATABASE"] = "sqlite:///" + self._db_file
+            self.app.config["DATABASE"] = f"sqlite:///{Path(self._db_file).as_posix()}"
         else:
             # Get DB from paths, default to first path if none found
             self.app.config.setdefault("DATABASE", fspath(Database.DB_PATHS[0]))  # default path
@@ -61,7 +76,7 @@ class Database:
                     self.app.config.setdefault("DATABASE", fspath(path))
                     self.app.logger.debug("Use database path %s", path)
             self._db_file = self.app.config["DATABASE"]
-            self.app.config["DATABASE"] = "sqlite:///" + self._db_file
+            self.app.config["DATABASE"] = f"sqlite:///{Path(self._db_file).as_posix()}"
 
         if not Path(self._db_file).exists():
             self.app.logger.warning(f'Database "{self._db_file}" not found — creating new file...')
@@ -76,7 +91,7 @@ class Database:
         self.app.logger.debug(f"SQLite database version is {db_version}")
         while db_version < self.DATABASE_VERSION:
             next_version = db_version + 1
-            migration_name = f"migrate_to_{next_version}"
+            migration_name = f"_migrate_to_{next_version}"
 
             self.app.logger.info(f'Upgrading database "{self._db_file}" from v{db_version} to v{next_version}')
 
@@ -88,14 +103,19 @@ class Database:
             db_version = next_version
 
     def _init_and_bind(self) -> None:
-        """Initialize and bind Peewee models to the SQLite database."""
+        """
+        Initialize the Flask-Peewee wrapper and apply performance tuning pragmas.
+
+        Binds model classes to the database connection and configures WAL mode,
+        cache size, and foreign key constraints.
+        """
         db_wrapper = FlaskDB(self.app)
         self.db = cast(SqliteDatabase, db_wrapper.database)
         self.app.extensions["flaskdb"] = db_wrapper
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
         self.db.foreign_keys = 1
-        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent])
+        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent, User])
         self.app.logger.debug(
             "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
             self.app.config["DATABASE"],
@@ -105,14 +125,16 @@ class Database:
         )
 
     def _register_functions(self) -> None:
-        """Register DB functions."""
+        """Register custom SQLite scalar functions for SQL queries."""
 
         @self.db.func("byte_to_gi")
         def db_byte_to_gi(num: float, suffix: str = "B") -> str:  # pyright: ignore [reportUnusedFunction]
+            """Convert byte counts to human-readable binary unit strings."""
             return utils.byte_to_gi(num, suffix)
 
         @self.db.func("humanize")
         def db_humanize(num: float) -> str:  # pyright: ignore [reportUnusedFunction]
+            """Format file size numbers into human-readable representations."""
             try:
                 # Treat None or invalid type as 0
                 num = float(num or 0)
@@ -122,6 +144,7 @@ class Database:
 
         @self.db.func("naturaldelta")
         def db_naturaldelta(num: float) -> str:  # pyright: ignore [reportUnusedFunction]
+            """Format second intervals into human-readable duration strings."""
             try:
                 # Treat None or invalid type as 0
                 num = float(num or 0)
@@ -133,32 +156,60 @@ class Database:
     # Database creation and migration
     #
     def _create_db_schema(self) -> None:
-        """Create all tables and set the initial database version."""
-        self.db.create_tables([Download, Torrent, TaskStatus, SeedboxSync])
+        """Create all database tables, insert default user, and set schema version."""
+        self.db.create_tables([Download, SeedboxSync, TaskStatus, Torrent, User])
+        self._create_default_user()
         SeedboxSync.set_db_version(str(self.DATABASE_VERSION))
 
-    def migrate_to_2(self) -> None:
+    def _migrate_to_2(self) -> None:
         """
-        Migration: rebuild SeedboxSync table and add Lock table.
+        Migrate database schema to v2.
 
-        Fixes compatibility issues between tables created with Peewee v2 and v3.
+        Rebuilds the `SeedboxSync` table to fix schema compatibility issues
+        between Peewee v2 and v3.
         """
         self.db.drop_tables([SeedboxSync])
         self.db.create_tables([SeedboxSync])
         SeedboxSync.set_db_version("2")
 
-    def migrate_to_3(self) -> None:
-        """Migration: allow null values for the 'announce' field in the torrent table."""
+    def _migrate_to_3(self) -> None:
+        """
+        Migrate database schema to v3.
+
+        Drops the NOT NULL constraint on the `announce` field in the `torrent` table.
+        """
         migrator = SchemaMigrator.from_database(self.db)
         migrate(
             migrator.drop_not_null("torrent", "announce"),
         )
         SeedboxSync.set_db_version("3")
 
-    def migrate_to_4(self) -> None:
-        """Replace 'Lock' table by 'TaskStatus'."""
+    def _migrate_to_4(self) -> None:
+        """
+        Migrate database schema to v4.
+
+        Replaces legacy `lock` table with the new `TaskStatus` table and cleans up
+        legacy configuration keys.
+        """
         self.db.execute_sql("DROP TABLE IF EXISTS lock;")  # type: ignore[no-untyped-call]
         self.db.execute_sql("DELETE FROM seedboxsync WHERE key = 'version';")  # type: ignore[no-untyped-call]
         self.db.create_tables([TaskStatus])
-
         SeedboxSync.set_db_version("4")
+
+    def _migrate_to_5(self) -> None:
+        """
+        Migrate database schema to v5.
+
+        Creates the `User` table for authentication and seeds the default admin account.
+        """
+        self.db.create_tables([User])
+        self._create_default_user()
+        SeedboxSync.set_db_version("5")
+
+    def _create_default_user(self) -> None:
+        User.create(
+            username="admin",
+            password="scrypt:32768:8:1$2xZqYGaVsWgvXn8Q$b0ef299478983c1ce62090ae4a7830a09fedff434835cb983ad96a2"
+            "e3719d180bf2256fe0109cf89a6d01f5ffe0159450d527ad331bb5e29e9392565c6782417",  # sonar:python:S2068=false
+            email="admin@admin.ltd",
+        )

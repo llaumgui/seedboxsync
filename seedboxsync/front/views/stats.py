@@ -4,22 +4,30 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for stats."""
+"""SeedboxSync Flask view for stats."""
 
 from flask import render_template
 from humanize import filesize
 from seedboxsync.core.dao import Download
 from seedboxsync.front.cache import cache
-from seedboxsync.front.utils import init_flash
+from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
 
 
 @bp.route("/stats")
+@login_required  # type: ignore[untyped-decorator]
 @cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def stats() -> str:
-    """Stats page view."""
-    init_flash()
+    """
+    Render the statistics view.
 
+    Calculates the total number of finished downloads and their cumulative file
+    size, formats the size in human-readable format, and renders the stats page
+    (cached for 5 minutes).
+
+    Returns:
+        str: Rendered HTML template containing the summary statistics.
+    """
     query = Download.select().where(Download.finished != 0)
     total_files = query.count()
     total_size = sum([d.seedbox_size for d in query if d.seedbox_size])

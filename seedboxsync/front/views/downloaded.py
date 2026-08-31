@@ -4,18 +4,25 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask vierw for downloaded torrents."""
+"""SeedboxSync Flask view for downloaded torrents."""
 
 from flask import render_template
 from seedboxsync.front.cache import cache
-from seedboxsync.front.utils import init_flash
+from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
 
 
 @bp.route("/downloaded")
+@login_required  # type: ignore[untyped-decorator]
 @cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def downloaded() -> str:
-    """Downloaded list view."""
-    init_flash()
+    """
+    Render the downloaded torrents list view.
 
+    Initializes flash messages and returns the rendered HTML template
+    containing the history or status of downloaded torrents (cached for 5 minutes).
+
+    Returns:
+        str: Rendered HTML template.
+    """
     return render_template("downloaded.html")

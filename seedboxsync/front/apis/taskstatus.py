@@ -10,6 +10,7 @@ from typing import Any
 from flask_restx import Namespace, fields
 from seedboxsync.core.dao import TaskStatus
 from seedboxsync.front.apis import DateTimeOrZero, Resource
+from seedboxsync.front.login_manager import login_required
 
 api = Namespace("taskstatuses", description="Operations related to taskstatus")
 
@@ -60,6 +61,7 @@ class TaskStatusList(Resource):
 
     @api.doc("list_taskstatus")  # type: ignore[untyped-decorator]
     @api.marshal_with(taskstatus_list_envelope, code=200, description="List of taskstatuses")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """Retrieve a list of taskstatus."""
         select = TaskStatus.select(
@@ -84,6 +86,7 @@ class TaskStatuses(Resource):
 
     @api.doc("get_taskstatus")  # type: ignore[untyped-decorator]
     @api.marshal_with(taskstatus_envelope, code=200, description="TaskStatus element")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
     def get(self, key: str) -> dict[str, Any]:
         """
         Retrieve a taskstatus.

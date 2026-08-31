@@ -1,0 +1,62 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ _('Users list') }}{% endblock %}</h2>
+
+      <div class="box">
+        {# Table #}
+        <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>{{ _('Username') }}</th>
+              <th class="is-hidden-mobile">{{ _('Email') }}</th>
+              <th class="is-hidden-mobile">{{ _('Created') }}</th>
+              <th>{{ _('Last login') }}</th>
+              <th class="is-narrow"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+              {% set can_delete = user.id != current_user.id %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td class="is-hidden-mobile">{{ user.email }}</td>
+                <td class="is-hidden-mobile">{{ format_datetime(user.created) }}</td>
+                <td>{{ format_datetime(user.last_login) }}</td>
+                <td class="has-text-right">
+                    <div class="buttons is-right is-flex-wrap-nowrap">
+                      <a class="button is-info is-outlined" href="{{ url_for('frontend.settings_users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
+                        <span class="icon is-small"><i class="fas fa-pen-to-square"></i></span>
+                      </a>
+                      <a class="button is-danger is-outlined" {% if not can_delete %}disabled aria-disabled="true"{% endif %} title="{{ _('Delete') }}"
+                        {% if can_delete %}href="{{ url_for('frontend.settings_users_delete', user_id=user.id) }}"{% endif %}>
+                        <span class="icon is-small"><i class="fas fa-times"></i></span>
+                      </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="control has-text-right">
+        <a class="button is-info is-outlined" href="{{ url_for('frontend.settings_users_create') }}">
+          <span class="icon is-small"><i class="fas fa-add"></i></span><span>{{ _('Add') }}</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

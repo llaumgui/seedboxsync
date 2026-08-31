@@ -52,6 +52,11 @@ run-front: i18n-compile
 run-taskmanager:
     uv run huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
 
+# Run all launcher in parallel
+[group('🚀 Launcher')]
+[parallel]
+run-all: run-taskmanager run-front
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 🌐 INTERNATIONALIZATION (I18N)
@@ -145,7 +150,7 @@ pytest-ci:
 # Run all local linters followed by the full test suite
 [group('🧪 Testing & CI')]
 [group('🐍 Python')]
-test: comply type-checking markdownlint hadolint nodejs-lint pytest
+test: comply type-checking markdownlint hadolint nodejs-lint pytest nodejs-test
 
 # Run the full validation and testing pipeline for CI
 [group('🧪 Testing & CI')]

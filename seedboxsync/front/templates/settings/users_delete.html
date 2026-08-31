@@ -1,0 +1,42 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ action }}{% endblock %}</h2>
+
+      <form method="post">
+        {{ form.csrf_token }}
+        {{ form_error(form) }}
+
+        <div class="box">
+
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <strong>{{ _('Username:') }}</strong> {{ user.username }}
+            </div>
+
+            <div class="column is-6">
+              <strong>{{ _('Email:') }}</strong> {{ user.email }}
+            </div>
+          </div>
+
+        <div class="control has-text-right">
+          <button class="button is-danger">
+            <span class="icon is-small"><i class="fas fa-times"></i></span> <span>{{ _('Delete') }}</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
