@@ -12,6 +12,7 @@ from pathlib import Path
 from flask import Response, flash, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
 from humanize import i18n as humanize_i18n
+from libgravatar import Gravatar
 from slugify import slugify
 from seedboxsync.__version__ import (
     __api_path_version__ as api_path_version,
@@ -109,6 +110,11 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
             "api_version": api_version,
             "locale": str(locale).replace("_", "-"),
         }
+
+    @app.template_global()
+    def gravatar(email: str) -> str:  # pyright: ignore [reportUnusedFunction]
+        """Return the Gravatar image URL for an email address."""
+        return str(Gravatar(email).get_image())
 
     # Initialize the cache
     cache.init_app(app)

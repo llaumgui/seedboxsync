@@ -990,6 +990,15 @@ wheels = [
 ]
 
 [[package]]
+name = "libgravatar"
+version = "1.0.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c3/e7/3e9c8d596dfad798be22ffa731dfc2ac8b5f72728a4beca56d722c07df6f/libgravatar-1.0.4.tar.gz", hash = "sha256:05cf4f8dfefe995d09078cd3d747c8f04dcf17d6004fc7bb542049a55f2238d9", size = 16969, upload-time = "2023-03-06T06:01:17.167Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/cc/1c5f1d887800035bf0c93f204190ae26f859ab0e00f7ff523324395716b8/libgravatar-1.0.4-py2.py3-none-any.whl", hash = "sha256:f967619b38914e0f941e53387881005e43929814571103f6bbfa2afd75045e20", size = 17567, upload-time = "2023-03-06T06:01:14.71Z" },
+]
+
+[[package]]
 name = "librt"
 version = "0.15.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2076,6 +2085,7 @@ dependencies = [
     { name = "ftputil" },
     { name = "huey" },
     { name = "humanize" },
+    { name = "libgravatar" },
     { name = "paramiko" },
     { name = "peewee" },
     { name = "python-slugify" },
@@ -2115,6 +2125,7 @@ requires-dist = [
     { name = "ftputil", specifier = ">=5.2.0" },
     { name = "huey", specifier = ">=3.3.2" },
     { name = "humanize", specifier = ">=4.16.0" },
+    { name = "libgravatar", specifier = ">=1.0.4" },
     { name = "mkdocs-coverage", marker = "extra == 'dev'", specifier = ">=2.0.0" },
     { name = "mkdocs-include-markdown-plugin", marker = "extra == 'dev'", specifier = ">=7.3.0" },
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.7.7" },

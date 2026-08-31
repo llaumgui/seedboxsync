@@ -1,7 +1,10 @@
 {% set current_path = request.path %}
 
-{% macro menu_link(title, link) %}
-<a class="navbar-item{% if current_path == url_for(link) or (url_for(link) != '/' and current_path.startswith(url_for(link))) %} is-active{% endif %}" href="{{ url_for(link) }}"><h1>{{ title }}</h1></a>
+{% macro menu_link(title, link, icon="") %}
+<a class="navbar-item{% if current_path == url_for(link) or (url_for(link) != '/' and current_path.startswith(url_for(link))) %} is-active{% endif %}"
+   href="{{ url_for(link) }}">
+   <h1>{% if icon %}<i class="fa {{ icon }}" aria-hidden="true"></i> {% endif %}{{ title }}</h1>
+</a>
 {% endmacro %}
 
 <nav class="navbar has-shadow is-dark" role="navigation" aria-label="main navigation">
@@ -35,11 +38,14 @@
       {% elif not config.SEEDBOXSYNC_LOGIN_DISABLED and current_user.is_authenticated %}
         <div class="navbar-item navbar-end has-dropdown is-hoverable">
           <a class="navbar-link">
+            {% if config.SEEDBOXSYNC_AUTH_GRAVATAR_ENABLED %}<figure class="image is-24x24">
+              <img class="is-rounded" src="{{ gravatar(current_user.email) }}" alt="{{ current_user.username }}">
+            </figure>{% endif %}
             {{ current_user.username }}
           </a>
           <div class="navbar-dropdown">
-            {{ menu_link(_('Settings'), 'frontend.settings') }}
-            {{ menu_link(_('Logout'), 'frontend.logout') }}
+            {{ menu_link(_('Settings'), 'frontend.settings', 'fa-gear') }}
+            {{ menu_link(_('Logout'), 'frontend.logout', 'fa-sign-out' ) }}
           </div>
         </div>
       {% endif %}

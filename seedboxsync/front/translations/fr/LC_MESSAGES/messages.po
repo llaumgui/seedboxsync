@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-08-27 07:57+0200\n"
+"POT-Creation-Date: 2026-08-31 16:31+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: seedboxsync/front/login_manager.py:16
+#: seedboxsync/front/login_manager.py:18
 msgid "Please log in to access this page."
 msgstr "Veuillez vous connecter pour accéder à cette page."
 
-#: seedboxsync/front/apis/error.py:56 seedboxsync/front/views/error.py:25
+#: seedboxsync/front/apis/core/error.py:67 seedboxsync/front/views/error.py:25
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
@@ -39,6 +39,10 @@ msgstr "Mot de passe"
 #: seedboxsync/front/forms/settings_authentication.py:22
 msgid "Disabled the authentication?"
 msgstr "Désactiver l'authentification ?"
+
+#: seedboxsync/front/forms/settings_authentication.py:23
+msgid "Enable Gravatar for users?"
+msgstr "Activer Gravatar pour les utilisateurs"
 
 #: seedboxsync/front/forms/settings_nas.py:24
 #: seedboxsync/front/forms/settings_seedbox.py:67
@@ -223,6 +227,10 @@ msgstr "Clair"
 msgid "Language of the WebUI"
 msgstr "Langue de l'interface web"
 
+#: seedboxsync/front/forms/settings_seedboxsync.py:38
+msgid "Enable CSRF protection for all forms?"
+msgstr "Activer la protection CSRF pour tous les formulaires"
+
 #: seedboxsync/front/forms/user.py:23
 #: seedboxsync/front/templates/settings/users.html:20
 msgid "Username"
@@ -305,7 +313,7 @@ msgstr "a été effacé"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: seedboxsync/front/templates/components/navbar.html:23
+#: seedboxsync/front/templates/components/navbar.html:26
 #: seedboxsync/front/templates/homepage.html:33
 msgid "Dashboard"
 msgstr "Tableau de bord"
@@ -442,11 +450,11 @@ msgid "Heartbeat"
 msgstr "Heartbeat"
 
 #: seedboxsync/front/templates/login.html:33
-#: seedboxsync/front/templates/settings/authentication.html:38
+#: seedboxsync/front/templates/settings/authentication.html:48
 #: seedboxsync/front/templates/settings/nas.html:47
 #: seedboxsync/front/templates/settings/ping.html:65
 #: seedboxsync/front/templates/settings/seedbox.html:210
-#: seedboxsync/front/templates/settings/seedboxsync.html:56
+#: seedboxsync/front/templates/settings/seedboxsync.html:67
 #: seedboxsync/front/templates/settings/users_edit.html:75
 msgid "Save"
 msgstr "Sauver"
@@ -520,8 +528,8 @@ msgstr "Recherche"
 
 #: seedboxsync/front/templates/components/menu_settings.html:9
 #: seedboxsync/front/templates/components/menu_settings.html:26
-#: seedboxsync/front/templates/components/navbar.html:33
-#: seedboxsync/front/templates/components/navbar.html:41
+#: seedboxsync/front/templates/components/navbar.html:36
+#: seedboxsync/front/templates/components/navbar.html:47
 #: seedboxsync/front/templates/settings/authentication.html:13
 #: seedboxsync/front/templates/settings/nas.html:13
 #: seedboxsync/front/templates/settings/ping.html:13
@@ -596,23 +604,23 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: seedboxsync/front/templates/components/navbar.html:24
+#: seedboxsync/front/templates/components/navbar.html:27
 msgid "Downloaded"
 msgstr "Téléchargés"
 
-#: seedboxsync/front/templates/components/navbar.html:25
+#: seedboxsync/front/templates/components/navbar.html:28
 msgid "Uploaded"
 msgstr "Envoyés"
 
-#: seedboxsync/front/templates/components/navbar.html:26
+#: seedboxsync/front/templates/components/navbar.html:29
 msgid "Info"
 msgstr "Info"
 
-#: seedboxsync/front/templates/components/navbar.html:27
+#: seedboxsync/front/templates/components/navbar.html:30
 msgid "Stats"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/components/navbar.html:42
+#: seedboxsync/front/templates/components/navbar.html:48
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -621,8 +629,8 @@ msgid ""
 "If authentication is disabled, do not expose the application directly, "
 "delegate authentication to a reverse proxy instead."
 msgstr ""
-"Si l'authentification est désactivée, ne pas exposer l'application directement "
-"et déléguer l'authentification à un reverse proxy."
+"Si l'authentification est désactivée, ne pas exposer l'application "
+"directement et déléguer l'authentification à un reverse proxy."
 
 #: seedboxsync/front/templates/settings/nas.html:20
 msgid "Information about local environment (NAS?)."
@@ -680,6 +688,14 @@ msgstr "E-mail :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
+#: seedboxsync/front/views/login.py:44
+msgid "Logged in successfully."
+msgstr "Connexion réussie."
+
+#: seedboxsync/front/views/login.py:48
+msgid "Invalid username or password."
+msgstr "Identifiant ou mot de passe invalide."
+
 #: seedboxsync/front/views/settings.py:20
 msgid "Failed to save configuration."
 msgstr "Échec de l’enregistrement de la configuration."
@@ -716,3 +732,4 @@ msgstr "Échec de la suppression de l'utilisateur."
 #: seedboxsync/front/views/users.py:119
 msgid "User delete"
 msgstr "Supprimer l'utilisateur"
+

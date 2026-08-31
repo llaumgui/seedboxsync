@@ -29,7 +29,17 @@
                 {{ render_field(form.login_disabled) }}
               </div>
             </div>
+          </div>
 
+          <div class="columns pt-4">
+            <div class="column is-6">
+              <div class="field" x-data="{
+                  auth_gravatar_enabled: '{{ form.auth_gravatar_enabled.data }}',
+                  enabled: {{ 'true' if form.auth_gravatar_enabled.data else 'false' }},
+              }">
+                {{ render_field(form.auth_gravatar_enabled) }}
+              </div>
+            </div>
           </div>
         </div>
 
