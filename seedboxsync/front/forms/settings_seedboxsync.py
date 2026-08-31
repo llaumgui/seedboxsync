@@ -35,3 +35,4 @@ class SettingsSeedboxSyncForm(FlaskForm):  # type: ignore[misc]
         choices=[("auto", _("Automatic"))] + [(lang, lang) for lang in ALLOWED_LANGUAGES],
         default="auto",
     )
+    wtf_csrf_enabled = BooleanField(_("Enable CSRF protection for all forms?"))

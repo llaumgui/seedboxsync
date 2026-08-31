@@ -49,6 +49,17 @@
               </div>
             </div>
           </div>
+
+          <div class="columns pt-4">
+            <div class="column is-6" x-data="{
+              enabled: {{ 'true' if form.wtf_csrf_enabled.data else 'false' }},
+            }">
+              <div class="field">
+                {{ render_field(form.wtf_csrf_enabled) }}
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <div class="control has-text-right">
