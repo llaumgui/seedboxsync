@@ -40,8 +40,8 @@ importers:
         specifier: ^10.9.1
         version: 10.9.1(supports-color@7.2.0)
       eslint-plugin-package-json:
-        specifier: ^1.7.1
-        version: 1.7.1(eslint@10.9.1(supports-color@7.2.0))
+        specifier: ^1.8.0
+        version: 1.8.0(eslint@10.9.1(supports-color@7.2.0))
       globals:
         specifier: ^17.11.0
         version: 17.11.0
@@ -57,8 +57,8 @@ importers:
 
 packages:
 
-  '@altano/repository-tools@2.0.5':
-    resolution: {integrity: sha512-dG0CH69cWUKaXOrfIdhldDt8zB3Tp4OQNVvnOWIS0wL+MiIkjyJC3WLFZGrO2r5anW00DxbDnEhpNHIkGCoNuw==}
+  '@altano/repository-tools@2.1.0':
+    resolution: {integrity: sha512-RGM8IimoK/RDlj+uG9sPgb9CSuHIAMVrtVVeslEMhc7yqDHpdmdKeMQcJfc0WveTtAmBdj/o9r1VW/A27SoPTg==}
 
   '@babel/helper-string-parser@7.29.7':
     resolution: {integrity: sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw==}
@@ -525,8 +525,8 @@ packages:
       '@eslint/json':
         optional: true
 
-  eslint-plugin-package-json@1.7.1:
-    resolution: {integrity: sha512-nlIlX7thB20+uExdYL0QGAmyjHXI+AgIAWpwTs45be4XkJFaOGjSrShxw42b51aUHWGtNrA+eLSkeA1RYm+ugA==}
+  eslint-plugin-package-json@1.8.0:
+    resolution: {integrity: sha512-nfWWrak5t8yPgSVchNOHCjdFW/pl3+1135Bxsq0KZKo6PUdWWqUTqOVBrvzw1S+8BNOhhEx5c/YxeeCSYySFog==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@eslint/json': '>=1.0.0'
@@ -845,8 +845,8 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
-  package-json-validator@1.6.0:
-    resolution: {integrity: sha512-pd5HlhSA4oymER74A8ODqcOHz3sQAQjmTysx1oiJrIMRtIWl9pqxX5L3aUqRb5CBFpXroA8j6fhJmaFKhVUuxQ==}
+  package-json-validator@1.6.1:
+    resolution: {integrity: sha512-eyl3DGFoxdUO0RA1Ym+H11S6P2XWIlA6Sy2PbvslbwFJ14kkz+FgX1Br3MaebrvLY3Q10Iih3PsL3741vsevrA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   path-exists@4.0.0:
@@ -1092,7 +1092,7 @@ packages:
 
 snapshots:
 
-  '@altano/repository-tools@2.0.5': {}
+  '@altano/repository-tools@2.1.0': {}
 
   '@babel/helper-string-parser@7.29.7': {}
 
@@ -1456,9 +1456,9 @@ snapshots:
       esquery: 1.7.0
       jsonc-eslint-parser: 3.3.0
 
-  eslint-plugin-package-json@1.7.1(eslint@10.9.1(supports-color@7.2.0)):
+  eslint-plugin-package-json@1.8.0(eslint@10.9.1(supports-color@7.2.0)):
     dependencies:
-      '@altano/repository-tools': 2.0.5
+      '@altano/repository-tools': 2.1.0
       '@types/estree': 1.0.9
       change-case: 5.4.4
       detect-indent: 7.0.2
@@ -1467,7 +1467,7 @@ snapshots:
       eslint-fix-utils: 0.4.3(@types/estree@1.0.9)(eslint@10.9.1(supports-color@7.2.0))
       eslint-json-compat-utils: 0.2.3(eslint@10.9.1(supports-color@7.2.0))(jsonc-eslint-parser@3.3.0)
       jsonc-eslint-parser: 3.3.0
-      package-json-validator: 1.6.0
+      package-json-validator: 1.6.1
       semver: 7.8.5
       sort-object-keys: 2.1.0
       sort-package-json: 4.0.0
@@ -1755,7 +1755,7 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
-  package-json-validator@1.6.0:
+  package-json-validator@1.6.1:
     dependencies:
       npm-package-arg: 13.0.2
       semver: 7.8.5
