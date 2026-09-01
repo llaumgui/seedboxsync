@@ -21,3 +21,5 @@ class SettingsAuthenticationForm(FlaskForm):  # type: ignore[misc]
 
     login_disabled = BooleanField(_("Disabled the authentication?"))
     auth_gravatar_enabled = BooleanField(_("Enable Gravatar for users?"))
+
+    # oAuth

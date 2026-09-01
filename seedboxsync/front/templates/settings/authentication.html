@@ -18,8 +18,8 @@
 
         <div class="box">
 
+          <h3 class="subtitle is-4">{{ _('Feature') }}</h3>
           <p class="is-italic">{{ _('If authentication is disabled, do not expose the application directly, delegate authentication to a reverse proxy instead.') }}</p>
-
           <div class="columns pt-4">
             <div class="column is-6">
               <div class="field" x-data="{
@@ -29,9 +29,7 @@
                 {{ render_field(form.login_disabled) }}
               </div>
             </div>
-          </div>
 
-          <div class="columns pt-4">
             <div class="column is-6">
               <div class="field" x-data="{
                   auth_gravatar_enabled: '{{ form.auth_gravatar_enabled.data }}',
@@ -40,6 +38,10 @@
                 {{ render_field(form.auth_gravatar_enabled) }}
               </div>
             </div>
+          </div>
+
+          <h3 class="subtitle is-4">{{ _('oAuth') }}</h3>
+          <div class="columns pt-4">
           </div>
         </div>
 
