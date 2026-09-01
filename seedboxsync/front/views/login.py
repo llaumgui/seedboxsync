@@ -32,6 +32,7 @@ def login() -> str | Response:
         login = request.form.get("login") or ""
         password = request.form.get("password") or ""
         next_url = request.args.get("next") or ""
+        remember = request.form.get("remember") == "1"
 
         if not is_safe_redirect_url(next_url):
             next_url = ""
@@ -40,7 +41,7 @@ def login() -> str | Response:
 
         # User is logged
         if user is not None:
-            login_user(user)
+            login_user(user, remember=remember)
             flash(_("Logged in successfully."), "success")
             return redirect(next_url or url_for("frontend.homepage"))
 

@@ -296,7 +296,6 @@ class Downloads(Resource):
 class DownloadsStatsByMonth(Resource):
     """Endpoint to retrieve monthly download statistics."""
 
-    @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_month")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_month_envelope, code=200, description="Download statistics aggregated by month")  # type: ignore[untyped-decorator]
     @login_required  # type: ignore[untyped-decorator]
@@ -314,7 +313,6 @@ class DownloadsStatsByMonth(Resource):
 class DownloadsStatsByYear(Resource):
     """Endpoint to retrieve yearly download statistics."""
 
-    @cache.cached(timeout=3600)  # pyright: ignore [reportUntypedFunctionDecorator]
     @api.doc("stats_downloads_by_year")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_year_envelope, code=200, description="Download statistics aggregated by year")  # type: ignore[untyped-decorator]
     @login_required  # type: ignore[untyped-decorator]
@@ -331,6 +329,7 @@ class DownloadsStatsByYear(Resource):
 # ==========================
 # Utility functions
 # ==========================
+@cache.memoize()
 def stats_by_period(period: str) -> list[dict[str, str | float]]:
     """
     Compute aggregated download statistics by period (month or year).

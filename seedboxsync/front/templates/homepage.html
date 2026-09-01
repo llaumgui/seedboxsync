@@ -37,11 +37,11 @@
 <div class="content">
 
   <div class="columns is-desktop">
-    {% if config.sync_blackhole_enabled %}
+    {% if seedboxsync_config.sync_blackhole_enabled %}
       {{ task_box(_('Blackhole'), 'sync-blackhole', 'blackhole') }}
     {% endif %}
 
-    {% set seedbox_offset = 'is-offset-4' if config.sync_blackhole_enabled else '' %}
+    {% set seedbox_offset = 'is-offset-4' if seedboxsync_config.sync_blackhole_enabled else '' %}
     {{ task_box(_('Seedbox'), 'sync-seedbox', 'seedbox', extra_classes=seedbox_offset) }}
   </div>
 

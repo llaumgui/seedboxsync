@@ -66,7 +66,7 @@ class Config:
         self.app.config.setdefault("CACHE_TYPE", "SimpleCache")  # Init Flask Cache
         self.app.config.setdefault("SWAGGER_UI_DOC_EXPANSION", "list")  # Expense swager namespaces
         self.app.config.setdefault("PROPAGATE_EXCEPTIONS", False)
-        self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", False))  # Disable login
+        self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", True))  # Disable login
         self.app.config.setdefault("WTF_CSRF_ENABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "WTF_CSRF_ENABLED", True))  # Disable CSRF
 
     def _check_config(self) -> None:

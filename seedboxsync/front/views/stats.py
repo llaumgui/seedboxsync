@@ -9,14 +9,14 @@
 from flask import render_template
 from humanize import filesize
 from seedboxsync.core.dao import Download
-from seedboxsync.front.cache import cache
+from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
 
 
 @bp.route("/stats")
+@cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 @login_required  # type: ignore[untyped-decorator]
-@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def stats() -> str:
     """
     Render the statistics view.

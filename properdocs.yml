@@ -72,6 +72,7 @@ nav:
   - frontend.md
   - Upgrade:
     - upgrade/from_v3_to_v4.md
+    - upgrade/from_v4_to_v4x.md
   - Development:
     - development/development.md
     - development/ai_usage.md

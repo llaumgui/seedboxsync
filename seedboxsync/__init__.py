@@ -9,6 +9,7 @@
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 from flask import Response, flash, request, send_from_directory
 from flask_babel import format_datetime, get_locale as get_babel_locale
 from humanize import i18n as humanize_i18n
@@ -101,14 +102,16 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
         return {"format_datetime": format_datetime}
 
     @app.context_processor
-    def inject_globals() -> dict[str, str]:  # pyright: ignore [reportUnusedFunction]
+    def inject_globals() -> dict[str, Any]:  # pyright: ignore [reportUnusedFunction]
         locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
         theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
+
         return {
-            "version": version,
-            "theme": theme,
             "api_version": api_version,
             "locale": str(locale).replace("_", "-"),
+            "seedboxsync_config": app.seedboxsync_config,
+            "theme": theme,
+            "version": version,
         }
 
     @app.template_global()

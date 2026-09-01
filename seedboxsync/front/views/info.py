@@ -12,14 +12,14 @@ from humanize import filesize, precisedelta
 from peewee import fn
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
-from seedboxsync.front.cache import cache
+from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
 
 
 @bp.route("/info")
+@cached(timeout=60)  # pyright: ignore [reportUntypedFunctionDecorator]
 @login_required  # type: ignore[untyped-decorator]
-@cache.cached(timeout=60)  # pyright: ignore [reportUntypedFunctionDecorator]
 def info() -> str:
     """
     Render the system information view.

@@ -29,6 +29,13 @@
       {{ render_field(form.password) }}
     </div>
 
+    <div class="field" x-data="{
+        remember: '{{ form.remember.data or "" }}',
+        touched: false
+      }">
+      {{ render_field(form.remember) }}
+    </div>
+
     <div class="control">
       <button class="button is-primary" :disabled="!canSubmit()">{{ _('Save') }}</button>
     </div>

@@ -22,7 +22,7 @@
     </div>
     <div class="navbar-menu" id="navMenu">
       <div class="navbar-start">
-        {% if not config.LOGIN_DISABLED and current_user.is_authenticated %}
+        {% if config.LOGIN_DISABLED or current_user.is_authenticated %}
           {{ menu_link(_('Dashboard'), 'frontend.homepage') }}
           {{ menu_link(_('Downloaded'), 'frontend.downloaded') }}
           {{ menu_link(_('Uploaded'), 'frontend.uploaded') }}
@@ -35,10 +35,10 @@
         <div class="navbar-end">
           {{ menu_link(_('Settings'), 'frontend.settings') }}
         </div>
-      {% elif not config.SEEDBOXSYNC_LOGIN_DISABLED and current_user.is_authenticated %}
+      {% elif current_user.is_authenticated %}
         <div class="navbar-item navbar-end has-dropdown is-hoverable">
           <a class="navbar-link">
-            {% if config.SEEDBOXSYNC_AUTH_GRAVATAR_ENABLED %}<figure class="image is-24x24">
+            {% if seedboxsync_config.auth_gravatar_enabled %}<figure class="image is-24x24">
               <img class="is-rounded" src="{{ gravatar(current_user.email) }}" alt="{{ current_user.username }}">
             </figure>{% endif %}
             {{ current_user.username }}

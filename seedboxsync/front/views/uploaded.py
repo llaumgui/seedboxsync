@@ -7,14 +7,14 @@
 """SeedboxSync Flask view for uploaded torrents."""
 
 from flask import render_template
-from seedboxsync.front.cache import cache
+from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
 
 
 @bp.route("/uploaded")
+@cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 @login_required  # type: ignore[untyped-decorator]
-@cache.cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 def uploaded() -> str:
     """
     Render the uploaded torrents list view.

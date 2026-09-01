@@ -12,6 +12,7 @@ from flask_wtf import FlaskForm
 from seedboxsync.core import Config, current_app as app
 from seedboxsync.core.dao import SeedboxSync
 from seedboxsync.front.babel import gettext as _
+from seedboxsync.front.cache import cache
 from seedboxsync.front.forms import SettingsAuthenticationForm, SettingsNasForm, SettingsPingForm, SettingsSeedboxForm, SettingsSeedboxSyncForm
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp
@@ -193,8 +194,19 @@ def _save_form(form: FlaskForm) -> None:
         config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}seedbox_chmod", "value": "0"})
         form["seedbox_chmod"].data = "0"
 
+    # Synchronize core Flask-Login & Flask-Wtf configuration flags
+    login_disabled_key = f"{Config.CONFIG_NAMESPACE}LOGIN_DISABLED"
+    if login_disabled_key in config_to_update:
+        app.config["LOGIN_DISABLED"] = config_to_update[login_disabled_key]
+    wtf_csrt_disabled_key = f"{Config.CONFIG_NAMESPACE}WTF_CSRF_ENABLED"
+    if wtf_csrt_disabled_key in config_to_update:
+        app.config["WTF_CSRF_ENABLED"] = config_to_update[wtf_csrt_disabled_key]
+
     # Update config in Flask app
     app.config.from_mapping(config_to_update)
 
     # Save in database
     SeedboxSync.replace_many(config_to_db).execute()  # type: ignore[no-untyped-call]
+
+    # Clear cache to ensure new settings take effect
+    cache.clear()

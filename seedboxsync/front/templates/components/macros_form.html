@@ -52,8 +52,10 @@
 {% endmacro %}
 
 {% macro render_field_checkbox(field) %}
-  <label class="label" for="{{ field.id }}">{{ field.label }}</label>
-  <input id="{{ field.id }}" type="{{ field.widget.input_type }}" name="{{ field.name }}" value="1" x-model="enabled" />
+  <label class="label" for="{{ field.id }}">
+    <input id="{{ field.id }}" type="{{ field.widget.input_type }}" name="{{ field.name }}" value="1" x-model="enabled" />
+    {{ field.label }}
+  </label>
 {% endmacro %}
 
 {% macro render_field_select(field) %}
