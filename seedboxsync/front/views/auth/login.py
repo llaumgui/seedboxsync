@@ -30,6 +30,15 @@ def login() -> str | Response:
     Returns:
         str | Response: Rendered login template or HTTP redirect response.
     """
+    # Auto redirect to OAuth2 provider if OAuth is enabled and built-in authentication is disabled
+    oauth_disable_builtin_authentication = app.seedboxsync_config.get("oauth_disable_builtin_authentication", False)
+    oauth_enabled = app.seedboxsync_config.get("oauth_enabled", False)
+    if oauth_disable_builtin_authentication and oauth_enabled:
+        return __authorize_redirect()
+
+    if request.args.get("provider") == "oauth2" and app.seedboxsync_config.get("oauth_enabled"):
+        return __authorize_redirect()
+
     form = LoginForm()
 
     # Basic auth
@@ -58,9 +67,22 @@ def login() -> str | Response:
         # User is not logged
         flash(_("Invalid username or password."), "danger")
 
-    if request.args.get("provider") == "oauth" and app.seedboxsync_config.get("oauth_enabled"):
-        oauth_name = app.seedboxsync_config.get("oauth_name")
-        redirect_uri = url_for("auth.authorize", _external=True)
-        return oauth.create_client(oauth_name).authorize_redirect(redirect_uri)  # type: ignore[no-any-return]
-
     return render_template("login.html", form=form)
+
+
+def __authorize_redirect() -> Response:
+    """
+    Redirect the user to the configured OAuth/OIDC provider's authorization URL.
+
+    Obtains the registered OAuth client name from application settings, builds
+    the external redirect URI, and initiates the OIDC authorization flow.
+
+    Returns:
+        Response: Flask redirect response object targeting the identity provider.
+    """
+    # Retrieve OAuth client name and construct absolute callback URL
+    oauth_name = app.seedboxsync_config.get("oauth_name")
+    redirect_uri = url_for("auth.authorize", _external=True)
+
+    # Initiate authorization redirect via Authlib client
+    return oauth.create_client(oauth_name).authorize_redirect(redirect_uri)  # type: ignore[no-any-return]

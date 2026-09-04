@@ -45,7 +45,7 @@
 
     {% if seedboxsync_config.get('oauth_enabled') %}
       <p class="has-text-centered pt-4">
-        <a class="button is-link" href="{{ url_for('auth.login', provider='oauth') }}">{{ _('Login with %(provider)s', provider=seedboxsync_config.get('oauth_name')) }}</a>
+        <a class="button is-link" href="{{ url_for('auth.login', provider='oauth2') }}">{{ _('Login with %(provider)s', provider=seedboxsync_config.get('oauth_name')) }}</a>
       </p>
     {% endif %}
   </div>
