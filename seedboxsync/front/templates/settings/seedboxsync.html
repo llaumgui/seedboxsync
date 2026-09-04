@@ -12,16 +12,17 @@
     <div class="content">
       <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('General') }} / {{ _('SeedboxSync') }}{% endblock %}</h2>
 
-      <form method="post">
+      <form method="post" x-data="validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
         <div class="box">
 
           <h3 class="subtitle is-4">{{ _('Features') }}</h3>
-          <div class="columns pt-4">
+          <div class="columns">
             <div class="column is-6" x-data="{
               enabled: {{ 'true' if form.sync_blackhole_enabled.data else 'false' }},
+              touched: false,
             }">
               <div class="field">
                 {{ render_field(form.sync_blackhole_enabled) }}
@@ -30,6 +31,7 @@
 
             <div class="column is-6" x-data="{
               enabled: {{ 'true' if form.sync_seedbox_enabled.data else 'false' }},
+              touched: false,
             }">
               <div class="field">
                 {{ render_field(form.sync_seedbox_enabled) }}
@@ -37,24 +39,25 @@
             </div>
           </div>
 
-          <div class="columns pt-4">
+          <div class="columns">
             <div class="column is-6">
-              <div class="field" x-data="{ webui_theme: '{{ form.webui_theme.data }}' }">
+              <div class="field" x-data="{ webui_theme: '{{ form.webui_theme.data }}', touched: false }">
                 {{ render_field(form.webui_theme) }}
               </div>
             </div>
 
             <div class="column is-6">
-              <div class="field" x-data="{ webui_language: '{{ form.webui_language.data }}' }">
+              <div class="field" x-data="{ webui_language: '{{ form.webui_language.data }}', touched: false }">
                 {{ render_field(form.webui_language) }}
               </div>
             </div>
           </div>
 
-          <h3 class="subtitle is-4">{{ _('Security') }}</h3>
-          <div class="columns pt-4">
+          <h3 class="subtitle is-4 pt-4">{{ _('Security') }}</h3>
+          <div class="columns">
             <div class="column is-6" x-data="{
               enabled: {{ 'true' if form.wtf_csrf_enabled.data else 'false' }},
+              touched: false,
             }">
               <div class="field">
                 {{ render_field(form.wtf_csrf_enabled) }}
@@ -65,7 +68,7 @@
         </div>
 
         <div class="control has-text-right">
-          <button class="button is-success">
+          <button class="button is-success" :disabled="!canSubmit()">
             <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
           </button>
         </div>

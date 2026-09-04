@@ -14,7 +14,7 @@ from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus
 from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp
+from seedboxsync.front.views import bp_frontend as bp
 
 
 @bp.route("/info")

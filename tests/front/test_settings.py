@@ -93,7 +93,7 @@ def test_settings_views_persist_valid_form_values(app, client, path, form, confi
 
 
 def test_seedbox_settings_rejects_missing_required_fields(client):
-    with patch("seedboxsync.front.views.settings._save_form") as save_form:
+    with patch("seedboxsync.front.views.frontend.settings._save_form") as save_form:
         response = _post_form(client, "/settings/seedbox", {"seedbox_host": ""})
 
     assert response.status_code == 200
@@ -122,7 +122,7 @@ def test_seedbox_settings_rejects_missing_required_fields(client):
     ],
 )
 def test_settings_views_report_persistence_errors(client, path, form):
-    with patch("seedboxsync.front.views.settings._save_form", side_effect=RuntimeError("database unavailable")):
+    with patch("seedboxsync.front.views.frontend.settings._save_form", side_effect=RuntimeError("database unavailable")):
         response = _post_form(client, path, form)
 
     assert response.status_code == 200

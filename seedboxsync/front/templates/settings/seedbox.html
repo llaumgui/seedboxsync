@@ -69,19 +69,24 @@
             <div class="column is-6">
               <div class="field" x-data="{
                   seedbox_timeout: '{{ form.seedbox_timeout.data }}',
-                  enabled: {{ 'true' if form.seedbox_timeout.data == 1 else 'false' }},
+                  enabled: {{ 'true' if (form.seedbox_timeout.data | int(default=0)) != 0 else 'false' }},
                   touched: false,
                   isValid() { return validators.isValidTimeout(this.touched, this.seedbox_timeout) }
                 }">
                 <label class="label" for="{{ form.seedbox_timeout.id }}">{{ form.seedbox_timeout.label }}</label>
                 <label class="is-sr-only" for="seedbox_timeout_enabled">{{ form.seedbox_timeout.label }}</label>
-                <input id="{{ form.seedbox_timeout.id }}_enabled" type="checkbox" name="{{ form.seedbox_timeout.id }}_enabled" value="1" checked x-model="enabled"/>
+                <input type="checkbox"
+                       id="{{ form.seedbox_timeout.id }}_enabled" name="{{ form.seedbox_timeout.id }}_enabled"
+                       value="1" checked
+                       @click="touched = true"
+                       x-model="enabled"
+                       x-effect="setFieldState('{{ form.seedbox_timeout.id }}_enabled', true, touched)" />
                 <div class="control column is-5 p-0 has-icons-left has-icons-right"  x-show="enabled" x-transition>
                   <input id="{{ form.seedbox_timeout.id }}" class="input" type="number"
-                        name="{{ form.seedbox_timeout.name }}" x-model="{{ form.seedbox_timeout.id }}"
-                        placeholder="{{ form.seedbox_timeout.render_kw['placeholder'] }}"
-                        @blur="touched = true"
-                        x-bind:class="{ 'is-danger': !isValid()}"/>
+                         name="{{ form.seedbox_timeout.name }}" x-model="{{ form.seedbox_timeout.id }}"
+                         placeholder="{{ form.seedbox_timeout.render_kw['placeholder'] }}"
+                         @click="touched = true"
+                         x-bind:class="{ 'is-danger': !isValid()}"/>
                   <span class="icon is-small is-left"><i class="fas {{ form.seedbox_timeout.render_kw['icon'] }}"></i></span>
                   <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
                 </div>
@@ -89,7 +94,10 @@
             </div>
 
             <div class="column is-6">
-              <div class="field" x-data="{ seedbox_protocol: '{{ form.seedbox_protocol.data }}' }">
+              <div class="field" x-data="{
+                  seedbox_protocol: '{{ form.seedbox_protocol.data }}',
+                  touched: false
+                }">
                 {{ render_field(form.seedbox_protocol) }}
               </div>
             </div>
@@ -99,7 +107,7 @@
             <div class="column is-6">
               <div class="field" x-data="{
                   seedbox_chmod: '{{ form.seedbox_chmod.data }}',
-                  enabled: {{ 'true' if form.seedbox_chmod.data == 1 else 'false' }},
+                  enabled: {{ 'true' if (form.seedbox_chmod.data | string) not in ['0', 'False'] else 'false' }},
                   touched: false,
                   isValid() { return validators.isOctalChmod(this.touched, this.seedbox_chmod) }
                 }">
@@ -111,10 +119,15 @@
                   </a>
                 </label>
                 <label class="is-sr-only" for="{{ form.seedbox_chmod.id }}_enabled">{{ form.seedbox_chmod.label }}</label>
-                <input id="{{ form.seedbox_chmod.id }}_enabled" type="checkbox" name="seedbox_chmod_enabled" value="1" checked x-model="enabled" />
+                <input type="checkbox"
+                       id="{{ form.seedbox_chmod.id }}_enabled" name="{{ form.seedbox_chmod.id }}_enabled"
+                       value="1" checked
+                       @click="touched = true"
+                       x-model="enabled"
+                       x-effect="setFieldState('{{ form.seedbox_chmod.id }}_enabled', true, touched)" />
                 <div class="control column is-5 p-0 has-icons-left has-icons-right" x-show="enabled" x-transition>
                   <input id="{{ form.seedbox_chmod.id }}" class="input" type="text"
-                        name="{{ form.seedbox_timeout.name }}" x-model="{{ form.seedbox_chmod.id }}"
+                        name="{{ form.seedbox_chmod.name }}" x-model="{{ form.seedbox_chmod.id }}"
                         placeholder="{{ form.seedbox_chmod.render_kw['placeholder'] }}"
                         @blur="touched = true"
                         x-bind:class="{ 'is-danger': !isValid()}"/>
@@ -160,7 +173,7 @@
             </div>
           </div>
 
-          <div class="columns pt-4">
+          <div class="columns">
             <div class="column is-6">
               <div class="field" x-data="{
                   seedbox_finished_path: '{{ form.seedbox_finished_path.data }}',
@@ -182,7 +195,7 @@
             </div>
           </div>
 
-          <div class="columns pt-4">
+          <div class="columns">
             <div class="column is-6">
               <div class="field" x-data="{
                   seedbox_part_suffix: '{{ form.seedbox_part_suffix.data }}',

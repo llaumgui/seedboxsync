@@ -7,7 +7,7 @@ Seedboxsync v4 introduces a merge between the backend and frontend into a single
 
 ## Update Docker Compose
 
-You can safely remove the `seedboxsync-front` service from your `docker-compose.yml` file and keep only the main application service.
+After merge compose (don't forget `FLASK_SECRET_KEY`), you can safely remove the `seedboxsync-front` service from your `docker-compose.yml` file and keep only the main application service.
 
 ## Reverse Proxy Setup (Traefik, Nginx, etc.)
 

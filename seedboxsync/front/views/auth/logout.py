@@ -10,7 +10,7 @@ from flask import redirect, url_for
 from flask_login import logout_user
 from werkzeug.wrappers.response import Response
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp
+from seedboxsync.front.views import bp_auth as bp
 
 
 @bp.route("/logout")

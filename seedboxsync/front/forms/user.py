@@ -22,4 +22,4 @@ class UserForm(FlaskForm):  # type: ignore[misc]
 
     username = StringField(_("Username"), validators=[DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "admin", "icon": "fa-user"})
     email = EmailField(_("Email"), validators=[DataRequired(), Length(min=8, max=35)], render_kw={"placeholder": "admin", "icon": "fa-user"})
-    password = PasswordField(_("Password"), validators=[DataRequired(), Length(min=8, max=128)], render_kw={"placeholder": "admin", "icon": "fa-lock"})
+    password = PasswordField(_("Password"), validators=[DataRequired(), Length(min=8, max=256)], render_kw={"placeholder": "admin", "icon": "fa-lock"})

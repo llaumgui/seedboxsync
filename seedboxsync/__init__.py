@@ -15,6 +15,7 @@ from flask_babel import format_datetime, get_locale as get_babel_locale
 from humanize import i18n as humanize_i18n
 from libgravatar import Gravatar
 from slugify import slugify
+from werkzeug.middleware.proxy_fix import ProxyFix
 from seedboxsync.__version__ import (
     __api_path_version__ as api_path_version,
     __api_version__ as api_version,
@@ -26,7 +27,8 @@ from seedboxsync.front.apis.core import error as error_api
 from seedboxsync.front.babel import babel, get_locale
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_manager
-from seedboxsync.front.views import bp as bp_frontend, error as error_front
+from seedboxsync.front.oauth2 import init_oauth2
+from seedboxsync.front.views import bp_auth, bp_frontend, error as error_front
 
 __version__ = version
 
@@ -67,6 +69,9 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
         instance_relative_config=True,
     )
 
+    # ══════════════════════════════════════════════════════════════════════════════
+    # ⚙️  INIT
+    # ══════════════════════════════════════════════════════════════════════════════
     # Configure logger for Flask and Click
     logger.configure_logger(app.logger)
 
@@ -84,25 +89,58 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     app.config["BABEL_TRANSLATION_DIRECTORIES"] = "front/translations"
     babel.init_app(app, locale_selector=get_locale)
 
-    # Initialize humanize for each request
+    # Initialize the cache
+    cache.init_app(app)
+
+    # Initialize the login manager and OAuth
+    login_manager.init_app(app)
+    init_oauth2(app)
+
+    # Register jinja filter
+    app.jinja_env.filters["slugify"] = slugify
+
+    # Register blueprint and error handler
+    app.register_blueprint(bp_auth)
+    app.register_blueprint(bp_frontend)
+    register_api_blueprint(app)
+    app.register_error_handler(Exception, __handle_http_exception)  # type: ignore[arg-type]
+
+    # Set up ProxyFix middleware to handle reverse proxy headers
+    app.wsgi_app = ProxyFix(  # type: ignore[method-assign]
+        app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
+    )
+
+    # ══════════════════════════════════════════════════════════════════════════════
+    # ⚙️  FUNCTIONS
+    # ══════════════════════════════════════════════════════════════════════════════
+    # Routes
+    @app.route("/favicon.ico")
+    def favicon() -> Response:  # pyright: ignore [reportUnusedFunction]
+        """Serve the favicon from the static directory."""
+        return send_from_directory(Path(app.root_path, "front/static"), "favicon.png", mimetype="image/png")
+
+    # Before Request
     @app.before_request
     def init_once() -> None:  # pyright: ignore [reportUnusedFunction]
+        """Initialize humanize for each request."""
         humanize_i18n.activate(get_locale())
 
-    # Display init / boot error on flash
     @app.before_request
     def check_init_error() -> None:  # pyright: ignore [reportUnusedFunction]
+        """Display initialization errors as flash messages if any."""
         init_error = app.config.pop("INIT_ERROR", None)
         if init_error:
             flash(init_error, "danger")
 
-    # Inject Jinja function / variables
+    # Context processor
     @app.context_processor
     def inject_formatters() -> dict[str, Callable[[datetime], str]]:  # pyright: ignore [reportUnusedFunction]
+        """Inject custom formatters into the template context."""
         return {"format_datetime": format_datetime}
 
     @app.context_processor
     def inject_globals() -> dict[str, Any]:  # pyright: ignore [reportUnusedFunction]
+        """Inject global variables into the template context."""
         locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
         theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
 
@@ -114,28 +152,10 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
             "version": version,
         }
 
+    # Template global
     @app.template_global()
     def gravatar(email: str) -> str:  # pyright: ignore [reportUnusedFunction]
         """Return the Gravatar image URL for an email address."""
         return str(Gravatar(email).get_image())
-
-    # Initialize the cache
-    cache.init_app(app)
-
-    # Initialize the login manager
-    login_manager.init_app(app)
-
-    # Register jinja filter
-    app.jinja_env.filters["slugify"] = slugify
-
-    # Register blueprint and error handler
-    app.register_blueprint(bp_frontend)
-    register_api_blueprint(app)
-    app.register_error_handler(Exception, __handle_http_exception)  # type: ignore[arg-type]
-
-    # Serve the favicon from the static directory
-    @app.route("/favicon.ico")
-    def favicon() -> Response:  # pyright: ignore [reportUnusedFunction]
-        return send_from_directory(Path(app.root_path) / "static", "favicon.png", mimetype="image/png")
 
     return app

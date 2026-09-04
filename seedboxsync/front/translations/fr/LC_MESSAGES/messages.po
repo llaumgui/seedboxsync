@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-08-31 16:31+0200\n"
+"POT-Creation-Date: 2026-09-04 11:04+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -31,96 +31,138 @@ msgid "Username or email"
 msgstr "Nom d'utilisateur ou e-mail"
 
 #: seedboxsync/front/forms/login.py:23
-#: seedboxsync/front/forms/settings_seedbox.py:30
+#: seedboxsync/front/forms/settings/seedbox.py:30
 #: seedboxsync/front/forms/user.py:25
 msgid "Password"
 msgstr "Mot de passe"
 
-#: seedboxsync/front/forms/settings_authentication.py:22
-msgid "Disabled the authentication?"
-msgstr "Désactiver l'authentification ?"
+#: seedboxsync/front/forms/login.py:24
+msgid "Remember me"
+msgstr "Rester connecté"
 
-#: seedboxsync/front/forms/settings_authentication.py:23
+#: seedboxsync/front/forms/user.py:23
+#: seedboxsync/front/templates/settings/users.html:20
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: seedboxsync/front/forms/user.py:24
+#: seedboxsync/front/templates/settings/users.html:21
+msgid "Email"
+msgstr "E-mail"
+
+#: seedboxsync/front/forms/settings/authentication.py:23
+msgid "Disable authentication fully?"
+msgstr "Désactiver complètement l'authentification ?"
+
+#: seedboxsync/front/forms/settings/authentication.py:24
 msgid "Enable Gravatar for users?"
-msgstr "Activer Gravatar pour les utilisateurs"
+msgstr "Activer Gravatar pour les utilisateurs ?"
 
-#: seedboxsync/front/forms/settings_nas.py:24
-#: seedboxsync/front/forms/settings_seedbox.py:67
+#: seedboxsync/front/forms/settings/authentication.py:27
+msgid "Enable OAuth for the authentication?"
+msgstr "Activer OAuth pour l'authentification ?"
+
+#: seedboxsync/front/forms/settings/authentication.py:28
+msgid "Auto-create users?"
+msgstr "Créer automatiquement les utilisateurs ?"
+
+#: seedboxsync/front/forms/settings/authentication.py:29
+msgid "Disable built-in authentication?"
+msgstr "Désactiver l'authentification intégrée ?"
+
+#: seedboxsync/front/forms/settings/authentication.py:30
+msgid "OAuth Client Name"
+msgstr "Nom du client OAuth"
+
+#: seedboxsync/front/forms/settings/authentication.py:31
+msgid "OAuth Client ID"
+msgstr "OAuth Client ID"
+
+#: seedboxsync/front/forms/settings/authentication.py:32
+msgid "OAuth Client Secret"
+msgstr "OAuth Client Secret"
+
+#: seedboxsync/front/forms/settings/authentication.py:33
+msgid "OAuth Server Metadata URL"
+msgstr "Metadata URL du serveur OAuth"
+
+#: seedboxsync/front/forms/settings/nas.py:24
+#: seedboxsync/front/forms/settings/seedbox.py:67
 msgid "Watch path"
 msgstr "Répertoire \"Watch\""
 
-#: seedboxsync/front/forms/settings_nas.py:26
+#: seedboxsync/front/forms/settings/nas.py:26
 msgid "Your local watch folder."
 msgstr "Votre répertoire local de surveillance."
 
-#: seedboxsync/front/forms/settings_nas.py:29
+#: seedboxsync/front/forms/settings/nas.py:29
 msgid "Downloads path"
 msgstr "Répertoire de téléchargement"
 
-#: seedboxsync/front/forms/settings_nas.py:31
+#: seedboxsync/front/forms/settings/nas.py:31
 msgid "Path where files are downloaded."
 msgstr "Chemin où les fichiers sont téléchargés"
 
-#: seedboxsync/front/forms/settings_ping.py:22
+#: seedboxsync/front/forms/settings/ping.py:22
 msgid "Enable for sync_blackhole task?"
 msgstr "Activer pour la tâche sync_blackhole ?"
 
-#: seedboxsync/front/forms/settings_ping.py:24
+#: seedboxsync/front/forms/settings/ping.py:24
 msgid "Ping URL for sync_blackhole task"
 msgstr "URL de ping pour la tâche sync_blackhole"
 
-#: seedboxsync/front/forms/settings_ping.py:26
+#: seedboxsync/front/forms/settings/ping.py:26
 msgid "Enable for sync_seedbox task?"
 msgstr "Activer pour la tâche sync_seedbox ?"
 
-#: seedboxsync/front/forms/settings_ping.py:28
+#: seedboxsync/front/forms/settings/ping.py:28
 msgid "Ping URL for sync_seedbox task"
 msgstr "URL de ping pour la tâche sync_seedbox"
 
-#: seedboxsync/front/forms/settings_seedbox.py:27
+#: seedboxsync/front/forms/settings/seedbox.py:27
 msgid "Hostname"
 msgstr "Hostname"
 
-#: seedboxsync/front/forms/settings_seedbox.py:28
+#: seedboxsync/front/forms/settings/seedbox.py:28
 msgid "Port"
 msgstr "Port"
 
-#: seedboxsync/front/forms/settings_seedbox.py:29
-#: seedboxsync/front/templates/login.html:14
+#: seedboxsync/front/forms/settings/seedbox.py:29
+#: seedboxsync/front/templates/login.html:15
 msgid "Login"
 msgstr "Login"
 
-#: seedboxsync/front/forms/settings_seedbox.py:31
+#: seedboxsync/front/forms/settings/seedbox.py:31
 msgid "Timeout (in seconds)"
 msgstr "Timeout (en secondes)"
 
-#: seedboxsync/front/forms/settings_seedbox.py:33
+#: seedboxsync/front/forms/settings/seedbox.py:33
 msgid "Protocol"
 msgstr "Protocole"
 
-#: seedboxsync/front/forms/settings_seedbox.py:35
+#: seedboxsync/front/forms/settings/seedbox.py:35
 msgid "sFTP"
 msgstr "sFTP"
 
-#: seedboxsync/front/forms/settings_seedbox.py:36
+#: seedboxsync/front/forms/settings/seedbox.py:36
 msgid "FTP"
 msgstr "FTP"
 
-#: seedboxsync/front/forms/settings_seedbox.py:41
+#: seedboxsync/front/forms/settings/seedbox.py:41
 msgid "chmod (in octal notation)"
 msgstr "chmod (en notation octale)"
 
-#: seedboxsync/front/forms/settings_seedbox.py:43
+#: seedboxsync/front/forms/settings/seedbox.py:43
 msgid "Chmod torrent after upload. Use octal notation, e.g. 0o644."
 msgstr ""
 "Chmod du fichier torrent après son téléversement. Utilisez la notation "
 "octale, par exemple 0o644."
 
-#: seedboxsync/front/forms/settings_seedbox.py:46
+#: seedboxsync/front/forms/settings/seedbox.py:46
 msgid "Max concurrent prefetch requests"
 msgstr "Nombre maximal de requêtes de préchargement simultanées"
 
-#: seedboxsync/front/forms/settings_seedbox.py:53
+#: seedboxsync/front/forms/settings/seedbox.py:53
 msgid ""
 "Only for SFTP (Paramiko). The maximum number of concurrent read requests "
 "to prefetch. When this is None (the default), do not limit the number of "
@@ -138,11 +180,11 @@ msgstr ""
 "téléchargé correctement avec sftp mais que le transfert se bloque avec "
 "Paramiko, il peut être utile de définir une limite."
 
-#: seedboxsync/front/forms/settings_seedbox.py:62
+#: seedboxsync/front/forms/settings/seedbox.py:62
 msgid "Tempory path"
 msgstr "Répertoire temporaire"
 
-#: seedboxsync/front/forms/settings_seedbox.py:64
+#: seedboxsync/front/forms/settings/seedbox.py:64
 msgid ""
 "Use a temporary directory for incomplete transfers (must be created "
 "manually)."
@@ -150,47 +192,47 @@ msgstr ""
 "Utiliser un répertoire temporaire pour les transferts incomplets (doit "
 "être créé manuellement)."
 
-#: seedboxsync/front/forms/settings_seedbox.py:69
+#: seedboxsync/front/forms/settings/seedbox.py:69
 msgid "Your BitTorrent client's watch folder (must be created manually)."
 msgstr ""
 "Le répertoire de surveillance de votre client BitTorrent (doit être créé "
 "manuellement)."
 
-#: seedboxsync/front/forms/settings_seedbox.py:72
+#: seedboxsync/front/forms/settings/seedbox.py:72
 msgid "Finished path"
 msgstr "Répertoire \"Finished\""
 
-#: seedboxsync/front/forms/settings_seedbox.py:74
+#: seedboxsync/front/forms/settings/seedbox.py:74
 msgid "The folder where your BitTorrent client puts finished files."
 msgstr ""
 "Le répertoire dans lequel votre client BitTorrent place les fichiers "
 "terminés."
 
-#: seedboxsync/front/forms/settings_seedbox.py:77
+#: seedboxsync/front/forms/settings/seedbox.py:77
 msgid "Prefixed path"
 msgstr "Prefixe des répertoires"
 
-#: seedboxsync/front/forms/settings_seedbox.py:78
+#: seedboxsync/front/forms/settings/seedbox.py:78
 msgid "Remove a prefix from the synced path (usually the same as finished_path)."
 msgstr ""
 "Supprimer un préfixe du chemin synchronisé (généralement identique à "
 "finished_path)."
 
-#: seedboxsync/front/forms/settings_seedbox.py:81
+#: seedboxsync/front/forms/settings/seedbox.py:81
 msgid "Suffix used for .part"
 msgstr "Suffixe utilisé pour les .part"
 
-#: seedboxsync/front/forms/settings_seedbox.py:82
+#: seedboxsync/front/forms/settings/seedbox.py:82
 msgid "Exclude files with this suffix (e.g. incomplete downloads)."
 msgstr ""
 "Exclure les fichiers ayant ce suffixe (par exemple, les téléchargements "
 "incomplets)."
 
-#: seedboxsync/front/forms/settings_seedbox.py:85
+#: seedboxsync/front/forms/settings/seedbox.py:85
 msgid "Files to exclude from synching"
 msgstr "Fichiers à exclure de la synchronisation"
 
-#: seedboxsync/front/forms/settings_seedbox.py:89
+#: seedboxsync/front/forms/settings/seedbox.py:89
 msgid ""
 "Exclude files from sync using a regular expression (Python re syntax). "
 "Example: .*missing$"
@@ -198,48 +240,38 @@ msgstr ""
 "Exclure des fichiers de la synchronisation à l'aide d'une expression "
 "régulière (syntaxe Python re). Exemple : .*missing$"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:22
+#: seedboxsync/front/forms/settings/seedboxsync.py:22
 msgid "Enable the blackhole synchronization task"
 msgstr "Activer la tâche de synchronisation du répertoire blackhole"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:23
+#: seedboxsync/front/forms/settings/seedboxsync.py:23
 msgid "Enable the seedbox synchronization task"
 msgstr "Activer la tâche de synchronisation de la seedbox"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:25
+#: seedboxsync/front/forms/settings/seedboxsync.py:25
 msgid "Theme of the WebUI"
 msgstr "Thème de l'interface web"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:27
-#: seedboxsync/front/forms/settings_seedboxsync.py:35
+#: seedboxsync/front/forms/settings/seedboxsync.py:27
+#: seedboxsync/front/forms/settings/seedboxsync.py:35
 msgid "Automatic"
 msgstr "Automatique"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:28
+#: seedboxsync/front/forms/settings/seedboxsync.py:28
 msgid "Dark"
 msgstr "Sombre"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:29
+#: seedboxsync/front/forms/settings/seedboxsync.py:29
 msgid "Light"
 msgstr "Clair"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:34
+#: seedboxsync/front/forms/settings/seedboxsync.py:34
 msgid "Language of the WebUI"
 msgstr "Langue de l'interface web"
 
-#: seedboxsync/front/forms/settings_seedboxsync.py:38
+#: seedboxsync/front/forms/settings/seedboxsync.py:38
 msgid "Enable CSRF protection for all forms?"
 msgstr "Activer la protection CSRF pour tous les formulaires"
-
-#: seedboxsync/front/forms/user.py:23
-#: seedboxsync/front/templates/settings/users.html:20
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-#: seedboxsync/front/forms/user.py:24
-#: seedboxsync/front/templates/settings/users.html:21
-msgid "Email"
-msgstr "E-mail"
 
 #: seedboxsync/front/templates/downloaded.html:6
 #: seedboxsync/front/templates/homepage.html:100
@@ -449,15 +481,20 @@ msgstr "Synchronisation de la seedbox"
 msgid "Heartbeat"
 msgstr "Heartbeat"
 
-#: seedboxsync/front/templates/login.html:33
-#: seedboxsync/front/templates/settings/authentication.html:48
+#: seedboxsync/front/templates/login.html:41
+#: seedboxsync/front/templates/settings/authentication.html:146
 #: seedboxsync/front/templates/settings/nas.html:47
 #: seedboxsync/front/templates/settings/ping.html:65
-#: seedboxsync/front/templates/settings/seedbox.html:210
-#: seedboxsync/front/templates/settings/seedboxsync.html:67
+#: seedboxsync/front/templates/settings/seedbox.html:223
+#: seedboxsync/front/templates/settings/seedboxsync.html:72
 #: seedboxsync/front/templates/settings/users_edit.html:75
 msgid "Save"
 msgstr "Sauver"
+
+#: seedboxsync/front/templates/login.html:48
+#, python-format
+msgid "Login with %(provider)s"
+msgstr "Se connecter avec %(provider)s"
 
 #: seedboxsync/front/templates/stats.html:9
 msgid "Total"
@@ -624,13 +661,26 @@ msgstr "Statistiques"
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: seedboxsync/front/templates/settings/authentication.html:21
+#: seedboxsync/front/templates/settings/authentication.html:24
+msgid "Global"
+msgstr "Global"
+
+#: seedboxsync/front/templates/settings/authentication.html:25
 msgid ""
 "If authentication is disabled, do not expose the application directly, "
 "delegate authentication to a reverse proxy instead."
 msgstr ""
 "Si l'authentification est désactivée, ne pas exposer l'application "
 "directement et déléguer l'authentification à un reverse proxy."
+
+#: seedboxsync/front/templates/settings/authentication.html:43
+#: seedboxsync/front/templates/settings/seedboxsync.html:21
+msgid "Features"
+msgstr "Fonctionnalités"
+
+#: seedboxsync/front/templates/settings/authentication.html:56
+msgid "OAuth"
+msgstr "OAuth"
 
 #: seedboxsync/front/templates/settings/nas.html:20
 msgid "Information about local environment (NAS?)."
@@ -648,13 +698,17 @@ msgstr "Connexion"
 msgid "Information about your seedbox connection."
 msgstr "Informations à propos de la connexion de votre seedbox."
 
-#: seedboxsync/front/templates/settings/seedbox.html:138
+#: seedboxsync/front/templates/settings/seedbox.html:151
 msgid "Path"
 msgstr "Répertoires"
 
-#: seedboxsync/front/templates/settings/seedbox.html:139
+#: seedboxsync/front/templates/settings/seedbox.html:152
 msgid "Information about your seedbox paths."
 msgstr "Information à propos des paths de votre seedbox."
+
+#: seedboxsync/front/templates/settings/seedboxsync.html:56
+msgid "Security"
+msgstr "Sécurité"
 
 #: seedboxsync/front/templates/settings/users.html:13
 msgid "Users list"
@@ -688,48 +742,62 @@ msgstr "E-mail :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: seedboxsync/front/views/login.py:44
+#: seedboxsync/front/views/auth/authorize.py:37
+msgid "OAuth provider is not properly configured."
+msgstr "Le fournisseur OAuth n'est pas correctement configuré."
+
+#: seedboxsync/front/views/auth/authorize.py:51
+msgid "Failed to obtain email from OAuth provider."
+msgstr "Impossible d'obtenir l'adresse e-mail auprès du fournisseur OAuth."
+
+#: seedboxsync/front/views/auth/authorize.py:62
+#: seedboxsync/front/views/auth/login.py:50
 msgid "Logged in successfully."
 msgstr "Connexion réussie."
 
-#: seedboxsync/front/views/login.py:48
+#: seedboxsync/front/views/auth/authorize.py:72
+msgid "Authentication failed. Please try again."
+msgstr "Échec de l'authentification. Veuillez réessayer."
+
+#: seedboxsync/front/views/auth/login.py:59
 msgid "Invalid username or password."
 msgstr "Identifiant ou mot de passe invalide."
 
-#: seedboxsync/front/views/settings.py:20
+#: seedboxsync/front/views/frontend/settings.py:22
 msgid "Failed to save configuration."
 msgstr "Échec de l’enregistrement de la configuration."
 
-#: seedboxsync/front/views/settings.py:21
+#: seedboxsync/front/views/frontend/settings.py:23
 msgid "Configuration saved successfully."
 msgstr "Configuration sauvegardée avec succès."
 
-#: seedboxsync/front/views/users.py:20
+#: seedboxsync/front/views/frontend/users.py:21
 msgid "Failed to save user."
 msgstr "Échec de l’enregistrement de l'utilisateur."
 
-#: seedboxsync/front/views/users.py:21
+#: seedboxsync/front/views/frontend/users.py:22
 msgid "User saved successfully."
 msgstr "Utilisateur sauvegardé avec succès."
 
-#: seedboxsync/front/views/users.py:69 seedboxsync/front/views/users.py:139
+#: seedboxsync/front/views/frontend/users.py:70
+#: seedboxsync/front/views/frontend/users.py:140
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: seedboxsync/front/views/users.py:82 seedboxsync/front/views/users.py:153
+#: seedboxsync/front/views/frontend/users.py:83
+#: seedboxsync/front/views/frontend/users.py:154
 msgid "User add"
 msgstr "Ajouter un utilisateur"
 
-#: seedboxsync/front/views/users.py:113
+#: seedboxsync/front/views/frontend/users.py:114
 #, python-format
 msgid "User '%(username)s' deleted successfully."
 msgstr "L'utilisateur '%(username)s' a bien été supprimé."
 
-#: seedboxsync/front/views/users.py:117
+#: seedboxsync/front/views/frontend/users.py:118
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l'utilisateur."
 
-#: seedboxsync/front/views/users.py:119
+#: seedboxsync/front/views/frontend/users.py:120
 msgid "User delete"
 msgstr "Supprimer l'utilisateur"
-

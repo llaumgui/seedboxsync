@@ -17,7 +17,9 @@ def app(tmp_path):
     database = Path(tmp_path / "seedboxsync.db")
     shutil.copy("tests/resources/seedboxsync.db", database)
 
-    app = create_app({"TESTING": True, "DATABASE": str(database), "SECRET_KEY": "pytest", "CACHE_TYPE": "NullCache", "BABEL_DEFAULT_LOCALE": "en"})
+    app = create_app(
+        {"TESTING": True, "DATABASE": str(database), "SECRET_KEY": "pytest", "CACHE_TYPE": "NullCache", "BABEL_DEFAULT_LOCALE": "en", "LOGIN_DISABLED": True}
+    )
 
     # FlaskDB opens the database while initializing and migrating it. Close
     # that connection so request and CLI contexts can manage their own.

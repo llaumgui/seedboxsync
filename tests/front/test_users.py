@@ -74,7 +74,7 @@ def test_settings_users_edit_rejects_password_mismatch(app, client):
     path = f"/settings/users/{user_id}/edit"
     csrf_token = _csrf_token(client, "/settings/users/create")
 
-    with patch("seedboxsync.front.views.users.render_template", return_value="form rendered"):
+    with patch("seedboxsync.front.views.frontend.users.render_template", return_value="form rendered"):
         response = client.post(
             path,
             data={

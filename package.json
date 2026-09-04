@@ -23,7 +23,7 @@
   "license": "GPL-3.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
-    "alpinejs": "^3.17.0",
+    "alpinejs": "^3.17.1",
     "animate.css": "^4.1.1",
     "bulma": "^1.0.4",
     "bulma-toast": "^2.4.4",
@@ -32,13 +32,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "5.0.0",
     "eslint": "^10.9.1",
     "eslint-plugin-package-json": "^1.8.0",
-    "globals": "^17.11.0",
-    "sass": "^1.103.1",
+    "globals": "^17.12.0",
+    "sass": "^1.104.0",
     "vite": "^8.2.2",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.0"
   },
   "scripts": {
     "build": "vite build",

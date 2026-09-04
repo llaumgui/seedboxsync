@@ -8,11 +8,11 @@
 
 from .csrf import EmptyCSRFForm
 from .login import LoginForm
-from .settings_authentication import SettingsAuthenticationForm
-from .settings_nas import SettingsNasForm
-from .settings_ping import SettingsPingForm
-from .settings_seedbox import SettingsSeedboxForm
-from .settings_seedboxsync import SettingsSeedboxSyncForm
+from .settings.authentication import SettingsAuthenticationForm
+from .settings.nas import SettingsNasForm
+from .settings.ping import SettingsPingForm
+from .settings.seedbox import SettingsSeedboxForm
+from .settings.seedboxsync import SettingsSeedboxSyncForm
 from .user import UserForm
 
 __all__ = [

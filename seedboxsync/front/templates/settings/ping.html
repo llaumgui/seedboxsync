@@ -19,7 +19,7 @@
         <div class="box">
           <p class="is-italic">{{ _('Settings Healthchecks service.') }}</p>
 
-          <div class="columns pt-4" x-data="{
+          <div class="columns" x-data="{
               healthchecks_sync_blackhole_enabled: '{{ form.healthchecks_sync_blackhole_enabled.data }}',
               enabled: {{ 'true' if form.healthchecks_sync_blackhole_enabled.data else 'false' }},
               healthchecks_sync_blackhole_ping_url: '{{ form.healthchecks_sync_blackhole_ping_url.data }}',
@@ -39,7 +39,7 @@
             </div>
           </div>
 
-          <div class="columns pt-4" x-data="{
+          <div class="columns " x-data="{
             healthchecks_sync_seedbox_enabled: '{{ form.healthchecks_sync_seedbox_enabled.data }}',
             enabled: {{ 'true' if form.healthchecks_sync_seedbox_enabled.data else 'false' }},
             healthchecks_sync_seedbox_ping_url: '{{ form.healthchecks_sync_seedbox_ping_url.data }}',

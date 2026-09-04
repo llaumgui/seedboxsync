@@ -4,25 +4,25 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 #
-"""SeedboxSync Flask view for homepage."""
+"""SeedboxSync Flask view for downloaded torrents."""
 
 from flask import render_template
 from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp
+from seedboxsync.front.views import bp_frontend as bp
 
 
-@bp.route("/")
+@bp.route("/downloaded")
 @cached(timeout=300)  # pyright: ignore [reportUntypedFunctionDecorator]
 @login_required  # type: ignore[untyped-decorator]
-def homepage() -> str:
+def downloaded() -> str:
     """
-    Render the home page view.
+    Render the downloaded torrents list view.
 
-    Initializes flash messages and renders the main dashboard template using
-    the active application configuration (cached for 5 minutes).
+    Initializes flash messages and returns the rendered HTML template
+    containing the history or status of downloaded torrents (cached for 5 minutes).
 
     Returns:
-        str: Rendered HTML template for the home page.
+        str: Rendered HTML template.
     """
-    return render_template("homepage.html")
+    return render_template("downloaded.html")

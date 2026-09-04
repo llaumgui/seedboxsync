@@ -14,7 +14,7 @@ from seedboxsync.front.babel import gettext as _
 
 # Setup Flask-Login
 login_manager = LoginManager()
-login_manager.login_view = "frontend.login"  # pyright: ignore[reportAttributeAccessIssue]
+login_manager.login_view = "auth.login"  # pyright: ignore[reportAttributeAccessIssue]
 login_manager.login_message = _("Please log in to access this page.")
 login_manager.login_message_category = "info"
 
@@ -32,7 +32,7 @@ def unauthorized() -> Any | int | Response:
         abort(401)
 
     # Default behavior for the frontend
-    return redirect(url_for("frontend.login", next=request.path))
+    return redirect(url_for("auth.login", next=request.path))
 
 
 @login_manager.request_loader  # type: ignore[untyped-decorator]

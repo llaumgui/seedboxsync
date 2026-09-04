@@ -14,8 +14,9 @@ from seedboxsync.core.dao import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserForm
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp
+from seedboxsync.front.views import bp_frontend as bp
 
+settings_users_url = "frontend.settings_users"
 msg_logger_error = "Failed to save user."
 msg_flash_error = _("Failed to save user.")
 msg_flash_success = _("User saved successfully.")
@@ -74,7 +75,7 @@ def settings_users_edit(user_id: int) -> str | Response:
                     user.password = generate_password_hash(form.password.data)
                 user.save()
                 flash(msg_flash_success, "success")
-                return redirect(url_for("frontend.settings_users"))
+                return redirect(url_for(settings_users_url))
             except Exception as e:
                 app.logger.exception(msg_logger_error, exc_info=e)
                 flash(msg_flash_error, "danger")
@@ -111,7 +112,7 @@ def settings_users_delete(user_id: int) -> str | Response:
             username = user.username
             user.delete_instance()
             flash(_("User '%(username)s' deleted successfully.") % {"username": username}, "success")
-            return redirect(url_for("frontend.settings_users"))
+            return redirect(url_for(settings_users_url))
         except Exception as e:
             app.logger.exception(msg_logger_error, exc_info=e)
             flash(_("Failed to delete user."), "danger")
@@ -145,7 +146,7 @@ def settings_users_create() -> str | Response:
                     user.password = generate_password_hash(form.password.data)
                 user.save()
                 flash(msg_flash_success, "success")
-                return redirect(url_for("frontend.settings_users"))
+                return redirect(url_for(settings_users_url))
             except Exception as e:
                 app.logger.exception(msg_logger_error, exc_info=e)
                 flash(msg_flash_error, "danger")

@@ -7,7 +7,7 @@
 """SeedboxSync Flask view for healthcheck."""
 
 from flask import Response, jsonify
-from seedboxsync.front.views import bp
+from seedboxsync.front.views import bp_frontend as bp
 
 
 @bp.route("/healthcheck")

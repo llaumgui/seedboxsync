@@ -16,37 +16,133 @@
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
-        <div class="box">
+        <div class="box" x-data="{
+          loginDisabled: {{ 'true' if form.login_disabled.data else 'false' }},
+          oauthEnabled: {{ 'true' if form.oauth_enabled.data else 'false' }}
+        }">
 
-          <h3 class="subtitle is-4">{{ _('Feature') }}</h3>
+          <h3 class="subtitle is-4">{{ _('Global') }}</h3>
           <p class="is-italic">{{ _('If authentication is disabled, do not expose the application directly, delegate authentication to a reverse proxy instead.') }}</p>
-          <div class="columns pt-4">
+          <div class="columns">
             <div class="column is-6">
-              <div class="field" x-data="{
+              <div class="field"
+                x-data="{
                   login_disabled: '{{ form.login_disabled.data }}',
                   enabled: {{ 'true' if form.login_disabled.data else 'false' }},
-              }">
+                  touched: false,
+                }"
+                @change="loginDisabled = $event.target.checked"
+              >
                 {{ render_field(form.login_disabled) }}
-              </div>
-            </div>
-
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  auth_gravatar_enabled: '{{ form.auth_gravatar_enabled.data }}',
-                  enabled: {{ 'true' if form.auth_gravatar_enabled.data else 'false' }},
-              }">
-                {{ render_field(form.auth_gravatar_enabled) }}
               </div>
             </div>
           </div>
 
-          <h3 class="subtitle is-4">{{ _('oAuth') }}</h3>
-          <div class="columns pt-4">
+          <div x-show="!loginDisabled" x-cloak>
+
+            <h3 class="subtitle is-4 pt-4">{{ _('Features') }}</h3>
+            <div class="columns">
+              <div class="column is-6">
+                <div class="field" x-data="{
+                  auth_gravatar_enabled: '{{ form.auth_gravatar_enabled.data }}',
+                  enabled: {{ 'true' if form.auth_gravatar_enabled.data else 'false' }},
+                  touched: false,
+                }">
+                  {{ render_field(form.auth_gravatar_enabled) }}
+                </div>
+              </div>
+            </div>
+
+            <h3 class="subtitle is-4 pt-4">{{ _('OAuth') }}</h3>
+            <div class="columns">
+              <div class="column is-6">
+                <div class="field"
+                  x-data="{
+                    oauth_enabled: '{{ form.oauth_enabled.data }}',
+                    enabled: {{ 'true' if form.oauth_enabled.data else 'false' }},
+                    touched: false,
+                  }"
+                  @change="oauthEnabled = $event.target.checked"
+                >
+                  {{ render_field(form.oauth_enabled) }}
+                </div>
+              </div>
+            </div>
+
+            <div x-show="oauthEnabled" x-cloak>
+
+              <div class="columns">
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                    oauth_auto_create_user: '{{ form.oauth_auto_create_user.data }}',
+                    enabled: {{ 'true' if form.oauth_auto_create_user.data else 'false' }},
+                    touched: false,
+                  }">
+                    {{ render_field(form.oauth_auto_create_user) }}
+                  </div>
+                </div>
+
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                    oauth_disable_builtin_authentication: '{{ form.oauth_disable_builtin_authentication.data }}',
+                    enabled: {{ 'true' if form.oauth_disable_builtin_authentication.data else 'false' }},
+                    touched: false,
+                  }">
+                    {{ render_field(form.oauth_disable_builtin_authentication) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                    oauth_name: '{{ form.oauth_name.data }}',
+                    touched: false,
+                    isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_name) }
+                  }">
+                    {{ render_field(form.oauth_name) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                      oauth_client_id: '{{ form.oauth_client_id.data }}',
+                      touched: false,
+                      isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_client_id) }
+                  }">
+                    {{ render_field(form.oauth_client_id) }}
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                      oauth_client_secret: '{{ form.oauth_client_secret.data }}',
+                      touched: false,
+                      isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_client_secret) }
+                  }">
+                    {{ render_field(form.oauth_client_secret) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column is-6">
+                  <div class="field" x-data="{
+                    oauth_server_metadata_url: '{{ form.oauth_server_metadata_url.data }}',
+                    touched: false,
+                    isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_server_metadata_url) }
+                  }">
+                    {{ render_field(form.oauth_server_metadata_url) }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="control has-text-right">
-          <button class="button is-success">
+          <button class="button is-success" :disabled="!canSubmit()">
             <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
           </button>
         </div>

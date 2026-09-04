@@ -42,10 +42,10 @@
   <input type="{{ field.widget.input_type }}" class="input"
          id="{{ field.id }}" name="{{ field.name }}"
          placeholder="{{ field.render_kw['placeholder'] }}"
-         @blur="touched = true"
+         @click="touched = true"
          x-model="{{ field.id }}"
          x-effect="setFieldState('{{ field.id }}', isValid(), touched)"
-         x-bind:class="{ 'is-danger': !isValid() }"/>
+         x-bind:class="{ 'is-danger': !isValid() } "/>
   <span class="icon is-small is-left"><i class="fas {{ field.render_kw['icon'] }}"></i></span>
   <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
 </div>
@@ -53,7 +53,12 @@
 
 {% macro render_field_checkbox(field) %}
   <label class="label" for="{{ field.id }}">
-    <input id="{{ field.id }}" type="{{ field.widget.input_type }}" name="{{ field.name }}" value="1" x-model="enabled" />
+    <input type="{{ field.widget.input_type }}"
+           id="{{ field.id }}"  name="{{ field.name }}"
+           value="1"
+           @click="touched = true"
+           x-model="enabled"
+           x-effect="setFieldState('{{ field.id }}', true, touched)" />
     {{ field.label }}
   </label>
 {% endmacro %}
@@ -61,7 +66,10 @@
 {% macro render_field_select(field) %}
   <label class="label" for="{{ field.id }}">{{ field.label }}</label>
   <div class="control select">
-    <select id="{{ field.id }}" name="{{ field.name }}" x-model="{{ field.id }}">
+    <select id="{{ field.id }}" name="{{ field.name }}"
+            @click="touched = true"
+            x-model="{{ field.id }}"
+            x-effect="setFieldState('{{ field.id }}', true, touched)">
       {% for value, label in field.choices %}
         <option value="{{ value }}">{{ label }}</option>
       {% endfor %}

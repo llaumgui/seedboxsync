@@ -35,7 +35,7 @@ def test_login_redirects_authenticated_user_to_homepage(client):
     csrf_token = _csrf_token(client, "/login")
     user = User(id=1, username="alice", email="alice@example.com")
 
-    with patch("seedboxsync.front.views.login.User.authenticate", return_value=user):
+    with patch("seedboxsync.front.views.auth.login.User.authenticate", return_value=user):
         response = _login(client, "alice", "secretsecret", csrf_token=csrf_token)
 
     assert response.status_code == 302
@@ -46,7 +46,7 @@ def test_login_preserves_next_url(client):
     csrf_token = _csrf_token(client, "/login")
     user = User(id=1, username="alice", email="alice@example.com")
 
-    with patch("seedboxsync.front.views.login.User.authenticate", return_value=user):
+    with patch("seedboxsync.front.views.auth.login.User.authenticate", return_value=user):
         response = _login(client, "alice@example.com", "secretsecret", "/settings", csrf_token)
 
     assert response.status_code == 302

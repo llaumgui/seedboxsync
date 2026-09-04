@@ -15,7 +15,8 @@ from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.cache import cache
 from seedboxsync.front.forms import SettingsAuthenticationForm, SettingsNasForm, SettingsPingForm, SettingsSeedboxForm, SettingsSeedboxSyncForm
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp
+from seedboxsync.front.oauth2 import init_oauth2
+from seedboxsync.front.views import bp_frontend as bp
 
 msg_logger_error = "Failed to save configuration."
 msg_flash_error = _("Failed to save configuration.")
@@ -137,6 +138,7 @@ def settings_authentication() -> str:
     if form.validate_on_submit():
         try:
             _save_form(form)
+            init_oauth2(app)
             flash(msg_flash_success, "success")
         except Exception as e:
             app.logger.exception(msg_logger_error, exc_info=e)

@@ -7,40 +7,48 @@
 {% block content %}
 <div class="content">
 
-  <form method="post" class="box column is-6 is-offset-3" x-data="validators.form()">
-    {{ form.csrf_token }}
-    {{ form_error(form) }}
+  <div class="box column is-6 is-offset-3">
+    {% if not seedboxsync_config.get('oauth_disable_builtin_authentication') %}<form method="post" x-data="validators.form()">
+      {{ form.csrf_token }}
+      {{ form_error(form) }}
 
-    <h1 class="title">{% block title %}{{ _('Login') }}{% endblock %}</h1>
+      <h1 class="title">{% block title %}{{ _('Login') }}{% endblock %}</h1>
 
-    <div class="field" x-data="{
-        login: '{{ form.login.data or "" }}',
-        touched: false,
-        isValid() { return validators.Length(this.touched, this.login, 4, 35) }
-      }">
-      {{ render_field(form.login) }}
-    </div>
+      <div class="field" x-data="{
+          login: '{{ form.login.data or "" }}',
+          touched: false,
+          isValid() { return validators.Length(this.touched, this.login, 4, 35) }
+        }">
+        {{ render_field(form.login) }}
+      </div>
 
-    <div class="field" x-data="{
-        password: '{{ form.password.data or "" }}',
-        touched: false,
-        isValid() { return validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) }
-      }">
-      {{ render_field(form.password) }}
-    </div>
+      <div class="field" x-data="{
+          password: '{{ form.password.data or "" }}',
+          touched: false,
+          isValid() { return validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) }
+        }">
+        {{ render_field(form.password) }}
+      </div>
 
-    <div class="field" x-data="{
-        remember: '{{ form.remember.data or "" }}',
-        touched: false
-      }">
-      {{ render_field(form.remember) }}
-    </div>
+      <div class="field" x-data="{
+          enabled: '{{ form.remember.data or "" }}',
+          touched: false
+        }">
+        {{ render_field(form.remember) }}
+      </div>
 
-    <div class="control">
-      <button class="button is-primary" :disabled="!canSubmit()">{{ _('Save') }}</button>
-    </div>
+      <div class="control">
+        <button class="button is-primary" :disabled="!canSubmit()">{{ _('Save') }}</button>
+      </div>
 
-  </form>
+    </form>{% endif %}
+
+    {% if seedboxsync_config.get('oauth_enabled') %}
+      <p class="has-text-centered pt-4">
+        <a class="button is-link" href="{{ url_for('auth.login', provider='oauth') }}">{{ _('Login with %(provider)s', provider=seedboxsync_config.get('oauth_name')) }}</a>
+      </p>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}

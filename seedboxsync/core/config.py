@@ -17,9 +17,16 @@ class Config:
     DB_CONFIG_PREFIX = "config_"
     CONFIG_NAMESPACE = "SEEDBOXSYNC_"
     DEFAULT_CONFIG: ClassVar[dict[str, Any]] = {
-        CONFIG_NAMESPACE + "LOGIN_DISABLED": True,
+        CONFIG_NAMESPACE + "LOGIN_DISABLED": False,
         CONFIG_NAMESPACE + "WTF_CSRF_ENABLED": True,
         CONFIG_NAMESPACE + "AUTH_GRAVATAR_ENABLED": False,
+        CONFIG_NAMESPACE + "OAUTH_ENABLED": False,
+        CONFIG_NAMESPACE + "OAUTH_AUTO_CREATE_USER": False,
+        CONFIG_NAMESPACE + "OAUTH_DISABLE_BUILTIN_AUTHENTICATION": False,
+        CONFIG_NAMESPACE + "OAUTH_NAME": "oidc",
+        CONFIG_NAMESPACE + "OAUTH_CLIENT_ID": "",
+        CONFIG_NAMESPACE + "OAUTH_CLIENT_SECRET": "",
+        CONFIG_NAMESPACE + "OAUTH_SERVER_METADATA_URL": "",
         CONFIG_NAMESPACE + "SYNC_BLACKHOLE_ENABLED": False,
         CONFIG_NAMESPACE + "SYNC_SEEDBOX_ENABLED": False,
         CONFIG_NAMESPACE + "SEEDBOX_HOST": "my-seedbox.ltd",
@@ -66,7 +73,7 @@ class Config:
         self.app.config.setdefault("CACHE_TYPE", "SimpleCache")  # Init Flask Cache
         self.app.config.setdefault("SWAGGER_UI_DOC_EXPANSION", "list")  # Expense swager namespaces
         self.app.config.setdefault("PROPAGATE_EXCEPTIONS", False)
-        self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", True))  # Disable login
+        self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", False))  # Disable login
         self.app.config.setdefault("WTF_CSRF_ENABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "WTF_CSRF_ENABLED", True))  # Disable CSRF
 
     def _check_config(self) -> None:

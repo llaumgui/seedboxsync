@@ -69,7 +69,9 @@ nav:
     - getting-started/docker.md
     - getting-started/configuration.md
     - getting-started/usage.md
-  - frontend.md
+  - Frontend:
+    - frontend/screenshots.md
+    - frontend/oauth2.md
   - Upgrade:
     - upgrade/from_v3_to_v4.md
     - upgrade/from_v4_to_v4x.md
