@@ -12,10 +12,12 @@ from flask import Blueprint
 
 bp_auth = Blueprint("auth", __name__)
 bp_frontend = Blueprint("frontend", __name__)
+bp_settings = Blueprint("settings", __name__)
 
 SUB_PACKAGES = [
     "auth",
     "frontend",
+    "settings",
 ]
 
 

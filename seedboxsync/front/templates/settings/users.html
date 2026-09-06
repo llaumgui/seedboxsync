@@ -36,11 +36,11 @@
                 <td>{{ format_datetime(user.last_login) }}</td>
                 <td class="has-text-right">
                     <div class="buttons is-right is-flex-wrap-nowrap">
-                      <a class="button is-info is-outlined" href="{{ url_for('frontend.settings_users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
+                      <a class="button is-info is-outlined" href="{{ url_for('settings.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
                         <span class="icon is-small"><i class="fas fa-pen-to-square"></i></span>
                       </a>
                       <a class="button is-danger is-outlined" {% if not can_delete %}disabled aria-disabled="true"{% endif %} title="{{ _('Delete') }}"
-                        {% if can_delete %}href="{{ url_for('frontend.settings_users_delete', user_id=user.id) }}"{% endif %}>
+                        {% if can_delete %}href="{{ url_for('settings.users_delete', user_id=user.id) }}"{% endif %}>
                         <span class="icon is-small"><i class="fas fa-times"></i></span>
                       </a>
                   </div>
@@ -52,7 +52,7 @@
       </div>
 
       <div class="control has-text-right">
-        <a class="button is-info is-outlined" href="{{ url_for('frontend.settings_users_create') }}">
+        <a class="button is-info is-outlined" href="{{ url_for('settings.users_create') }}">
           <span class="icon is-small"><i class="fas fa-add"></i></span><span>{{ _('Add') }}</span>
         </a>
       </div>

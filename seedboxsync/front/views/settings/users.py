@@ -14,9 +14,9 @@ from seedboxsync.core.dao import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp_frontend as bp
+from seedboxsync.front.views import bp_settings as bp
 
-settings_users_url = "frontend.settings_users"
+settings_users_url = "settings.users"
 msg_logger_error = "Failed to save user."
 msg_flash_error = _("Failed to save user.")
 msg_flash_success = _("User saved successfully.")
@@ -24,7 +24,7 @@ msg_flash_success = _("User saved successfully.")
 
 @bp.route("/settings/users")
 @login_required  # type: ignore[untyped-decorator]
-def settings_users() -> str | Response:
+def users() -> str | Response:
     """
     Render the users management settings page.
 
@@ -41,7 +41,7 @@ def settings_users() -> str | Response:
 
 @bp.route("/settings/users/<int:user_id>/edit", methods=["GET", "POST"])
 @login_required  # type: ignore[untyped-decorator]
-def settings_users_edit(user_id: int) -> str | Response:
+def users_edit(user_id: int) -> str | Response:
     """
     Render and process the user edition view.
 
@@ -94,7 +94,7 @@ def settings_users_edit(user_id: int) -> str | Response:
 
 @bp.route("/settings/users/<int:user_id>/delete", methods=["GET", "POST"])
 @login_required  # type: ignore[untyped-decorator]
-def settings_users_delete(user_id: int) -> str | Response:
+def users_delete(user_id: int) -> str | Response:
     """
     Render and process the user delete view.
 
@@ -131,7 +131,7 @@ def settings_users_delete(user_id: int) -> str | Response:
 
 @bp.route("/settings/users/create", methods=["GET", "POST"])
 @login_required  # type: ignore[untyped-decorator]
-def settings_users_create() -> str | Response:
+def users_create() -> str | Response:
     """
     Render and process the user creation view.
 

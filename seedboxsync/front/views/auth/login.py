@@ -6,7 +6,6 @@
 #
 """SeedboxSync Flask view for authentication handling."""
 
-import datetime
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user
 from werkzeug.wrappers.response import Response
@@ -45,11 +44,8 @@ def login() -> str | Response:
     if form.validate_on_submit():
         login = request.form.get("login") or ""
         password = request.form.get("password") or ""
-        next_url = request.args.get("next") or ""
+        next_url = request.args.get("next")
         remember = request.form.get("remember") == "1"
-
-        if not is_safe_redirect_url(next_url):
-            next_url = ""
 
         user = User.authenticate(login, password)
 
@@ -58,11 +54,12 @@ def login() -> str | Response:
             login_user(user, remember=remember)
             flash(_("Logged in successfully."), "success")
 
-            # Update last login timestamp
-            user.last_login = datetime.datetime.now()
-            user.save()
+            # Sanitization/Validation for SonarQube (Open Redirect protection)
+            target_url = url_for("frontend.homepage")
+            if next_url and is_safe_redirect_url(next_url):
+                target_url = next_url
 
-            return redirect(next_url or url_for("frontend.homepage"))
+            return redirect(target_url)
 
         # User is not logged
         flash(_("Invalid username or password."), "danger")

@@ -12,7 +12,7 @@ from seedboxsync.cli import Context, group, pass_context
 from seedboxsync.core.dao import User
 
 
-@group("user", help="User operations & management.")  # type: ignore[untyped-decorator]
+@group("user", help="User operations & management for SeedboxSync frontend.")  # type: ignore[untyped-decorator]
 @pass_context
 def cli(ctx: Context) -> None:
     """Empty function for Click sub commands."""
@@ -129,6 +129,7 @@ def add(ctx: Context, username: str, email: str, password: str) -> None:
         click.secho(f"User '{user.username}' (ID: {user.id}) created successfully.", fg="green")
     except Exception as e:
         click.secho(f"Error: Failed to create user: {e}", fg="red", err=True)
+
 
 @cli.command("edit", help="Edit an existing user.")  # type: ignore[untyped-decorator]
 @click.option("--id", type=int, required=True, help="ID of the user to edit.")

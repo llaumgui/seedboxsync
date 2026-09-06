@@ -6,7 +6,6 @@
 #
 """SeedboxSync Flask view for authentication handling."""
 
-import datetime
 import secrets
 from flask import flash, redirect, url_for
 from flask_login import login_user
@@ -69,8 +68,7 @@ def authorize() -> Response:
         flash(_("Logged in successfully."), "success")
 
         # Update last login timestamp
-        user.last_login = datetime.datetime.now()
-        user.save()
+        user.update_last_login()
 
         return redirect(url_for("frontend.homepage"))
 

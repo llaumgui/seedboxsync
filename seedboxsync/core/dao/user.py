@@ -65,4 +65,17 @@ class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]
         if not check_password_hash(user.password, password):
             return None
 
+        # Update last login timestamp
+        user.update_last_login()
+
         return user
+
+    def update_last_login(self) -> None:
+        """
+        Update the last login timestamp for the user.
+
+        This method sets the `last_login` field to the current datetime and
+        saves the change to the database.
+        """
+        self.last_login = datetime.datetime.now()
+        self.save()

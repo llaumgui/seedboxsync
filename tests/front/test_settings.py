@@ -1,13 +1,24 @@
+from pathlib import Path
 import re
 from unittest.mock import patch
 import pytest
 from seedboxsync.core.dao import SeedboxSync
 
 
+@pytest.fixture(autouse=True)
+def _ensure_repo_root(monkeypatch):
+    monkeypatch.chdir(Path(__file__).resolve().parents[2])
+
+
 def _post_form(client, path, form):
     csrf_response = client.get(path)
-    csrf_token = re.search(r'name="csrf_token" type="hidden" value="([^"]+)"', csrf_response.text).group(1)
-    return client.post(path, data={**form, "csrf_token": csrf_token})
+    data = dict(form)
+
+    csrf_match = re.search(r'name="csrf_token"\s+type="hidden"\s+value="([^"]+)"', csrf_response.text)
+    if csrf_match is not None:
+        data["csrf_token"] = csrf_match.group(1)
+
+    return client.post(path, data=data)
 
 
 @pytest.mark.parametrize(
@@ -93,7 +104,7 @@ def test_settings_views_persist_valid_form_values(app, client, path, form, confi
 
 
 def test_seedbox_settings_rejects_missing_required_fields(client):
-    with patch("seedboxsync.front.views.frontend.settings._save_form") as save_form:
+    with patch("seedboxsync.front.utils.save_settings_form") as save_form:
         response = _post_form(client, "/settings/seedbox", {"seedbox_host": ""})
 
     assert response.status_code == 200
@@ -101,9 +112,13 @@ def test_seedbox_settings_rejects_missing_required_fields(client):
 
 
 @pytest.mark.parametrize(
-    ("path", "form"),
+    ("path", "form", "save_settings_target"),
     [
-        ("/settings", {"sync_blackhole_enabled": "1", "webui_theme": "dark", "webui_language": "auto"}),
+        (
+            "/settings",
+            {"sync_blackhole_enabled": "1", "webui_theme": "dark", "webui_language": "auto"},
+            "seedboxsync.front.views.settings.seedboxsync.save_settings_form",
+        ),
         (
             "/settings/seedbox",
             {
@@ -116,13 +131,22 @@ def test_seedbox_settings_rejects_missing_required_fields(client):
                 "seedbox_watch_path": "/watch",
                 "seedbox_finished_path": "/files",
             },
+            "seedboxsync.front.views.settings.seedbox.save_settings_form",
         ),
-        ("/settings/nas", {"local_watch_path": "/watch", "local_download_path": "/downloads"}),
-        ("/settings/ping", {"healthchecks_sync_blackhole_ping_url": "https://hc-ping.com/test"}),
+        (
+            "/settings/nas",
+            {"local_watch_path": "/watch", "local_download_path": "/downloads"},
+            "seedboxsync.front.views.settings.nas.save_settings_form",
+        ),
+        (
+            "/settings/ping",
+            {"healthchecks_sync_blackhole_ping_url": "https://hc-ping.com/test"},
+            "seedboxsync.front.views.settings.ping.save_settings_form",
+        ),
     ],
 )
-def test_settings_views_report_persistence_errors(client, path, form):
-    with patch("seedboxsync.front.views.frontend.settings._save_form", side_effect=RuntimeError("database unavailable")):
+def test_settings_views_report_persistence_errors(client, path, form, save_settings_target):
+    with patch(save_settings_target, side_effect=RuntimeError("database unavailable")):
         response = _post_form(client, path, form)
 
     assert response.status_code == 200

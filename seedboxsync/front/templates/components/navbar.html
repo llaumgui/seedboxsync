@@ -33,7 +33,7 @@
 
       {% if config.LOGIN_DISABLED %}
         <div class="navbar-end">
-          {{ menu_link(_('Settings'), 'frontend.settings') }}
+          {{ menu_link(_('Settings'), 'settings.seedboxsync') }}
         </div>
       {% elif current_user.is_authenticated %}
         <div class="navbar-item navbar-end has-dropdown is-hoverable">
@@ -44,7 +44,7 @@
             {{ current_user.username }}
           </a>
           <div class="navbar-dropdown">
-            {{ menu_link(_('Settings'), 'frontend.settings', 'fa-gear') }}
+            {{ menu_link(_('Settings'), 'settings.seedboxsync', 'fa-gear') }}
             {{ menu_link(_('Logout'), 'auth.logout', 'fa-sign-out' ) }}
           </div>
         </div>
