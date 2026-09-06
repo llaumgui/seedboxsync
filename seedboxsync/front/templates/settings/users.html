@@ -19,6 +19,7 @@
             <tr>
               <th>{{ _('Username') }}</th>
               <th class="is-hidden-mobile">{{ _('Email') }}</th>
+              <th>{{ _('Origin') }}</th>
               <th class="is-hidden-mobile">{{ _('Created') }}</th>
               <th>{{ _('Last login') }}</th>
               <th class="is-narrow"></th>
@@ -30,6 +31,7 @@
               <tr>
                 <td>{{ user.username }}</td>
                 <td class="is-hidden-mobile">{{ user.email }}</td>
+                <td>{{ user.origin }}</td>
                 <td class="is-hidden-mobile">{{ format_datetime(user.created) }}</td>
                 <td>{{ format_datetime(user.last_login) }}</td>
                 <td class="has-text-right">

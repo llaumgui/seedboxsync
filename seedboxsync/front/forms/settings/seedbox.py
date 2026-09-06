@@ -59,7 +59,7 @@ class SettingsSeedboxForm(FlaskForm):  # type: ignore[misc]
         },
     )
     seedbox_tmp_path = StringField(
-        _("Tempory path"),
+        _("Temporary path"),
         validators=[DataRequired()],
         render_kw={"placeholder": "./tmp", "icon": "fa-folder", "help": _("Use a temporary directory for incomplete transfers (must be created manually).")},
     )

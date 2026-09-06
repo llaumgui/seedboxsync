@@ -85,6 +85,7 @@ export function isRequired(touched, value) {
 export function Length(touched, value, min, max) {
   if (!touched) return true;
   const str = value ? String(value) : "";
+  if (str == "") return true;
 
   if (min !== undefined && min !== null && str.length < min) {
     return false;

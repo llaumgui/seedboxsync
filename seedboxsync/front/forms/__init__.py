@@ -13,7 +13,7 @@ from .settings.nas import SettingsNasForm
 from .settings.ping import SettingsPingForm
 from .settings.seedbox import SettingsSeedboxForm
 from .settings.seedboxsync import SettingsSeedboxSyncForm
-from .user import UserForm
+from .user import UserCreateForm, UserEditForm
 
 __all__ = [
     "EmptyCSRFForm",
@@ -23,5 +23,6 @@ __all__ = [
     "SettingsPingForm",
     "SettingsSeedboxForm",
     "SettingsSeedboxSyncForm",
-    "UserForm",
+    "UserCreateForm",
+    "UserEditForm",
 ]

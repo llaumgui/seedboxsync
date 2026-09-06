@@ -44,7 +44,11 @@
                   password: '{{ form.password.data or '' }}',
                   password2: '{{ form.password.data or '' }}',
                   touched: false,
+                  {% if form.password.flags.required %}
                   isValid() { return (validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) && validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
+                  {% else %}
+                  isValid() { return (validators.Length(this.touched, this.password, 8, 128) && this.password === this.password2) }
+                  {% endif %}
               }"
           >
             <div class="column is-6">

@@ -12,7 +12,7 @@ from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
 from seedboxsync.core.dao import User
 from seedboxsync.front.babel import gettext as _
-from seedboxsync.front.forms import EmptyCSRFForm, UserForm
+from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp_frontend as bp
 
@@ -34,7 +34,7 @@ def settings_users() -> str | Response:
     Returns:
         str | Response: Rendered HTML template containing the users list.
     """
-    users = User.select(User.id, User.username, User.email, User.created, User.last_login)
+    users = User.select(User.id, User.username, User.email, User.origin, User.created, User.last_login)
 
     return render_template("settings/users.html", users=users)
 
@@ -62,17 +62,26 @@ def settings_users_edit(user_id: int) -> str | Response:
     except User.DoesNotExist:  # pyright: ignore [reportAttributeAccessIssue]
         abort(404, f"User id {user_id} doesn't exist.")
 
-    form = UserForm(obj=user)
+    form = UserEditForm(obj=user)
+    if request.method == "GET":
+        form.password.data = ""
+
     if form.validate_on_submit():
         # Check password 1 et 2
+        new_password = form.password.data
         password2 = request.form.get("password2", "")
-        if form.password.data != password2:
+        if new_password and new_password != password2:
             form.password.errors.append(_("Passwords do not match."))  # pyright: ignore [reportAttributeAccessIssue]
         else:
             try:
                 form.populate_obj(user)
-                if form.password.data:
-                    user.password = generate_password_hash(form.password.data)
+
+                if new_password:
+                    user.password = generate_password_hash(new_password)
+                else:
+                    db_user = User.get_by_id(user_id)
+                    user.password = db_user.password
+
                 user.save()
                 flash(msg_flash_success, "success")
                 return redirect(url_for(settings_users_url))
@@ -80,7 +89,7 @@ def settings_users_edit(user_id: int) -> str | Response:
                 app.logger.exception(msg_logger_error, exc_info=e)
                 flash(msg_flash_error, "danger")
 
-    return render_template("settings/users_edit.html", form=form, action=_("User add"))
+    return render_template("settings/users_edit.html", form=form, action=_("User edit"))
 
 
 @bp.route("/settings/users/<int:user_id>/delete", methods=["GET", "POST"])
@@ -132,7 +141,7 @@ def settings_users_create() -> str | Response:
     Returns:
         str | Response: Rendered HTML edit form template.
     """
-    form = UserForm()
+    form = UserCreateForm()
     if form.validate_on_submit():
         # Check password 1 et 2
         password2 = request.form.get("password2", "")

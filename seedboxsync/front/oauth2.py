@@ -47,5 +47,5 @@ def init_oauth2(app: Flask) -> None:
             "OAuth provider '%s' (%s) registered successfully with client_id '%s'.",
             app.seedboxsync_config.get("oauth_name"),
             app.seedboxsync_config.get("oauth_server_metadata_url"),
-            app.seedboxsync_config.get("oauth_client_id")
+            app.seedboxsync_config.get("oauth_client_id"),
         )

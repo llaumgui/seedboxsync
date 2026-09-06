@@ -30,9 +30,17 @@ class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]
         last_login (datetime): Timestamp when the user last logged in.
     """
 
+    ORIGIN_LOCAL = "local"
+    ORIGIN_OIDC = "oidc"
+    ORIGIN_CHOICES = (
+        (ORIGIN_LOCAL, "Local"),
+        (ORIGIN_OIDC, "OIDC"),
+    )
+
     id = AutoField(help_text="Unique identifier of the user")
     username = CharField(unique=True, help_text="Username of the user")
     password = CharField(help_text="Salted password of the user")
+    origin = CharField(choices=ORIGIN_CHOICES, default=ORIGIN_LOCAL, max_length=10, help_text="Origin of the user account (local or oidc)")
     email = CharField(unique=True, help_text="Email address of the user")
     created = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the user was created")
     last_login = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the user last logged in")

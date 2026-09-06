@@ -20,5 +20,5 @@ class LoginForm(FlaskForm):  # type: ignore[misc]
     """
 
     login = StringField(_("Username or email"), validators=[DataRequired(), Length(min=4, max=35)], render_kw={"placeholder": "admin", "icon": "fa-user"})
-    password = PasswordField(_("Password"), validators=[DataRequired(), Length(min=8, max=128)], render_kw={"placeholder": "**********", "icon": "fa-lock"})
+    password = PasswordField(_("Password"), validators=[DataRequired(), Length(min=8, max=128)], render_kw={"placeholder": "••••••••••••", "icon": "fa-lock"})
     remember = BooleanField(_("Remember me"))
