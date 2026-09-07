@@ -1,0 +1,17 @@
+{% set all_messages = get_flashed_messages(with_categories=true) %}
+{% set messages = [] %}
+{% for cat, msg in all_messages if not cat.startswith('toast-') %}
+  {% set _ = messages.append((cat, msg)) %}
+{% endfor %}
+{% if messages %}
+  {% for category, message in messages %}
+  <div class="container">
+    <div x-data="{ show: true }" x-show="show" class="notification is-{{ category }} mt-4">
+      <button class="delete" @click="show = false"></button>
+      <ul>
+        <li>{{ message }}</li>
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}

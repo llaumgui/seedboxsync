@@ -65,7 +65,7 @@ def authorize() -> Response:
 
         # Connect user with Flask-Login
         login_user(user)
-        flash(_("Logged in successfully."), "success")
+        flash(_("Logged in successfully."), "toast-success")
 
         # Update last login timestamp
         user.update_last_login()
@@ -74,5 +74,5 @@ def authorize() -> Response:
 
     except Exception as e:
         app.logger.error("Authentication failed: %s", str(e))
-        flash(_("Authentication failed. Please try again."), "danger")
+        flash(_("Authentication failed. Please try again."), "toast-danger")
         return redirect(url_for(view_login))

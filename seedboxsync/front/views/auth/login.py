@@ -52,7 +52,7 @@ def login() -> str | Response:
         # User is logged
         if user is not None:
             login_user(user, remember=remember)
-            flash(_("Logged in successfully."), "success")
+            flash(_("Logged in successfully."), "toast-success")
 
             # Sanitization/Validation for SonarQube (Open Redirect protection)
             target_url = url_for("frontend.homepage")
@@ -62,7 +62,7 @@ def login() -> str | Response:
             return redirect(target_url)
 
         # User is not logged
-        flash(_("Invalid username or password."), "danger")
+        flash(_("Invalid username or password."), "toast-danger")
 
     return render_template("login.html", form=form)
 

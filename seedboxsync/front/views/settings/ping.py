@@ -31,9 +31,9 @@ def ping() -> str:
     if form.validate_on_submit():
         try:
             save_settings_form(form)
-            flash(_("Configuration saved successfully."), "success")
+            flash(_("Configuration saved successfully."), "toast-success")
         except Exception as e:
             app.logger.exception("Failed to save configuration.", exc_info=e)
-            flash(_("Failed to save configuration."), "danger")
+            flash(_("Failed to save configuration."), "toast-danger")
 
     return render_template("settings/ping.html", form=form)

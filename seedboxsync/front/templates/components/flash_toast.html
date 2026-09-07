@@ -1,0 +1,13 @@
+{% set all_messages = get_flashed_messages(with_categories=true) %}
+{% set toasts = [] %}
+{% for cat, msg in all_messages if cat.startswith('toast-') %}
+  {% set _ = toasts.append((cat, msg)) %}
+{% endfor %}
+
+{% if toasts %}
+<script>document.addEventListener("DOMContentLoaded", () => {
+{% for category, message in toasts %}
+  bulmaToast.toast({ message: `{{ message }}`, type: "is-{{ category.replace('toast-', '') }}" });
+{% endfor %}
+});</script>
+{% endif %}

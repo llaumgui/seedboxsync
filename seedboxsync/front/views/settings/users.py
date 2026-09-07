@@ -83,11 +83,11 @@ def users_edit(user_id: int) -> str | Response:
                     user.password = db_user.password
 
                 user.save()
-                flash(msg_flash_success, "success")
+                flash(msg_flash_success, "toast-success")
                 return redirect(url_for(settings_users_url))
             except Exception as e:
                 app.logger.exception(msg_logger_error, exc_info=e)
-                flash(msg_flash_error, "danger")
+                flash(msg_flash_error, "toast-danger")
 
     return render_template("settings/users_edit.html", form=form, action=_("User edit"))
 
@@ -120,11 +120,11 @@ def users_delete(user_id: int) -> str | Response:
         try:
             username = user.username
             user.delete_instance()
-            flash(_("User '%(username)s' deleted successfully.") % {"username": username}, "success")
+            flash(_("User '%(username)s' deleted successfully.") % {"username": username}, "toast-success")
             return redirect(url_for(settings_users_url))
         except Exception as e:
             app.logger.exception(msg_logger_error, exc_info=e)
-            flash(_("Failed to delete user."), "danger")
+            flash(_("Failed to delete user."), "toast-danger")
 
     return render_template("settings/users_delete.html", form=form, user=user, action=_("User delete"))
 
@@ -154,10 +154,10 @@ def users_create() -> str | Response:
                 if form.password.data:
                     user.password = generate_password_hash(form.password.data)
                 user.save()
-                flash(msg_flash_success, "success")
+                flash(msg_flash_success, "toast-success")
                 return redirect(url_for(settings_users_url))
             except Exception as e:
                 app.logger.exception(msg_logger_error, exc_info=e)
-                flash(msg_flash_error, "danger")
+                flash(msg_flash_error, "toast-danger")
 
     return render_template("settings/users_edit.html", form=form, action=_("User add"))
