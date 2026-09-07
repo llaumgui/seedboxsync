@@ -8,7 +8,7 @@
 <div class="content">
 
   <div class="box column is-6 is-offset-3">
-    {% if not seedboxsync_config.get('oauth_disable_builtin_authentication') %}<form method="post" x-data="validators.form()">
+    {% if not seedboxsync_config.get('oauth_builtin_authentication_disabled') %}<form method="post" x-data="validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 

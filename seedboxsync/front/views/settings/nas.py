@@ -15,7 +15,7 @@ from seedboxsync.front.utils import save_settings_form
 from seedboxsync.front.views import bp_settings as bp
 
 
-@bp.route("/settings/nas", methods=("GET", "POST"))
+@bp.route("/nas", methods=("GET", "POST"))
 @login_required  # type: ignore[untyped-decorator]
 def nas() -> str:
     """

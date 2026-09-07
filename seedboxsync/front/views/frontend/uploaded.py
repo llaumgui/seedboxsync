@@ -19,8 +19,7 @@ def uploaded() -> str:
     """
     Render the uploaded torrents list view.
 
-    Initializes flash messages and returns the rendered HTML template
-    containing the history or status of uploaded torrents (cached for 5 minutes).
+    Returns the rendered HTML template containing the history or status of uploaded torrents (cached for 5 minutes).
 
     Returns:
         str: Rendered HTML template.

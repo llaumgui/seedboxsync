@@ -29,7 +29,7 @@ def test_authorize_creates_and_logs_in_oidc_user(app, client):
     provider = MagicMock()
     provider.authorize_access_token.return_value = {"access_token": "token"}
     provider.userinfo.return_value = {"email": "alice@example.com", "name": "Alice"}
-    app.config["SEEDBOXSYNC_OAUTH_AUTO_CREATE_USER"] = True
+    app.config["SEEDBOXSYNC_OAUTH_AUTO_CREATE_USER_ENABLED"] = True
 
     with (
         patch("seedboxsync.front.views.auth.authorize.oauth.create_client", return_value=provider),
@@ -56,7 +56,7 @@ def test_authorize_logs_in_existing_user_without_creating(app, client):
     provider.authorize_access_token.return_value = {"access_token": "token"}
     provider.userinfo.return_value = {"email": "alice@example.com", "preferred_username": "alice"}
 
-    app.config["SEEDBOXSYNC_OAUTH_AUTO_CREATE_USER"] = False
+    app.config["SEEDBOXSYNC_OAUTH_AUTO_CREATE_USER_ENABLED"] = False
     with (
         patch("seedboxsync.front.views.auth.authorize.oauth.create_client", return_value=provider),
         patch("seedboxsync.front.views.auth.authorize.User.get", return_value=user) as get_user,
@@ -71,6 +71,17 @@ def test_authorize_logs_in_existing_user_without_creating(app, client):
 
 def test_authorize_redirects_to_login_when_authentication_fails(client):
     with patch("seedboxsync.front.views.auth.authorize.oauth.create_client", side_effect=RuntimeError("boom")):
+        response = client.get("/oauth2/oidc/callback")
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/login")
+
+
+def test_authorize_redirects_to_login_when_access_token_exchange_fails(client):
+    provider = MagicMock()
+    provider.authorize_access_token.side_effect = RuntimeError("boom")
+
+    with patch("seedboxsync.front.views.auth.authorize.oauth.create_client", return_value=provider):
         response = client.get("/oauth2/oidc/callback")
 
     assert response.status_code == 302

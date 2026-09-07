@@ -19,8 +19,7 @@ def homepage() -> str:
     """
     Render the home page view.
 
-    Initializes flash messages and renders the main dashboard template using
-    the active application configuration (cached for 5 minutes).
+    Renders the main dashboard template using the active application configuration (cached for 5 minutes).
 
     Returns:
         str: Rendered HTML template for the home page.

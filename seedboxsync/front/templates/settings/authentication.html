@@ -53,7 +53,7 @@
               </div>
             </div>
 
-            <h3 class="subtitle is-4 pt-4">{{ _('OAuth') }}</h3>
+            <h3 class="subtitle is-4 pt-4">{{ _('OAuth 2.0 / OIDC') }}</h3>
             <div class="columns">
               <div class="column is-6">
                 <div class="field"
@@ -74,21 +74,21 @@
               <div class="columns">
                 <div class="column is-6">
                   <div class="field" x-data="{
-                    oauth_auto_create_user: '{{ form.oauth_auto_create_user.data }}',
-                    enabled: {{ 'true' if form.oauth_auto_create_user.data else 'false' }},
+                    oauth_auto_create_user_enabled: '{{ form.oauth_auto_create_user_enabled.data }}',
+                    enabled: {{ 'true' if form.oauth_auto_create_user_enabled.data else 'false' }},
                     touched: false,
                   }">
-                    {{ render_field(form.oauth_auto_create_user) }}
+                    {{ render_field(form.oauth_auto_create_user_enabled) }}
                   </div>
                 </div>
 
                 <div class="column is-6">
                   <div class="field" x-data="{
-                    oauth_disable_builtin_authentication: '{{ form.oauth_disable_builtin_authentication.data }}',
-                    enabled: {{ 'true' if form.oauth_disable_builtin_authentication.data else 'false' }},
+                    oauth_builtin_authentication_disabled: '{{ form.oauth_builtin_authentication_disabled.data }}',
+                    enabled: {{ 'true' if form.oauth_builtin_authentication_disabled.data else 'false' }},
                     touched: false,
                   }">
-                    {{ render_field(form.oauth_disable_builtin_authentication) }}
+                    {{ render_field(form.oauth_builtin_authentication_disabled) }}
                   </div>
                 </div>
               </div>

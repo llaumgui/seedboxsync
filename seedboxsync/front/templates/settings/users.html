@@ -33,7 +33,7 @@
                 <td class="is-hidden-mobile">{{ user.email }}</td>
                 <td>{{ user.origin }}</td>
                 <td class="is-hidden-mobile">{{ format_datetime(user.created) }}</td>
-                <td>{{ format_datetime(user.last_login) }}</td>
+                <td>{{ format_datetime(user.last_login) if user.last_login is not none else _('Never') }}</td>
                 <td class="has-text-right">
                     <div class="buttons is-right is-flex-wrap-nowrap">
                       <a class="button is-info is-outlined" href="{{ url_for('settings.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">

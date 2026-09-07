@@ -54,9 +54,16 @@ def register_api_blueprint(app: Flask) -> None:
         api.authorizations = {
             "basicAuth": {
                 "type": "basic",
+                "description": "Basic authentication with username and password",
+            },
+            "apiKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-Key",
+                "description": "API key authentication (e.g. 'X-API-Key: sbx_...')",
             },
         }
-        api.security = "basicAuth"
+        api.security = ["basicAuth", "apiKey"]
 
     if api.blueprint is None:
         api.init_app(bp)

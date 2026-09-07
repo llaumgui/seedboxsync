@@ -16,7 +16,7 @@ from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from playhouse.migrate import SchemaMigrator, migrate
 from seedboxsync.core import utils
-from seedboxsync.core.dao import Download, SeedboxSync, TaskStatus, Torrent, User
+from seedboxsync.core.dao import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
 
 
 class Database:
@@ -115,7 +115,7 @@ class Database:
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
         self.db.foreign_keys = 1
-        self.db.bind([Download, SeedboxSync, TaskStatus, Torrent, User])
+        self.db.bind([ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User])
         self.app.logger.debug(
             "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
             self.app.config["DATABASE"],
@@ -157,7 +157,7 @@ class Database:
     #
     def _create_db_schema(self) -> None:
         """Create all database tables, insert default user, and set schema version."""
-        self.db.create_tables([Download, SeedboxSync, TaskStatus, Torrent, User])
+        self.db.create_tables([ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User])
         self._create_default_user()
         SeedboxSync.set_db_version(str(self.DATABASE_VERSION))
 
@@ -202,7 +202,7 @@ class Database:
 
         Creates the `User` table for authentication and seeds the default admin account.
         """
-        self.db.create_tables([User])
+        self.db.create_tables([ApiKey, User])
         self._create_default_user()
         SeedboxSync.set_db_version("5")
 

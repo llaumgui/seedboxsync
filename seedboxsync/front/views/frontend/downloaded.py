@@ -19,8 +19,7 @@ def downloaded() -> str:
     """
     Render the downloaded torrents list view.
 
-    Initializes flash messages and returns the rendered HTML template
-    containing the history or status of downloaded torrents (cached for 5 minutes).
+    Returns the rendered HTML template containing the history or status of downloaded torrents (cached for 5 minutes).
 
     Returns:
         str: Rendered HTML template.

@@ -43,7 +43,7 @@ class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]
     origin = CharField(choices=ORIGIN_CHOICES, default=ORIGIN_LOCAL, max_length=10, help_text="Origin of the user account (local or oidc)")
     email = CharField(unique=True, help_text="Email address of the user")
     created = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the user was created")
-    last_login = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the user last logged in")
+    last_login = DateTimeField(null=True, help_text="Timestamp when the user last logged in")
 
     @classmethod
     def authenticate(cls, login: str, password: str) -> Self | None:

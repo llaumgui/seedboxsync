@@ -15,7 +15,7 @@ from seedboxsync.front.utils import save_settings_form
 from seedboxsync.front.views import bp_settings as bp
 
 
-@bp.route("/settings/seedbox", methods=("GET", "POST"))
+@bp.route("/seedbox", methods=("GET", "POST"))
 @login_required  # type: ignore[untyped-decorator]
 def seedbox() -> str:
     """

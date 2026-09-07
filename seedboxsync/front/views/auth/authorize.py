@@ -50,7 +50,7 @@ def authorize() -> Response:
             return redirect(url_for(view_login))
 
         # Check if user exists or create a new one based on configuration
-        if app.seedboxsync_config.get("oauth_auto_create_user"):
+        if app.seedboxsync_config.get("oauth_auto_create_user_enabled"):
             random_password = secrets.token_urlsafe(32)
             user, _created = User.get_or_create(
                 email=email,

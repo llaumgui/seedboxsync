@@ -22,7 +22,7 @@ msg_flash_error = _("Failed to save user.")
 msg_flash_success = _("User saved successfully.")
 
 
-@bp.route("/settings/users")
+@bp.route("/users")
 @login_required  # type: ignore[untyped-decorator]
 def users() -> str | Response:
     """
@@ -39,7 +39,41 @@ def users() -> str | Response:
     return render_template("settings/users.html", users=users)
 
 
-@bp.route("/settings/users/<int:user_id>/edit", methods=["GET", "POST"])
+@bp.route("/users/create", methods=["GET", "POST"])
+@login_required  # type: ignore[untyped-decorator]
+def users_create() -> str | Response:
+    """
+    Render and process the user creation view.
+
+    Handles fetching user data, populating the creation form, verifying password
+    confirmations, hashing new passwords, and saving updates to the database.
+
+    Returns:
+        str | Response: Rendered HTML edit form template.
+    """
+    form = UserCreateForm()
+    if form.validate_on_submit():
+        # Check password 1 et 2
+        password2 = request.form.get("password2", "")
+        if form.password.data != password2:
+            form.password.errors.append(_("Passwords do not match."))  # pyright: ignore [reportAttributeAccessIssue]
+        else:
+            try:
+                user = User()
+                form.populate_obj(user)
+                if form.password.data:
+                    user.password = generate_password_hash(form.password.data)
+                user.save()
+                flash(msg_flash_success, "toast-success")
+                return redirect(url_for(settings_users_url))
+            except Exception as e:
+                app.logger.exception(msg_logger_error, exc_info=e)
+                flash(msg_flash_error, "toast-danger")
+
+    return render_template("settings/users_edit.html", form=form, action=_("User add"))
+
+
+@bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
 @login_required  # type: ignore[untyped-decorator]
 def users_edit(user_id: int) -> str | Response:
     """
@@ -92,7 +126,7 @@ def users_edit(user_id: int) -> str | Response:
     return render_template("settings/users_edit.html", form=form, action=_("User edit"))
 
 
-@bp.route("/settings/users/<int:user_id>/delete", methods=["GET", "POST"])
+@bp.route("/users/<int:user_id>/delete", methods=["GET", "POST"])
 @login_required  # type: ignore[untyped-decorator]
 def users_delete(user_id: int) -> str | Response:
     """
@@ -127,37 +161,3 @@ def users_delete(user_id: int) -> str | Response:
             flash(_("Failed to delete user."), "toast-danger")
 
     return render_template("settings/users_delete.html", form=form, user=user, action=_("User delete"))
-
-
-@bp.route("/settings/users/create", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
-def users_create() -> str | Response:
-    """
-    Render and process the user creation view.
-
-    Handles fetching user data, populating the creation form, verifying password
-    confirmations, hashing new passwords, and saving updates to the database.
-
-    Returns:
-        str | Response: Rendered HTML edit form template.
-    """
-    form = UserCreateForm()
-    if form.validate_on_submit():
-        # Check password 1 et 2
-        password2 = request.form.get("password2", "")
-        if form.password.data != password2:
-            form.password.errors.append(_("Passwords do not match."))  # pyright: ignore [reportAttributeAccessIssue]
-        else:
-            try:
-                user = User()
-                form.populate_obj(user)
-                if form.password.data:
-                    user.password = generate_password_hash(form.password.data)
-                user.save()
-                flash(msg_flash_success, "toast-success")
-                return redirect(url_for(settings_users_url))
-            except Exception as e:
-                app.logger.exception(msg_logger_error, exc_info=e)
-                flash(msg_flash_error, "toast-danger")
-
-    return render_template("settings/users_edit.html", form=form, action=_("User add"))

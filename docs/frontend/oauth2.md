@@ -1,5 +1,5 @@
 ---
-title: OAuth2
+title: OAuth2 / OIDC
 summary: SeedboxSyncFront  — The seedboxsync frontend
 ---
 
@@ -16,8 +16,8 @@ Set these via the Web UI (`Settings` > `Authentication`) or environment variable
 | Parameter | Description |
 | --- | --- |
 | **`oauth_enabled`** | Enables/disables OIDC authentication (`true`/`false`). |
-| **`oauth_auto_create_user`** | Automatically provisions a local user on first login (`true`/`false`). |
-| **`oauth_disable_builtin_authentication`** | Hides local password login form (`true`/`false`). |
+| **`oauth_auto_create_user_enabled`** | Automatically provisions a local user on first login (`true`/`false`). |
+| **`oauth_builtin_authentication_disabled`** | Hides local password login form (`true`/`false`). |
 | **`oauth_name`** | Provider identifier (e.g., `authelia`). |
 | **`oauth_client_id`** | OAuth Client ID. |
 | **`oauth_client_secret`** | Plaintext OAuth Client Secret. |

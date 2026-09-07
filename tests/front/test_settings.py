@@ -2,7 +2,13 @@ from pathlib import Path
 import re
 from unittest.mock import patch
 import pytest
-from seedboxsync.core.dao import SeedboxSync
+from werkzeug.security import generate_password_hash
+from seedboxsync.core.dao import ApiKey, SeedboxSync, User
+from seedboxsync.front.forms import SettingsAuthenticationForm
+from seedboxsync.front.utils import save_settings_form
+from seedboxsync.front.views.auth.logout import logout
+from seedboxsync.front.views.settings.apikeys import apikeys, apikeys_create, apikeys_delete
+from seedboxsync.front.views.settings.authentication import authentication
 
 
 @pytest.fixture(autouse=True)
@@ -109,6 +115,100 @@ def test_seedbox_settings_rejects_missing_required_fields(client):
 
     assert response.status_code == 200
     save_form.assert_not_called()
+
+
+def test_save_settings_form_persists_runtime_and_database_values(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with app.test_request_context("/settings", method="POST", data={"login_disabled": "1", "auth_gravatar_enabled": "1"}):
+        form = SettingsAuthenticationForm(meta={"csrf": False}, data={"login_disabled": True, "auth_gravatar_enabled": True})
+        save_settings_form(form)
+
+    assert app.config["LOGIN_DISABLED"] is True
+    assert app.config["SEEDBOXSYNC_LOGIN_DISABLED"] is True
+    assert app.config["SEEDBOXSYNC_AUTH_GRAVATAR_ENABLED"] is True
+
+    with app.app_context():
+        persisted = {row.key: row.value for row in SeedboxSync.select().where(SeedboxSync.key.in_(["config_login_disabled", "config_auth_gravatar_enabled"]))}
+
+    assert persisted["config_login_disabled"] == "1"
+    assert persisted["config_auth_gravatar_enabled"] == "1"
+
+
+def test_authentication_settings_page_saves_oauth_configuration(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with (
+        patch("seedboxsync.front.views.settings.authentication.save_settings_form") as save_form,
+        patch("seedboxsync.front.views.settings.authentication.init_oauth2") as init_oauth2_mock,
+        app.test_request_context(
+            "/settings/authentication",
+            method="POST",
+            data={"login_disabled": "1", "oauth_enabled": "1", "oauth_name": "oidc"},
+        ),
+    ):
+        response = authentication()
+
+    save_form.assert_called_once()
+    init_oauth2_mock.assert_called_once()
+    assert response
+    assert "Configuration saved successfully" in response
+
+
+def test_apikeys_list_and_create_delete_flow(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with app.app_context():
+        user = User.create(username="alice", password=generate_password_hash("secret"), email="alice@example.com")
+
+    with app.test_request_context("/settings/apikeys"):
+        with patch("seedboxsync.front.views.settings.apikeys.current_user", user):
+            response = apikeys()
+        assert isinstance(response, str)
+
+    with (
+        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "homeassistant"}),
+        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+    ):
+        response = apikeys_create()
+
+    assert response.status_code == 302
+    assert response.location.endswith("/settings/apikeys")
+
+    with app.app_context():
+        apikey = ApiKey.get(user=user)
+        assert apikey.name == "homeassistant"
+
+    with app.test_request_context(f"/settings/apikeys/{apikey.id}/delete", method="POST"), patch("seedboxsync.front.views.settings.apikeys.current_user", user):
+        response = apikeys_delete(apikey.id)
+
+    assert response.status_code == 302
+    assert response.location.endswith("/settings/apikeys")
+
+    with app.app_context():
+        assert ApiKey.get_or_none(ApiKey.id == apikey.id) is None
+
+
+def test_api_key_generation_and_authentication(app):
+    with app.app_context():
+        user = User.create(username="bob", password=generate_password_hash("secret"), email="bob@example.com")
+        api_key, raw_key = ApiKey.generate(user, "cli")
+
+        assert raw_key.startswith("sbx_")
+        assert api_key.key_hash != raw_key
+        assert ApiKey.authenticate(raw_key) == user
+        assert ApiKey.authenticate("sbx_invalid") is None
+        assert ApiKey.authenticate("other_123") is None
+
+        refreshed = ApiKey.get_by_id(api_key.id)
+        assert refreshed is not None
+        assert refreshed.last_used is not None
+
+
+def test_logout_view_redirects_to_frontpage(app):
+    with app.test_request_context("/logout"), patch("seedboxsync.front.views.auth.logout.logout_user") as logout_user_mock:
+        response = logout()
+
+    assert response.status_code == 302
+    assert response.location.endswith("/")
+    logout_user_mock.assert_called_once()
 
 
 @pytest.mark.parametrize(

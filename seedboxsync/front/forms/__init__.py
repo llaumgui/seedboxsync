@@ -8,6 +8,7 @@
 
 from .csrf import EmptyCSRFForm
 from .login import LoginForm
+from .settings.apikey import ApiKeyForm
 from .settings.authentication import SettingsAuthenticationForm
 from .settings.nas import SettingsNasForm
 from .settings.ping import SettingsPingForm
@@ -16,6 +17,7 @@ from .settings.seedboxsync import SettingsSeedboxSyncForm
 from .user import UserCreateForm, UserEditForm
 
 __all__ = [
+    "ApiKeyForm",
     "EmptyCSRFForm",
     "LoginForm",
     "SettingsAuthenticationForm",

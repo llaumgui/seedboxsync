@@ -1,0 +1,62 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="columns">
+  {% include 'components/menu_settings.html' %}
+
+  <div class="column">
+    <div class="content">
+      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ _('API keys list') }}{% endblock %}</h2>
+
+      {% if config.LOGIN_DISABLED %}
+        <div class="box">
+          _('API keys are not available when login is disabled.')
+        </div>
+      {% elif current_user.is_authenticated %}
+        <div class="box">
+          {# Table #}
+          <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>{{ _('Name') }}</th>
+                <th class="is-hidden-mobile">{{ _('Created') }}</th>
+                <th>{{ _('Last used') }}</th>
+                <th class="is-narrow"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for apikey in apikeys %}
+                <tr>
+                  <td>{{ apikey.name }}</td>
+                  <td class="is-hidden-mobile">{{ format_datetime(apikey.created) }}</td>
+                  <td>{{ format_datetime(apikey.last_used) if apikey.last_used is not none else _('Never') }}</td>
+                  <td class="has-text-right">
+                      <div class="buttons is-right is-flex-wrap-nowrap">
+                        <a class="button is-danger is-outlined" title="{{ _('Delete') }}"
+                          href="{{ url_for('settings.apikeys_delete', apikey_id=apikey.id) }}">
+                          <span class="icon is-small"><i class="fas fa-times"></i></span>
+                        </a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="control has-text-right">
+          <a class="button is-info is-outlined" href="{{ url_for('settings.apikeys_create') }}">
+            <span class="icon is-small"><i class="fas fa-add"></i></span><span>{{ _('Add') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

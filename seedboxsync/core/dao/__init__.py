@@ -16,7 +16,9 @@ from seedboxsync.core.dao.taskstatus import TaskStatus
 from seedboxsync.core.dao.torrent import Torrent
 from seedboxsync.core.dao.user import User
 
-__all__ = ["Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent", "User"]
+from seedboxsync.core.dao.apikey import ApiKey  # isort: skip
+
+__all__ = ["ApiKey", "Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent", "User"]
 
 
 def typed_peewee_dicts(query: Any) -> Iterable[dict[str, Any]]:

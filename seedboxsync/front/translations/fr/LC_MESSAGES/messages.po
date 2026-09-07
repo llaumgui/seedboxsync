@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-06 17:06+0200\n"
+"POT-Creation-Date: 2026-09-07 21:45+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -50,6 +50,10 @@ msgstr "Nom d’utilisateur"
 msgid "Email"
 msgstr "E-mail"
 
+#: seedboxsync/front/forms/settings/apikey.py:22
+msgid "API key Name"
+msgstr "Nom de la clé d’API"
+
 #: seedboxsync/front/forms/settings/authentication.py:23
 msgid "Disable authentication fully?"
 msgstr "Désactiver complètement l’authentification ?"
@@ -59,8 +63,8 @@ msgid "Enable Gravatar for users?"
 msgstr "Activer Gravatar pour les utilisateurs ?"
 
 #: seedboxsync/front/forms/settings/authentication.py:27
-msgid "Enable OAuth for the authentication?"
-msgstr "Activer OAuth pour l’authentification ?"
+msgid "Enable OAuth2 / OIDC for the authentication?"
+msgstr "Activer OAuth2 / OIDC pour l’authentification ?"
 
 #: seedboxsync/front/forms/settings/authentication.py:28
 msgid "Auto-create users?"
@@ -83,8 +87,8 @@ msgid "OAuth Client Secret"
 msgstr "Secret client OAuth"
 
 #: seedboxsync/front/forms/settings/authentication.py:33
-msgid "OAuth Server Metadata URL"
-msgstr "Metadata URL du serveur OAuth"
+msgid "OIDC Server Metadata URL"
+msgstr "Metadata URL du serveur OIDC"
 
 #: seedboxsync/front/forms/settings/nas.py:24
 #: seedboxsync/front/forms/settings/seedbox.py:67
@@ -193,7 +197,7 @@ msgstr ""
 "être créé manuellement)."
 
 #: seedboxsync/front/forms/settings/seedbox.py:69
-msgid "Your BitTorrent client’s watch folder (must be created manually)."
+msgid "Your BitTorrent client's watch folder (must be created manually)."
 msgstr ""
 "Le répertoire de surveillance de votre client BitTorrent (doit être créé "
 "manuellement)."
@@ -310,6 +314,7 @@ msgstr "Aucun fichier téléchargé pour le moment..."
 #: seedboxsync/front/templates/homepage.html:78
 #: seedboxsync/front/templates/homepage.html:109
 #: seedboxsync/front/templates/homepage.html:135
+#: seedboxsync/front/templates/settings/apikeys.html:25
 #: seedboxsync/front/templates/uploaded.html:27
 msgid "Name"
 msgstr "Nom"
@@ -339,6 +344,8 @@ msgid "has been deleted"
 msgstr "a été effacé"
 
 #: seedboxsync/front/templates/downloaded.html:48
+#: seedboxsync/front/templates/settings/apikeys.html:39
+#: seedboxsync/front/templates/settings/apikeys_delete.html:29
 #: seedboxsync/front/templates/settings/users.html:42
 #: seedboxsync/front/templates/settings/users_delete.html:33
 #: seedboxsync/front/templates/uploaded.html:46
@@ -482,6 +489,7 @@ msgid "Heartbeat"
 msgstr "Heartbeat"
 
 #: seedboxsync/front/templates/login.html:41
+#: seedboxsync/front/templates/settings/apikeys_create.html:37
 #: seedboxsync/front/templates/settings/authentication.html:146
 #: seedboxsync/front/templates/settings/nas.html:47
 #: seedboxsync/front/templates/settings/ping.html:65
@@ -567,6 +575,9 @@ msgstr "Recherche"
 #: seedboxsync/front/templates/components/menu_settings.html:26
 #: seedboxsync/front/templates/components/navbar.html:36
 #: seedboxsync/front/templates/components/navbar.html:47
+#: seedboxsync/front/templates/settings/apikeys.html:13
+#: seedboxsync/front/templates/settings/apikeys_create.html:13
+#: seedboxsync/front/templates/settings/apikeys_delete.html:13
 #: seedboxsync/front/templates/settings/authentication.html:13
 #: seedboxsync/front/templates/settings/nas.html:13
 #: seedboxsync/front/templates/settings/ping.html:13
@@ -606,6 +617,9 @@ msgid "Ping"
 msgstr "Ping"
 
 #: seedboxsync/front/templates/components/menu_settings.html:24
+#: seedboxsync/front/templates/settings/apikeys.html:13
+#: seedboxsync/front/templates/settings/apikeys_create.html:13
+#: seedboxsync/front/templates/settings/apikeys_delete.html:13
 #: seedboxsync/front/templates/settings/authentication.html:13
 #: seedboxsync/front/templates/settings/users.html:13
 #: seedboxsync/front/templates/settings/users_delete.html:13
@@ -617,11 +631,15 @@ msgstr "Authentification"
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: seedboxsync/front/templates/components/menu_settings.html:32
+#: seedboxsync/front/templates/components/menu_settings.html:28
+msgid "My API keys"
+msgstr "Mes clés d’API"
+
+#: seedboxsync/front/templates/components/menu_settings.html:33
 msgid "Need help?"
 msgstr "Besoin d’aide ?"
 
-#: seedboxsync/front/templates/components/menu_settings.html:34
+#: seedboxsync/front/templates/components/menu_settings.html:35
 msgid ""
 "<a title=\"SeedboxSync configuration documentation\" "
 "href=\"https://llaumgui.github.io/seedboxsync/getting-"
@@ -661,6 +679,41 @@ msgstr "Statistiques"
 msgid "Logout"
 msgstr "Déconnexion"
 
+#: seedboxsync/front/templates/settings/apikeys.html:13
+msgid "API keys list"
+msgstr "Liste des clés d’API"
+
+#: seedboxsync/front/templates/settings/apikeys.html:26
+#: seedboxsync/front/templates/settings/users.html:23
+msgid "Created"
+msgstr "Date de création"
+
+#: seedboxsync/front/templates/settings/apikeys.html:27
+msgid "Last used"
+msgstr "Dernier usage"
+
+#: seedboxsync/front/templates/settings/apikeys.html:36
+#: seedboxsync/front/templates/settings/users.html:36
+msgid "Never"
+msgstr "Jamais"
+
+#: seedboxsync/front/templates/settings/apikeys.html:53
+#: seedboxsync/front/templates/settings/users.html:56
+msgid "Add"
+msgstr "Ajouter"
+
+#: seedboxsync/front/templates/settings/apikeys_create.html:13
+msgid "API keys create"
+msgstr "Création de clé d’API"
+
+#: seedboxsync/front/templates/settings/apikeys_delete.html:13
+msgid "API key delete"
+msgstr "La clé d’API a été effacée"
+
+#: seedboxsync/front/templates/settings/apikeys_delete.html:23
+msgid "Name:"
+msgstr "Nom"
+
 #: seedboxsync/front/templates/settings/authentication.html:24
 msgid "Global"
 msgstr "Global"
@@ -679,8 +732,8 @@ msgid "Features"
 msgstr "Fonctionnalités"
 
 #: seedboxsync/front/templates/settings/authentication.html:56
-msgid "OAuth"
-msgstr "OAuth"
+msgid "OAuth 2.0 / OIDC"
+msgstr "OAuth 2.0 / OIDC"
 
 #: seedboxsync/front/templates/settings/nas.html:20
 msgid "Information about local environment (NAS?)."
@@ -718,10 +771,6 @@ msgstr "Utilisateurs"
 msgid "Origin"
 msgstr "Origine"
 
-#: seedboxsync/front/templates/settings/users.html:23
-msgid "Created"
-msgstr "Date de création"
-
 #: seedboxsync/front/templates/settings/users.html:24
 msgid "Last login"
 msgstr "Dernière connexion"
@@ -729,10 +778,6 @@ msgstr "Dernière connexion"
 #: seedboxsync/front/templates/settings/users.html:39
 msgid "Edit"
 msgstr "Éditer"
-
-#: seedboxsync/front/templates/settings/users.html:56
-msgid "Add"
-msgstr "Ajouter"
 
 #: seedboxsync/front/templates/settings/users_delete.html:23
 msgid "Username:"
@@ -746,66 +791,97 @@ msgstr "E-mail :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: seedboxsync/front/views/auth/authorize.py:40
+#: seedboxsync/front/views/auth/authorize.py:39
 msgid "OAuth provider is not properly configured."
 msgstr "Le fournisseur OAuth n’est pas correctement configuré."
 
-#: seedboxsync/front/views/auth/authorize.py:50
+#: seedboxsync/front/views/auth/authorize.py:49
 msgid "Failed to obtain email from OAuth provider."
 msgstr "Impossible d’obtenir l’adresse e-mail auprès du fournisseur OAuth."
 
-#: seedboxsync/front/views/auth/authorize.py:69
-#: seedboxsync/front/views/auth/login.py:59
+#: seedboxsync/front/views/auth/authorize.py:68
+#: seedboxsync/front/views/auth/login.py:55
 msgid "Logged in successfully."
 msgstr "Connexion réussie."
 
-#: seedboxsync/front/views/auth/authorize.py:79
+#: seedboxsync/front/views/auth/authorize.py:77
 msgid "Authentication failed. Please try again."
 msgstr "Échec de l’authentification. Veuillez réessayer."
 
-#: seedboxsync/front/views/auth/login.py:68
+#: seedboxsync/front/views/auth/login.py:65
 msgid "Invalid username or password."
 msgstr "Identifiant ou mot de passe invalide."
 
-#: seedboxsync/front/views/frontend/settings.py:22
-msgid "Failed to save configuration."
-msgstr "Échec de l’enregistrement de la configuration."
+#: seedboxsync/front/views/settings/apikeys.py:59
+msgid "API key created successfully."
+msgstr "Clé d'API sauvegardée avec succès."
 
-#: seedboxsync/front/views/frontend/settings.py:23
+#: seedboxsync/front/views/settings/apikeys.py:61
+#, python-format
+msgid ""
+"API key '%(apikey_name)s' created successfully. Copy it now, as it will "
+"not be displayed again: '%(apikey_raw)s'"
+msgstr "La clé d’API '%(apikey_name)s' a été créée avec succès. Veuillez la noter maintenant, elle ne vous sera plus affichée en clair : '%(apikey_raw)s'"
+
+#: seedboxsync/front/views/settings/apikeys.py:68
+msgid "Failed to save apikey."
+msgstr "Échec de l’enregistrement de la clé d’API."
+
+#: seedboxsync/front/views/settings/apikeys.py:100
+#, python-format
+msgid "API key '%(apikey_name)s' deleted successfully."
+msgstr "La clé d’API '%(apikey_name)s' a bien été supprimée."
+
+#: seedboxsync/front/views/settings/apikeys.py:104
+msgid "Failed to delete API key."
+msgstr "Échec de la suppression de la clé d’API."
+
+#: seedboxsync/front/views/settings/authentication.py:37
+#: seedboxsync/front/views/settings/nas.py:34
+#: seedboxsync/front/views/settings/ping.py:34
+#: seedboxsync/front/views/settings/seedbox.py:35
+#: seedboxsync/front/views/settings/seedboxsync.py:36
 msgid "Configuration saved successfully."
 msgstr "Configuration sauvegardée avec succès."
 
-#: seedboxsync/front/views/frontend/users.py:21
+#: seedboxsync/front/views/settings/authentication.py:40
+#: seedboxsync/front/views/settings/nas.py:37
+#: seedboxsync/front/views/settings/ping.py:37
+#: seedboxsync/front/views/settings/seedbox.py:38
+#: seedboxsync/front/views/settings/seedboxsync.py:39
+msgid "Failed to save configuration."
+msgstr "Échec de l’enregistrement de la configuration."
+
+#: seedboxsync/front/views/settings/users.py:21
 msgid "Failed to save user."
 msgstr "Échec de l’enregistrement de l’utilisateur."
 
-#: seedboxsync/front/views/frontend/users.py:22
+#: seedboxsync/front/views/settings/users.py:22
 msgid "User saved successfully."
 msgstr "Utilisateur sauvegardé avec succès."
 
-#: seedboxsync/front/views/frontend/users.py:74
-#: seedboxsync/front/views/frontend/users.py:149
+#: seedboxsync/front/views/settings/users.py:59
+#: seedboxsync/front/views/settings/users.py:108
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: seedboxsync/front/views/frontend/users.py:92
+#: seedboxsync/front/views/settings/users.py:73
+msgid "User add"
+msgstr "Ajouter un utilisateur"
+
+#: seedboxsync/front/views/settings/users.py:126
 msgid "User edit"
 msgstr "Éditer l’utilisateur"
 
-#: seedboxsync/front/views/frontend/users.py:123
+#: seedboxsync/front/views/settings/users.py:157
 #, python-format
 msgid "User '%(username)s' deleted successfully."
 msgstr "L’utilisateur '%(username)s' a bien été supprimé."
 
-#: seedboxsync/front/views/frontend/users.py:127
+#: seedboxsync/front/views/settings/users.py:161
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l’utilisateur."
 
-#: seedboxsync/front/views/frontend/users.py:129
+#: seedboxsync/front/views/settings/users.py:163
 msgid "User delete"
 msgstr "Supprimer l’utilisateur"
-
-#: seedboxsync/front/views/frontend/users.py:163
-msgid "User add"
-msgstr "Ajouter un utilisateur"
-

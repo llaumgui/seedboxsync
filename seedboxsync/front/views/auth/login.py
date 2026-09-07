@@ -30,9 +30,9 @@ def login() -> str | Response:
         str | Response: Rendered login template or HTTP redirect response.
     """
     # Auto redirect to OAuth2 provider if OAuth is enabled and built-in authentication is disabled
-    oauth_disable_builtin_authentication = app.seedboxsync_config.get("oauth_disable_builtin_authentication", False)
+    oauth_builtin_authentication_disabled = app.seedboxsync_config.get("oauth_builtin_authentication_disabled", False)
     oauth_enabled = app.seedboxsync_config.get("oauth_enabled", False)
-    if oauth_disable_builtin_authentication and oauth_enabled:
+    if oauth_builtin_authentication_disabled and oauth_enabled:
         return __authorize_redirect()
 
     if request.args.get("provider") == "oauth2" and app.seedboxsync_config.get("oauth_enabled"):
