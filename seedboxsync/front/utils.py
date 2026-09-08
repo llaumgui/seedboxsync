@@ -7,11 +7,40 @@
 """SeedboxSync utils and helpers for frontend."""
 
 from typing import Any
+from urllib.parse import urlsplit
 from flask import request
 from flask_wtf import FlaskForm
 from seedboxsync.core import Config, current_app as app
 from seedboxsync.core.dao import SeedboxSync
 from seedboxsync.front.cache import cache
+
+
+def is_safe_redirect_url(target: str) -> bool:
+    """
+    Check whether a target URL is safe for local redirection.
+
+    Only absolute local paths are allowed. External URLs, scheme-relative
+    URLs, and paths containing backslashes are rejected.
+
+    Args:
+        target: The target URL string to validate.
+
+    Returns:
+        True if the target is a safe local absolute path, False otherwise.
+    """
+    if not target.startswith("/"):
+        return False
+
+    # Reject scheme-relative and browser-specific absolute URL forms.
+    if target.startswith("//") or "\\" in target:
+        return False
+
+    try:
+        url = urlsplit(target)
+    except ValueError:
+        return False
+
+    return not url.scheme and not url.netloc
 
 
 def save_settings_form(form: FlaskForm) -> None:

@@ -11,10 +11,10 @@ from flask_login import login_user
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
 from seedboxsync.core.dao.user import User
-from seedboxsync.core.utils import is_safe_redirect_url
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import LoginForm
 from seedboxsync.front.oauth2 import oauth
+from seedboxsync.front.utils import is_safe_redirect_url
 from seedboxsync.front.views import bp_auth as bp
 
 
