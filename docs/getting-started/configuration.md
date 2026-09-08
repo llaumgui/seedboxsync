@@ -9,7 +9,7 @@ summary: Configuration of SeedboxSync
 
 > :information_source: **Recommended:** This is the recommended way.
 
-The sqlite database file should be placed in `/conf`.
+The sqlite database file should be placed in `/config`.
 
 ### Other ways
 
@@ -24,7 +24,7 @@ Supported qlite database file locations:
 
 ## Settings
 
-> :information_source: Since SeedboxSync v4, all configurations is stored in the database, and settings have been moved to the [web UI](../frontend.md).
+> :information_source: Since SeedboxSync v4, all configurations is stored in the database, and settings have been moved to the [web UI](../frontend/screenshots.md).
 
 **Notes:**
 

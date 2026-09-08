@@ -4,7 +4,7 @@ site_description: Project documentation of SeedboxSync / SeedboxSyncFront.
 site_author: Guillaume Kulakowski
 
 repo_url: https://github.com/llaumgui/seedboxsync/
-edit_uri: blob/master/docs/
+edit_uri: blob/main/docs/
 
 theme:
   name: material
@@ -71,7 +71,7 @@ nav:
     - getting-started/usage.md
   - Frontend:
     - frontend/screenshots.md
-    - frontend/oauth2.md
+    - frontend/oidc.md
   - Upgrade:
     - upgrade/from_v3_to_v4.md
     - upgrade/from_v4_to_v4x.md

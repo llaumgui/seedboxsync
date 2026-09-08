@@ -1,6 +1,6 @@
 ---
-title: API reference
-summary: API for seedboxsync.
+title: Python API
+summary: Python API reference for seedboxsync.
 hide:
   - navigation
 ---

@@ -29,7 +29,7 @@ Create a Python virtual environment and install dependencies:
 
 ```bash
 just virtualenv
-source env/bin/activate
+source .venv/bin/activate
 ```
 
 ### Install Node.js stack

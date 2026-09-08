@@ -24,7 +24,7 @@ pip install seedboxsync
 * Running WebUI:
 
 ```bash
-flask flask --app seedboxsync.app:main run
+flask --app seedboxsync.app:app run
 ```
 
 * Running task manager:
@@ -33,4 +33,6 @@ flask flask --app seedboxsync.app:main run
 huey_consumer seedboxsync.taskmanager.huey -w 2 -k thread
 ```
 
-Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/) with default login & password: `admin` / `seedboxsync`.
+> :warning: **Security notice:** SeedboxSync creates an initial administrator account with the username `admin` and password `seedboxsync`. Change this password immediately under **Settings > Users** before exposing the application to other users or to the Internet.
+
+Once installed, you can access the frontend: [http://127.0.0.1:5000](http://127.0.0.1:5000/).

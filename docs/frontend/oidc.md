@@ -7,21 +7,9 @@ summary: SeedboxSyncFront  — The seedboxsync frontend
 
 SeedboxSync supports authentication via **OpenID Connect** (OIDC) providers such as Authelia, Keycloak, or Authentik.
 
----
-
 ## Configuration Parameters
 
-Set these via the Web UI (`Settings` > `Authentication`) or environment variables:
-
-| Parameter | Description |
-| --- | --- |
-| **`oauth_enabled`** | Enables/disables OIDC authentication (`true`/`false`). |
-| **`oauth_auto_create_user_enabled`** | Automatically provisions a local user on first login (`true`/`false`). |
-| **`oauth_builtin_authentication_disabled`** | Hides local password login form (`true`/`false`). |
-| **`oauth_name`** | Provider identifier (e.g., `authelia`). |
-| **`oauth_client_id`** | OAuth Client ID. |
-| **`oauth_client_secret`** | Plaintext OAuth Client Secret. |
-| **`oauth_server_metadata_url`** | OpenID discovery URL (e.g., `https://auth.example.ltd/.well-known/openid-configuration`). |
+Set these via the Web UI (`Settings` > `Authentication`).
 
 ## Prerequisites & Redirect URIs
 
@@ -34,8 +22,28 @@ Configure your Identity Provider (IdP) with:
 
 ```text
 https://seedbox.example.ltd/oauth2/oidc/callback
-
 ```
+
+### User identity requirements
+
+SeedboxSync requires the OIDC provider to return an `email` claim. This email address is used as the stable identifier for matching the OIDC identity with a local SeedboxSync user.
+
+The displayed username is selected from the first available claim:
+
+1. `preferred_username`
+2. `name`
+3. `email`
+
+When **Auto-create users** is enabled, SeedboxSync creates a local user during the first successful OIDC login.
+
+When **Auto-create users** is disabled, a local SeedboxSync user with the same email address must already exist. Otherwise, authentication will fail.
+
+> :warning: Test OIDC login successfully before disabling built-in authentication. We recommend keeping an active local administrator account until the OIDC configuration has been fully validated, preferably using a private browser session.
+
+When SeedboxSync is hosted behind a reverse proxy, ensure that the original host and protocol are forwarded correctly. In particular, the proxy should forward the `Host`, `X-Forwarded-Proto`, `X-Forwarded-Host`, and
+`X-Forwarded-Port` headers so that SeedboxSync generates the expected HTTPS callback URL.
+
+The OIDC client secret is stored in the SeedboxSync database. Protect the database file and its backups accordingly.
 
 ## Example Configuration
 
@@ -90,3 +98,14 @@ In SeedboxSync (`/settings/authentication`):
 * **OAuth Client Secret:** `MySecret123!` *(plaintext)*
 * **OpenID Metadata URL:** `https://auth.example.ltd/.well-known/openid-configuration`
 * **Auto-create users:** Enabled
+
+#### Step 4: Validate the Configuration
+
+1. Keep built-in authentication enabled.
+2. Sign out from SeedboxSync.
+3. Open SeedboxSync in a private browser window.
+4. Select **Login with authelia**.
+5. Verify that the expected user is created or matched.
+6. Verify that the user can access the application after logging out and back in.
+
+Only disable built-in authentication after this validation succeeds.

@@ -3,9 +3,8 @@ name: Publish GitHub Pages
 on:
   push:
     tags: ['*']
-    #branches:
-    #  - develop
-    #  - main
+    branches:
+      - main
 
 env:
   pythonLastVersion: '3.14'
