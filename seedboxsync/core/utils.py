@@ -100,6 +100,31 @@ def is_running_in_docker() -> bool:
     return Path("/.dockerenv").exists()
 
 
+def get_database_path_from_paths() -> Path:
+    """
+    Find and return an existing writable database file path.
+
+    Iterates through a predefined list of standard locations to locate a valid
+    database file. Returns the first path that exists, is a regular file, and
+    has write permissions. If no match is found, falls back to the default
+    user configuration path.
+
+    Returns:
+        Path: The resolved writable database path if found; otherwise, the default
+            path (~/.config/seedboxsync/seedboxsync.db).
+    """
+    db_paths = [
+        Path("~/.config/seedboxsync/seedboxsync.db").expanduser().resolve(),
+        Path("~/.seedboxsync.db").expanduser().resolve(),
+        Path("~/.seedboxsync/config/seedboxsync.db").expanduser().resolve(),
+        Path("/etc/seedboxsync/seedboxsync.db"),
+    ]
+    for path in db_paths:
+        if path.exists() and path.is_file() and os.access(path, os.W_OK):
+            return path
+    return db_paths[0]
+
+
 def get_web_healthcheck_url() -> str:
     """
     Return the URL used to check the local Flask application.

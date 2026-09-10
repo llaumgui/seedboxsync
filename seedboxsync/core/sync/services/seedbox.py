@@ -12,7 +12,7 @@ from pathlib import Path
 import re
 from paramiko import SSHException
 from seedboxsync.core import current_app as app, utils
-from seedboxsync.core.dao import Download
+from seedboxsync.core.database.dao import Download
 from seedboxsync.core.exception import SeedboxSyncConfigurationError
 from seedboxsync.core.sync.download_progress import DownloadProgress
 from seedboxsync.core.taskmanager import track_taskstatus

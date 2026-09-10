@@ -2,7 +2,6 @@ import logging
 import pytest
 import seedboxsync
 from seedboxsync.cli import cli
-from seedboxsync.core.db import Database
 
 
 def test_help_lists_only_seedboxsync_options_and_commands(runner):
@@ -42,7 +41,6 @@ def test_version_banner(runner):
 
     assert result.exit_code == 0
     assert f"SeedboxSync {seedboxsync.__version__}" in result.output
-    assert f"SeedboxSync database {Database.DATABASE_VERSION}" in result.output
 
 
 def test_debug_option_enables_debug_logging(app, runner):

@@ -2,13 +2,6 @@ from unittest.mock import patch
 import click
 from seedboxsync.cli import cli
 from seedboxsync.cli.cli import Cli, Command, Group
-from seedboxsync.core.dao import SeedboxSync
-from seedboxsync.core.db import Database
-
-
-def test_test_database_is_migrated_when_app_is_created(app):
-    with app.app_context():
-        assert int(SeedboxSync.get_db_version()) == Database.DATABASE_VERSION
 
 
 def test_cli_discovers_commands_dynamically(app):

@@ -37,6 +37,15 @@ virtualenv: clean
 # Update both Python and Node.js dependencies to their latest versions
 dependencies-update: python-dependencies-update nodejs-dependencies-update
 
+# Remove Python bytecode files (*.pyc) and build artifacts
+clean:
+    rm -rf build/ dist/ seedboxsync/front/static/dist/ *.egg-info .eggs/
+    rm -rf .pytest_cache .ruff_cache .mypy_cache coverage-report site/
+    find ./seedboxsync -type d -name '__pycache__' -exec rm -rf {} +
+    find ./seedboxsync -name '*.py[co]' -delete
+    find ./seedboxsync -name '*.pot' -delete
+    find ./seedboxsync -name '*.mo' -delete
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 🚀 LAUNCHER
@@ -85,47 +94,47 @@ i18n-compile:
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Check Python code quality and style using Ruff
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🐍 Python')]
 comply:
     uv run ruff check
 
 # Lint Markdown files for syntax and formatting rules (need markdownlint)
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 markdownlint:
     markdownlint -c .markdownlint.yaml *.md docs/
 
 # Lint the Dockerfile for best practices and security issues (need hadolint)
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 hadolint:
     hadolint Dockerfile
 
 # Run static type checking on Python source code using Mypy
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🐍 Python')]
 mypy:
     uv run mypy
 
 # Run static type checking on Python source code using basedpyright
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🐍 Python')]
 basedpyright:
     uv run basedpyright
 
 # Run static type checking on Python source code
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🐍 Python')]
 type-checking: mypy basedpyright
 
 # Format Python code and automatically fix safe issues using Ruff
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🐍 Python')]
 format *args:
     uv run ruff format
     uv run ruff check --fix {{args}}
 
 # Run linter for Node.js frontend code/assets
-[group('🛠️ Code quality & linting')]
+[group('🛠️  Code quality & linting')]
 [group('🎨 Node.js')]
 nodejs-lint:
     pnpm lint
@@ -192,6 +201,26 @@ python-install-dev:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# 🗄️ Database & Peewee
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Compute a database schema diff between models and database
+[group('🗄️  Database')]
+pwmigrate-diff:
+    uv run pwmigrate diff
+
+# Generate a database migration file for a specific action
+[group('🗄️  Database')]
+pwmigrate-generate action:
+    uv run pwmigrate generate {{action}}
+
+# Apply migrations to testing DB
+[group('🗄️  Database')]
+pwmigrate-testing:
+    uv run pwmigrate sqlite:///tests/resources/seedboxsync.db up
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # 🎨 NODE.JS / PNPM (Frontend)
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -214,6 +243,7 @@ nodejs-build:
 [group('🎨 Node.js')]
 nodejs-dependencies-update:
     pnpm update --latest
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 📚 DOCUMENTATION
@@ -239,30 +269,24 @@ doc-gh-deploy: i18n-compile pytest
 # 📦 BUILD, PACKAGING & CLEANUP
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Remove Python bytecode files (*.pyc) and build artifacts
-clean:
-    rm -rf build/ dist/ seedboxsync/front/static/dist/ *.egg-info .eggs/
-    rm -rf .pytest_cache .ruff_cache .mypy_cache coverage-report site/
-    find ./seedboxsync -type d -name '__pycache__' -exec rm -rf {} +
-    find ./seedboxsync -name '*.py[co]' -delete
-    find ./seedboxsync -name '*.pot' -delete
-    find ./seedboxsync -name '*.mo' -delete
-
-# Build the Docker container image
-docker-build:
-    docker build .
-
-# Build frontend assets and package the Python distribution via uv
-dist: clean i18n-compile
-    @just nodejs-build
-    @SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) uv build
-    @just _dist-check
-
 # Check the built distribution packages by running tests against them
 _dist-check:
     uv run --isolated --no-project --with dist/*.whl pytest -v tests/
     uv run --isolated --no-project --with dist/*.tar.gz pytest -v tests/
 
+# Build the Docker container image
+[group('📦 Package')]
+docker-build:
+    docker build .
+
+# Build frontend assets and package the Python distribution via uv
+[group('📦 Package')]
+dist: clean i18n-compile
+    @just nodejs-build
+    @SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) uv build
+    @just _dist-check
+
 # Build distribution packages and publish to PyPI using uv
+[group('📦 Package')]
 publish: dist
     uv publish

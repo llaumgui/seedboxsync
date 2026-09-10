@@ -15,10 +15,18 @@ from seedboxsync import create_app
 def app(tmp_path):
     """Create an application backed by an isolated copy of the test database."""
     database = Path(tmp_path / "seedboxsync.db")
-    shutil.copy("tests/resources/seedboxsync.db", database)
+    source_database = Path(__file__).parent / "resources" / "seedboxsync.db"
+    shutil.copy(source_database, database)
 
     app = create_app(
-        {"TESTING": True, "DATABASE": str(database), "SECRET_KEY": "pytest", "CACHE_TYPE": "NullCache", "BABEL_DEFAULT_LOCALE": "en", "LOGIN_DISABLED": True}
+        {
+            "TESTING": True,
+            "DATABASE": str(database),
+            "SECRET_KEY": "pytest",
+            "CACHE_TYPE": "NullCache",
+            "BABEL_DEFAULT_LOCALE": "en",
+            "LOGIN_DISABLED": True,
+        }
     )
 
     # FlaskDB opens the database while initializing and migrating it. Close
@@ -28,6 +36,37 @@ def app(tmp_path):
         db.close()
 
     yield app
+
+    huey = app.extensions.get("huey")
+    if huey is not None:
+        huey.storage.close()
+
+    if not db.is_closed():
+        db.close()
+
+
+@pytest.fixture
+def new_database_app(tmp_path):
+    """Create an application whose database file does not exist yet."""
+    database = Path(tmp_path / "new-seedboxsync.db")
+    assert not database.exists()
+
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE": str(database),
+            "SECRET_KEY": "pytest",
+            "CACHE_TYPE": "NullCache",
+            "BABEL_DEFAULT_LOCALE": "en",
+            "LOGIN_DISABLED": True,
+        }
+    )
+
+    db = app.extensions["flaskdb"].database
+    if not db.is_closed():
+        db.close()
+
+    yield app, database
 
     huey = app.extensions.get("huey")
     if huey is not None:

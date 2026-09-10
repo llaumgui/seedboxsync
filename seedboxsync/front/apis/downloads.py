@@ -10,7 +10,7 @@ from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core import utils
-from seedboxsync.core.dao import Download, typed_peewee_dicts
+from seedboxsync.core.database.dao import Download, typed_peewee_dicts
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required

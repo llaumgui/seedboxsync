@@ -8,7 +8,7 @@
 
 from flask import render_template
 from humanize import filesize
-from seedboxsync.core.dao import Download
+from seedboxsync.core.database.dao import Download
 from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp_frontend as bp

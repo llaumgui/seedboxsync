@@ -10,7 +10,7 @@ from collections.abc import Callable
 from datetime import datetime
 from functools import wraps
 from typing import ParamSpec, TypeVar
-from seedboxsync.core.dao import TaskStatus
+from seedboxsync.core.database.dao import TaskStatus
 
 P = ParamSpec("P")
 R = TypeVar("R")

@@ -9,7 +9,7 @@
 import click
 from werkzeug.security import generate_password_hash
 from seedboxsync.cli import Context, group, pass_context
-from seedboxsync.core.dao import User
+from seedboxsync.core.database.dao import User
 
 
 @group("user", help="User operations & management for SeedboxSync frontend.")  # type: ignore[untyped-decorator]

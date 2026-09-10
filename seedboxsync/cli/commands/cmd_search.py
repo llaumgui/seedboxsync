@@ -9,7 +9,7 @@
 import click
 from peewee import fn
 from seedboxsync.cli import Context, group, pass_context
-from seedboxsync.core.dao import Download, Torrent, typed_peewee_dicts
+from seedboxsync.core.database.dao import Download, Torrent, typed_peewee_dicts
 
 
 @group("search", help="Search operations.")  # type: ignore[untyped-decorator]

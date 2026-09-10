@@ -14,7 +14,7 @@ import click
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.cli import Context, pass_context
 from seedboxsync.core import utils
-from seedboxsync.core.dao import SeedboxSync, TaskStatus, typed_peewee_dict
+from seedboxsync.core.database.dao import TaskStatus, typed_peewee_dict
 
 
 @click.command("health")
@@ -29,9 +29,7 @@ def cli(ctx: Context) -> None:
     exit_code = 0
 
     # CLI part
-    db_version = SeedboxSync.get_db_version()
     click.echo(f"Version: {version}")
-    click.echo(f"Database version: {db_version}")
     click.secho("CLI - OK", fg="green")
 
     # Task manager part

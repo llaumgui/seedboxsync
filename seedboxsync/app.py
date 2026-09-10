@@ -8,4 +8,4 @@
 
 from seedboxsync import create_app
 
-app = create_app()
+app = create_app({"MIGRATE_DB": True})

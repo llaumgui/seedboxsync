@@ -50,12 +50,12 @@ def __handle_http_exception(
     return error_front.error(e)
 
 
-def create_app(test_config: dict[str, str] | None = None) -> Flask:
+def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     """
     Create and configure the SeedboxSync Flask application.
 
     Args:
-        test_config (dict[str, str] | None): Optional configuration overrides
+        injected_config (dict[str, str] | None): Optional configuration overrides
             used by tests.
 
     Returns:
@@ -76,11 +76,12 @@ def create_app(test_config: dict[str, str] | None = None) -> Flask:
     logger.configure_logger(app.logger)
 
     # Load test config
-    if test_config is not None:
-        app.config.from_mapping(test_config)  # load the test config if passed in
+    if injected_config is not None:
+        app.config.from_mapping(injected_config)  # load the test config if passed in
 
     # Initialize the database
-    Database(app)
+    database = Database(app)
+    app.extensions["database"] = database
 
     # Load config
     Config(app)

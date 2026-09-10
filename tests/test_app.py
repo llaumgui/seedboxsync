@@ -10,5 +10,5 @@ def test_app_module_exports_application_created_at_import():
         sys.modules.pop("seedboxsync.app", None)
         app_module = importlib.import_module("seedboxsync.app")
 
-    create_app.assert_called_once_with()
+    create_app.assert_called_once_with({"MIGRATE_DB": True})
     assert app_module.app is expected_app

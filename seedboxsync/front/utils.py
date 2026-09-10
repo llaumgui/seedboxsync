@@ -11,7 +11,7 @@ from urllib.parse import urlsplit
 from flask import request
 from flask_wtf import FlaskForm
 from seedboxsync.core import Config, current_app as app
-from seedboxsync.core.dao import SeedboxSync
+from seedboxsync.core.database.dao import SeedboxSync
 from seedboxsync.front.cache import cache
 
 

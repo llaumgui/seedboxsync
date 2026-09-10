@@ -1,0 +1,4 @@
+database = seedboxsync.core.database.migration.database
+models = seedboxsync.core.database.migration:models
+directory = seedboxsync/core/database/migrations/
+# table = schema_migration

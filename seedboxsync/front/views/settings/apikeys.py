@@ -11,7 +11,7 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
-from seedboxsync.core.dao import ApiKey, User
+from seedboxsync.core.database.dao import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import ApiKeyForm, EmptyCSRFForm
 from seedboxsync.front.login_manager import login_required

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 import pytest
 from seedboxsync.core.config import Config
-from seedboxsync.core.dao import SeedboxSync
+from seedboxsync.core.database.dao import SeedboxSync
 
 
 @pytest.mark.parametrize(

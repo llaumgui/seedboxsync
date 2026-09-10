@@ -8,7 +8,7 @@
 
 from typing import Any
 from flask_restx import Namespace, fields
-from seedboxsync.core.dao import TaskStatus
+from seedboxsync.core.database.dao import TaskStatus
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 from seedboxsync.front.login_manager import login_required
 

@@ -12,7 +12,6 @@ from flask.cli import with_appcontext
 import seedboxsync
 from seedboxsync import create_app
 from seedboxsync.cli.context import Context
-from seedboxsync.core import Database
 from .cli import Cli, check_root_warning, command, group, pass_context
 
 __all__ = [
@@ -28,8 +27,7 @@ CONTEXT_SETTINGS = {
 }
 VERSION_BANNER = f"""Script for performing sync operations between your NAS and your seedbox.
 
-SeedboxSync {seedboxsync.__version__}
-SeedboxSync database {Database.DATABASE_VERSION}"""
+SeedboxSync {seedboxsync.__version__}"""
 
 
 @click.group(

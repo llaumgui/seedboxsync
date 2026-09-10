@@ -8,7 +8,7 @@
 
 from typing import Any, ClassVar
 from flask import Flask
-from seedboxsync.core.dao import SeedboxSync, typed_peewee_dicts
+from seedboxsync.core.database.dao import SeedboxSync, typed_peewee_dicts
 
 
 class Config:
