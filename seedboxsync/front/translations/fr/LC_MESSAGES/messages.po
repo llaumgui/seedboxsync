@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-07 21:45+0200\n"
+"POT-Creation-Date: 2026-09-11 10:28+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -791,20 +791,25 @@ msgstr "E-mail :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: seedboxsync/front/views/auth/authorize.py:39
+#: seedboxsync/front/views/auth/authorize.py:40
 msgid "OAuth provider is not properly configured."
 msgstr "Le fournisseur OAuth n’est pas correctement configuré."
 
-#: seedboxsync/front/views/auth/authorize.py:49
+#: seedboxsync/front/views/auth/authorize.py:50
 msgid "Failed to obtain email from OAuth provider."
 msgstr "Impossible d’obtenir l’adresse e-mail auprès du fournisseur OAuth."
 
 #: seedboxsync/front/views/auth/authorize.py:68
+#, python-format
+msgid "No user account exists for email '%(email)s'."
+msgstr "Aucun compte utilisateur existe pour l’email '%(email)s'."
+
+#: seedboxsync/front/views/auth/authorize.py:73
 #: seedboxsync/front/views/auth/login.py:55
 msgid "Logged in successfully."
 msgstr "Connexion réussie."
 
-#: seedboxsync/front/views/auth/authorize.py:77
+#: seedboxsync/front/views/auth/authorize.py:85
 msgid "Authentication failed. Please try again."
 msgstr "Échec de l’authentification. Veuillez réessayer."
 
@@ -821,7 +826,9 @@ msgstr "Clé d'API sauvegardée avec succès."
 msgid ""
 "API key '%(apikey_name)s' created successfully. Copy it now, as it will "
 "not be displayed again: '%(apikey_raw)s'"
-msgstr "La clé d’API '%(apikey_name)s' a été créée avec succès. Veuillez la noter maintenant, elle ne vous sera plus affichée en clair : '%(apikey_raw)s'"
+msgstr ""
+"La clé d’API '%(apikey_name)s' a été créée avec succès. Veuillez la noter"
+" maintenant, elle ne vous sera plus affichée en clair : '%(apikey_raw)s'"
 
 #: seedboxsync/front/views/settings/apikeys.py:68
 msgid "Failed to save apikey."
@@ -885,3 +892,4 @@ msgstr "Échec de la suppression de l’utilisateur."
 #: seedboxsync/front/views/settings/users.py:163
 msgid "User delete"
 msgstr "Supprimer l’utilisateur"
+

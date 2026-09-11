@@ -7,8 +7,9 @@
 """SeedboxSync Flask view for authentication handling."""
 
 import secrets
-from flask import flash, redirect, url_for
+from flask import abort, flash, redirect, url_for
 from flask_login import login_user
+from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
@@ -61,7 +62,11 @@ def authorize() -> Response:
                 },
             )  # type: ignore[no-untyped-call]
         else:
-            user = User.get(User.email == email)
+            try:
+                user = User.get(User.email == email)
+            except User.DoesNotExist:  # pyright: ignore [reportAttributeAccessIssue]
+                abort(403, description=_("No user account exists for email '%(email)s'.") % {"email": email})
+                raise
 
         # Connect user with Flask-Login
         login_user(user)
@@ -72,6 +77,9 @@ def authorize() -> Response:
 
         return redirect(url_for("frontend.homepage"))
 
+    except HTTPException as e:
+        app.logger.error("Authentication failed: %s", str(e))
+        raise
     except Exception as e:
         app.logger.error("Authentication failed: %s", str(e))
         flash(_("Authentication failed. Please try again."), "toast-danger")
