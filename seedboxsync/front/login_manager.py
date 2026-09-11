@@ -7,7 +7,7 @@
 """SeedboxSync login manager module using Flask-Login."""
 
 from typing import Any
-from flask import Request, Response, abort, redirect, request, url_for
+from flask import Request, Response, abort, redirect, request, session, url_for
 from flask_login import LoginManager, login_required as flask_login_required
 from seedboxsync.core.database.dao import ApiKey, User
 from seedboxsync.front.babel import gettext as _
@@ -63,7 +63,10 @@ def load_user(user_id: str) -> "User | None":
     Returns:
         User | None: The matching User instance if found, or None if no record exists.
     """
-    return User.get(user_id)
+    user = User.get_or_none(User.id == int(user_id))
+    if user is None:
+        session.clear()  # Clear broken session.
+    return user
 
 
 @login_manager.unauthorized_handler  # type: ignore[untyped-decorator]

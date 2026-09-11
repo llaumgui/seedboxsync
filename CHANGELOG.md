@@ -3,6 +3,11 @@
 ## 4.1.0 - Sep xx, 2026
 
 * ✨ [Issue #127](https://github.com/llaumgui/seedboxsync/issues/127): **Authentication**: User management and authentication features powered by [Flask-Login](https://flask-login.readthedocs.io/en/latest/).
+  * ✨ [Issue #128](https://github.com/llaumgui/seedboxsync/issues/128): OAuth2 / OIDC support for web login.
+  * ✨ [Issue #206](https://github.com/llaumgui/seedboxsync/issues/206): API key support for API usage.
+  * ✨ [Issue #198](https://github.com/llaumgui/seedboxsync/issues/198): Gravatar support for user profile.
+  * ✨ [Issue #191](https://github.com/llaumgui/seedboxsync/issues/191): User management from CLI.
+* ♻️ [Issue #213](https://github.com/llaumgui/seedboxsync/issues/213): **Database**: New migration system, more Peewee compliant.
 * ♻️ **Configuration**: Rewrote settings handling across multiple pages using [WTForms](https://wtforms.readthedocs.io/) and [Flask-WTF](https://flask-wtf.readthedocs.io/en/1.2.x/).
 
 ## 4.0.0 - Aug 16, 2026
