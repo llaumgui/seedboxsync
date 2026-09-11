@@ -7,6 +7,7 @@
 
 """Database schema migration management."""
 
+from pathlib import Path
 from flask import Flask
 from peewee import SqliteDatabase
 from playhouse.migrations import Runner
@@ -15,7 +16,7 @@ from seedboxsync.core.database.dao import ApiKey, Download, SeedboxSync, TaskSta
 
 database = SqliteDatabase(str(utils.get_database_path_from_paths()))
 models = [ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User]
-MIGRATION_PATH = "seedboxsync/core/database/migrations/"
+MIGRATION_PATH = str(Path(__file__).parent / "migrations")
 
 # Map each legacy database version to the latest equivalent migration
 # managed by the Peewee migration runner.
