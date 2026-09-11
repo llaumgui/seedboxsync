@@ -6,8 +6,10 @@
 #
 """Peewee DAO model for Download."""
 
+from collections.abc import Iterable
 import datetime
-from peewee import AutoField, CharField, DateTimeField, IntegerField, TextField
+from typing import Any, cast
+from peewee import AutoField, CharField, DateTimeField, IntegerField, TextField, fn
 from seedboxsync.core import utils
 from seedboxsync.core.database.models import SeedboxSyncModel
 
@@ -31,21 +33,6 @@ class Download(SeedboxSyncModel):
     started = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the download started")
     finished = DateTimeField(default=0, help_text="Timestamp when the download finished")
 
-    @classmethod
-    def is_already_download(cls, filepath: str) -> bool:
-        """
-        Check if a file has already been downloaded.
-
-        Args:
-            filepath (str): Absolute or relative path to the file.
-
-        Returns:
-            bool: True if the file was already downloaded (i.e. has a nonzero
-            ``finished`` timestamp), otherwise False.
-        """
-        count = cls.select().where(cls.path == filepath, cls.finished > 0).count()
-        return count != 0
-
     def set_mime(self, save: bool = False) -> None:
         """
         Detect and update the MIME attributes of the downloaded file.
@@ -61,3 +48,39 @@ class Download(SeedboxSyncModel):
 
         if save:
             self.save()
+
+    @classmethod
+    def is_already_download(cls, filepath: str) -> bool:
+        """
+        Check if a file has already been downloaded.
+
+        Args:
+            filepath (str): Absolute or relative path to the file.
+
+        Returns:
+            bool: True if the file was already downloaded (i.e. has a nonzero
+            ``finished`` timestamp), otherwise False.
+        """
+        count = cls.select().where(cls.path == filepath, cls.finished > 0).count()
+        return count != 0
+
+    @classmethod
+    def get_stats_by_mime_type(cls) -> list[dict[str, Any]]:
+        """
+        Get the total count and total size of downloaded files grouped by MIME type.
+
+        Returns:
+            list[dict[str, Any]]: A list of dicts containing mime_type, total count, and total_size.
+        """
+        query = (
+            cls.select(
+                cls.mime_type,
+                fn.COUNT(cls.id).alias("total"),
+                fn.SUM(cls.local_size).alias("total_size"),
+                fn.humanize(fn.SUM(cls.local_size)).alias("human_total_size"),
+            )
+            .group_by(cls.mime_type)
+            .order_by(fn.SUM(cls.local_size).desc())
+            .dicts()
+        )
+        return list(cast(Iterable[dict[str, Any]], query))

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-11 16:46+0200\n"
+"POT-Creation-Date: 2026-09-11 18:41+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -326,6 +326,7 @@ msgstr "Terminé"
 
 #: seedboxsync/front/templates/downloaded.html:29
 #: seedboxsync/front/templates/homepage.html:121
+#: seedboxsync/front/templates/stats.html:58
 msgid "Size"
 msgstr "Taille"
 
@@ -443,27 +444,49 @@ msgstr "Se connecter avec %(provider)s"
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/stats.html:9
+#: seedboxsync/front/templates/stats.html:11
 msgid "Total"
 msgstr "Total"
 
 #: seedboxsync/front/templates/settings/info.html:34
-#: seedboxsync/front/templates/stats.html:13
+#: seedboxsync/front/templates/stats.html:15
 msgid "Number of files downloaded"
 msgstr "Nombre de fichiers téléchargés"
 
 #: seedboxsync/front/templates/settings/info.html:38
-#: seedboxsync/front/templates/stats.html:14
+#: seedboxsync/front/templates/stats.html:16
 msgid "Total size of files downloaded"
 msgstr "Taille totale des fichiers téléchargés"
 
-#: seedboxsync/front/templates/stats.html:25
-msgid "Statistics by month"
-msgstr "Statistiques par mois"
+#: seedboxsync/front/templates/stats.html:31
+msgid "Files by MIME type"
+msgstr "Fichiers par type MIME"
 
-#: seedboxsync/front/templates/stats.html:28
-msgid "Statistics by year"
-msgstr "Statistiques par année"
+#: seedboxsync/front/templates/stats.html:35
+msgid "Size by MIME type"
+msgstr "Taille par type MIME"
+
+#: seedboxsync/front/templates/stats.html:42
+msgid "Downloads by month"
+msgstr "Téléchargements par mois"
+
+#: seedboxsync/front/templates/stats.html:46
+msgid "Downloads by year"
+msgstr "Téléchargements par années"
+
+#: seedboxsync/front/templates/stats.html:54
+#: seedboxsync/front/templates/stats.html:55
+msgid "Files"
+msgstr "Fichiers"
+
+#: seedboxsync/front/templates/stats.html:54
+#: seedboxsync/front/templates/stats.html:55
+msgid "Size (GiB)"
+msgstr "Taille (GiB)"
+
+#: seedboxsync/front/templates/stats.html:57
+msgid "Number"
+msgstr "Nombre"
 
 #: seedboxsync/front/templates/uploaded.html:21
 msgid "No files uploaded yet..."
@@ -890,7 +913,3 @@ msgstr "Échec de la suppression de l’utilisateur."
 #: seedboxsync/front/views/settings/users.py:163
 msgid "User delete"
 msgstr "Supprimer l’utilisateur"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-

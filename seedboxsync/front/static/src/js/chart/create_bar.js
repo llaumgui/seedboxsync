@@ -12,13 +12,13 @@ import Chart from "chart.js/auto";
 export function createBarChart(
   ctx,
   data,
-  labelFiles = "Files",
-  labelSize = "Size (GiB)",
-  labelField = "month"
+  labelFiles,
+  labelSize,
+  labelField
 ) {
   const labels = data.map((d) => d[labelField]);
-  const filesData = data.map((d) => d.files);
-  const sizeData = data.map((d) => Number.parseFloat(d.total_size));
+  const dataFiles = data.map((d) => d.files);
+  const dataSize = data.map((d) => Number.parseFloat(d.total_size));
 
   return new Chart(ctx, {
     type: "bar",
@@ -27,14 +27,14 @@ export function createBarChart(
       datasets: [
         {
           label: labelFiles,
-          data: filesData,
+          data: dataFiles,
           backgroundColor: "#a3be8c",
           borderWidth: 1,
           borderColor: "#92ab7e",
         },
         {
           label: labelSize,
-          data: sizeData,
+          data: dataSize,
           backgroundColor: "#b48ead",
           borderWidth: 1,
           borderColor: "#a27f9b",
@@ -55,11 +55,11 @@ export function createBarChart(
  * @param {*} url
  * @param {*} labelField
  */
-export function loadChart(ctx, url, labelField) {
+export function loadChart(ctx, url, label_file, label_size, labelField) {
   fetch(url)
     .then((res) => res.json())
     .then((json) =>
-      createBarChart(ctx, json.data, "Files", "Size (GiB)", labelField)
+      createBarChart(ctx, json.data, label_file, label_size, labelField),
     )
     .catch((err) => console.error("Error loading chart:", err));
 }

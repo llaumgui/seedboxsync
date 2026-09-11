@@ -128,6 +128,34 @@ stats_year_model = api.model(
 )
 stats_year_envelope = Resource.build_envelope_model(api, "StatsYear", nested_model=stats_year_model)
 
+stats_mimetype_model = api.model(
+    "StatsMimeType",
+    {
+        "mime_type": fields.String(
+            required=True,
+            description="MIME type identifier detected for the files",
+            pattern=r"^[a-zA-Z0-9!#$&^_\-\+\.]+/[a-zA-Z0-9!#$&^_\-\+\.]+$",
+            example="video/x-matroska",
+        ),
+        "total": fields.Integer(
+            required=True,
+            description="Number or size of files downloaded for this MIME type",
+            example=4989,
+        ),
+        "total_size": fields.Integer(
+            required=True,
+            description="Size of files downloaded for this MIME type",
+            example=21678643250867,
+        ),
+        "human_total_size": fields.String(
+            required=True,
+            description="Total size of files downloaded with related humanization",
+            example="19.7 Tio",
+        ),
+    },
+)
+stats_mimetype_envelope = Resource.build_envelope_model(api, "StatsMimeType", nested_model=stats_mimetype_model)
+
 
 # ==========================
 # Request parser
@@ -347,10 +375,32 @@ class DownloadsStatsByYear(Resource):
         return self.build_envelope(stats, data_total=len(stats), type="StatsYear")
 
 
+@api.route("/stats/mimetype")
+class DownloadsStatsByMimeType(Resource):
+    """Resource endpoint to retrieve download MIME type statistics."""
+
+    @api.doc("stats_downloads_by_mimetype")  # type: ignore[untyped-decorator]
+    @api.marshal_with(stats_mimetype_envelope, code=200, description="Download statistics aggregated by mimetype")  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
+    def get(self) -> dict[str, Any]:
+        """
+        Retrieve download statistics grouped by MIME type.
+
+        Fetches aggregated file counts and total sizes per MIME type from the cache
+        or database, then wraps the dataset into a standard API response envelope.
+
+        Returns:
+            dict[str, Any]: Envelope containing MIME type statistics, metadata,
+                and total element count.
+        """
+        stats = _get_stats_by_mime_type()
+        return self.build_envelope(stats, data_total=len(stats), type="StatsMimeType")
+
+
 # ==========================
 # Utility functions
 # ==========================
-@cache.memoize()
+@cache.memoize(timeout=300)
 def stats_by_period(period: str) -> list[dict[str, str | float]]:
     """
     Compute aggregated download statistics by period (month or year).
@@ -395,3 +445,17 @@ def stats_by_period(period: str) -> list[dict[str, str | float]]:
         }
         for key in sorted(tmp)
     ]
+
+@cache.memoize(timeout=300)
+def _get_stats_by_mime_type() -> list[dict[str, object]]:
+    """
+    Fetch file download counts and total sizes grouped by MIME type.
+
+    Executes the database query to aggregate finished downloads count and sum up
+    their local sizes by MIME type, then caches the result using Flask-Caching memoization[cite: 3].
+
+    Returns:
+        list[dict[str, object]]: A list of dictionaries containing MIME types,
+            their associated total file counts, and total sizes in bytes[cite: 3].
+    """
+    return Download.get_stats_by_mime_type()

@@ -252,6 +252,7 @@ def test_settings_views_report_persistence_errors(client, path, form, save_setti
     assert response.status_code == 200
     assert b"Failed to save config" in response.data
 
+
 def test_infos(client):  # Is OK
     response = client.get("/settings/info")
     assert response.status_code == 200

@@ -6,8 +6,11 @@
  */
 
 import Chart from "chart.js/auto";
-import { createBarChart, loadChart } from "./create_bar";
+import { createBarChart, loadChart as loadBarChart } from "./create_bar";
+import { createDoughnutChart, loadChart as loadDoughnutChart } from "./create_doughnut";
 
 window.Chart = Chart;
 window.createBarChart = createBarChart;
-window.loadChart = loadChart;
+window.loadBarChart = loadBarChart;
+window.createDoughnutChart = createDoughnutChart;
+window.loadDoughnutChart = loadDoughnutChart;

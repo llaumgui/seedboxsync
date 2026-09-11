@@ -156,7 +156,7 @@ def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
         tuple[str, str, str]: (mime_type, mime_extension, confidence)
     """
     # Initialize local file path
-    local_filepath = Path(app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filename # type: ignore[attr-defined]
+    local_filepath = Path(app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filename  # type: ignore[attr-defined]
 
     # Use first magic_file
     try:

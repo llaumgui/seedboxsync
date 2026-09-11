@@ -1,38 +1,63 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="title is-invisible">{% block title %}{{ _('Statistics') }}{% endblock %}</h1>
+  <h1 class="title">{% block title %}{{ _('Statistics') }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 <div class="content">
-  <h2>{{ _('Total') }}</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>{{ _('Number of files downloaded') }}</th>
-        <th>{{ _('Total size of files downloaded') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{ stats_total.files }}</td>
-        <td>{{ stats_total.total_size }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="columns is-desktop">
+    <div class="column">
+      <h2 class="title is-4">{{ _('Total') }}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>{{ _('Number of files downloaded') }}</th>
+            <th>{{ _('Total size of files downloaded') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ stats_total.files }}</td>
+            <td>{{ stats_total.total_size }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-  <h2>{{ _('Statistics by month') }}</h2>
-  <canvas id="statsByMonth"></canvas>
+  <div class="columns is-desktop pt-6">
+    <div class="column is-3 is-offset-1">
+      <h2 class="title is-4">{{ _('Files by MIME type') }}</h2>
+      <canvas id="filesByMimeType"></canvas>
+    </div>
+    <div class="column is-3 is-offset-3">
+      <h2 class="title is-4">{{ _('Size by MIME type') }}</h2>
+      <canvas id="sizeByMimeType"></canvas>
+    </div>
+  </div>
 
-  <h2>{{ _('Statistics by year') }}</h2>
-  <canvas id="statsByYear"></canvas>
+  <div class="columns is-desktop pt-6">
+    <div class="column">
+      <h2 class="title is-4">{{ _('Downloads by month') }}</h2>
+      <canvas id="statsByMonth"></canvas>
+    </div>
+    <div class="column">
+      <h2 class="title is-4">{{ _('Downloads by year') }}</h2>
+      <canvas id="statsByYear"></canvas>
+    </div>
+  </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    loadChart(document.getElementById('statsByMonth'), '{{ url_for("api.downloads_downloads_stats_by_month") }}', 'month');
-    loadChart(document.getElementById('statsByYear'), '{{ url_for("api.downloads_downloads_stats_by_year") }}', 'year');
+    loadBarChart(document.getElementById('statsByMonth'), '{{ url_for("api.downloads_downloads_stats_by_month") }}', '{{ _("Files") }}', '{{ _("Size (GiB)") }}', 'month');
+    loadBarChart(document.getElementById('statsByYear'), '{{ url_for("api.downloads_downloads_stats_by_year") }}', '{{ _("Files") }}', '{{ _("Size (GiB)") }}', 'year');
+    loadDoughnutChart(
+      document.getElementById('filesByMimeType'), 'total', '{{_("Number")}}',
+      document.getElementById('sizeByMimeType'), 'total_size', '{{_("Size")}}',
+      '{{ url_for("api.downloads_downloads_stats_by_mime_type") }}'
+    );
   });
 </script>
 {% endblock %}

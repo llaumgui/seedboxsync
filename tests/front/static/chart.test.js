@@ -34,14 +34,14 @@ describe("bar chart helpers", () => {
 
   it("loads chart data and logs request errors", async () => {
     fetch.mockResolvedValue({ json: async () => ({ data: [{ year: "2025", files: 2, total_size: "3" }] }) });
-    loadChart("canvas", "/stats", "year");
+    loadChart("canvas", "/stats", "Files", "Size (GiB)", "year");
     await vi.waitFor(() => expect(instances).toHaveLength(1));
     expect(fetch).toHaveBeenCalledWith("/stats");
     expect(instances[0].config.data.labels).toEqual(["2025"]);
 
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
     fetch.mockRejectedValue(new Error("network"));
-    loadChart("canvas", "/stats", "year");
+    loadChart("canvas", "/stats", "Files", "Size (GiB)", "year");
     await vi.waitFor(() => expect(error).toHaveBeenCalled());
     error.mockRestore();
   });
