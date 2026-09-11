@@ -4,7 +4,7 @@ from types import ModuleType
 from unittest.mock import MagicMock, patch
 import pytest
 from seedboxsync.__version__ import __api_path_version__ as api_path_version
-from seedboxsync.core.database.dao import TaskStatus
+from seedboxsync.core.database.models import TaskStatus
 
 API_PATH = f"/api/{api_path_version}"
 

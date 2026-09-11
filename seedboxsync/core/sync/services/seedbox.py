@@ -12,7 +12,7 @@ from pathlib import Path
 import re
 from paramiko import SSHException
 from seedboxsync.core import current_app as app, utils
-from seedboxsync.core.database.dao import Download
+from seedboxsync.core.database.models import Download
 from seedboxsync.core.exception import SeedboxSyncConfigurationError
 from seedboxsync.core.sync.download_progress import DownloadProgress
 from seedboxsync.core.taskmanager import track_taskstatus
@@ -159,6 +159,7 @@ def __get_file(filepath: str | PathLike[str], only_store: bool) -> None:
 
         download.local_size = local_size
         download.finished = datetime.datetime.now()
+        download.set_mime()
         download.save()
     except SSHException as exc:
         app.logger.error(f"Download failed: {exc!s}")

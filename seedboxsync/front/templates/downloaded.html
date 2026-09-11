@@ -33,7 +33,12 @@
       <tbody>
         <template x-for="row in data" :key="row.id || row.key">
           <tr>
-            <td x-text="row.path"></td>
+            <td>
+              <span class="icon">
+                <i :class="getMimeIconClass(row.mime_type)"></i>
+              </span>
+              <span x-text="row.path"></span>
+            </td>
             <td x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
             <td class="is-hidden-mobile" x-text="row.human_local_size"></td>
             <td class="has-text-right">

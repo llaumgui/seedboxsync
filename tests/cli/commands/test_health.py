@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from urllib.error import URLError
 import pytest
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import TaskStatus
+from seedboxsync.core.database.models import TaskStatus
 
 
 def _set_heartbeat(app, *, age: timedelta = timedelta()) -> None:

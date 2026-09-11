@@ -1,6 +1,6 @@
 import pytest
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import Download
+from seedboxsync.core.database.models import Download
 
 
 @pytest.fixture

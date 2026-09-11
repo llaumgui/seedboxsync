@@ -9,14 +9,14 @@
 from collections.abc import Iterable
 from typing import Any, cast
 
-from seedboxsync.core.database.dao.model import SeedboxSyncModel  # isort: skip
-from seedboxsync.core.database.dao.download import Download
-from seedboxsync.core.database.dao.seedboxsync import SeedboxSync
-from seedboxsync.core.database.dao.taskstatus import TaskStatus
-from seedboxsync.core.database.dao.torrent import Torrent
-from seedboxsync.core.database.dao.user import User
+from seedboxsync.core.database.models.model import SeedboxSyncModel  # isort: skip
+from seedboxsync.core.database.models.download import Download
+from seedboxsync.core.database.models.seedboxsync import SeedboxSync
+from seedboxsync.core.database.models.taskstatus import TaskStatus
+from seedboxsync.core.database.models.torrent import Torrent
+from seedboxsync.core.database.models.user import User
 
-from seedboxsync.core.database.dao.apikey import ApiKey  # isort: skip
+from seedboxsync.core.database.models.apikey import ApiKey  # isort: skip
 
 __all__ = ["ApiKey", "Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent", "User"]
 

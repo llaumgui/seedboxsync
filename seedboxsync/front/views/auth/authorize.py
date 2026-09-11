@@ -13,7 +13,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
-from seedboxsync.core.database.dao.user import User
+from seedboxsync.core.database.models.user import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.oauth2 import oauth
 from seedboxsync.front.views import bp_auth as bp

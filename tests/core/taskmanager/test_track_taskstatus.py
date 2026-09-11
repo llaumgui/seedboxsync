@@ -1,4 +1,4 @@
-from seedboxsync.core.database.dao import TaskStatus
+from seedboxsync.core.database.models import TaskStatus
 from seedboxsync.core.taskmanager import heartbeat_shutdown, heartbeat_startup
 
 

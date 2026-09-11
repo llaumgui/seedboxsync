@@ -10,7 +10,7 @@ import click
 from humanize import filesize
 from peewee import fn
 from seedboxsync.cli import Context, group, pass_context
-from seedboxsync.core.database.dao import Download, typed_peewee_dicts
+from seedboxsync.core.database.models import Download, typed_peewee_dicts
 
 
 @group(

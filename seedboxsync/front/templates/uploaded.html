@@ -32,7 +32,12 @@
       <tbody>
         <template x-for="row in data" :key="row.id || row.key">
           <tr>
-            <td x-text="row.name"></td>
+            <td>
+              <span class="icon">
+                <i :class="getMimeIconClass('application/x-bittorrent')"></i>
+              </span>
+              <span x-text="row.name"></span>
+            </td>
             <td x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
             <td class="has-text-right">
               <button class="button is-danger is-outlined"

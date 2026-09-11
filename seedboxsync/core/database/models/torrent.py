@@ -8,7 +8,7 @@
 
 import datetime
 from peewee import AutoField, DateTimeField, TextField
-from seedboxsync.core.database.dao import SeedboxSyncModel
+from seedboxsync.core.database.models import SeedboxSyncModel
 
 
 class Torrent(SeedboxSyncModel):

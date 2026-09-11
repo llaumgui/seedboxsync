@@ -1,6 +1,6 @@
 from datetime import datetime
 from unittest.mock import MagicMock, patch
-from seedboxsync.core.database.dao import User
+from seedboxsync.core.database.models import User
 
 
 def test_authorize_redirects_to_login_when_provider_is_not_configured(client):

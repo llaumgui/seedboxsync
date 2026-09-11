@@ -1,6 +1,6 @@
 import re
 from unittest.mock import patch
-from seedboxsync.core.database.dao import User
+from seedboxsync.core.database.models import User
 
 
 def _csrf_token(client, path):

@@ -8,7 +8,7 @@
 
 from typing import Any
 from flask_restx import Namespace, fields, reqparse
-from seedboxsync.core.database.dao import Torrent
+from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource
 from seedboxsync.front.login_manager import login_required
 

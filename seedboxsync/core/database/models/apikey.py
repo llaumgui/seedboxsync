@@ -11,7 +11,7 @@ import hashlib
 import secrets
 from typing import Self, cast
 from peewee import AutoField, CharField, DateTimeField, ForeignKeyField
-from seedboxsync.core.database.dao import SeedboxSyncModel, User
+from seedboxsync.core.database.models import SeedboxSyncModel, User
 
 
 class ApiKey(SeedboxSyncModel):

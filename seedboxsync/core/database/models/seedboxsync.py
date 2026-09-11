@@ -7,7 +7,7 @@
 """Peewee DAO model for SeedboxSync."""
 
 from peewee import CharField, TextField
-from seedboxsync.core.database.dao import SeedboxSyncModel
+from seedboxsync.core.database.models import SeedboxSyncModel
 
 
 class SeedboxSync(SeedboxSyncModel):

@@ -10,6 +10,7 @@ import { TableComponent } from "./table";
 import { TablePaginedComponent } from "./table_pagined";
 import { TaskStatusBoxComponent } from "./taskstatusbox";
 import { ModalConfirmCallComponent, OpenModalConfirmCall } from "./modal";
+import { getMimeIconClass } from "./mimeicon"
 
 // Tables
 window.TableComponent = TableComponent;
@@ -22,6 +23,9 @@ window.OpenModalConfirmCall = OpenModalConfirmCall;
 
 // Validators
 window.validators = validators;
+
+// Helpers
+window.getMimeIconClass = getMimeIconClass;
 
 window.Alpine = Alpine;
 Alpine.start();

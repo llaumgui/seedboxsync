@@ -10,7 +10,7 @@ from os import fspath
 from pathlib import Path
 from paramiko import SSHException
 from seedboxsync.core import current_app as app, utils
-from seedboxsync.core.database.dao import Torrent
+from seedboxsync.core.database.models import Torrent
 from seedboxsync.core.taskmanager import track_taskstatus
 
 LOCK_NAME = "sync-blackhole"

@@ -50,6 +50,7 @@ dependencies = [
   "libgravatar>=1.0.4",
   "authlib>=1.8.0",
   "requests>=2.34.2",
+  "puremagic>=1.30",
 ]
 
 [project.urls]

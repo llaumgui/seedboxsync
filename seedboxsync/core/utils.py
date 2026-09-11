@@ -6,6 +6,7 @@
 #
 """A collection of utility functions for SeedboxSync."""
 
+import mimetypes
 import os
 from os import PathLike
 from pathlib import Path
@@ -13,6 +14,7 @@ from typing import Any
 from urllib.parse import urlparse
 from bcoding import bdecode
 from flask import current_app as app
+import puremagic
 
 
 def byte_to_gi(bytes_value: float, suffix: str = "B") -> str:
@@ -142,6 +144,55 @@ def get_web_healthcheck_url() -> str:
 
     port = 8000 if is_running_in_docker() else 5000
     return f"http://127.0.0.1:{port}/healthcheck"
+
+
+def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
+    """
+    Detect the MIME type and extension of a file.
+
+    Args:
+        filename: Name to the local file to analyze
+    Returns:
+        tuple[str, str, str]: (mime_type, mime_extension, confidence)
+    """
+    # Initialize local file path
+    local_filepath = Path(app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filename # type: ignore[attr-defined]
+
+    # Use first magic_file
+    try:
+        app.logger.debug(f"Attempting MIME detection via puremagic header analysis for: {local_filepath}")
+        results = puremagic.magic_file(local_filepath)
+        if results:
+            match = results[0]
+
+            mime_extension = match.extension.lstrip(".")
+            mime_type = match.mime_type
+            mime_confidence = f"puremagic (confidence: {match.confidence})"
+            app.logger.debug(f"Successfully detected MIME via puremagic: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
+
+            return mime_type, mime_extension, mime_confidence
+
+    except (FileNotFoundError, puremagic.PureError):
+        pass
+
+    # Fallback with mimetypes
+    app.logger.debug(f"Attempting MIME detection fallback via mimetypes for: {local_filepath}")
+    mime_type, _ = mimetypes.guess_type(local_filepath)
+
+    if mime_type:
+        extension = mimetypes.guess_extension(mime_type) or ""
+        mime_extension = extension.lstrip(".")
+        mime_confidence = "mimetypes (path_fallback)"
+
+        app.logger.debug(f"MIME detection completed using fallback: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
+
+        return mime_type, mime_extension, "mimetypes (path_fallback)"
+
+    # Last resort when nothing can be detected.
+    parts = str(local_filepath).rsplit(".", 1) if local_filepath else []
+    mime_extension = parts[1].lower() if len(parts) > 1 else "unknown"
+
+    return "application/octet-stream", mime_extension, "unknown"
 
 
 def _healthcheck_url_from_bind(bind: str) -> str:

@@ -12,7 +12,7 @@ from flask import Flask
 from peewee import SqliteDatabase
 from playhouse.migrations import Runner
 from seedboxsync.core import utils
-from seedboxsync.core.database.dao import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
+from seedboxsync.core.database.models import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
 
 database = SqliteDatabase(str(utils.get_database_path_from_paths()))
 models = [ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User]
@@ -51,7 +51,8 @@ class DatabaseMigration:
         are first converted to the Peewee migration history format.
         """
         self._migrate_legacy_database()
-        self._run_migrations()
+        with self.app.app_context():
+            self._run_migrations()
         self._set_last_migration()
 
     def _run_migrations(self) -> None:

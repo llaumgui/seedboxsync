@@ -67,7 +67,12 @@
                 '{{ _('Purge?') }}',
                 '{{ _('Do you want to purge all in-progress downloads?') }}',
                 'In-progress has been purged'
-              )">{{ _('Purge') }}</button>
+              )">
+        <span class="icon">
+          <i class="fa fa-trash"></i>
+        </span>
+        <span>{{ _('Purge') }}</span>
+      </button>
     </div>
     <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
     <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
@@ -83,7 +88,12 @@
       <tbody>
         <template x-for="row in data" :key="row.id || row.key">
           <tr>
-            <td class="is-overflow-anywhere" x-text="row.path"></td>
+            <td class="is-overflow-anywhere">
+              <span class="icon is-hidden-mobile">
+                <i :class="getMimeIconClass(row.mime_type)"></i>
+              </span>
+              <span x-text="row.path"></span>
+            </td>
             <td class="is-hidden-mobile" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
             <td>
               <div class="is-flex is-align-items-center is-justify-content-center" style="gap: 15px;">
@@ -114,7 +124,12 @@
       <tbody>
         <template x-for="row in data" :key="row.id || row.key">
           <tr>
-            <td class="is-overflow-anywhere" x-text="row.path"></td>
+            <td class="is-overflow-anywhere">
+              <span class="icon is-hidden-mobile">
+                <i :class="getMimeIconClass(row.mime_type)"></i>
+              </span>
+              <span x-text="row.path"></span>
+            </td>
             <td class="is-hidden-mobile" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
             <td class="is-hidden-mobile" x-text="row.human_local_size"></td>
           </tr>
@@ -139,7 +154,12 @@
       <tbody>
         <template x-for="row in data" :key="row.id || row.key">
           <tr>
-            <td class="is-overflow-anywhere" x-text="row.name"></td>
+            <td class="is-overflow-anywhere">
+              <span class="icon is-hidden-mobile">
+                <i :class="getMimeIconClass('application/x-bittorrent')"></i>
+              </span>
+              <span x-text="row.name"></span>
+            </td>
             <td class="is-hidden-mobile" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
           </tr>
         </template>

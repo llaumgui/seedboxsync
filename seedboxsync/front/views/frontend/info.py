@@ -12,7 +12,7 @@ from humanize import filesize, precisedelta
 from peewee import fn
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core import current_app as app
-from seedboxsync.core.database.dao import Download, TaskStatus
+from seedboxsync.core.database.models import Download, TaskStatus
 from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp_frontend as bp

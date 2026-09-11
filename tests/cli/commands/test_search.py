@@ -1,7 +1,7 @@
 import datetime
 import pytest
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import Download, Torrent
+from seedboxsync.core.database.models import Download, Torrent
 
 
 @pytest.fixture

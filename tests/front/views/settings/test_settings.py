@@ -3,7 +3,7 @@ import re
 from unittest.mock import patch
 import pytest
 from werkzeug.security import generate_password_hash
-from seedboxsync.core.database.dao import ApiKey, SeedboxSync, User
+from seedboxsync.core.database.models import ApiKey, SeedboxSync, User
 from seedboxsync.front.forms import SettingsAuthenticationForm
 from seedboxsync.front.utils import save_settings_form
 from seedboxsync.front.views.auth.logout import logout

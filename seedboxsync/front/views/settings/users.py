@@ -10,7 +10,7 @@ from flask import abort, flash, redirect, render_template, request, url_for
 from werkzeug.security import generate_password_hash
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
-from seedboxsync.core.database.dao import User
+from seedboxsync.core.database.models import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
 from seedboxsync.front.login_manager import login_required

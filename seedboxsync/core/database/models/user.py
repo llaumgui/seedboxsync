@@ -11,7 +11,7 @@ from typing import Self
 from flask_login import UserMixin
 from peewee import AutoField, CharField, DateTimeField
 from werkzeug.security import check_password_hash
-from seedboxsync.core.database.dao import SeedboxSyncModel
+from seedboxsync.core.database.models import SeedboxSyncModel
 
 
 class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]

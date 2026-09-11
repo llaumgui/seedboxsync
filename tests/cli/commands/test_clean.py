@@ -1,5 +1,5 @@
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import Download
+from seedboxsync.core.database.models import Download
 
 
 def test_clean_progress_deletes_only_unfinished_downloads(app, runner):

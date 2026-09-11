@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, PropertyMock, patch
 from paramiko import SSHException
 import pytest
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import Download, TaskStatus, Torrent
+from seedboxsync.core.database.models import Download, TaskStatus, Torrent
 from seedboxsync.core.flask import SeedboxSyncFlask
 
 

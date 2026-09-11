@@ -14,8 +14,8 @@ from humanize import filesize, time
 from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from seedboxsync.core import utils
-from seedboxsync.core.database.dao import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
 from seedboxsync.core.database.migration import DatabaseMigration
+from seedboxsync.core.database.models import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
 
 
 class Database:

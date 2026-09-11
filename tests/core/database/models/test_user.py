@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash
-from seedboxsync.core.database.dao import User
+from seedboxsync.core.database.models import User
 
 
 def test_authenticate_accepts_username_or_email(app):

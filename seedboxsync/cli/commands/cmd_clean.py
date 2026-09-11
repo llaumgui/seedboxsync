@@ -7,7 +7,7 @@
 """All commands related to cleaning operations in SeedboxSync."""
 
 import click
-from seedboxsync.core.database.dao import Download
+from seedboxsync.core.database.models import Download
 
 
 @click.group("clean", help="Cleaning operations.")

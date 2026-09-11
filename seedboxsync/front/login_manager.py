@@ -9,7 +9,7 @@
 from typing import Any
 from flask import Request, Response, abort, redirect, request, session, url_for
 from flask_login import LoginManager, login_required as flask_login_required
-from seedboxsync.core.database.dao import ApiKey, User
+from seedboxsync.core.database.models import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 
 # Setup Flask-Login

@@ -14,7 +14,7 @@ import click
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.cli import Context, pass_context
 from seedboxsync.core import utils
-from seedboxsync.core.database.dao import TaskStatus, typed_peewee_dict
+from seedboxsync.core.database.models import TaskStatus, typed_peewee_dict
 
 
 @click.command("health")

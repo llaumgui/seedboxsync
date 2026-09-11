@@ -10,7 +10,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user
 from werkzeug.wrappers.response import Response
 from seedboxsync.core import current_app as app
-from seedboxsync.core.database.dao.user import User
+from seedboxsync.core.database.models.user import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import LoginForm
 from seedboxsync.front.oauth2 import oauth

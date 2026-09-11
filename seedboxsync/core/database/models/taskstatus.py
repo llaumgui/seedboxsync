@@ -7,7 +7,7 @@
 """Peewee DAO model for TaskStatus."""
 
 from peewee import BooleanField, CharField, DateTimeField
-from seedboxsync.core.database.dao import SeedboxSyncModel
+from seedboxsync.core.database.models import SeedboxSyncModel
 
 
 class TaskStatus(SeedboxSyncModel):

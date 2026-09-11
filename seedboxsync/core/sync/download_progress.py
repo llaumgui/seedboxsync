@@ -7,7 +7,7 @@
 """Callback for tracking and persisting download progress."""
 
 from seedboxsync.core import current_app
-from seedboxsync.core.database.dao import Download
+from seedboxsync.core.database.models import Download
 from seedboxsync.core.taskmanager import heartbeat
 
 

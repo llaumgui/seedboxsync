@@ -10,7 +10,7 @@ from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core import utils
-from seedboxsync.core.database.dao import Download, typed_peewee_dicts
+from seedboxsync.core.database.models import Download, typed_peewee_dicts
 from seedboxsync.front.apis import DateTimeOrZero, Resource
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
@@ -33,6 +33,21 @@ download_model = api.model(
             required=True,
             description="Local path of the downloaded file",
             example="ConvallisMorbi.doc",
+        ),
+        "mime_extension": fields.String(
+            required=True,
+            description="File extension detected during MIME analysis",
+            example="doc",
+        ),
+        "mime_type": fields.String(
+            required=True,
+            description="MIME type detected for the file (e.g. application/msword)",
+            example="ConvallisMorbi.doc",
+        ),
+        "mime_confidence": fields.String(
+            required=True,
+            description="Confidence level or method used for MIME detection (e.g. extension, magic)",
+            example="puremagic (confidence: 1)",
         ),
         "started": fields.DateTime(dt_format="iso8601", required=True, description="Download start timestamp"),
         "finished": DateTimeOrZero(
@@ -178,6 +193,9 @@ class DownloadsList(Resource):
             Download.select(
                 Download.id,
                 Download.path,
+                Download.mime_extension,
+                Download.mime_type,
+                Download.mime_confidence,
                 Download.started,
                 Download.finished,
                 Download.local_size,
@@ -252,6 +270,9 @@ class Downloads(Resource):
                 Download.select(
                     Download.id,
                     Download.path,
+                    Download.mime_extension,
+                    Download.mime_type,
+                    Download.mime_confidence,
                     Download.started,
                     Download.finished,
                     Download.local_size,

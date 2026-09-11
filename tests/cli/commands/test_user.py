@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from werkzeug.security import check_password_hash
 from seedboxsync.cli import cli
-from seedboxsync.core.database.dao import User
+from seedboxsync.core.database.models import User
 
 
 def test_user_list_filters_and_limits_results(app, runner):
