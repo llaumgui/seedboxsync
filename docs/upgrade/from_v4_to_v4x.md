@@ -1,7 +1,13 @@
 ---
 title: Upgrade from v4 to v4.x
-summary: Upgrade guide for Seedboxsync from v4 to v4.x
+summary: Upgrade guide for Seedboxsync from v4.x to v4.y
 ---
+> :warning: **Database Migration Changes in 4.1**
+>
+> Seedboxsync 4.1 introduces a new database migration system.
+>
+> * The legacy migration system will be supported through version **4.2**.
+> * Starting with version **4.3**, upgrading directly from version 4.0 or lower will no longer be supported. You must first upgrade to an intermediate version (4.1 to 4.2) before updating to 4.4+.
 
 ## Before upgrading
 
@@ -21,13 +27,6 @@ cp -a /data/seedboxsync/config \
 Keep the backup until the upgraded installation has been fully validated.
 
 ## Upgrade from v4.0 to v4.1
-
-> :warning:> **Database Migration Changes in 4.1**
->
-> Seedboxsync 4.1 introduces a new database migration system.
->
-> * The legacy migration system will be supported through version **4.2**.
-> * Starting with version **4.3**, upgrading directly from version 4.0 or lower will no longer be supported. You must first upgrade to an intermediate version (4.1 to 4.2) before updating to 4.4+.
 
 SeedboxSync v4.1 introduces a built-in authentication mechanism.
 
