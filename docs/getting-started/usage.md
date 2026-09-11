@@ -22,6 +22,7 @@ Commands:
   stats   Stats operations.
   sync    Run synchronization operations.
   task    Task operations on task queue management.
+  user    User operations & management for SeedboxSync frontend.
 ```
 
 * Sync blackhole:
