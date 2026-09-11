@@ -47,7 +47,7 @@ def test_settings_views_are_reachable(client, path, title):
     ("path", "form", "config", "stored"),
     [
         (
-            "/settings",
+            "/settings/seedboxsync",
             {
                 "sync_blackhole_enabled": "1",
                 "webui_theme": "dark",
@@ -215,7 +215,7 @@ def test_logout_view_redirects_to_frontpage(app):
     ("path", "form", "save_settings_target"),
     [
         (
-            "/settings",
+            "/settings/seedboxsync",
             {"sync_blackhole_enabled": "1", "webui_theme": "dark", "webui_language": "auto"},
             "seedboxsync.front.views.settings.seedboxsync.save_settings_form",
         ),
@@ -251,3 +251,7 @@ def test_settings_views_report_persistence_errors(client, path, form, save_setti
 
     assert response.status_code == 200
     assert b"Failed to save config" in response.data
+
+def test_infos(client):  # Is OK
+    response = client.get("/settings/info")
+    assert response.status_code == 200

@@ -47,11 +47,6 @@ def test_stats(client):  # Is OK
     assert response.status_code == 200
 
 
-def test_infos(client):  # Is OK
-    response = client.get("/info")
-    assert response.status_code == 200
-
-
 def test_settings(client):  # Is OK
     response = client.get("/settings")
     assert response.status_code == 200

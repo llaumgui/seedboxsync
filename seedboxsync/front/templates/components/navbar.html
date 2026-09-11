@@ -26,14 +26,13 @@
           {{ menu_link(_('Dashboard'), 'frontend.homepage') }}
           {{ menu_link(_('Downloaded'), 'frontend.downloaded') }}
           {{ menu_link(_('Uploaded'), 'frontend.uploaded') }}
-          {{ menu_link(_('Info'), 'frontend.info') }}
           {{ menu_link(_('Stats'), 'frontend.stats') }}
         {% endif %}
       </div>
 
       {% if config.LOGIN_DISABLED %}
         <div class="navbar-end">
-          {{ menu_link(_('Settings'), 'settings.seedboxsync') }}
+          {{ menu_link(_('Settings'), 'settings.info') }}
         </div>
       {% elif current_user.is_authenticated %}
         <div class="navbar-item navbar-end has-dropdown is-hoverable">
@@ -44,7 +43,7 @@
             {{ current_user.username }}
           </a>
           <div class="navbar-dropdown">
-            {{ menu_link(_('Settings'), 'settings.seedboxsync', 'fa-gear') }}
+            {{ menu_link(_('Settings'), 'settings.info', 'fa-gear') }}
             {{ menu_link(_('Logout'), 'auth.logout', 'fa-sign-out' ) }}
           </div>
         </div>

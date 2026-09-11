@@ -16,7 +16,6 @@ from seedboxsync.front.views import bp_settings as bp
 
 
 @bp.route("/seedboxsync", methods=("GET", "POST"))
-@bp.route("", methods=("GET", "POST"))
 @login_required  # type: ignore[untyped-decorator]
 def seedboxsync() -> str:
     """

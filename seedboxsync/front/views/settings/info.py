@@ -13,13 +13,13 @@ from peewee import fn
 from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core import current_app as app
 from seedboxsync.core.database.models import Download, TaskStatus
-from seedboxsync.front.cache import cached
+from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
-from seedboxsync.front.views import bp_frontend as bp
+from seedboxsync.front.views import bp_settings as bp
 
 
 @bp.route("/info")
-@cached(timeout=60)  # pyright: ignore [reportUntypedFunctionDecorator]
+@bp.route("")
 @login_required  # type: ignore[untyped-decorator]
 def info() -> str:
     """
@@ -30,6 +30,21 @@ def info() -> str:
 
     Returns:
         str: Rendered HTML template containing overall application information.
+    """
+    return render_template("settings/info.html", info=_get_info_data())
+
+
+@cache.memoize(timeout=60)
+def _get_info_data() -> dict[str, object]:
+    """
+    Fetch and calculate application system information.
+
+    Queries download metrics, background task statuses, application version,
+    and database migration metadata. Cached for 60 seconds.
+
+    Returns:
+        dict[str, object]: Dictionary containing gathered system statistics
+            and status flags.
     """
     # Download statistics
     query_stats = Download.select().where(Download.finished != 0)
@@ -52,7 +67,7 @@ def info() -> str:
         first_delta = datetime.now() - first_date
         first_delta = precisedelta(first_delta, minimum_unit="days")
 
-    info = {
+    return {
         "stats_total_files": total_files,
         "stats_total_size": filesize.naturalsize(total_size, True),
         "stats_first": first_date,
@@ -63,5 +78,3 @@ def info() -> str:
         "sync_seedbox": sync_seedbox,
         "heartbeat": heartbeat,
     }
-
-    return render_template("info.html", info=info)

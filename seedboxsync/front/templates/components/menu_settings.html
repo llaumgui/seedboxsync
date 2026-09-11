@@ -1,7 +1,7 @@
 {% set current_path = request.path %}
 
 {% macro menu_link(title, link) %}
-<a class="{% if current_path == url_for(link) or (url_for(link) != '/settings' and current_path.startswith(url_for(link))) %}is-active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
+<a class="{% if current_path == url_for(link) or (link not in ['settings.info', 'settings.seedbox'] and current_path.startswith(url_for(link))) %}is-active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
 {% endmacro %}
 
 <div class="column is-2 settings-sidebar">
@@ -9,6 +9,9 @@
   <h1 class="title is-4 ">{{ _('Settings') }}</h1>
 
   <aside class="menu">
+    <ul class="menu-list">
+      <li>{{ menu_link( _('Informations'), 'settings.info') }}</li>
+    </ul>
     <p class="menu-label">{{ _('General') }}</p>
     <ul class="menu-list">
       <li>{{ menu_link( _('SeedboxSync'), 'settings.seedboxsync') }}</li>
