@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.1.0 - Sep xx, 2026
+## 4.1.0 - Sep 13, 2026
 
 * ✨ [Issue #127](https://github.com/llaumgui/seedboxsync/issues/127): **Authentication**: User management and authentication features powered by [Flask-Login](https://flask-login.readthedocs.io/en/latest/).
   * ✨ [Issue #128](https://github.com/llaumgui/seedboxsync/issues/128): OAuth2 / OIDC support for web login.
