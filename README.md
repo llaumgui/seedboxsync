@@ -15,7 +15,7 @@
 [![Security Rating][ico-sonarcloud-security]][link-sonarcloud-security]
 
 <p align="center">
-  <a href="https://llaumgui.github.io/seedboxsync/" title="Documentation"><img alt="SeedboxSync logo" src="logo/128.png" /></a>
+  <a href="https://llaumgui.github.io/seedboxsync/" title="Documentation"><img alt="SeedboxSync logo" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/logo/128.png" /></a>
 </p>
 
 **SeedboxSync** is designed for users who run a NAS (Synology, TrueNAS, Unraid, Linux...) alongside a remote seedbox and want to automate torrent transfers without manual intervention.
