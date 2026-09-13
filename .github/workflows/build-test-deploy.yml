@@ -325,6 +325,7 @@ jobs:
       url: https://pypi.org/p/<your-pypi-project-name>
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write
     steps:
     - name: Git checkout
       uses: actions/checkout@v7
@@ -362,28 +363,21 @@ jobs:
     # Release on GitHub
     - name: Create GitHub release
       id: create_release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        name: Release ${{ github.ref }}
+        draft: true
+        prerelease: false
         body: |
           Changes in this Release
           - First Change
           - Second Change
-        draft: true
-        prerelease: false
-    - name: Upload asset in GitHub release
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: dist/seedboxsync-${{ env.RELEASE_VERSION }}.tar.gz
-        asset_name: seedboxsync-${{ env.RELEASE_VERSION }}.tar.gz
-        asset_content_type: application/tar+gzip
+        working_directory: dist
+        files: |
+          seedboxsync-${{ env.RELEASE_VERSION }}.tar.gz
 
     # Release on Pypi
     - name: Publish package distributions to PyPI
