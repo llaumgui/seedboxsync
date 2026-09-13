@@ -7,7 +7,7 @@ summary: Upgrade guide for Seedboxsync from v4.x to v4.y
 > Seedboxsync 4.1 introduces a new database migration system.
 >
 > * The legacy migration system will be supported through version **4.2**.
-> * Starting with version **4.3**, upgrading directly from version 4.0 or lower will no longer be supported. You must first upgrade to an intermediate version (4.1 to 4.2) before updating to 4.4+.
+> * Starting with version **4.3**, upgrading directly from version 4.0 or lower will no longer be supported. You must first upgrade to an intermediate version (4.1 to 4.2) before updating to 4.3+.
 
 ## Before upgrading
 
