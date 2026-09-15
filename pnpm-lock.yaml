@@ -46,14 +46,14 @@ importers:
         specifier: ^17.12.0
         version: 17.12.0
       sass:
-        specifier: ^1.104.0
-        version: 1.104.0
+        specifier: ^1.104.1
+        version: 1.104.1
       vite:
         specifier: ^8.3.0
-        version: 8.3.0(sass@1.104.0)
+        version: 8.3.0(sass@1.104.1)
       vitest:
         specifier: ^5.0.0
-        version: 5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.0))
+        version: 5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.1))
 
 packages:
 
@@ -865,8 +865,8 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  sass@1.104.0:
-    resolution: {integrity: sha512-btHMApW2bgolvClhRW8AlQJzgI9lUB3pPSofBQQT+E46GWvf9o0TVQ13SYv5riWZVFyPN+JNz3TKW9XhBlc10w==}
+  sass@1.104.1:
+    resolution: {integrity: sha512-yDA+1aIG3EHgN4V/BvuhCvu61FF6hEd4e+9DxikUm9U0CAGuvdIZ/UYy7qbOxjhbbWQraoyLlMuzdRGOSV5Bmw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -1283,7 +1283,7 @@ snapshots:
       obug: 2.2.1
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.0))
+      vitest: 5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.1))
 
   '@vitest/istanbul-lib-coverage@1.0.1': {}
 
@@ -1291,14 +1291,14 @@ snapshots:
     dependencies:
       '@vitest/istanbul-lib-coverage': 1.0.1
 
-  '@vitest/mocker@5.0.0(vite@8.3.0(sass@1.104.0))':
+  '@vitest/mocker@5.0.0(vite@8.3.0(sass@1.104.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.0
       estree-walker: 3.0.3
       magic-string: 1.3.1
     optionalDependencies:
-      vite: 8.3.0(sass@1.104.0)
+      vite: 8.3.0(sass@1.104.1)
 
   '@vitest/spy@5.0.0': {}
 
@@ -1732,7 +1732,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.8
       '@rolldown/binding-win32-x64-msvc': 1.2.8
 
-  sass@1.104.0:
+  sass@1.104.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
@@ -1810,7 +1810,7 @@ snapshots:
 
   verkit@0.3.2: {}
 
-  vite@8.3.0(sass@1.104.0):
+  vite@8.3.0(sass@1.104.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -1819,12 +1819,12 @@ snapshots:
       tinyglobby: 0.2.17
     optionalDependencies:
       fsevents: 2.3.3
-      sass: 1.104.0
+      sass: 1.104.1
 
-  vitest@5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.0)):
+  vitest@5.0.0(@vitest/coverage-v8@5.0.0)(vite@8.3.0(sass@1.104.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.0(vite@8.3.0(sass@1.104.0))
+      '@vitest/mocker': 5.0.0(vite@8.3.0(sass@1.104.1))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -1835,7 +1835,7 @@ snapshots:
       tinybench: 6.1.4
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
-      vite: 8.3.0(sass@1.104.0)
+      vite: 8.3.0(sass@1.104.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@vitest/coverage-v8': 5.0.0(vitest@5.0.0)
