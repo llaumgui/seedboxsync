@@ -7,7 +7,10 @@ export default defineConfig({
     outDir: resolve(import.meta.dirname, "seedboxsync/front/static/dist"),
     emptyOutDir: true,
     rollupOptions: {
-      input: resolve(import.meta.dirname, "seedboxsync/front/static/src/main.js"),
+      input: resolve(
+        import.meta.dirname,
+        "seedboxsync/front/static/src/main.js",
+      ),
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
@@ -18,7 +21,13 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        quietDeps: true,
+        silenceDeprecations: [
+          "import",
+          "color-functions",
+          "global-builtin",
+          "legacy-js-api",
+          "if-function",
+        ],
       },
     },
   },

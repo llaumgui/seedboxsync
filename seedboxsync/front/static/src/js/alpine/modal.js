@@ -5,20 +5,16 @@
  * file that was distributed with this source code.
  */
 
-/**
- * Settable modal with confirmation and call API.
- *
- * @returns
- */
-import { toast } from "bulma-toast";
+import { Modal } from "bootstrap";
+import { Toast } from "./toast";
 
 /**
  * Modal confirmation and call API.
- * @returns
+ *
+ * @returns {object}
  */
 export function ModalConfirmCallComponent() {
   return {
-    isActive: false,
     title: "",
     content: "",
     apiUrl: "",
@@ -26,6 +22,11 @@ export function ModalConfirmCallComponent() {
     apiMethod: "POST",
     loading: false,
     error: false,
+    modal: null,
+
+    init() {
+      this.modal = Modal.getOrCreateInstance(this.$refs.modal);
+    },
 
     open(title, content, url = "", method = "POST", toastMessage = "") {
       this.title = title;
@@ -33,13 +34,14 @@ export function ModalConfirmCallComponent() {
       this.apiUrl = url;
       this.apiMethod = method;
       this.toastMessage = toastMessage;
-      this.isActive = true;
       this.loading = false;
       this.error = false;
+
+      this.modal.show();
     },
 
     close() {
-      this.isActive = false;
+      this.modal.hide();
       this.loading = false;
       this.error = false;
     },
@@ -49,25 +51,35 @@ export function ModalConfirmCallComponent() {
         this.close();
         return;
       }
+
       this.loading = true;
       this.error = false;
 
       try {
-        const response = await fetch(this.apiUrl, { method: this.apiMethod });
-        if (!response.ok) throw new Error("API call failed");
-        toast({
-          message: this.toastMessage,
-          type: "is-success",
+        const response = await fetch(this.apiUrl, {
+          method: this.apiMethod,
         });
-        window.dispatchEvent(new CustomEvent("force-refresh")); // Refresh all components
+
+        if (!response.ok) {
+          throw new Error("API call failed");
+        }
+
+        Toast({
+          message: this.toastMessage,
+          type: "success",
+        });
+
+        window.dispatchEvent(new CustomEvent("force-refresh"));
 
         this.close();
       } catch (e) {
         console.error(e);
-        toast({
+
+        Toast({
           message: e.message,
-          type: "is-danger",
+          type: "danger",
         });
+
         this.error = true;
       } finally {
         this.loading = false;
@@ -90,8 +102,11 @@ export function OpenModalConfirmCall(
   method,
   title,
   content,
-  toastMessage = ""
+  toastMessage = "",
 ) {
-  const modal = document.querySelector("#ModalConfirmCallComponent").__modal;
-  modal.open(title, content, url, method, toastMessage);
+  const component = document.querySelector(
+    "#ModalConfirmCallComponent",
+  ).__modal;
+
+  component.open(title, content, url, method, toastMessage);
 }

@@ -1,28 +1,44 @@
-<div id="ModalConfirmCallComponent" x-data="ModalConfirmCallComponent()" x-init="$el.__modal = $data" @keydown.window.escape="close()">
-  <div class="modal" :class="{ 'is-active': isActive }">
-    <div class="modal-background" @click="close()"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title" x-text="title"></p>
-        <button class="delete" aria-label="close" @click="close()"></button>
-      </header>
-
-      <section class="modal-card-body">
-        <div x-html="content"></div>
-        <template x-if="loading">
-          <p><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</p>
-        </template>
-        <template x-if="error">
-          <p class="has-text-danger">{{ _('An error has occurred.') }}</p>
-        </template>
-      </section>
-
-      <footer class="modal-card-foot">
-        <div class="buttons">
-          <button class="button is-success" @click="confirm()">{{ _('OK') }}</button>
-          <button class="button" @click="close()">{{ _('Cancel') }}</button>
+<div id="ModalConfirmCallComponent"
+     x-data="ModalConfirmCallComponent()"
+     x-init="$el.__modal = $data">
+  <div x-ref="modal"
+       class="modal fade" id="ModalConfirmCall" tabindex="-1"
+       aria-labelledby="ModalConfirmCallTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="ModalConfirmCallTitle"
+              class="modal-title"
+              x-text="title"></h5>
+          <button type="button" class="btn-close"
+                  aria-label="{{ _('Close') }}"
+                  @click="close()"></button>
         </div>
-      </footer>
+
+        <div class="modal-body">
+          <div x-html="content"></div>
+          <template x-if="loading">
+            <p><div class="spinner-border spinner-border-sm"></div> { _('Loading...') }}</p>
+          </template>
+
+          <template x-if="error">
+            <p class="text-danger">{{ _('An error has occurred.') }}</p>
+          </template>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  @click="confirm()" :disabled="loading">
+            {{ _('OK') }}
+          </button>
+
+          <button type="button" class="btn btn-dark"
+                  @click="close()">
+            {{ _('Cancel') }}
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

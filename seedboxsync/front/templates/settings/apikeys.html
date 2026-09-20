@@ -1,45 +1,58 @@
 {% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Settings'), url_for('settings.info')),
+  (_('Authentication'), False),
+  (_('My API keys'), False),
+] %}
 
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
-    <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ _('API keys list') }}{% endblock %}</h2>
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
 
-      {% if config.LOGIN_DISABLED %}
-        <div class="box">
+    {% if config.LOGIN_DISABLED %}
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
           _('API keys are not available when login is disabled.')
         </div>
-      {% elif current_user.is_authenticated %}
-        <div class="box">
+      </div>
+    {% elif current_user.is_authenticated %}
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
           {# Table #}
-          <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+          <table class="table table-bordered table-striped table-hover">
             <thead>
               <tr>
                 <th>{{ _('Name') }}</th>
-                <th class="is-hidden-mobile">{{ _('Created') }}</th>
+                <th class="d-none d-md-table-cell">{{ _('Created') }}</th>
                 <th>{{ _('Last used') }}</th>
-                <th class="is-narrow"></th>
+                <th class="narrow"></th>
               </tr>
             </thead>
             <tbody>
               {% for apikey in apikeys %}
                 <tr>
                   <td>{{ apikey.name }}</td>
-                  <td class="is-hidden-mobile">{{ format_datetime(apikey.created) }}</td>
+                  <td class="d-none d-md-table-cell">{{ format_datetime(apikey.created) }}</td>
                   <td>{{ format_datetime(apikey.last_used) if apikey.last_used is not none else _('Never') }}</td>
-                  <td class="has-text-right">
-                      <div class="buttons is-right is-flex-wrap-nowrap">
-                        <a class="button is-danger is-outlined" title="{{ _('Delete') }}"
-                          href="{{ url_for('settings.apikeys_delete', apikey_id=apikey.id) }}">
-                          <span class="icon is-small"><i class="fas fa-times"></i></span>
-                        </a>
+                  <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2 flex-nowrap">
+                      <a class="btn btn-outline-danger btn-sm" title="{{ _('Delete') }}"
+                         href="{{ url_for('settings.apikeys_delete', apikey_id=apikey.id) }}">
+                        <i class="fas fa-times"></i>
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -47,16 +60,14 @@
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div class="control has-text-right">
-          <a class="button is-info is-outlined" href="{{ url_for('settings.apikeys_create') }}">
-            <span class="icon is-small"><i class="fas fa-add"></i></span><span>{{ _('Add') }}</span>
-          </a>
-        </div>
-      {% endif %}
-
-    </div>
+      <div class="mt-4 text-end">
+        <a class="btn btn-outline-info" href="{{ url_for('settings.apikeys_create') }}">
+          <i class="fas fa-add"></i> {{ _('Add') }}
+        </a>
+      </div>
+    {%  endif %}
   </div>
 </div>
-
 {% endblock %}

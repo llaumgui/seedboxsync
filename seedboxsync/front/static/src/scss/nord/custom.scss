@@ -1,0 +1,72 @@
+@import "./theme-light.scss";
+@import "./theme-dark.scss";
+
+/* ---------------------------------------------------------------- Font size */
+.fs-7 {
+  font-size: $font-size-7;
+}
+.fs-8 {
+  font-size: $font-size-8;
+}
+.fs-9 {
+  font-size: $font-size-9;
+}
+.btn-xs {
+  --bs-btn-padding-y: .25rem;
+  --bs-btn-padding-x: .5rem;
+  --bs-btn-font-size: $font-size-8;
+  --bs-btn-border-radius: var(--bs-border-radius-sm);
+}
+
+
+/* ---------------------------------------------------------------- Text color */
+.text-blue {
+  color: $blue;
+}
+.text-purple {
+  color: $purple;
+}
+.text-red {
+  color: $red;
+}
+.text-orange {
+  color: $orange;
+}
+.text-yellow {
+  color: $yellow;
+}
+.text-green {
+  color: $green;
+}
+
+
+/* --------------------------------------------------------------------- Misc */
+.overflow-anywhere {
+  overflow-wrap: anywhere;
+}
+.table .narrow {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.breadcrumb a {
+  text-decoration-style: dotted;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.settings-sidebar {
+  border-right: 1px solid var(--bs-border-color);
+
+  ul.nav-pills {
+    border-radius: var(--bs-border-radius);
+  }
+}
+
+.main-footer {
+  a:link {
+    text-decoration: none;
+  }
+}

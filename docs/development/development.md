@@ -17,7 +17,7 @@ This section covers development for the **SeedboxSync backend**.
 
 * **Node.js**:
     * **[pnpm](https://pnpm.io)** as Node.js package manager
-    * **[Bulma](https://bulma.io/)** as CSS Framework
+    * **[Bootstrap](https://getbootstrap.com)** as CSS Framework
     * **[Alpine.js](https://alpinejs.dev/)** as JS framework
     * **[Vite](https://vite.dev)** as tooling
 

@@ -5,7 +5,7 @@
  * file that was distributed with this source code.
  */
 
-import { toast } from "bulma-toast";
+import { Toast } from "./toast";
 
 /**
  * Build AlpineJS taskstatus box components.
@@ -78,9 +78,9 @@ export function TaskStatusBoxComponent(urlInfo, urlLaunch, title, refreshMs = 30
         this.taskStatusMessage !== "" &&
         this.taskStatusMessage !== newMessage
       ) {
-        toast({
+        Toast({
           message: `<strong>${this.taskStatusTitle}</strong>\n<br>${newMessage}`,
-          type: "is-info",
+          type: "info",
         });
       }
       this.previousLockMessage = this.taskStatusMessage;
@@ -92,14 +92,14 @@ export function TaskStatusBoxComponent(urlInfo, urlLaunch, title, refreshMs = 30
         this.tasking = true;
         const res = await fetch(urlLaunch, { method: "POST" });
         if (res.status === 202) {
-        toast({
+        Toast({
           message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_scheduled}`,
-          type: "is-success",
+          type: "success",
         });
         } else {
-         toast({
+         Toast({
            message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_not_scheduled}`,
-           type: "is-danger",
+           type: "danger",
          });
         }
       } catch (e) {

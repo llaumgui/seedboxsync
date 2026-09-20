@@ -8,6 +8,7 @@ import {
   isValidPort,
   isValidTimeout,
   isValidUrl,
+  Length,
 } from "@seedboxsync/alpine/validators.js";
 
 describe("validators", () => {
@@ -17,6 +18,8 @@ describe("validators", () => {
     expect(isValidHost(true, "192.168.1.10")).toBe(true);
     expect(isValidHost(true, "256.168.1.10")).toBe(false);
     expect(isValidHost(true, "-seedbox.example.com")).toBe(false);
+    expect(isValidHost(true, "::1")).toBe(true);
+    expect(isValidHost(true, "not a host")).toBe(false);
   });
 
   it("validates numeric settings at their boundaries", () => {
@@ -49,6 +52,11 @@ describe("validators", () => {
     expect(isValidUrl(true, "not a url", false)).toBe(true);
     expect(isValidUrl(true, "https://example.com", true)).toBe(true);
     expect(isValidUrl(true, "not a url", true)).toBe(false);
+    expect(Length(false, "", 2, 4)).toBe(true);
+    expect(Length(true, "a", 2, 4)).toBe(false);
+    expect(Length(true, "abcd", 2, 4)).toBe(true);
+    expect(Length(true, "abcde", 2, 4)).toBe(false);
+    expect(Length(true, "", 2, 4)).toBe(true);
   });
 
   it("tracks field state and enables submission only for touched valid fields", () => {

@@ -60,6 +60,23 @@ describe("TablePaginedComponent", () => {
     expect(load).toHaveBeenCalledTimes(3);
   });
 
+  it("does not load beyond the first or last page", () => {
+    const component = TablePaginedComponent("/api/items", 10);
+    component.total = 20;
+    const load = vi.spyOn(component, "load").mockResolvedValue();
+
+    component.prevPage();
+    component.nextPage();
+    expect(component.page).toBe(2);
+    expect(load).toHaveBeenCalledOnce();
+
+    component.nextPage();
+    component.goToPage(0);
+    component.goToPage(3);
+    expect(component.page).toBe(2);
+    expect(load).toHaveBeenCalledOnce();
+  });
+
   it("builds visible pages with ellipses and resets search", () => {
     const component = TablePaginedComponent("/api/items", 10);
     component.total = 100;

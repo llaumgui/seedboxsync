@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ locale }}" {% if theme != 'auto' %}data-theme="{{ theme }}"{% endif %}>
+<html lang="{{ locale }}" {% if theme != 'auto' %}data-bs-theme="{{ theme }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,12 +11,10 @@
 <body>
   {% include 'components/navbar.html' %}
   {% include 'components/flash_message.html' %}
-  <section class="section">
-    <div class="container">
-      {% block header %}{% endblock %}
-      {% block content %}{% endblock %}
-    </div>
-  </section>
+  <div class="container py-5">
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+  </div>
   {% include 'components/footer.html' %}
   {% include 'components/modal.html' %}
   {% include 'components/flash_toast.html' %}

@@ -1,0 +1,49 @@
+@use "nord/src/sass/nord" as nord;
+@use "sass:color";
+
+// -----------------------------------------------------------------------------
+// All globals variables in 1 places for Nord
+// -----------------------------------------------------------------------------
+
+// Font size
+$font-size-7: 0.875rem;
+$font-size-8: 0.75rem;
+$font-size-9: 0.625rem;
+$breadcrumb-font-size: 1.8rem;
+$tooltip-max-width: 400px;
+
+// Main colors
+$primary:   nord.$nord10;
+$secondary: nord.$nord9;
+$success:   nord.$nord14;
+$info:      nord.$nord8;
+$warning:   nord.$nord13;
+$danger:    nord.$nord11;
+$light:     nord.$nord6;
+$dark:      color.adjust(nord.$nord0, $lightness: -13%);
+
+// others colors
+$blue:      nord.$nord10;
+$purple:    nord.$nord14;
+$red:       nord.$nord11;
+$orange:    nord.$nord12;
+$yellow:    nord.$nord13;
+$green:     nord.$nord14;
+$gray-100:  nord.$nord5;
+$gray-200:  nord.$nord4;
+$gray-300:  nord.$nord3;
+$gray-400:  nord.$nord2;
+$gray-500:  nord.$nord1;
+$gray-600:  nord.$nord0;
+
+// Background and font colors
+$body-bg: color.adjust(nord.$nord6, $lightness: -10%);
+$body-color: nord.$nord0;
+$body-secondary-color: nord.$nord3;
+$body-secondary-bg:    nord.$nord5;
+$body-tertiary-color:  nord.$nord3;
+$body-tertiary-bg:     nord.$nord5;
+
+$border-color: nord.$nord4;
+$link-hover-color: nord.$nord9;
+$headings-color: nord.$nord0;

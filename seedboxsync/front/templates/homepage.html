@@ -1,171 +1,129 @@
-{% macro task_box(title, status_key, task_key, extra_classes='') %}
-<div class="message is-small column is-4 {{ extra_classes }}" x-data="TaskStatusBoxComponent(
-  '{{ url_for('api.taskstatuses_task_statuses', key=status_key) }}',
-  '{{ url_for('api.tasks_tasks', key=task_key) }}',
-  '{{ title }}')">
-  <div class="message-header">
-    {{ title }}
-    <button
-      class="button is-small is-rounded"
-      :disabled="tasking"
-      @click="taskLaunch()">
-      <span class="icon">
-        <template x-if="!tasking">
-          <i class="fas fa-play"></i>
-        </template>
-        <template x-if="tasking">
-          <i class="fas fa-spinner fa-spin"></i>
-        </template>
-      </span>
-    </button>
-  </div>
-  <div class="message-body">
-    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-    <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
-    <div x-show="error" class="has-text-danger" x-text="error"></div>
-  </div>
-</div>
-{% endmacro %}
+{% import 'components/macros.html' as macro %}
 
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="title is-hidden">{% block title %}{{ _('Dashboard') }}{% endblock %}</h1>
+  <h1 class="visually-hidden">{% block title %}{{ _('Dashboard') }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-<div class="content">
-
-  <div class="columns is-desktop">
-    {% if seedboxsync_config.get('sync_blackhole_enabled') %}
-      {{ task_box(_('Blackhole'), 'sync-blackhole', 'blackhole') }}
-    {% endif %}
-
-    {% set seedbox_offset = 'is-offset-4' if seedboxsync_config.get('sync_blackhole_enabled') else '' %}
-    {{ task_box(_('Seedbox'), 'sync-seedbox', 'seedbox', extra_classes=seedbox_offset) }}
+<div class="row">
+  {% if seedboxsync_config.get('sync_blackhole_enabled') %}
+    <div class="col-md-4">
+      {{ macro.task_box(_('Blackhole'), 'sync-blackhole', 'blackhole') }}
+    </div>
+  {% endif %}
+  {% set seedbox_offset = 'ms-auto' if seedboxsync_config.get('sync_blackhole_enabled') else '' %}
+  <div class="col-md-4 {{ seedbox_offset }}">
+    {{ macro.task_box(_('Seedbox'), 'sync-seedbox', 'seedbox') }}
   </div>
+</div>
 
-  <div class="has-text-right">
-    <button x-data
-            class="button is-info is-small is-responsive"
-            @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
-      <span class="icon">
-        <i class="fa fa-refresh"></i>
-      </span>
-      <span>{{ _('Refresh') }}</span>
+<div class="mt-2 text-end">
+  <button x-data
+          class="btn btn-info btn-sm"
+          @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
+    <i class="fa fa-refresh"></i> {{ _('Refresh') }}
+  </button>
+</div>
+
+<h2>{{ _('Download in progress') }}</h2>
+<div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false')">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <p class="fst-italic">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
+    <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
+            @click="OpenModalConfirmCall(
+              '{{ url_for('api.downloads_downloads_progress') }}',
+              'DELETE',
+              '{{ _('Purge?') }}',
+              '{{ _('Do you want to purge all in-progress downloads?') }}',
+              '{{ _('In-progress has been purged') }}'
+            )">
+      <i class="fa fa-trash"></i>{{ _('Purge') }}
     </button>
   </div>
-
-  <h2>{{ _('Download in progress') }}</h2>
-  <div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false')">
-    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
-      <p class="is-italic">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
-      <button x-show="data.length > 0" class="button is-danger is-small is-responsive js-modal-trigger"
-              @click="OpenModalConfirmCall(
-                '{{ url_for('api.downloads_downloads_progress') }}',
-                'DELETE',
-                '{{ _('Purge?') }}',
-                '{{ _('Do you want to purge all in-progress downloads?') }}',
-                'In-progress has been purged'
-              )">
-        <span class="icon">
-          <i class="fa fa-trash"></i>
-        </span>
-        <span>{{ _('Purge') }}</span>
-      </button>
-    </div>
-    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
-    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-    <div x-show="!loading && !error && data.length === 0" class="notification is-info"><i class="fas fa-inbox"></i> {{ _('No download in progress now...') }}</div>
-    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
-      <thead>
+  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+  <div x-show="!loading && !error && data.length === 0" class="alert alert-info"><i class="fas fa-inbox"></i> {{ _('No download in progress now...') }}</div>
+  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th class="d-sm-none d-md-table-cell">{{ _('Started') }}</th>
+        <th>{{ _('Progress') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <th>{{ _('Name') }}</th>
-          <th class="is-hidden-mobile">{{ _('Started') }}</th>
-          <th>{{ _('Progress') }}</th>
+          <td class="overflow-anywhere">
+            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+          </td>
+          <td class="d-none d-md-table-cell" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td>
+            <div class="d-none d-md-block progress" role="progressbar" :aria-label="row.progress + '%'" :aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
+            </div>
+            <span class="d-none d-sm-block d-md-none" x-text="row.progress + '%'"></span>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <template x-for="row in data" :key="row.id || row.key">
-          <tr>
-            <td class="is-overflow-anywhere">
-              <span class="icon is-hidden-mobile">
-                <i :class="getMimeIconClass(row.mime_type)"></i>
-              </span>
-              <span x-text="row.path"></span>
-            </td>
-            <td class="is-hidden-mobile" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
-            <td>
-              <div class="is-flex is-align-items-center is-justify-content-center" style="gap: 15px;">
-                <progress class="is-hidden-mobile progress is-primary mb-0" :value="row.progress" max="100" x-text="row.progress + '%'"></progress>
-                <span class="is-size-7" x-text="row.progress + '%'"></span>
-              </div>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
+      </template>
+    </tbody>
+  </table>
+</div>
 
-  <h2>{{ _('Last files downloaded') }}</h2>
-  <div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=true')">
-    <p class="is-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
-    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
-    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
-    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
-      <thead>
+<h2 class="mt-5">{{ _('Last files downloaded') }}</h2>
+<div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=true')">
+  <p class="fst-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
+  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+  <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
+  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th class="d-none d-md-table-cell">{{ _('Finished') }}</th>
+        <th class="d-none d-md-table-cell">{{ _('Size') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <th>{{ _('Name') }}</th>
-          <th class="is-hidden-mobile">{{ _('Finished') }}</th>
-          <th class="is-hidden-mobile">{{ _('Size') }}</th>
+          <td class="overflow-anywhere">
+            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+          </td>
+          <td class="d-none d-md-table-cell" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td class="d-none d-md-table-cell" x-text="row.human_local_size"></td>
         </tr>
-      </thead>
-      <tbody>
-        <template x-for="row in data" :key="row.id || row.key">
-          <tr>
-            <td class="is-overflow-anywhere">
-              <span class="icon is-hidden-mobile">
-                <i :class="getMimeIconClass(row.mime_type)"></i>
-              </span>
-              <span x-text="row.path"></span>
-            </td>
-            <td class="is-hidden-mobile" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
-            <td class="is-hidden-mobile" x-text="row.human_local_size"></td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
+      </template>
+    </tbody>
+  </table>
+</div>
 
-  <h2>{{ _('Last torrents uploaded') }}</h2>
-  <div x-data="TableComponent('{{ url_for('api.uploads_uploads_list') }}?limit=5')">
-    <p class="is-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
-    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
-    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No torrent downloaded yet...') }} </div>
-    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
-      <thead>
+<h2 class="mt-5">{{ _('Last torrents uploaded') }}</h2>
+<div x-data="TableComponent('{{ url_for('api.uploads_uploads_list') }}?limit=5')">
+  <p class="fst-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
+  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+  <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No torrent downloaded yet...') }} </div>
+  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th class="d-none d-md-table-cell">{{ _('Sent') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <th>{{ _('Name') }}</th>
-          <th class="is-hidden-mobile">{{ _('Sent') }}</th>
+          <td class="overflow-anywhere">
+            <i :class="getMimeIconClass('application/x-bittorrent')"></i>
+            <span x-text="row.name"></span>
+          </td>
+          <td class="d-none d-md-table-cell" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
         </tr>
-      </thead>
-      <tbody>
-        <template x-for="row in data" :key="row.id || row.key">
-          <tr>
-            <td class="is-overflow-anywhere">
-              <span class="icon is-hidden-mobile">
-                <i :class="getMimeIconClass('application/x-bittorrent')"></i>
-              </span>
-              <span x-text="row.name"></span>
-            </td>
-            <td class="is-hidden-mobile" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
-
+      </template>
+    </tbody>
+  </table>
 </div>
 {% endblock %}

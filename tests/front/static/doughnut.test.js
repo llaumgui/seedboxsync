@@ -54,6 +54,26 @@ describe("doughnut chart helpers", () => {
     expect(chart.config.data.datasets[0].data).toEqual([2]);
   });
 
+  it("formats humanized tooltip values and falls back to raw values", () => {
+    const chart = createDoughnutChart(
+      "canvas",
+      [
+        { mime_type: "video/mp4", downloads: 4, human_downloads: "4 GiB" },
+        { mime_type: "application/pdf", downloads: 2 },
+      ],
+      "downloads",
+      "Downloads",
+    );
+    const label = chart.config.options.plugins.tooltip.callbacks.label;
+
+    expect(label({ dataIndex: 0, dataset: { label: "Downloads" }, raw: 4 })).toBe(
+      " Downloads: 4 GiB",
+    );
+    expect(label({ dataIndex: 1, dataset: { label: "Downloads" }, raw: 2 })).toBe(
+      " Downloads: 2",
+    );
+  });
+
   it("loads data into two doughnut charts and logs request errors", async () => {
     fetch.mockResolvedValue({
       json: async () => ({

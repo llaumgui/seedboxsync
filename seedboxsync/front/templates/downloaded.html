@@ -3,64 +3,59 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1 class="title">{% block title %}{{ _('Last files downloaded') }}{% endblock %}</h1>
+<h1 class="h2">{% block title %}{{ _('Last files downloaded') }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-<div class="content">
-  <p class="is-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
+<p class="fst-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
 
-  <div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true')">
+<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true')">
 
-    {# Search #}
-    {{ macro.render_search() }}
+  {# Search #}
+  {{ macro.render_search() }}
 
-    {# Messages #}
-    <div x-show="loading"><i class="fas fa-spinner fa-spin"></i> {{ _('Loading...') }}</div>
-    <div x-show="error" class="notification is-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-    <div x-show="!loading && !error && data.length === 0" class="notification is-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
+  {# Messages #}
+  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+  <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
 
-    {# Table #}
-    <table x-show="data.length > 0" class="table is-bordered is-striped is-hoverable is-fullwidth">
-      <thead>
+  {# Table #}
+  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th>{{ _('Finished') }}</th>
+        <th class="d-none d-md-table-cell">{{ _('Size') }}</th>
+        <th class="narrow"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <th>{{ _('Name') }}</th>
-          <th>{{ _('Finished') }}</th>
-          <th class="is-hidden-mobile">{{ _('Size') }}</th>
-          <th class="is-narrow"></th>
+          <td>
+            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+          </td>
+          <td x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td class="d-none d-md-table-cell" x-text="row.human_local_size"></td>
+          <td class="text-end">
+            <button class="btn btn-outline-danger btn-sm text-nowrap"
+                @click="OpenModalConfirmCall(
+                '{{ url_for('api.downloads_downloads', id=0) }}'.replace('0', row.id),
+                'DELETE',
+                '{{ _('Delete?') }}',
+                `{{ _('Do you want to delete this download?') }}<br><em>${row.path}</em>`,
+                `<em>${row.path}</em> {{ _('has been deleted') }}.`,
+              )">
+                {{ _('Delete') }}<i class="fas fa-times"></i>
+            </button>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <template x-for="row in data" :key="row.id || row.key">
-          <tr>
-            <td>
-              <span class="icon">
-                <i :class="getMimeIconClass(row.mime_type)"></i>
-              </span>
-              <span x-text="row.path"></span>
-            </td>
-            <td x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
-            <td class="is-hidden-mobile" x-text="row.human_local_size"></td>
-            <td class="has-text-right">
-              <button class="button is-danger is-outlined"
-                 @click="OpenModalConfirmCall(
-                  '{{ url_for('api.downloads_downloads', id=0) }}'.replace('0', row.id),
-                  'DELETE',
-                  '{{ _('Delete?') }}',
-                  `{{ _('Do you want to delete this download?') }}<br><em>${row.path}</em>`,
-                  `<em>${row.path}</em> {{ _('has been deleted') }}.`,
-                )">
-                  <span class="is-hidden-mobile">{{ _('Delete') }}</span><span class="icon is-small"><i class="fas fa-times"></i></span>
-              </button>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
+      </template>
+    </tbody>
+  </table>
 
-    {# Pagination controls #}
-    {{ macro.render_pagination() }}
+  {# Pagination controls #}
+  {{ macro.render_pagination() }}
 
-  </div>
 </div>
 {% endblock %}

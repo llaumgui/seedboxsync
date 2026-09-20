@@ -1,29 +1,87 @@
 {# Used in Downloaded / Uploaded pages #}
 {% macro render_pagination() %}
-<nav class="pagination is-right" role="navigation" aria-label="pagination">
-  <a href="#" class="pagination-previous" :class="{ 'is-disabled': page === 1 }" @click.prevent="prevPage()">{{ _('Previous') }}</a>
-  <a href="#" class="pagination-next" :class="{ 'is-disabled': page === totalPages }" @click.prevent="nextPage()">{{ _('Next') }}</a>
+<nav class="mt-4" aria-label="{{ _('Pagination') }}">
+  <ul class="pagination justify-content-end">
+    <li class="page-item" :class="{ disabled: page === 1 }">
+      <a href="#" class="page-link" :aria-disabled="page === 1" @click.prevent="prevPage()">{{ _('Previous') }}</a>
+    </li>
 
-  <ul class="pagination-list">
     <template x-for="pObj in visiblePages" :key="pObj.page ?? Math.random()">
-      <li>
-        <a href="#" class="pagination-link"
-          :class="{ 'is-current': page === pObj.page, 'is-disabled': pObj.isEllipsis }"
-          @click.prevent="if(!pObj.isEllipsis) goToPage(pObj.page)"
-          x-text="pObj.isEllipsis ? '…' : pObj.page">
-        </a>
+      <li class="page-item" :class="{ active: page === pObj.page, disabled: pObj.isEllipsis }">
+        <a href="#" class="page-link" :aria-current="page === pObj.page ? 'page' : undefined"
+           @click.prevent="if (!pObj.isEllipsis) goToPage(pObj.page)"
+           x-text="pObj.isEllipsis ? '…' : pObj.page"></a>
       </li>
     </template>
+
+    <li class="page-item" :class="{ disabled: page === totalPages }">
+      <a href="#" class="page-link" :aria-disabled="page === totalPages" @click.prevent="nextPage()">{{ _('Next') }}</a>
+    </li>
   </ul>
 </nav>
 {% endmacro %}
 
 {% macro render_search() %}
-<div class="mb-4 control has-icons-left has-icons-right">
-  <label for="search" class="is-sr-only">{{ _('Search') }}</label>
-  <input id="search" class="input" type="text" placeholder="{{ _('Search') }}" x-model="search" @input.debounce.300ms="load()" />
-  <span class="icon is-small is-left">
-    <i class="fas fa-search"></i>
-  </span>
+<div class="mb-4">
+  <label for="search" class="visually-hidden">{{ _('Search') }}</label>
+
+  <div class="input-group">
+    <span class="input-group-text"><i class="fas fa-search"></i></span>
+
+    <input id="search" class="form-control" type="text" placeholder="{{ _('Search') }}"
+      x-model="search"
+      @input.debounce.300ms="load()" />
+  </div>
 </div>
+{% endmacro %}
+
+{# Used in homepage #}
+{% macro task_box(title, status_key, task_key) %}
+<div class="card fs-8 mb-3" x-data="TaskStatusBoxComponent(
+  '{{ url_for('api.taskstatuses_task_statuses', key=status_key) }}',
+  '{{ url_for('api.tasks_tasks', key=task_key) }}',
+  '{{ title }}')">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    {{ title }}
+    <button
+      class="btn btn-xs btn-outline-secondary rounded-pill"
+      :disabled="tasking"
+      @click="taskLaunch()">
+      <template x-if="!tasking">
+        <i class="fas fa-play"></i>
+      </template>
+      <template x-if="tasking">
+        <div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+      </template>
+    </button>
+  </div>
+  <div class="card-body">
+    <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+    <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
+    <div x-show="error" class="has-text-danger" x-text="error"></div>
+  </div>
+</div>
+{% endmacro %}
+
+{# Used in several page #}
+{% macro mime_icon() %}
+<i :class="getMimeIconClass(row.mime_type)"
+   data-bs-toggle="tooltip"
+   data-bs-html="true"
+   :data-bs-title="'<strong>{{ _('MIME type:') }}</strong> ' + row.mime_type + '<br><strong>{{ _('Confidence:') }}</strong> ' + row.mime_confidence + '<br>'"
+   x-init="new Tooltip($el)"></i>
+{% endmacro %}
+
+{% macro breadcrumb(items) %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% for text, link in items %}
+      {% if not loop.last and link %}
+        <li class="breadcrumb-item"><a href="{{ link }}">{{ text }}</a></li>
+      {% else %}
+        <li class="breadcrumb-item{% if loop.last %} active{% endif %}" {% if loop.last %}aria-current="page"{% endif %}>{{ text }}</li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
 {% endmacro %}

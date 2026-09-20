@@ -9,6 +9,7 @@ import * as validators from "./validators";
 import { TableComponent } from "./table";
 import { TablePaginedComponent } from "./table_pagined";
 import { TaskStatusBoxComponent } from "./taskstatusbox";
+import { Toast, ToastManager } from "./toast";
 import { ModalConfirmCallComponent, OpenModalConfirmCall } from "./modal";
 import { getMimeIconClass } from "./mimeicon"
 
@@ -26,6 +27,8 @@ window.validators = validators;
 
 // Helpers
 window.getMimeIconClass = getMimeIconClass;
+Alpine.data("ToastManager", ToastManager);
+window.Toast = Toast;
 
 window.Alpine = Alpine;
 Alpine.start();

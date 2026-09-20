@@ -24,11 +24,14 @@ describe("frontend entry points", () => {
 
   it("registers Alpine components and validators globally", async () => {
     const start = vi.fn();
-    vi.doMock("alpinejs", () => ({ default: { start } }));
-    vi.doMock("bulma-toast", () => ({ toast: vi.fn(), setDefaults: vi.fn() }));
+    vi.doMock("alpinejs", () => ({ default: { data: vi.fn(), start } }));
+    vi.doMock("bootstrap", () => ({
+      Modal: { getOrCreateInstance: vi.fn() },
+      Toast: { getOrCreateInstance: vi.fn() },
+    }));
     await import("@seedboxsync/alpine/index.js");
 
-    expect(window.Alpine).toEqual({ start });
+    expect(window.Alpine).toMatchObject({ data: expect.any(Function), start });
     expect(start).toHaveBeenCalledOnce();
     expect(window.TableComponent).toBeTypeOf("function");
     expect(window.TablePaginedComponent).toBeTypeOf("function");

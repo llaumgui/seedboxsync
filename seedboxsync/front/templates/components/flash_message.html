@@ -6,8 +6,10 @@
 {% if messages %}
   {% for category, message in messages %}
   <div class="container">
-    <div x-data="{ show: true }" x-show="show" class="notification is-{{ category }} mt-4">
-      <button class="delete" @click="show = false"></button>
+    <div x-data="{ show: true }" x-show="show" role="alert"
+         class="alert alert-{{ category }} alert-dismissible mt-4">
+      <button type="button"  class="btn-close"
+              aria-label="{{ _('Close') }}" @click="show = false"></button>
       <ul>
         <li>{{ message }}</li>
       </ul>

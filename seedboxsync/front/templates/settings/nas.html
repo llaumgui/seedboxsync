@@ -1,55 +1,62 @@
 {% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+    (_('Settings'), url_for('settings.info')),
+    (_('Synchronization'), False),
+    (_('Local (NAS)'), False),
+] %}
 
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
-    <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Synchronization') }} / {{ _('Local (NAS)') }}{% endblock %}</h2>
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
 
-      <form method="post" x-data="validators.form()">
+    <form method="post" x-data="validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
-        <div class="box">
-          <p class="is-italic">{{ _('Information about local environment (NAS?).') }}</p>
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
+          <p class="fst-italic">{{ _('Information about local environment (NAS?).') }}</p>
 
-          <div class="columns">
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  local_watch_path: '{{ form.local_watch_path.data }}',
-                  touched: false,
-                  isValid() { return validators.isRequired(this.touched, this.local_watch_path) }
-              }">
-                {{ render_field(form.local_watch_path) }}
-              </div>
+          <div class="row">
+            <div class="col-md-6 mb-3" x-data="{
+              local_watch_path: '{{ form.local_watch_path.data }}',
+              touched: false,
+              isValid() { return validators.isRequired(this.touched, this.local_watch_path) }
+            }">
+              {{ render_field(form.local_watch_path) }}
             </div>
 
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  local_download_path: '{{ form.local_download_path.data }}',
-                  touched: false,
-                  isValid() { return validators.isRequired(this.touched, this.local_download_path) }
-              }">
-                {{ render_field(form.local_download_path) }}
-              </div>
+            <div class="col-md-6 mb-3" x-data="{
+              local_download_path: '{{ form.local_download_path.data }}',
+              touched: false,
+              isValid() { return validators.isRequired(this.touched, this.local_download_path) }
+            }">
+              {{ render_field(form.local_download_path) }}
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="control has-text-right">
-          <button class="button is-success" :disabled="!canSubmit()">
-            <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
-          </button>
-        </div>
+      <div class="mt-4 text-end">
+        <button class="btn btn-success" :disabled="!canSubmit()">
+          <i class="fas fa-floppy-disk "></i> {{ _('Save') }}
+        </button>
+      </div>
 
-      </form>
-    </div>
+    </form>
   </div>
 </div>
 

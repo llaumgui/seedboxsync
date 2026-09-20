@@ -1,0 +1,42 @@
+@use "nord/src/sass/nord" as nord;
+@use "sass:color";
+
+@include color-mode(dark) {
+  // base colors
+  --bs-body-bg: #{color.adjust(nord.$nord0, $lightness: -10%)};
+  --bs-body-color: #{nord.$nord4};
+  --bs-box-shadow: 0 .5rem 1rem #{nord.$nord0};
+
+  .breadcrumb {
+    --bs-breadcrumb-divider-color: #{nord.$nord6};
+    --bs-breadcrumb-item-active-color: #{nord.$nord6};
+  }
+  .card {
+    --bs-card-cap-bg: #{color.adjust(nord.$nord0, $lightness: 5%)};
+  }
+  .table thead {
+    --bs-table-accent-bg: #{color.adjust(nord.$nord0, $lightness: 5%)};
+  }
+  .main-footer {
+    background-color: #{nord.$nord0};
+  }
+  .text-bg-primary {
+    color: #{nord.$nord4} !important;
+  }
+  .nav {
+    --bs-nav-link-color: #{nord.$nord6};
+  }
+}
+
+/* ------------------------------------------------------------------- Header */
+.navbar[data-bs-theme="dark"] {
+  --bs-tertiary-bg-rgb: #{to-rgb(nord.$nord1)};
+  --bs-navbar-brand-color: #{nord.$nord6};
+  --bs-navbar-color: #{nord.$nord6};
+  --bs-navbar-active-color: #{nord.$nord6};
+
+  .nav-link.active {
+    background-color: #{nord.$nord3};
+  }
+}
+

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-11 18:41+0200\n"
+"POT-Creation-Date: 2026-09-19 12:08+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -41,12 +41,12 @@ msgid "Remember me"
 msgstr "Rester connecté"
 
 #: seedboxsync/front/forms/user.py:23
-#: seedboxsync/front/templates/settings/users.html:20
+#: seedboxsync/front/templates/settings/users.html:31
 msgid "Username"
 msgstr "Nom d’utilisateur"
 
 #: seedboxsync/front/forms/user.py:24
-#: seedboxsync/front/templates/settings/users.html:21
+#: seedboxsync/front/templates/settings/users.html:32
 msgid "Email"
 msgstr "E-mail"
 
@@ -132,7 +132,6 @@ msgid "Port"
 msgstr "Port"
 
 #: seedboxsync/front/forms/settings/seedbox.py:29
-#: seedboxsync/front/templates/login.html:15
 msgid "Login"
 msgstr "Login"
 
@@ -278,223 +277,234 @@ msgid "Enable CSRF protection for all forms?"
 msgstr "Activer la protection CSRF pour tous les formulaires"
 
 #: seedboxsync/front/templates/downloaded.html:6
-#: seedboxsync/front/templates/homepage.html:110
+#: seedboxsync/front/templates/homepage.html:75
 msgid "Last files downloaded"
 msgstr "Derniers fichiers téléchargés"
 
-#: seedboxsync/front/templates/downloaded.html:11
-#: seedboxsync/front/templates/homepage.html:112
+#: seedboxsync/front/templates/downloaded.html:10
+#: seedboxsync/front/templates/homepage.html:77
 msgid "List of last files downloaded from the seedbox to the NAS."
 msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 
-#: seedboxsync/front/templates/components/modal.html:13
-#: seedboxsync/front/templates/downloaded.html:19
-#: seedboxsync/front/templates/homepage.html:77
-#: seedboxsync/front/templates/homepage.html:113
-#: seedboxsync/front/templates/homepage.html:144
-#: seedboxsync/front/templates/uploaded.html:19
+#: seedboxsync/front/templates/components/macros.html:54
+#: seedboxsync/front/templates/components/macros.html:59
+#: seedboxsync/front/templates/downloaded.html:18
+#: seedboxsync/front/templates/homepage.html:45
+#: seedboxsync/front/templates/homepage.html:78
+#: seedboxsync/front/templates/homepage.html:106
+#: seedboxsync/front/templates/uploaded.html:18
 msgid "Loading..."
 msgstr "Chargement..."
 
-#: seedboxsync/front/templates/components/modal.html:16
-#: seedboxsync/front/templates/downloaded.html:20
-#: seedboxsync/front/templates/homepage.html:78
-#: seedboxsync/front/templates/homepage.html:114
-#: seedboxsync/front/templates/homepage.html:145
-#: seedboxsync/front/templates/uploaded.html:20
+#: seedboxsync/front/templates/components/modal.html:25
+#: seedboxsync/front/templates/downloaded.html:19
+#: seedboxsync/front/templates/homepage.html:46
+#: seedboxsync/front/templates/homepage.html:79
+#: seedboxsync/front/templates/homepage.html:107
+#: seedboxsync/front/templates/uploaded.html:19
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
 
-#: seedboxsync/front/templates/downloaded.html:21
-#: seedboxsync/front/templates/homepage.html:115
+#: seedboxsync/front/templates/downloaded.html:20
+#: seedboxsync/front/templates/homepage.html:80
 msgid "No files downloaded yet..."
 msgstr "Aucun fichier téléchargé pour le moment..."
 
-#: seedboxsync/front/templates/downloaded.html:27
-#: seedboxsync/front/templates/homepage.html:83
-#: seedboxsync/front/templates/homepage.html:119
-#: seedboxsync/front/templates/homepage.html:150
-#: seedboxsync/front/templates/settings/apikeys.html:25
-#: seedboxsync/front/templates/uploaded.html:27
+#: seedboxsync/front/templates/downloaded.html:26
+#: seedboxsync/front/templates/homepage.html:51
+#: seedboxsync/front/templates/homepage.html:84
+#: seedboxsync/front/templates/homepage.html:112
+#: seedboxsync/front/templates/settings/apikeys.html:38
+#: seedboxsync/front/templates/uploaded.html:26
 msgid "Name"
 msgstr "Nom"
 
-#: seedboxsync/front/templates/downloaded.html:28
-#: seedboxsync/front/templates/homepage.html:120
+#: seedboxsync/front/templates/downloaded.html:27
+#: seedboxsync/front/templates/homepage.html:85
 msgid "Finished"
 msgstr "Terminé"
 
-#: seedboxsync/front/templates/downloaded.html:29
-#: seedboxsync/front/templates/homepage.html:121
-#: seedboxsync/front/templates/stats.html:58
+#: seedboxsync/front/templates/downloaded.html:28
+#: seedboxsync/front/templates/homepage.html:86
+#: seedboxsync/front/templates/stats.html:56
 msgid "Size"
 msgstr "Taille"
 
-#: seedboxsync/front/templates/downloaded.html:49
-#: seedboxsync/front/templates/uploaded.html:47
+#: seedboxsync/front/templates/downloaded.html:45
+#: seedboxsync/front/templates/uploaded.html:44
 msgid "Delete?"
 msgstr "Supprimer ?"
 
-#: seedboxsync/front/templates/downloaded.html:50
+#: seedboxsync/front/templates/downloaded.html:46
 msgid "Do you want to delete this download?"
 msgstr "Voulez-vous supprimer ce téléchargement ?"
 
-#: seedboxsync/front/templates/downloaded.html:51
-#: seedboxsync/front/templates/uploaded.html:49
+#: seedboxsync/front/templates/downloaded.html:47
+#: seedboxsync/front/templates/uploaded.html:46
 msgid "has been deleted"
 msgstr "a été effacé"
 
-#: seedboxsync/front/templates/downloaded.html:53
-#: seedboxsync/front/templates/settings/apikeys.html:39
-#: seedboxsync/front/templates/settings/apikeys_delete.html:29
-#: seedboxsync/front/templates/settings/users.html:42
-#: seedboxsync/front/templates/settings/users_delete.html:33
-#: seedboxsync/front/templates/uploaded.html:51
+#: seedboxsync/front/templates/downloaded.html:49
+#: seedboxsync/front/templates/settings/apikeys.html:52
+#: seedboxsync/front/templates/settings/apikeys_delete.html:8
+#: seedboxsync/front/templates/settings/apikeys_delete.html:44
+#: seedboxsync/front/templates/settings/users.html:53
+#: seedboxsync/front/templates/settings/users_delete.html:48
+#: seedboxsync/front/templates/uploaded.html:48
+#: seedboxsync/front/views/settings/users.py:163
 msgid "Delete"
 msgstr "Supprimer"
 
-#: seedboxsync/front/templates/components/navbar.html:26
-#: seedboxsync/front/templates/homepage.html:33
+#: seedboxsync/front/templates/components/navbar.html:25
+#: seedboxsync/front/templates/homepage.html:6
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: seedboxsync/front/templates/homepage.html:41
+#: seedboxsync/front/templates/homepage.html:13
 msgid "Blackhole"
 msgstr "Blackhole"
 
 #: seedboxsync/front/templates/components/menu_settings.html:22
-#: seedboxsync/front/templates/homepage.html:45
-#: seedboxsync/front/templates/settings/seedbox.html:13
+#: seedboxsync/front/templates/homepage.html:18
+#: seedboxsync/front/templates/settings/seedbox.html:7
 msgid "Seedbox"
 msgstr "Seedbox"
 
-#: seedboxsync/front/templates/homepage.html:55
+#: seedboxsync/front/templates/homepage.html:26
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: seedboxsync/front/templates/homepage.html:59
+#: seedboxsync/front/templates/homepage.html:30
 msgid "Download in progress"
 msgstr "Téléchargement en cours"
 
-#: seedboxsync/front/templates/homepage.html:62
+#: seedboxsync/front/templates/homepage.html:33
 msgid "List of downloads in progress from the seedbox to the NAS."
 msgstr "Liste des téléchargements en cours de la seedbox vers le NAS."
 
-#: seedboxsync/front/templates/homepage.html:67
+#: seedboxsync/front/templates/homepage.html:38
 msgid "Purge?"
 msgstr "Purger ?"
 
-#: seedboxsync/front/templates/homepage.html:68
+#: seedboxsync/front/templates/homepage.html:39
 msgid "Do you want to purge all in-progress downloads?"
 msgstr "Voulez-vous purger tous les téléchargements en cours ?"
 
-#: seedboxsync/front/templates/homepage.html:74
+#: seedboxsync/front/templates/homepage.html:40
+msgid "In-progress has been purged"
+msgstr "En cours purgés"
+
+#: seedboxsync/front/templates/homepage.html:42
 msgid "Purge"
 msgstr "Purger"
 
-#: seedboxsync/front/templates/homepage.html:79
+#: seedboxsync/front/templates/homepage.html:47
 msgid "No download in progress now..."
 msgstr "Aucun téléchargement en cours pour le moment..."
 
-#: seedboxsync/front/templates/homepage.html:84
+#: seedboxsync/front/templates/homepage.html:52
 msgid "Started"
 msgstr "Démarré"
 
-#: seedboxsync/front/templates/homepage.html:85
+#: seedboxsync/front/templates/homepage.html:53
 msgid "Progress"
 msgstr "Progression"
 
-#: seedboxsync/front/templates/homepage.html:141
+#: seedboxsync/front/templates/homepage.html:103
 #: seedboxsync/front/templates/uploaded.html:6
 msgid "Last torrents uploaded"
 msgstr "Derniers torrents envoyés"
 
-#: seedboxsync/front/templates/homepage.html:143
-#: seedboxsync/front/templates/uploaded.html:11
+#: seedboxsync/front/templates/homepage.html:105
+#: seedboxsync/front/templates/uploaded.html:10
 msgid "List of last torrents uploaded from the NAS to the seedbox."
 msgstr "Liste des derniers torrents envoyés du NAS vers la seedbox."
 
-#: seedboxsync/front/templates/homepage.html:146
+#: seedboxsync/front/templates/homepage.html:108
 msgid "No torrent downloaded yet..."
 msgstr "Pas encore de torrent téléchargé..."
 
-#: seedboxsync/front/templates/homepage.html:151
-#: seedboxsync/front/templates/uploaded.html:28
+#: seedboxsync/front/templates/homepage.html:113
+#: seedboxsync/front/templates/uploaded.html:27
 msgid "Sent"
 msgstr "Envoyé"
 
-#: seedboxsync/front/templates/login.html:41
-#: seedboxsync/front/templates/settings/apikeys_create.html:37
-#: seedboxsync/front/templates/settings/authentication.html:146
-#: seedboxsync/front/templates/settings/nas.html:47
-#: seedboxsync/front/templates/settings/ping.html:65
-#: seedboxsync/front/templates/settings/seedbox.html:223
-#: seedboxsync/front/templates/settings/seedboxsync.html:72
-#: seedboxsync/front/templates/settings/users_edit.html:79
-msgid "Save"
-msgstr "Sauver"
+#: seedboxsync/front/templates/login.html:15
+msgctxt "page_title"
+msgid "Login"
+msgstr "Connexion"
 
-#: seedboxsync/front/templates/login.html:48
+#: seedboxsync/front/templates/login.html:42
 #, python-format
 msgid "Login with %(provider)s"
 msgstr "Se connecter avec %(provider)s"
 
-#: seedboxsync/front/templates/settings/info.html:32
+#: seedboxsync/front/templates/login.html:44
+msgid "Log in"
+msgstr "Se connecter"
+
+#: seedboxsync/front/templates/settings/info.html:43
 #: seedboxsync/front/templates/stats.html:4
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/stats.html:11
+#: seedboxsync/front/templates/stats.html:10
 msgid "Total"
 msgstr "Total"
 
-#: seedboxsync/front/templates/settings/info.html:34
-#: seedboxsync/front/templates/stats.html:15
+#: seedboxsync/front/templates/settings/info.html:45
+#: seedboxsync/front/templates/stats.html:14
 msgid "Number of files downloaded"
 msgstr "Nombre de fichiers téléchargés"
 
-#: seedboxsync/front/templates/settings/info.html:38
-#: seedboxsync/front/templates/stats.html:16
+#: seedboxsync/front/templates/settings/info.html:49
+#: seedboxsync/front/templates/stats.html:15
 msgid "Total size of files downloaded"
 msgstr "Taille totale des fichiers téléchargés"
 
-#: seedboxsync/front/templates/stats.html:31
+#: seedboxsync/front/templates/stats.html:30
 msgid "Files by MIME type"
 msgstr "Fichiers par type MIME"
 
-#: seedboxsync/front/templates/stats.html:35
+#: seedboxsync/front/templates/stats.html:34
 msgid "Size by MIME type"
 msgstr "Taille par type MIME"
 
-#: seedboxsync/front/templates/stats.html:42
+#: seedboxsync/front/templates/stats.html:41
 msgid "Downloads by month"
 msgstr "Téléchargements par mois"
 
-#: seedboxsync/front/templates/stats.html:46
+#: seedboxsync/front/templates/stats.html:45
 msgid "Downloads by year"
 msgstr "Téléchargements par années"
 
-#: seedboxsync/front/templates/stats.html:54
-#: seedboxsync/front/templates/stats.html:55
+#: seedboxsync/front/templates/stats.html:52
+#: seedboxsync/front/templates/stats.html:53
 msgid "Files"
 msgstr "Fichiers"
 
-#: seedboxsync/front/templates/stats.html:54
-#: seedboxsync/front/templates/stats.html:55
+#: seedboxsync/front/templates/stats.html:52
+#: seedboxsync/front/templates/stats.html:53
 msgid "Size (GiB)"
 msgstr "Taille (GiB)"
 
-#: seedboxsync/front/templates/stats.html:57
+#: seedboxsync/front/templates/stats.html:55
 msgid "Number"
 msgstr "Nombre"
 
-#: seedboxsync/front/templates/uploaded.html:21
+#: seedboxsync/front/templates/uploaded.html:20
 msgid "No files uploaded yet..."
 msgstr "Aucun fichier envoyé pour le moment..."
 
-#: seedboxsync/front/templates/uploaded.html:48
+#: seedboxsync/front/templates/uploaded.html:45
 msgid "Do you want to delete this upload?"
 msgstr "Voulez-vous supprimer cet upload ?"
+
+#: seedboxsync/front/templates/components/flash_message.html:12
+#: seedboxsync/front/templates/components/flash_toast.html:24
+#: seedboxsync/front/templates/components/modal.html:14
+msgid "Close"
+msgstr "Fermer"
 
 #: seedboxsync/front/templates/components/footer.html:5
 #, python-format
@@ -530,94 +540,113 @@ msgstr "Tâche programmée"
 msgid "Error in task scheduling"
 msgstr "Erreur lors de la programmation de la tâche"
 
-#: seedboxsync/front/templates/components/macros.html:4
+#: seedboxsync/front/templates/components/macros.html:3
+msgid "Pagination"
+msgstr "Pagination"
+
+#: seedboxsync/front/templates/components/macros.html:6
 msgid "Previous"
 msgstr "Précédent"
 
-#: seedboxsync/front/templates/components/macros.html:5
+#: seedboxsync/front/templates/components/macros.html:18
 msgid "Next"
 msgstr "Suivant"
 
-#: seedboxsync/front/templates/components/macros.html:23
-#: seedboxsync/front/templates/components/macros.html:24
+#: seedboxsync/front/templates/components/macros.html:26
+#: seedboxsync/front/templates/components/macros.html:31
 msgid "Search"
 msgstr "Recherche"
 
+#: seedboxsync/front/templates/components/macros.html:71
+msgid "MIME type:"
+msgstr "Type MIME :"
+
+#: seedboxsync/front/templates/components/macros.html:71
+msgid "Confidence:"
+msgstr "Confiance :"
+
 #: seedboxsync/front/templates/components/menu_settings.html:9
 #: seedboxsync/front/templates/components/menu_settings.html:29
-#: seedboxsync/front/templates/components/navbar.html:35
-#: seedboxsync/front/templates/components/navbar.html:46
-#: seedboxsync/front/templates/settings/apikeys.html:13
-#: seedboxsync/front/templates/settings/apikeys_create.html:13
-#: seedboxsync/front/templates/settings/apikeys_delete.html:13
-#: seedboxsync/front/templates/settings/authentication.html:13
-#: seedboxsync/front/templates/settings/info.html:26
-#: seedboxsync/front/templates/settings/nas.html:13
-#: seedboxsync/front/templates/settings/ping.html:13
-#: seedboxsync/front/templates/settings/seedbox.html:13
-#: seedboxsync/front/templates/settings/seedboxsync.html:13
-#: seedboxsync/front/templates/settings/users.html:13
-#: seedboxsync/front/templates/settings/users_delete.html:13
-#: seedboxsync/front/templates/settings/users_edit.html:13
+#: seedboxsync/front/templates/components/navbar.html:34
+#: seedboxsync/front/templates/components/navbar.html:44
+#: seedboxsync/front/templates/settings/apikeys.html:5
+#: seedboxsync/front/templates/settings/apikeys_create.html:5
+#: seedboxsync/front/templates/settings/apikeys_delete.html:5
+#: seedboxsync/front/templates/settings/authentication.html:5
+#: seedboxsync/front/templates/settings/authentication.html:7
+#: seedboxsync/front/templates/settings/info.html:19
+#: seedboxsync/front/templates/settings/nas.html:5
+#: seedboxsync/front/templates/settings/ping.html:5
+#: seedboxsync/front/templates/settings/seedbox.html:5
+#: seedboxsync/front/templates/settings/seedboxsync.html:5
+#: seedboxsync/front/templates/settings/users.html:5
+#: seedboxsync/front/templates/settings/users_delete.html:5
+#: seedboxsync/front/templates/settings/users_edit.html:5
 msgid "Settings"
 msgstr "Configuration"
 
 #: seedboxsync/front/templates/components/menu_settings.html:13
-#: seedboxsync/front/templates/settings/info.html:26
+#: seedboxsync/front/templates/settings/info.html:20
 msgid "Informations"
 msgstr "Informations"
 
 #: seedboxsync/front/templates/components/menu_settings.html:15
-#: seedboxsync/front/templates/settings/seedboxsync.html:13
+#: seedboxsync/front/templates/settings/seedboxsync.html:6
 msgid "General"
 msgstr "Général"
 
 #: seedboxsync/front/templates/components/menu_settings.html:17
-#: seedboxsync/front/templates/settings/seedboxsync.html:13
+#: seedboxsync/front/templates/components/navbar.html:16
+#: seedboxsync/front/templates/settings/seedboxsync.html:7
 msgid "SeedboxSync"
 msgstr "SeedboxSync"
 
 #: seedboxsync/front/templates/components/menu_settings.html:20
-#: seedboxsync/front/templates/settings/nas.html:13
-#: seedboxsync/front/templates/settings/ping.html:13
-#: seedboxsync/front/templates/settings/seedbox.html:13
+#: seedboxsync/front/templates/settings/nas.html:6
+#: seedboxsync/front/templates/settings/ping.html:6
+#: seedboxsync/front/templates/settings/seedbox.html:6
 msgid "Synchronization"
 msgstr "Synchronisation"
 
 #: seedboxsync/front/templates/components/menu_settings.html:23
-#: seedboxsync/front/templates/settings/nas.html:13
+#: seedboxsync/front/templates/settings/nas.html:7
 msgid "Local (NAS)"
 msgstr "Local (NAS)"
 
 #: seedboxsync/front/templates/components/menu_settings.html:24
-#: seedboxsync/front/templates/settings/ping.html:13
+#: seedboxsync/front/templates/settings/ping.html:7
 msgid "Ping"
 msgstr "Ping"
 
 #: seedboxsync/front/templates/components/menu_settings.html:27
-#: seedboxsync/front/templates/settings/apikeys.html:13
-#: seedboxsync/front/templates/settings/apikeys_create.html:13
-#: seedboxsync/front/templates/settings/apikeys_delete.html:13
-#: seedboxsync/front/templates/settings/authentication.html:13
-#: seedboxsync/front/templates/settings/users.html:13
-#: seedboxsync/front/templates/settings/users_delete.html:13
-#: seedboxsync/front/templates/settings/users_edit.html:13
+#: seedboxsync/front/templates/settings/apikeys.html:6
+#: seedboxsync/front/templates/settings/apikeys_create.html:6
+#: seedboxsync/front/templates/settings/apikeys_delete.html:6
+#: seedboxsync/front/templates/settings/authentication.html:6
+#: seedboxsync/front/templates/settings/users.html:6
+#: seedboxsync/front/templates/settings/users_delete.html:6
+#: seedboxsync/front/templates/settings/users_edit.html:6
 msgid "Authentication"
 msgstr "Authentification"
 
 #: seedboxsync/front/templates/components/menu_settings.html:30
+#: seedboxsync/front/templates/settings/users_delete.html:7
+#: seedboxsync/front/templates/settings/users_edit.html:7
 msgid "Users"
 msgstr "Utilisateurs"
 
 #: seedboxsync/front/templates/components/menu_settings.html:31
+#: seedboxsync/front/templates/settings/apikeys.html:7
+#: seedboxsync/front/templates/settings/apikeys_create.html:7
+#: seedboxsync/front/templates/settings/apikeys_delete.html:7
 msgid "My API keys"
 msgstr "Mes clés d’API"
 
-#: seedboxsync/front/templates/components/menu_settings.html:36
+#: seedboxsync/front/templates/components/menu_settings.html:37
 msgid "Need help?"
 msgstr "Besoin d’aide ?"
 
-#: seedboxsync/front/templates/components/menu_settings.html:38
+#: seedboxsync/front/templates/components/menu_settings.html:40
 msgid ""
 "<a title=\"SeedboxSync configuration documentation\" "
 "href=\"https://llaumgui.github.io/seedboxsync/getting-"
@@ -629,70 +658,81 @@ msgstr ""
 "started/configuration/\">La documentation</a> contient toutes les "
 "informations dont vous avez besoin."
 
-#: seedboxsync/front/templates/components/modal.html:22
+#: seedboxsync/front/templates/components/modal.html:32
 msgid "OK"
 msgstr "OK"
 
-#: seedboxsync/front/templates/components/modal.html:23
+#: seedboxsync/front/templates/components/modal.html:37
 msgid "Cancel"
 msgstr "Annuler"
 
-#: seedboxsync/front/templates/components/navbar.html:27
+#: seedboxsync/front/templates/components/navbar.html:12
+msgid "Main navigation"
+msgstr "Navigation principale"
+
+#: seedboxsync/front/templates/components/navbar.html:18
+msgid "Toggle navigation"
+msgstr "Déplier/Replier le menu"
+
+#: seedboxsync/front/templates/components/navbar.html:26
 msgid "Downloaded"
 msgstr "Téléchargés"
 
-#: seedboxsync/front/templates/components/navbar.html:28
+#: seedboxsync/front/templates/components/navbar.html:27
 msgid "Uploaded"
 msgstr "Envoyés"
 
-#: seedboxsync/front/templates/components/navbar.html:29
+#: seedboxsync/front/templates/components/navbar.html:28
 msgid "Stats"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/components/navbar.html:47
+#: seedboxsync/front/templates/components/navbar.html:46
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: seedboxsync/front/templates/settings/apikeys.html:13
-msgid "API keys list"
-msgstr "Liste des clés d’API"
-
-#: seedboxsync/front/templates/settings/apikeys.html:26
-#: seedboxsync/front/templates/settings/users.html:23
+#: seedboxsync/front/templates/settings/apikeys.html:39
+#: seedboxsync/front/templates/settings/users.html:34
 msgid "Created"
 msgstr "Date de création"
 
-#: seedboxsync/front/templates/settings/apikeys.html:27
+#: seedboxsync/front/templates/settings/apikeys.html:40
 msgid "Last used"
 msgstr "Dernier usage"
 
-#: seedboxsync/front/templates/settings/apikeys.html:36
-#: seedboxsync/front/templates/settings/users.html:36
+#: seedboxsync/front/templates/settings/apikeys.html:49
+#: seedboxsync/front/templates/settings/users.html:47
 msgid "Never"
 msgstr "Jamais"
 
-#: seedboxsync/front/templates/settings/apikeys.html:53
-#: seedboxsync/front/templates/settings/users.html:56
+#: seedboxsync/front/templates/settings/apikeys.html:67
+#: seedboxsync/front/templates/settings/users.html:68
 msgid "Add"
 msgstr "Ajouter"
 
-#: seedboxsync/front/templates/settings/apikeys_create.html:13
-msgid "API keys create"
-msgstr "Création de clé d’API"
+#: seedboxsync/front/templates/settings/apikeys_create.html:8
+#: seedboxsync/front/views/settings/users.py:73
+msgid "Create"
+msgstr "Créer"
 
-#: seedboxsync/front/templates/settings/apikeys_delete.html:13
-msgid "API key delete"
-msgstr "La clé d’API a été effacée"
+#: seedboxsync/front/templates/settings/apikeys_create.html:48
+#: seedboxsync/front/templates/settings/authentication.html:136
+#: seedboxsync/front/templates/settings/nas.html:55
+#: seedboxsync/front/templates/settings/ping.html:77
+#: seedboxsync/front/templates/settings/seedbox.html:219
+#: seedboxsync/front/templates/settings/seedboxsync.html:83
+#: seedboxsync/front/templates/settings/users_edit.html:82
+msgid "Save"
+msgstr "Sauver"
 
-#: seedboxsync/front/templates/settings/apikeys_delete.html:23
+#: seedboxsync/front/templates/settings/apikeys_delete.html:35
 msgid "Name:"
 msgstr "Nom"
 
-#: seedboxsync/front/templates/settings/authentication.html:24
+#: seedboxsync/front/templates/settings/authentication.html:34
 msgid "Global"
 msgstr "Global"
 
-#: seedboxsync/front/templates/settings/authentication.html:25
+#: seedboxsync/front/templates/settings/authentication.html:35
 msgid ""
 "If authentication is disabled, do not expose the application directly, "
 "delegate authentication to a reverse proxy instead."
@@ -700,115 +740,116 @@ msgstr ""
 "Si l’authentification est désactivée, ne pas exposer l’application "
 "directement et déléguer l’authentification à un reverse proxy."
 
-#: seedboxsync/front/templates/settings/authentication.html:43
-#: seedboxsync/front/templates/settings/seedboxsync.html:21
+#: seedboxsync/front/templates/settings/authentication.html:49
+#: seedboxsync/front/templates/settings/seedboxsync.html:32
 msgid "Features"
 msgstr "Fonctionnalités"
 
-#: seedboxsync/front/templates/settings/authentication.html:56
+#: seedboxsync/front/templates/settings/authentication.html:60
 msgid "OAuth 2.0 / OIDC"
 msgstr "OAuth 2.0 / OIDC"
 
-#: seedboxsync/front/templates/settings/info.html:6
-#: seedboxsync/front/templates/settings/info.html:45
+#: seedboxsync/front/templates/settings/info.html:8
+#: seedboxsync/front/templates/settings/info.html:56
 msgid "Never executed."
 msgstr "Jamais exécuté."
 
-#: seedboxsync/front/templates/settings/info.html:8
+#: seedboxsync/front/templates/settings/info.html:10
 #, python-format
 msgid "Running since %(since)s"
 msgstr "En cours depuis %(since)s"
 
-#: seedboxsync/front/templates/settings/info.html:10
+#: seedboxsync/front/templates/settings/info.html:12
 #, python-format
 msgid "Finished since %(since)s"
 msgstr "Terminé depuis %(since)s"
 
-#: seedboxsync/front/templates/settings/info.html:42
+#: seedboxsync/front/templates/settings/info.html:53
 msgid "Since"
 msgstr "Depuis"
 
-#: seedboxsync/front/templates/settings/info.html:52
+#: seedboxsync/front/templates/settings/info.html:63
 msgid "Versions"
 msgstr "Versions"
 
-#: seedboxsync/front/templates/settings/info.html:55
+#: seedboxsync/front/templates/settings/info.html:66
 msgid "SeedboxSync version"
 msgstr "Version de SeedboxSync"
 
-#: seedboxsync/front/templates/settings/info.html:59
+#: seedboxsync/front/templates/settings/info.html:70
 msgid "SeedboxSync database version"
 msgstr "Version de la base de données de SeedboxSync"
 
-#: seedboxsync/front/templates/settings/info.html:63
+#: seedboxsync/front/templates/settings/info.html:74
 msgid "Tasks"
 msgstr "Tâches"
 
-#: seedboxsync/front/templates/settings/info.html:65
+#: seedboxsync/front/templates/settings/info.html:76
 msgid "Blackhole synchronization"
 msgstr "Synchronisation de la blackhole"
 
-#: seedboxsync/front/templates/settings/info.html:66
+#: seedboxsync/front/templates/settings/info.html:77
 msgid "Seedbox synchronization"
 msgstr "Synchronisation de la seedbox"
 
-#: seedboxsync/front/templates/settings/info.html:67
+#: seedboxsync/front/templates/settings/info.html:78
 msgid "Heartbeat"
 msgstr "Heartbeat"
 
-#: seedboxsync/front/templates/settings/nas.html:20
+#: seedboxsync/front/templates/settings/nas.html:31
 msgid "Information about local environment (NAS?)."
 msgstr "Informations à propos de votre environnement local (NAS ?)."
 
-#: seedboxsync/front/templates/settings/ping.html:20
+#: seedboxsync/front/templates/settings/ping.html:31
 msgid "Settings Healthchecks service."
 msgstr "Configuration du service Healthchecks."
 
-#: seedboxsync/front/templates/settings/seedbox.html:21
+#: seedboxsync/front/templates/settings/seedbox.html:32
 msgid "Connection"
 msgstr "Connexion"
 
-#: seedboxsync/front/templates/settings/seedbox.html:22
+#: seedboxsync/front/templates/settings/seedbox.html:33
 msgid "Information about your seedbox connection."
 msgstr "Informations à propos de la connexion de votre seedbox."
 
-#: seedboxsync/front/templates/settings/seedbox.html:151
+#: seedboxsync/front/templates/settings/seedbox.html:158
 msgid "Path"
 msgstr "Répertoires"
 
-#: seedboxsync/front/templates/settings/seedbox.html:152
+#: seedboxsync/front/templates/settings/seedbox.html:159
 msgid "Information about your seedbox paths."
 msgstr "Information à propos des paths de votre seedbox."
 
-#: seedboxsync/front/templates/settings/seedboxsync.html:56
+#: seedboxsync/front/templates/settings/seedboxsync.html:69
 msgid "Security"
 msgstr "Sécurité"
 
-#: seedboxsync/front/templates/settings/users.html:13
+#: seedboxsync/front/templates/settings/users.html:7
 msgid "Users list"
 msgstr "Utilisateurs"
 
-#: seedboxsync/front/templates/settings/users.html:22
+#: seedboxsync/front/templates/settings/users.html:33
 msgid "Origin"
 msgstr "Origine"
 
-#: seedboxsync/front/templates/settings/users.html:24
+#: seedboxsync/front/templates/settings/users.html:35
 msgid "Last login"
 msgstr "Dernière connexion"
 
-#: seedboxsync/front/templates/settings/users.html:39
+#: seedboxsync/front/templates/settings/users.html:50
+#: seedboxsync/front/views/settings/users.py:126
 msgid "Edit"
 msgstr "Éditer"
 
-#: seedboxsync/front/templates/settings/users_delete.html:23
+#: seedboxsync/front/templates/settings/users_delete.html:36
 msgid "Username:"
 msgstr "Nom d’utilisateur :"
 
-#: seedboxsync/front/templates/settings/users_delete.html:27
+#: seedboxsync/front/templates/settings/users_delete.html:40
 msgid "Email:"
 msgstr "E-mail :"
 
-#: seedboxsync/front/templates/settings/users_edit.html:62
+#: seedboxsync/front/templates/settings/users_edit.html:67
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -893,14 +934,6 @@ msgstr "Utilisateur sauvegardé avec succès."
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: seedboxsync/front/views/settings/users.py:73
-msgid "User add"
-msgstr "Ajouter un utilisateur"
-
-#: seedboxsync/front/views/settings/users.py:126
-msgid "User edit"
-msgstr "Éditer l’utilisateur"
-
 #: seedboxsync/front/views/settings/users.py:157
 #, python-format
 msgid "User '%(username)s' deleted successfully."
@@ -910,6 +943,3 @@ msgstr "L’utilisateur '%(username)s' a bien été supprimé."
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l’utilisateur."
 
-#: seedboxsync/front/views/settings/users.py:163
-msgid "User delete"
-msgstr "Supprimer l’utilisateur"

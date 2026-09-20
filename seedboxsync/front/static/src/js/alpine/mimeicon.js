@@ -13,33 +13,33 @@
  */
 export function getMimeIconClass(mimeType) {
   if (!mimeType || mimeType === "application/octet-stream")
-    return "fa-solid fa-file has-text-grey";
+    return "cursor-pointer fa-solid fa-file text-grey";
 
   // Main type
   if (mimeType.startsWith("video/"))
-    return "fa-solid fa-video has-text-link";
+    return "cursor-pointer fa-solid fa-video text-blue";
   if (mimeType.startsWith("image/"))
-    return "fa-solid fa-image has-text-success";
+    return "cursor-pointer fa-solid fa-image text-purple";
   if (mimeType.startsWith("audio/"))
-    return "fa-solid fa-music has-text-warning";
+    return "cursor-pointer fa-solid fa-music text-red";
   if (mimeType.startsWith("text/"))
-    return "fa-solid fa-file-lines has-text-info";
+    return "cursor-pointer fa-solid fa-file-lines text-orange";
   if (mimeType.startsWith("application/x-bittorrent"))
-    return "fa-solid fa-download has-text-primary";
+    return "fa-solid fa-download text-grey";
 
   // Others types
   switch (mimeType) {
     case "application/pdf":
-      return "fa-solid fa-file-pdf has-text-danger";
+      return "cursor-pointer fa-solid fa-file-pdf text-green";
     case "application/zip":
     case "application/x-7z-compressed":
     case "application/x-rar-compressed":
     case "application/x-tar":
-      return "fa-solid fa-file-zipper has-text-warning";
+      return "cursor-pointer fa-solid fa-file-zipper text-warning";
     case "application/json":
     case "application/xml":
-      return "fa-solid fa-file-code has-text-link";
+      return "cursor-pointer fa-solid fa-file-code text-secondary";
     default:
-      return "fa-solid fa-file has-text-grey";
+      return "cursor-pointer fa-solid fa-file text-grey";
   }
 }

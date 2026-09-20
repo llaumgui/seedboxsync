@@ -1,9 +1,0 @@
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-<script>document.addEventListener("DOMContentLoaded", () => {
-{% for category, message in messages %}
-bulmaToast.toast({ message: `{{ message }}`, type: "is-{{ category }}" });
-{% endfor %}
-});</script>
-  {% endif %}
-{% endwith %}

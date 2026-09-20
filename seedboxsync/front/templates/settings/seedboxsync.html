@@ -1,80 +1,90 @@
+{% import 'components/macros.html' as macro %}
 {% from 'components/macros_form.html' import form_error, render_field %}
 
+{% set breadcrumb_items = [
+  (_('Settings'), url_for('settings.info')),
+  (_('General'), False),
+  (_('SeedboxSync'), False),
+] %}
+
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
-    <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('General') }} / {{ _('SeedboxSync') }}{% endblock %}</h2>
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
 
-      <form method="post" x-data="validators.form()">
-        {{ form.csrf_token }}
-        {{ form_error(form) }}
+    <form method="post" x-data="validators.form()">
+      {{ form.csrf_token }}
+      {{ form_error(form) }}
 
-        <div class="box">
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
 
-          <h3 class="subtitle is-4">{{ _('Features') }}</h3>
-          <div class="columns">
-            <div class="column is-6" x-data="{
+          <h3 class="h4">{{ _('Features') }}</h3>
+          <div class="row">
+            <div class="col-md-6 mb-3" x-data="{
               enabled: {{ 'true' if form.sync_blackhole_enabled.data else 'false' }},
-              touched: false,
+              touched: false
             }">
-              <div class="field">
-                {{ render_field(form.sync_blackhole_enabled) }}
-              </div>
+              {{ render_field(form.sync_blackhole_enabled) }}
             </div>
 
-            <div class="column is-6" x-data="{
+            <div class="col-md-6 mb-3" x-data="{
               enabled: {{ 'true' if form.sync_seedbox_enabled.data else 'false' }},
-              touched: false,
+              touched: false
             }">
-              <div class="field">
-                {{ render_field(form.sync_seedbox_enabled) }}
-              </div>
+              {{ render_field(form.sync_seedbox_enabled) }}
             </div>
           </div>
 
-          <div class="columns">
-            <div class="column is-6">
-              <div class="field" x-data="{ webui_theme: '{{ form.webui_theme.data }}', touched: false }">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div x-data="{
+                webui_theme: '{{ form.webui_theme.data }}',
+                touched: false
+              }">
                 {{ render_field(form.webui_theme) }}
               </div>
             </div>
 
-            <div class="column is-6">
-              <div class="field" x-data="{ webui_language: '{{ form.webui_language.data }}', touched: false }">
+            <div class="col-md-6 mb-3">
+              <div x-data="{
+                webui_language: '{{ form.webui_language.data }}',
+                touched: false
+              }">
                 {{ render_field(form.webui_language) }}
               </div>
             </div>
           </div>
 
-          <h3 class="subtitle is-4 pt-4">{{ _('Security') }}</h3>
-          <div class="columns">
-            <div class="column is-6" x-data="{
+          <h3 class="h4 pt-4">{{ _('Security') }}</h3>
+          <div class="row">
+            <div class="col-md-6 mb-3" x-data="{
               enabled: {{ 'true' if form.wtf_csrf_enabled.data else 'false' }},
-              touched: false,
+              touched: false
             }">
-              <div class="field">
-                {{ render_field(form.wtf_csrf_enabled) }}
-              </div>
+              {{ render_field(form.wtf_csrf_enabled) }}
             </div>
           </div>
-
         </div>
+      </div>
 
-        <div class="control has-text-right">
-          <button class="button is-success" :disabled="!canSubmit()">
-            <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
-          </button>
-        </div>
+      <div class="mt-4 text-end">
+        <button class="btn btn-success" :disabled="!canSubmit()">
+          <i class="fas fa-floppy-disk "></i> {{ _('Save') }}
+        </button>
+      </div>
 
-      </form>
-    </div>
+    </form>
   </div>
 </div>
 

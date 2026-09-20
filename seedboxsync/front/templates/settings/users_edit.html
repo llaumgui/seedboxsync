@@ -1,82 +1,85 @@
 {% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Settings'), url_for('settings.info')),
+  (_('Authentication'), False),
+  (_('Users'), url_for('settings.users')),
+  (action, False),
+] %}
 
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
+  <div class="col-md-10">
     <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ action }}{% endblock %}</h2>
+      {{ macro.breadcrumb(breadcrumb_items) }}
 
       <form method="post" x-data="validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
-        <div class="box">
+        <div class="card bg-body-tertiary shadow">
+          <div class="card-body">
 
-          <div class="columns pt-4">
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  username: '{{ form.username.data or '' }}',
-                  touched: false,
-                  isValid() { return validators.Length(this.touched, this.username, 4, 25) && validators.isRequired(this.touched, this.username) }
+            <div class="row">
+              <div class="col-md-6 mb-3" x-data="{
+                username: '{{ form.username.data or '' }}',
+                touched: false,
+                isValid() { return validators.Length(this.touched, this.username, 4, 25) && validators.isRequired(this.touched, this.username) }
               }">
                 {{ render_field(form.username) }}
               </div>
-            </div>
 
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  email: '{{ form.email.data or '' }}',
-                  touched: false,
-                  isValid() { return validators.Length(this.touched, this.email, 8, 35) && validators.isRequired(this.touched, this.email) }
+              <div class="col-md-6 mb-3" x-data="{
+                email: '{{ form.email.data or '' }}',
+                touched: false,
+                isValid() { return validators.Length(this.touched, this.email, 8, 35) && validators.isRequired(this.touched, this.email) }
               }">
                 {{ render_field(form.email) }}
               </div>
             </div>
-          </div>
 
-          <div class="columns pt-4" x-data="{
-                  password: '{{ form.password.data or '' }}',
-                  password2: '{{ form.password.data or '' }}',
-                  touched: false,
-                  {% if form.password.flags.required %}
-                  isValid() { return (validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) && validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
-                  {% else %}
-                  isValid() { return (validators.Length(this.touched, this.password, 8, 128) && this.password === this.password2) }
-                  {% endif %}
-              }"
-          >
-            <div class="column is-6">
-              <div class="field">
+            <div class="row" x-data="{
+              password: '{{ form.password.data or '' }}',
+              password2: '{{ form.password.data or '' }}',
+              touched: false,
+              {% if form.password.flags.required %}
+              isValid() { return (validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) && validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
+              {% else %}
+              isValid() { return (validators.Length(this.touched, this.password, 8, 128) && this.password === this.password2) }
+              {% endif %}
+            }">
+              <div class="col-md-6 mb-3">
                 {{ render_field(form.password) }}
               </div>
-            </div>
 
-            <div class="column is-6">
-              <div class="field">
+              <div class="col-md-6 mb-3">
                 <label class="label" for="{{ form.password.id }}2">{{ _('Confirm password') }}</label>
-                <div class="control column p-0 has-icons-left has-icons-right">
-                  <input id="{{ form.password.id }}2" class="input" type="{{ form.password.widget.input_type }}"
-                          name="{{ form.password.name }}2" x-model="{{ form.password.id }}2"
-                          placeholder="{{ form.password.render_kw['placeholder'] }}"
-                          x-bind:class="{ 'is-danger': !isValid()}"/>
-                  <span class="icon is-small is-left"><i class="fas {{ form.password.render_kw['icon'] }}"></i></span>
-                  <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas {{ form.password.render_kw['icon'] }}"></i></span>
+                  <input id="{{ form.password.id }}2" class="form-control" type="{{ form.password.widget.input_type }}"
+                         name="{{ form.password.name }}2" x-model="{{ form.password.id }}2"
+                         placeholder="{{ form.password.render_kw['placeholder'] }}"
+                         x-bind:class="isValid() ? 'is-valid' : 'is-invalid'"/>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
 
-        <div class="control has-text-right">
-          <button class="button is-success" :disabled="!canSubmit()">
-            <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
+        <div class="mt-4 text-end">
+          <button class="btn btn-success" :disabled="!canSubmit()">
+            <i class="fas fa-floppy-disk "></i> {{ _('Save') }}
           </button>
         </div>
 

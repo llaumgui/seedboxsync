@@ -1,6 +1,6 @@
 {% macro form_error(form) %}
   {% if form.errors %}
-    <div class="notification is-danger">
+    <div class="alert alert-danger">
       <ul>
         {% for field, error_list in form.errors.items() %}
           {% for error in error_list %}
@@ -33,40 +33,44 @@
 <label class="label" for="{{ field.id }}">
   {{ field.label }}
   {% if field.render_kw['help'] %}
-    <a class="icon has-text-grey" title="{{ field.render_kw['help'] }}">
+    <a href="#" class="text-body-info ms-1" @click.prevent
+       data-bs-toggle="tooltip"
+       data-bs-title="{{ field.render_kw['help'] }}"
+       aria-label="{{ field.render_kw['help'] }}">
       <i class="fas fa-circle-info"></i>
     </a>
   {% endif %}
 </label>
-<div class="control column p-0 has-icons-left has-icons-right">
-  <input type="{{ field.widget.input_type }}" class="input"
+<div class="input-group">
+  <span class="input-group-text">
+    <i class="fas {{ field.render_kw['icon'] }}"></i>
+  </span>
+  <input type="{{ field.widget.input_type }}" class="form-control"
          id="{{ field.id }}" name="{{ field.name }}"
          placeholder="{{ field.render_kw['placeholder'] }}"
          @click="touched = true"
          x-model="{{ field.id }}"
          x-effect="setFieldState('{{ field.id }}', isValid(), touched)"
-         x-bind:class="{ 'is-danger': !isValid() } "/>
-  <span class="icon is-small is-left"><i class="fas {{ field.render_kw['icon'] }}"></i></span>
-  <span class="icon is-small is-right" x-show="isValid()" x-transition><i class="fas fa-check has-text-success"></i></span>
+         x-bind:class="isValid() ? 'is-valid' : 'is-invalid'"/>
 </div>
 {% endmacro %}
 
 {% macro render_field_checkbox(field) %}
-  <label class="label" for="{{ field.id }}">
-    <input type="{{ field.widget.input_type }}"
-           id="{{ field.id }}"  name="{{ field.name }}"
-           value="1"
-           @click="touched = true"
-           x-model="enabled"
-           x-effect="setFieldState('{{ field.id }}', true, touched)" />
-    {{ field.label }}
-  </label>
+<div class="form-check">
+  <input class="form-check-input" type="{{ field.widget.input_type }}"
+         id="{{ field.id }}" name="{{ field.name }}"
+         value="1"
+         @click="touched = true"
+         x-model="enabled"
+         x-effect="setFieldState('{{ field.id }}', true, touched)" />
+  <label class="form-check-label" for="{{ field.id }}">{{ field.label }}</label>
+</div>
 {% endmacro %}
 
 {% macro render_field_select(field) %}
-  <label class="label" for="{{ field.id }}">{{ field.label }}</label>
+  <label class="form-label" for="{{ field.id }}">{{ field.label }}</label>
   <div class="control select">
-    <select id="{{ field.id }}" name="{{ field.name }}"
+    <select id="{{ field.id }}" name="{{ field.name }}" class="form-select"
             @click="touched = true"
             x-model="{{ field.id }}"
             x-effect="setFieldState('{{ field.id }}', true, touched)">

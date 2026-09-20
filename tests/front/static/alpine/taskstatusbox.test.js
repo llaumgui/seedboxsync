@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { toast } = vi.hoisted(() => ({ toast: vi.fn() }));
-vi.mock("bulma-toast", () => ({ toast }));
+vi.mock("bootstrap", () => ({ Toast: { getOrCreateInstance: vi.fn() } }));
 
 import { TaskStatusBoxComponent } from "@seedboxsync/alpine/taskstatusbox.js";
 
@@ -18,7 +17,7 @@ describe("TaskStatusBoxComponent", () => {
       task_not_scheduled: "Not scheduled",
     };
     globalThis.dateTimeOption = {};
-    globalThis.window = { addEventListener: vi.fn() };
+    globalThis.window = { addEventListener: vi.fn(), dispatchEvent: vi.fn() };
   });
 
   it("loads never-launched, running, and finished states", async () => {
@@ -34,7 +33,12 @@ describe("TaskStatusBoxComponent", () => {
     fetch.mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ data: { running: false, finished: "2025-01-02T00:00:00Z" } }) });
     await component.loadTaskStatus();
     expect(component.taskStatusMessage).toContain("Completed since");
-    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ type: "is-info" }));
+    expect(window.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "show-toast",
+        detail: expect.objectContaining({ type: "info" }),
+      }),
+    );
   });
 
   it("reports status errors and task launch outcomes", async () => {
@@ -46,12 +50,22 @@ describe("TaskStatusBoxComponent", () => {
     fetch.mockResolvedValueOnce({ status: 202 });
     await component.taskLaunch();
     expect(fetch).toHaveBeenLastCalledWith("/launch", { method: "POST" });
-    expect(toast).toHaveBeenLastCalledWith(expect.objectContaining({ type: "is-success" }));
+    expect(window.dispatchEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        type: "show-toast",
+        detail: expect.objectContaining({ type: "success" }),
+      }),
+    );
     expect(component.tasking).toBe(false);
 
     fetch.mockResolvedValueOnce({ status: 500 });
     await component.taskLaunch();
-    expect(toast).toHaveBeenLastCalledWith(expect.objectContaining({ type: "is-danger" }));
+    expect(window.dispatchEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        type: "show-toast",
+        detail: expect.objectContaining({ type: "danger" }),
+      }),
+    );
   });
 
   it("handles a network failure while launching", async () => {
@@ -61,7 +75,7 @@ describe("TaskStatusBoxComponent", () => {
     await component.taskLaunch();
 
     expect(component.tasking).toBe(false);
-    expect(toast).not.toHaveBeenCalled();
+    expect(window.dispatchEvent).not.toHaveBeenCalled();
   });
 
   it("loads immediately and registers periodic refresh", async () => {

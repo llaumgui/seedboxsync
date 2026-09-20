@@ -1,45 +1,55 @@
 {% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Settings'), url_for('settings.info')),
+  (_('Authentication'), False),
+  (_('My API keys'), url_for('settings.apikeys')),
+  (_('Create'), False),
+] %}
 
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
-    <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ _('API keys create') }}{% endblock %}</h2>
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
 
-      <form method="post" x-data="validators.form()">
-        {{ form.csrf_token }}
-        {{ form_error(form) }}
+    <form method="post" x-data="validators.form()">
+      {{ form.csrf_token }}
+      {{ form_error(form) }}
 
-        <div class="box">
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
 
-          <div class="columns pt-4">
-            <div class="column is-6">
-              <div class="field" x-data="{
-                  name: '{{ form.name.data or '' }}',
-                  touched: false,
-                  isValid() { return validators.Length(this.touched, this.name, 4, 32) && validators.isRequired(this.touched, this.name) }
-              }">
-                {{ render_field(form.name) }}
-              </div>
+          <div class="row">
+            <div class="col-md-6 md-3"  x-data="{
+              name: '{{ form.name.data or '' }}',
+              touched: false,
+              isValid() { return validators.Length(this.touched, this.name, 4, 32) && validators.isRequired(this.touched, this.name) }
+            }">
+              {{ render_field(form.name) }}
             </div>
           </div>
 
         </div>
+      </div>
 
-        <div class="control has-text-right">
-          <button class="button is-success" :disabled="!canSubmit()">
-            <span class="icon is-small"><i class="fas fa-floppy-disk "></i></span> <span>{{ _('Save') }}</span>
-          </button>
-        </div>
+      <div class="mt-4 text-end">
+        <button class="btn btn-success" :disabled="!canSubmit()">
+          <i class="fas fa-floppy-disk "></i> {{ _('Save') }}
+        </button>
+      </div>
 
-      </form>
-    </div>
+    </form>
   </div>
 </div>
 

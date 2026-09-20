@@ -1,28 +1,39 @@
 {% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Settings'), url_for('settings.info')),
+  (_('Authentication'), False),
+  (_('Users list'), False),
+] %}
 
 {% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="columns">
+<div class="row">
   {% include 'components/menu_settings.html' %}
 
-  <div class="column">
-    <div class="content">
-      <h2 class="title">{% block title %}{{ _('Settings') }} / {{ _('Authentication') }} / {{ _('Users list') }}{% endblock %}</h2>
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
 
-      <div class="box">
+    <div class="card bg-body-tertiary shadow">
+      <div class="card-body">
         {# Table #}
-        <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+        <table class="table table-bordered table-striped table-hover">
           <thead>
             <tr>
               <th>{{ _('Username') }}</th>
-              <th class="is-hidden-mobile">{{ _('Email') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Email') }}</th>
               <th>{{ _('Origin') }}</th>
-              <th class="is-hidden-mobile">{{ _('Created') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Created') }}</th>
               <th>{{ _('Last login') }}</th>
-              <th class="is-narrow"></th>
+              <th class="narrow"></th>
             </tr>
           </thead>
           <tbody>
@@ -30,18 +41,18 @@
               {% set can_delete = user.id != current_user.id %}
               <tr>
                 <td>{{ user.username }}</td>
-                <td class="is-hidden-mobile">{{ user.email }}</td>
+                <td class="d-none d-md-table-cell">{{ user.email }}</td>
                 <td>{{ user.origin }}</td>
-                <td class="is-hidden-mobile">{{ format_datetime(user.created) }}</td>
+                <td class="d-none d-md-table-cell">{{ format_datetime(user.created) }}</td>
                 <td>{{ format_datetime(user.last_login) if user.last_login is not none else _('Never') }}</td>
-                <td class="has-text-right">
-                    <div class="buttons is-right is-flex-wrap-nowrap">
-                      <a class="button is-info is-outlined" href="{{ url_for('settings.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
-                        <span class="icon is-small"><i class="fas fa-pen-to-square"></i></span>
+                <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2 flex-nowrap">
+                      <a class="btn btn-sm btn-outline-info" href="{{ url_for('settings.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
+                        <i class="fas fa-pen-to-square"></i>
                       </a>
-                      <a class="button is-danger is-outlined" {% if not can_delete %}disabled aria-disabled="true"{% endif %} title="{{ _('Delete') }}"
+                      <a class="btn btn-sm btn-outline-danger" {% if not can_delete %}disabled aria-disabled="true"{% endif %} title="{{ _('Delete') }}"
                         {% if can_delete %}href="{{ url_for('settings.users_delete', user_id=user.id) }}"{% endif %}>
-                        <span class="icon is-small"><i class="fas fa-times"></i></span>
+                        <i class="fas fa-times"></i>
                       </a>
                   </div>
                 </td>
@@ -50,14 +61,14 @@
           </tbody>
         </table>
       </div>
-
-      <div class="control has-text-right">
-        <a class="button is-info is-outlined" href="{{ url_for('settings.users_create') }}">
-          <span class="icon is-small"><i class="fas fa-add"></i></span><span>{{ _('Add') }}</span>
-        </a>
-      </div>
-
     </div>
+
+    <div class="mt-4 text-end">
+      <a class="btn btn-outline-info" href="{{ url_for('settings.users_create') }}">
+        <i class="fas fa-add"></i> {{ _('Add') }}
+      </a>
+    </div>
+
   </div>
 </div>
 

@@ -5,47 +5,45 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
-  <div class="columns is-desktop">
-    <div class="column">
-      <h2 class="title is-4">{{ _('Total') }}</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>{{ _('Number of files downloaded') }}</th>
-            <th>{{ _('Total size of files downloaded') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ stats_total.files }}</td>
-            <td>{{ stats_total.total_size }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="row mb-5">
+  <div class="col-6">
+    <h2 class="h4">{{ _('Total') }}</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ _('Number of files downloaded') }}</th>
+          <th>{{ _('Total size of files downloaded') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ stats_total.files }}</td>
+          <td>{{ stats_total.total_size }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+</div>
 
-  <div class="columns is-desktop pt-6">
-    <div class="column is-3 is-offset-1">
-      <h2 class="title is-4">{{ _('Files by MIME type') }}</h2>
-      <canvas id="filesByMimeType"></canvas>
-    </div>
-    <div class="column is-3 is-offset-3">
-      <h2 class="title is-4">{{ _('Size by MIME type') }}</h2>
-      <canvas id="sizeByMimeType"></canvas>
-    </div>
+<div class="row mb-5 justify-content-around">
+  <div class="col-3">
+    <h2 class="h4">{{ _('Files by MIME type') }}</h2>
+    <canvas id="filesByMimeType"></canvas>
   </div>
+  <div class="col-3">
+    <h2 class="h4">{{ _('Size by MIME type') }}</h2>
+    <canvas id="sizeByMimeType"></canvas>
+  </div>
+</div>
 
-  <div class="columns is-desktop pt-6">
-    <div class="column">
-      <h2 class="title is-4">{{ _('Downloads by month') }}</h2>
-      <canvas id="statsByMonth"></canvas>
-    </div>
-    <div class="column">
-      <h2 class="title is-4">{{ _('Downloads by year') }}</h2>
-      <canvas id="statsByYear"></canvas>
-    </div>
+<div class="row mb-5">
+  <div class="col-6">
+    <h2 class="h4">{{ _('Downloads by month') }}</h2>
+    <canvas id="statsByMonth"></canvas>
+  </div>
+  <div class="col-6">
+    <h2 class="h4">{{ _('Downloads by year') }}</h2>
+    <canvas id="statsByYear"></canvas>
   </div>
 </div>
 

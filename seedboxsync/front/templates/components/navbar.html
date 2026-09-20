@@ -1,54 +1,53 @@
 {% set current_path = request.path %}
 
-{% macro menu_link(title, link, icon="") %}
-<a class="navbar-item{% if current_path == url_for(link) or (url_for(link) != '/' and current_path.startswith(url_for(link))) %} is-active{% endif %}"
-   href="{{ url_for(link) }}">
-   <h1>{% if icon %}<i class="fa {{ icon }}" aria-hidden="true"></i> {% endif %}{{ title }}</h1>
-</a>
+{% macro menu_link(title, link, dropdown=False, icon="") %}
+<li class="{% if not dropdown %}nav-item{% endif %}">
+  <a class="{% if dropdown %}dropdown-item{% else %}py-3 nav-link{% endif %}{% if current_path == url_for(link) or (url_for(link) != '/' and current_path.startswith(url_for(link))) %} active{% endif %}"
+     href="{{ url_for(link) }}">
+    {% if icon %}<i class="fa {{ icon }}" aria-hidden="true"></i> {% endif %}{{ title }}
+  </a>
+</li>
 {% endmacro %}
 
-<nav class="navbar has-shadow is-dark" role="navigation" aria-label="main navigation">
-  <div class="container">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="{{ url_for('frontend.homepage') }}">
-        <img alt="SeedboxSync logo" src="{{ url_for('static', filename='logo.png') }}" /> SeedboxSync
-      </a>
-      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" tabindex="0" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    <div class="navbar-menu" id="navMenu">
-      <div class="navbar-start">
+<nav class="navbar navbar-expand-lg bg-body-tertiary p-0" role="navigation" aria-label="{{ _('Main navigation') }}" data-bs-theme="dark">
+  <div class="container-md">
+    <a class="navbar-brand" href="{{ url_for('frontend.homepage') }}">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="28" class="d-inline-block align-text-top">
+      {{ _('SeedboxSync') }}
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% if config.LOGIN_DISABLED or current_user.is_authenticated %}
           {{ menu_link(_('Dashboard'), 'frontend.homepage') }}
           {{ menu_link(_('Downloaded'), 'frontend.downloaded') }}
           {{ menu_link(_('Uploaded'), 'frontend.uploaded') }}
           {{ menu_link(_('Stats'), 'frontend.stats') }}
         {% endif %}
-      </div>
+      </ul>
 
-      {% if config.LOGIN_DISABLED %}
-        <div class="navbar-end">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if config.LOGIN_DISABLED %}
           {{ menu_link(_('Settings'), 'settings.info') }}
-        </div>
-      {% elif current_user.is_authenticated %}
-        <div class="navbar-item navbar-end has-dropdown is-hoverable">
-          <a class="navbar-link">
-            {% if seedboxsync_config.auth_gravatar_enabled %}<figure class="image is-24x24">
-              <img class="is-rounded" src="{{ gravatar(current_user.email) }}" alt="{{ current_user.username }}">
-            </figure>{% endif %}
-            {{ current_user.username }}
+        {% elif current_user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if seedboxsync_config.auth_gravatar_enabled %}
+              <img src="{{ gravatar(current_user.email) }}" alt="{{ current_user.username }}" width="24" height="24" class="rounded-circle">
+            {% endif %}
+            <span>{{ current_user.username }}</span>
           </a>
-          <div class="navbar-dropdown">
-            {{ menu_link(_('Settings'), 'settings.info', 'fa-gear') }}
-            {{ menu_link(_('Logout'), 'auth.logout', 'fa-sign-out' ) }}
-          </div>
-        </div>
-      {% endif %}
-
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            {{ menu_link(_('Settings'), 'settings.info', True, 'fa-gear') }}
+            <li><hr class="dropdown-divider"></li>
+            {{ menu_link(_('Logout'), 'auth.logout', True, 'fa-sign-out') }}
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 </nav>

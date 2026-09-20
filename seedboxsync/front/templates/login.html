@@ -5,16 +5,16 @@
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="content">
+<div class="card w-50 mx-auto my-5 text-bg-dark shadow">
+  <div class="card-body">
 
-  <div class="box column is-6 is-offset-3">
     {% if not seedboxsync_config.get('oauth_builtin_authentication_disabled') %}<form method="post" x-data="validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 
-      <h1 class="title">{% block title %}{{ _('Login') }}{% endblock %}</h1>
+      <h1 class="card-title h2 mb-4">{% block title %}{{ pgettext('page_title', 'Login') }}{% endblock %}</h1>
 
-      <div class="field" x-data="{
+      <div class="mb-3" x-data="{
           login: '{{ form.login.data or "" }}',
           touched: false,
           isValid() { return validators.Length(this.touched, this.login, 4, 35) }
@@ -22,7 +22,7 @@
         {{ render_field(form.login) }}
       </div>
 
-      <div class="field" x-data="{
+      <div class="mb-3" x-data="{
           password: '{{ form.password.data or "" }}',
           touched: false,
           isValid() { return validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) }
@@ -30,25 +30,22 @@
         {{ render_field(form.password) }}
       </div>
 
-      <div class="field" x-data="{
+      <div class="mb-3" x-data="{
           enabled: '{{ form.remember.data or "" }}',
           touched: false
         }">
         {{ render_field(form.remember) }}
       </div>
 
-      <div class="control">
-        <button class="button is-primary" :disabled="!canSubmit()">{{ _('Save') }}</button>
+      <div class="card-footer d-flex  bg-transparent justify-content-between">
+        {% if seedboxsync_config.get('oauth_enabled') %}
+        <a class="btn btn-info" href="{{ url_for('auth.login', provider='oauth2') }}">{{ _('Login with %(provider)s', provider=seedboxsync_config.get('oauth_name')) }}</a>
+        {% endif %}
+        <button class="btn btn-primary ms-auto" :disabled="!canSubmit()">{{ _('Log in') }}</button>
       </div>
 
     </form>{% endif %}
 
-    {% if seedboxsync_config.get('oauth_enabled') %}
-      <p class="has-text-centered pt-4">
-        <a class="button is-link" href="{{ url_for('auth.login', provider='oauth2') }}">{{ _('Login with %(provider)s', provider=seedboxsync_config.get('oauth_name')) }}</a>
-      </p>
-    {% endif %}
   </div>
 </div>
-
 {% endblock %}

@@ -1,40 +1,42 @@
 {% set current_path = request.path %}
 
 {% macro menu_link(title, link) %}
-<a class="{% if current_path == url_for(link) or (link not in ['settings.info', 'settings.seedbox'] and current_path.startswith(url_for(link))) %}is-active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
+<a class="nav-link{% if current_path == url_for(link) or (link not in ['settings.info', 'settings.seedbox'] and current_path.startswith(url_for(link))) %} active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
 {% endmacro %}
 
-<div class="column is-2 settings-sidebar">
+<div class="col-md-2 settings-sidebar">
 
-  <h1 class="title is-4 ">{{ _('Settings') }}</h1>
+  <h1 class="h4">{{ _('Settings') }}</h1>
 
-  <aside class="menu">
-    <ul class="menu-list">
-      <li>{{ menu_link( _('Informations'), 'settings.info') }}</li>
+  <nav class="menu">
+    <ul class="nav nav-pills flex-column bg-body-tertiary">
+      <li class="nav-item">{{ menu_link( _('Informations'), 'settings.info') }}</li>
     </ul>
-    <p class="menu-label">{{ _('General') }}</p>
-    <ul class="menu-list">
-      <li>{{ menu_link( _('SeedboxSync'), 'settings.seedboxsync') }}</li>
-    </ul>
-
-    <p class="menu-label mt-5 mb-1">{{ _('Synchronization') }}</p>
-    <ul class="menu-list">
-      <li>{{ menu_link( _('Seedbox'), 'settings.seedbox') }}</li>
-      <li>{{ menu_link( _('Local (NAS)'), 'settings.nas') }}</li>
-      <li>{{ menu_link( _('Ping'), 'settings.ping') }}</li>
+    <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('General') }}</p>
+    <ul class="nav nav-pills flex-column bg-body-tertiary">
+      <li class="nav-item">{{ menu_link( _('SeedboxSync'), 'settings.seedboxsync') }}</li>
     </ul>
 
-    <p class="menu-label mt-5 mb-1">{{ _('Authentication') }}</p>
-    <ul class="menu-list">
-      <li>{{ menu_link( _('Settings'), 'settings.authentication') }}</li>
-      <li>{{ menu_link( _('Users'), 'settings.users') }}</li>
-      <li>{{ menu_link( _('My API keys'), 'settings.apikeys') }}</li>
+    <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('Synchronization') }}</p>
+    <ul class="nav nav-pills flex-column bg-body-tertiary">
+      <li class="nav-item">{{ menu_link( _('Seedbox'), 'settings.seedbox') }}</li>
+      <li class="nav-item">{{ menu_link( _('Local (NAS)'), 'settings.nas') }}</li>
+      <li class="nav-item">{{ menu_link( _('Ping'), 'settings.ping') }}</li>
     </ul>
-  </aside>
 
-  <div class="settings-help notification mt-4 p-2">
-    <p class="">ⓘ {{ _('Need help?') }}</p>
-    <p class="is-size-7">
+    <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('Authentication') }}</p>
+     <ul class="nav nav-pills flex-column bg-body-tertiary">
+      <li class="nav-item">{{ menu_link( _('Settings'), 'settings.authentication') }}</li>
+      <li class="nav-item">{{ menu_link( _('Users'), 'settings.users') }}</li>
+      <li class="nav-item">{{ menu_link( _('My API keys'), 'settings.apikeys') }}</li>
+    </ul>
+  </nav>
+
+  <div class="settings-help alert alert-secondary mt-4 p-2">
+    <p class="mb-1">
+      ⓘ {{ _('Need help?') }}
+    </p>
+    <p class="small mb-0">
       {{ _('<a title="SeedboxSync configuration documentation" href="https://llaumgui.github.io/seedboxsync/getting-started/configuration/">The documentation</a> contains all the information you need.') }}
     </p>
   </div>

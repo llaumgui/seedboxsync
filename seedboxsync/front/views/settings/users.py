@@ -70,7 +70,7 @@ def users_create() -> str | Response:
                 app.logger.exception(msg_logger_error, exc_info=e)
                 flash(msg_flash_error, "toast-danger")
 
-    return render_template("settings/users_edit.html", form=form, action=_("User add"))
+    return render_template("settings/users_edit.html", form=form, action=_("Create"))
 
 
 @bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
@@ -123,7 +123,7 @@ def users_edit(user_id: int) -> str | Response:
                 app.logger.exception(msg_logger_error, exc_info=e)
                 flash(msg_flash_error, "toast-danger")
 
-    return render_template("settings/users_edit.html", form=form, action=_("User edit"))
+    return render_template("settings/users_edit.html", form=form, action=_("Edit"))
 
 
 @bp.route("/users/<int:user_id>/delete", methods=["GET", "POST"])
@@ -160,4 +160,4 @@ def users_delete(user_id: int) -> str | Response:
             app.logger.exception(msg_logger_error, exc_info=e)
             flash(_("Failed to delete user."), "toast-danger")
 
-    return render_template("settings/users_delete.html", form=form, user=user, action=_("User delete"))
+    return render_template("settings/users_delete.html", form=form, user=user, action=_("Delete"))
