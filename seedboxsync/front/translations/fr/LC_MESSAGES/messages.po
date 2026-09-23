@@ -1,4 +1,4 @@
-# French translations for .
+# French translations for SeedboxSync.
 # Copyright (C) 2015-2026 Guillaume Kulakowski <guillaume@kulakowski.fr>
 # This file is distributed under the same license as the  project.
 # Guillaume Kulakowski <guillaume@kulakowski.fr>, 2025.
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-19 12:08+0200\n"
+"POT-Creation-Date: 2026-09-23 14:00+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -326,7 +326,7 @@ msgstr "Terminé"
 
 #: seedboxsync/front/templates/downloaded.html:28
 #: seedboxsync/front/templates/homepage.html:86
-#: seedboxsync/front/templates/stats.html:56
+#: seedboxsync/front/templates/stats.html:29
 msgid "Size"
 msgstr "Taille"
 
@@ -448,49 +448,78 @@ msgstr "Se connecter"
 msgid "Statistics"
 msgstr "Statistiques"
 
+#: seedboxsync/front/templates/components/macros.html:6
+#: seedboxsync/front/templates/stats.html:8
+msgid "Previous"
+msgstr "Précédent"
+
+#: seedboxsync/front/templates/components/macros.html:18
+#: seedboxsync/front/templates/stats.html:9
+msgid "Next"
+msgstr "Suivant"
+
 #: seedboxsync/front/templates/stats.html:10
+msgid "Today"
+msgstr "Aujourd’hui"
+
+#: seedboxsync/front/templates/stats.html:11
+msgid "Clear"
+msgstr "Réinitialiser"
+
+#: seedboxsync/front/templates/stats.html:12
+#: seedboxsync/front/templates/stats.html:14
+msgid "Choose date"
+msgstr "Choisir une date"
+
+#: seedboxsync/front/templates/stats.html:13
+msgid "Switch calendar view"
+msgstr "Changer de vue"
+
+#: seedboxsync/front/templates/stats.html:15
+msgid "Wk"
+msgstr "S"
+
+#: seedboxsync/front/templates/stats.html:28
+msgid "Files"
+msgstr "Fichiers"
+
+#: seedboxsync/front/templates/stats.html:30
+msgid "Size (GiB)"
+msgstr "Taille (GiB)"
+
+#: seedboxsync/front/templates/stats.html:54
 msgid "Total"
 msgstr "Total"
 
 #: seedboxsync/front/templates/settings/info.html:45
-#: seedboxsync/front/templates/stats.html:14
+#: seedboxsync/front/templates/stats.html:58
 msgid "Number of files downloaded"
 msgstr "Nombre de fichiers téléchargés"
 
 #: seedboxsync/front/templates/settings/info.html:49
-#: seedboxsync/front/templates/stats.html:15
+#: seedboxsync/front/templates/stats.html:59
 msgid "Total size of files downloaded"
 msgstr "Taille totale des fichiers téléchargés"
 
-#: seedboxsync/front/templates/stats.html:30
+#: seedboxsync/front/templates/stats.html:73
+msgid "Period"
+msgstr "Période"
+
+#: seedboxsync/front/templates/stats.html:87
 msgid "Files by MIME type"
 msgstr "Fichiers par type MIME"
 
-#: seedboxsync/front/templates/stats.html:34
+#: seedboxsync/front/templates/stats.html:91
 msgid "Size by MIME type"
 msgstr "Taille par type MIME"
 
-#: seedboxsync/front/templates/stats.html:41
+#: seedboxsync/front/templates/stats.html:98
 msgid "Downloads by month"
 msgstr "Téléchargements par mois"
 
-#: seedboxsync/front/templates/stats.html:45
+#: seedboxsync/front/templates/stats.html:102
 msgid "Downloads by year"
 msgstr "Téléchargements par années"
-
-#: seedboxsync/front/templates/stats.html:52
-#: seedboxsync/front/templates/stats.html:53
-msgid "Files"
-msgstr "Fichiers"
-
-#: seedboxsync/front/templates/stats.html:52
-#: seedboxsync/front/templates/stats.html:53
-msgid "Size (GiB)"
-msgstr "Taille (GiB)"
-
-#: seedboxsync/front/templates/stats.html:55
-msgid "Number"
-msgstr "Nombre"
 
 #: seedboxsync/front/templates/uploaded.html:20
 msgid "No files uploaded yet..."
@@ -543,14 +572,6 @@ msgstr "Erreur lors de la programmation de la tâche"
 #: seedboxsync/front/templates/components/macros.html:3
 msgid "Pagination"
 msgstr "Pagination"
-
-#: seedboxsync/front/templates/components/macros.html:6
-msgid "Previous"
-msgstr "Précédent"
-
-#: seedboxsync/front/templates/components/macros.html:18
-msgid "Next"
-msgstr "Suivant"
 
 #: seedboxsync/front/templates/components/macros.html:26
 #: seedboxsync/front/templates/components/macros.html:31
@@ -881,7 +902,7 @@ msgstr "Identifiant ou mot de passe invalide."
 
 #: seedboxsync/front/views/settings/apikeys.py:59
 msgid "API key created successfully."
-msgstr "Clé d'API sauvegardée avec succès."
+msgstr "Clé d’API sauvegardée avec succès."
 
 #: seedboxsync/front/views/settings/apikeys.py:61
 #, python-format
@@ -942,4 +963,3 @@ msgstr "L’utilisateur '%(username)s' a bien été supprimé."
 #: seedboxsync/front/views/settings/users.py:161
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l’utilisateur."
-

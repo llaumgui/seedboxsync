@@ -27,6 +27,14 @@ def test_get_uploads_list(client):
     assert len(response.json["data"]) == 250
 
 
+def test_get_uploads_list_period(client):
+    response = client.get(f"{API_PATH}/uploads?start_date=2017-09-10&end_date=2017-09-11")
+
+    assert response.status_code == 200
+    assert response.json["data_total"] == 8
+    assert all("2017-09-10" <= upload["sent"][:10] <= "2017-09-11" for upload in response.json["data"])
+
+
 def test_get_uploads(client):
     # Default
     response = client.get(f"{API_PATH}/uploads/100")

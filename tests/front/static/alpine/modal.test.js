@@ -7,12 +7,15 @@ vi.mock("bootstrap", () => ({
   Modal: { getOrCreateInstance: vi.fn(() => modalInstance) },
 }));
 
-import { ModalConfirmCallComponent, OpenModalConfirmCall } from "@seedboxsync/alpine/modal.js";
+import { ModalConfirmCallComponent } from "@seedboxsync/alpine/modal.js";
 
 describe("modal components", () => {
   function createModal() {
     const modal = ModalConfirmCallComponent();
     modal.modal = modalInstance;
+    modal.$dispatch = (type, detail) => {
+      window.dispatchEvent({ type, detail });
+    };
     return modal;
   }
 
@@ -84,12 +87,18 @@ describe("modal components", () => {
     expect(modal.loading).toBe(false);
   });
 
-  it("opens the Alpine modal from the document", () => {
-    const open = vi.fn();
-    globalThis.document = { querySelector: vi.fn(() => ({ __modal: { open } })) };
+  it("opens with the values received from the Alpine event", () => {
+    const modal = createModal();
 
-    OpenModalConfirmCall("/api", "PUT", "Title", "Content", "Done");
+    modal.open("Title", "Content", "/api", "PUT", "Done");
 
-    expect(open).toHaveBeenCalledWith("Title", "Content", "/api", "PUT", "Done");
+    expect(modal).toMatchObject({
+      title: "Title",
+      content: "Content",
+      apiUrl: "/api",
+      apiMethod: "PUT",
+      toastMessage: "Done",
+    });
+    expect(modal.modal.show).toHaveBeenCalled();
   });
 });

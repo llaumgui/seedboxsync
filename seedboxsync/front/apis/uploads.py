@@ -7,7 +7,7 @@
 """SeedboxSync api uploads view."""
 
 from typing import Any
-from flask_restx import Namespace, fields, reqparse
+from flask_restx import Namespace, fields, inputs, reqparse
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource
 from seedboxsync.front.login_manager import login_required
@@ -62,6 +62,18 @@ parser.add_argument(
     location="args",
     help="Maximum number of items to return (min=5, max=1000)",
 )
+parser.add_argument(
+    "start_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
+parser.add_argument(
+    "end_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
 
 
@@ -93,6 +105,8 @@ class UploadsList(Resource):
         offset = args.get("offset")
         limit = self.set_limit(args.get("limit", 50))
         search = args.get("search")
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
 
         count = Torrent.select()
         select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).limit(limit).offset(offset).order_by(Torrent.sent.desc())
@@ -100,6 +114,14 @@ class UploadsList(Resource):
         if search:
             count = count.where(Torrent.name.contains(search))
             select = select.where(Torrent.name.contains(search))
+
+        if start_date:
+            count = count.where(Torrent.sent >= start_date)
+            select = select.where(Torrent.sent >= start_date)
+
+        if end_date:
+            count = count.where(Torrent.sent <= end_date)
+            select = select.where(Torrent.sent <= end_date)
 
         return self.build_envelope(list(select.dicts()), data_total=count.count(), type="Upload")
 

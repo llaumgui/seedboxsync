@@ -28,7 +28,7 @@ def test_login_rejects_invalid_credentials(client):
     response = _login(client, "unknown", "unknownunknownunknownunknown")
 
     assert response.status_code == 200
-    assert b"Toast({ message: \"Invalid username or password.\", type: \"danger\" });" in response.data
+    assert b'message: "Invalid username or password."' in response.data
 
 
 def test_login_redirects_authenticated_user_to_homepage(client):

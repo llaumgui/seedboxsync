@@ -6,7 +6,6 @@
  */
 
 import { Modal } from "bootstrap";
-import { Toast } from "./toast";
 
 /**
  * Modal confirmation and call API.
@@ -64,7 +63,7 @@ export function ModalConfirmCallComponent() {
           throw new Error("API call failed");
         }
 
-        Toast({
+        this.$dispatch("show-toast", {
           message: this.toastMessage,
           type: "success",
         });
@@ -75,7 +74,7 @@ export function ModalConfirmCallComponent() {
       } catch (e) {
         console.error(e);
 
-        Toast({
+        this.$dispatch("show-toast", {
           message: e.message,
           type: "danger",
         });
@@ -88,25 +87,3 @@ export function ModalConfirmCallComponent() {
   };
 }
 
-/**
- * Open modal outside Alpine.
- *
- * @param {string} url
- * @param {string} method
- * @param {string} title
- * @param {string} content
- * @param {string} toastMessage
- */
-export function OpenModalConfirmCall(
-  url,
-  method,
-  title,
-  content,
-  toastMessage = "",
-) {
-  const component = document.querySelector(
-    "#ModalConfirmCallComponent",
-  ).__modal;
-
-  component.open(title, content, url, method, toastMessage);
-}

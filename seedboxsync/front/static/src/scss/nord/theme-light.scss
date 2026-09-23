@@ -1,16 +1,21 @@
 @use "nord/src/sass/nord" as nord;
 @use "sass:color";
 
-.card {
-  --bs-card-cap-bg: #{color.adjust(nord.$nord4, $lightness: 5%)};
-  --bs-card-cap-color: #{color.adjust(nord.$nord3, $lightness: -10%)};
-}
+@include color-mode(light) {
+  .card {
+    --bs-card-cap-bg: #{color.adjust(nord.$nord4, $lightness: 5%)};
+    --bs-card-cap-color: #{color.adjust(nord.$nord3, $lightness: -10%)};
+  }
 
-.table thead {
-  --bs-table-accent-bg: #{color.adjust(nord.$nord4, $lightness: 5%)};
+  .table {
+    --bs-table-border-color: #{color.adjust(nord.$nord3, $lightness: 5%)};
 
-}
-.main-footer {
-  background-color: #{nord.$nord0};
-  color: #{nord.$nord6};
+    thead {
+    --bs-table-accent-bg: #{color.adjust(nord.$nord4, $lightness: 5%)};
+    }
+  }
+  .main-footer {
+    background-color: #{nord.$nord0};
+    color: #{nord.$nord6};
+  }
 }

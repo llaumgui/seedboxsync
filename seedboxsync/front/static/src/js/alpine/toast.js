@@ -50,22 +50,3 @@ export function ToastManager() {
     },
   };
 }
-
-
-/**
- * Display a toast.
- *
- * @param {object} options
- * @param {string} options.message
- * @param {string} [options.type="info"]
- */
-export function Toast({ message, type = "info" }) {
-  window.dispatchEvent(
-    new CustomEvent("show-toast", {
-      detail: {
-        message,
-        type,
-      },
-    }),
-  );
-}

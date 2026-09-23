@@ -143,12 +143,14 @@ def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     @app.context_processor
     def inject_globals() -> dict[str, Any]:  # pyright: ignore [reportUnusedFunction]
         """Inject global variables into the template context."""
-        locale = get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en")
+        locale = str(get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en_US"))
+        lang = locale.split("_")[0].split("-")[0]
         theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
 
         return {
             "api_version": api_version,
-            "locale": str(locale).replace("_", "-"),
+            "lang": lang,
+            "locale": locale,
             "seedboxsync_config": app.seedboxsync_config,
             "theme": theme,
             "version": version,

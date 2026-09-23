@@ -1,6 +1,12 @@
 <div id="ModalConfirmCallComponent"
      x-data="ModalConfirmCallComponent()"
-     x-init="$el.__modal = $data">
+  @open-modal-confirm-call.window="open(
+    $event.detail.title,
+    $event.detail.content,
+    $event.detail.url,
+    $event.detail.method,
+    $event.detail.toastMessage
+  )">
   <div x-ref="modal"
        class="modal fade" id="ModalConfirmCall" tabindex="-1"
        aria-labelledby="ModalConfirmCallTitle" aria-hidden="true">

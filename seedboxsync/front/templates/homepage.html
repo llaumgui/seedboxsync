@@ -32,13 +32,13 @@
   <div class="d-flex justify-content-between align-items-center mb-2">
     <p class="fst-italic">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
     <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
-            @click="OpenModalConfirmCall(
-              '{{ url_for('api.downloads_downloads_progress') }}',
-              'DELETE',
-              '{{ _('Purge?') }}',
-              '{{ _('Do you want to purge all in-progress downloads?') }}',
-              '{{ _('In-progress has been purged') }}'
-            )">
+            @click="$dispatch('open-modal-confirm-call', {
+              url: '{{ url_for('api.downloads_downloads_progress') }}',
+              method: 'DELETE',
+              title: '{{ _('Purge?') }}',
+              content: '{{ _('Do you want to purge all in-progress downloads?') }}',
+              toastMessage: '{{ _('In-progress has been purged') }}'
+            })">
       <i class="fa fa-trash"></i>{{ _('Purge') }}
     </button>
   </div>

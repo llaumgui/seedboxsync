@@ -6,29 +6,26 @@
  */
 import Alpine from "alpinejs";
 import * as validators from "./validators";
+import { ModalConfirmCallComponent } from "./modal";
 import { TableComponent } from "./table";
 import { TablePaginedComponent } from "./table_pagined";
 import { TaskStatusBoxComponent } from "./taskstatusbox";
-import { Toast, ToastManager } from "./toast";
-import { ModalConfirmCallComponent, OpenModalConfirmCall } from "./modal";
+import { ToastManager } from "./toast";
+import { StatsPeriod } from "./stats";
 import { getMimeIconClass } from "./mimeicon"
 
 // Tables
-window.TableComponent = TableComponent;
-window.TablePaginedComponent = TablePaginedComponent;
-window.TaskStatusBoxComponent = TaskStatusBoxComponent;
+Alpine.data("TableComponent", TableComponent);
+Alpine.data("TablePaginedComponent", TablePaginedComponent);
+Alpine.data("TaskStatusBoxComponent", TaskStatusBoxComponent);
 
-// Modales
-window.ModalConfirmCallComponent = ModalConfirmCallComponent;
-window.OpenModalConfirmCall = OpenModalConfirmCall;
-
-// Validators
-window.validators = validators;
-
-// Helpers
-window.getMimeIconClass = getMimeIconClass;
+// Others elements / helpers
+Alpine.data("ModalConfirmCallComponent", ModalConfirmCallComponent);
+Alpine.data("StatsPeriod", StatsPeriod);
 Alpine.data("ToastManager", ToastManager);
-window.Toast = Toast;
 
-window.Alpine = Alpine;
 Alpine.start();
+
+// Attach to window object
+window.getMimeIconClass = getMimeIconClass;
+window.validators = validators;

@@ -9,10 +9,17 @@
 {% block content %}
 <p class="fst-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
 
-<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true')">
+<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true', 20, 'downloaded')">
 
-  {# Search #}
-  {{ macro.render_search() }}
+  {# Filters #}
+  <div class="row mb-4">
+    <div class="col-12 col-md-8">
+      {{ macro.render_search() }}
+    </div>
+    <div class="col-4 d-none d-md-block text-end">
+      {{ macro.datepicker_range('downloaded', False) }}
+    </div>
+  </div>
 
   {# Messages #}
   <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
@@ -33,19 +40,19 @@
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
           <td>
-            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+            {{ macro.mime_icon() }} <span class="overflow-anywhere" x-text="row.path"></span>
           </td>
-          <td x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
-          <td class="d-none d-md-table-cell" x-text="row.human_local_size"></td>
+          <td class="text-nowrap" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
           <td class="text-end">
             <button class="btn btn-outline-danger btn-sm text-nowrap"
-                @click="OpenModalConfirmCall(
-                '{{ url_for('api.downloads_downloads', id=0) }}'.replace('0', row.id),
-                'DELETE',
-                '{{ _('Delete?') }}',
-                `{{ _('Do you want to delete this download?') }}<br><em>${row.path}</em>`,
-                `<em>${row.path}</em> {{ _('has been deleted') }}.`,
-              )">
+                @click="$dispatch('open-modal-confirm-call', {
+                url: '{{ url_for('api.downloads_downloads', id=0) }}'.replace('0', row.id),
+                method: 'DELETE',
+                title: '{{ _('Delete?') }}',
+                content: `{{ _('Do you want to delete this download?') }}<br><em>${row.path}</em>`,
+                toastMessage: `<em>${row.path}</em> {{ _('has been deleted') }}.`
+              })">
                 {{ _('Delete') }}<i class="fas fa-times"></i>
             </button>
           </td>

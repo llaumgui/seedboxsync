@@ -35,10 +35,12 @@ def list_user(ctx: Context, number: int, search: str) -> None:
         search (str): Optional search term to filter users by username.
     """
     # Build "where" expression
-    where = User.username.contains(search) if search else ~User.id.contains("not_a_int")
+    conditions = []
+    if search:
+        conditions.append(User.username.contains(search))
 
     # DB query
-    data = (
+    query = (
         User.select(
             User.id,
             User.username,
@@ -47,11 +49,14 @@ def list_user(ctx: Context, number: int, search: str) -> None:
             User.created,
             User.last_login,
         )
-        .where(where)
         .limit(number)
         .order_by(User.id.desc())
-        .dicts()
     )
+
+    # if "where" expression
+    if conditions:
+        query = query.where(*conditions)
+    data = query.dicts()
 
     click.echo(
         ctx.render(

@@ -31,12 +31,7 @@ describe("frontend entry points", () => {
     }));
     await import("@seedboxsync/alpine/index.js");
 
-    expect(window.Alpine).toMatchObject({ data: expect.any(Function), start });
     expect(start).toHaveBeenCalledOnce();
-    expect(window.TableComponent).toBeTypeOf("function");
-    expect(window.TablePaginedComponent).toBeTypeOf("function");
-    expect(window.TaskStatusBoxComponent).toBeTypeOf("function");
-    expect(window.ModalConfirmCallComponent).toBeTypeOf("function");
     expect(window.validators).toBeTypeOf("object");
     expect(window.validators.isValidUrl).toBeTypeOf("function");
   });

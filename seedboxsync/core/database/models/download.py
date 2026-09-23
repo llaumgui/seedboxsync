@@ -65,13 +65,24 @@ class Download(SeedboxSyncModel):
         return count != 0
 
     @classmethod
-    def get_stats_by_mime_type(cls) -> list[dict[str, Any]]:
+    def get_stats_by_mime_type(cls, start_date: datetime.date | None = None, end_date: datetime.date | None = None) -> list[dict[str, Any]]:
         """
         Get the total count and total size of downloaded files grouped by MIME type.
+
+        Args:
+            start_date (datetime.date | None): Optional start date filter.
+            end_date (datetime.date | None): Optional end date filter.
 
         Returns:
             list[dict[str, Any]]: A list of dicts containing mime_type, total count, and total_size.
         """
+        # Build "where" expression
+        conditions = []
+        if start_date:
+            conditions.append(cls.finished >= start_date)
+        if end_date:
+            conditions.append(cls.finished <= end_date)
+
         query = (
             cls.select(
                 cls.mime_type,
@@ -81,6 +92,11 @@ class Download(SeedboxSyncModel):
             )
             .group_by(cls.mime_type)
             .order_by(fn.SUM(cls.local_size).desc())
-            .dicts()
         )
-        return list(cast(Iterable[dict[str, Any]], query))
+
+        # if "where" expression
+        if conditions:
+            query = query.where(*conditions)
+        data = query.dicts()
+
+        return list(cast(Iterable[dict[str, Any]], data))

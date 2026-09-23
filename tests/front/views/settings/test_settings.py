@@ -51,7 +51,7 @@ def test_settings_views_are_reachable(client, path, title):
             {
                 "sync_blackhole_enabled": "1",
                 "webui_theme": "dark",
-                "webui_language": "fr",
+                "webui_language": "fr_FR",
             },
             {"SEEDBOXSYNC_SYNC_BLACKHOLE_ENABLED": True, "SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED": False},
             {"config_sync_blackhole_enabled": "1", "config_sync_seedbox_enabled": "0"},

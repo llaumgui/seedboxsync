@@ -12,7 +12,7 @@ from flask_babel import Babel, lazy_gettext
 from seedboxsync.core import Config, current_app as app
 
 babel = Babel()
-ALLOWED_LANGUAGES = ["fr", "en"]
+ALLOWED_LANGUAGES = ["fr_FR", "en_US"]
 
 
 def gettext(message: str) -> str:

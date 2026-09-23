@@ -5,6 +5,14 @@ vi.mock("bootstrap", () => ({ Toast: { getOrCreateInstance: vi.fn() } }));
 import { TaskStatusBoxComponent } from "@seedboxsync/alpine/taskstatusbox.js";
 
 describe("TaskStatusBoxComponent", () => {
+  function createComponent() {
+    const component = TaskStatusBoxComponent("/info", "/launch", "Sync");
+    component.$dispatch = (type, detail) => {
+      window.dispatchEvent({ type, detail });
+    };
+    return component;
+  }
+
   beforeEach(() => {
     vi.clearAllMocks();
     globalThis.fetch = vi.fn();
@@ -21,7 +29,7 @@ describe("TaskStatusBoxComponent", () => {
   });
 
   it("loads never-launched, running, and finished states", async () => {
-    const component = TaskStatusBoxComponent("/info", "/launch", "Sync");
+    const component = createComponent();
     fetch.mockResolvedValueOnce({ status: 404 });
     await component.loadTaskStatus();
     expect(component.taskStatusMessage).toBe("Never launched");
@@ -42,7 +50,7 @@ describe("TaskStatusBoxComponent", () => {
   });
 
   it("reports status errors and task launch outcomes", async () => {
-    const component = TaskStatusBoxComponent("/info", "/launch", "Sync");
+    const component = createComponent();
     fetch.mockResolvedValueOnce({ ok: false, status: 500 });
     await component.loadTaskStatus();
     expect(component.error).toBe("Unable to load");
@@ -69,7 +77,7 @@ describe("TaskStatusBoxComponent", () => {
   });
 
   it("handles a network failure while launching", async () => {
-    const component = TaskStatusBoxComponent("/info", "/launch", "Sync");
+    const component = createComponent();
     fetch.mockRejectedValue(new Error("network"));
 
     await component.taskLaunch();

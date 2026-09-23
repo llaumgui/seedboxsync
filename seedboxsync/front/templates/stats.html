@@ -1,3 +1,5 @@
+{% import 'components/macros.html' as macro %}
+
 {% extends 'base.html' %}
 
 {% block header %}
@@ -5,57 +7,71 @@
 {% endblock %}
 
 {% block content %}
-<div class="row mb-5">
-  <div class="col-6">
-    <h2 class="h4">{{ _('Total') }}</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ _('Number of files downloaded') }}</th>
-          <th>{{ _('Total size of files downloaded') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ stats_total.files }}</td>
-          <td>{{ stats_total.total_size }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="row mb-5 justify-content-around">
-  <div class="col-3">
-    <h2 class="h4">{{ _('Files by MIME type') }}</h2>
-    <canvas id="filesByMimeType"></canvas>
-  </div>
-  <div class="col-3">
-    <h2 class="h4">{{ _('Size by MIME type') }}</h2>
-    <canvas id="sizeByMimeType"></canvas>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-6">
-    <h2 class="h4">{{ _('Downloads by month') }}</h2>
-    <canvas id="statsByMonth"></canvas>
-  </div>
-  <div class="col-6">
-    <h2 class="h4">{{ _('Downloads by year') }}</h2>
-    <canvas id="statsByYear"></canvas>
-  </div>
-</div>
-
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    loadBarChart(document.getElementById('statsByMonth'), '{{ url_for("api.downloads_downloads_stats_by_month") }}', '{{ _("Files") }}', '{{ _("Size (GiB)") }}', 'month');
-    loadBarChart(document.getElementById('statsByYear'), '{{ url_for("api.downloads_downloads_stats_by_year") }}', '{{ _("Files") }}', '{{ _("Size (GiB)") }}', 'year');
-    loadDoughnutChart(
-      document.getElementById('filesByMimeType'), 'total', '{{_("Number")}}',
-      document.getElementById('sizeByMimeType'), 'total_size', '{{_("Size")}}',
-      '{{ url_for("api.downloads_downloads_stats_by_mime_type") }}'
-    );
-  });
+  window.StatsConfig = {
+    urls: {
+      month: {{- url_for('api.downloads_downloads_stats_by_month') | tojson -}},
+      year: {{- url_for('api.downloads_downloads_stats_by_year') | tojson -}},
+      mimeType: {{- url_for('api.downloads_downloads_stats_by_mime_type') | tojson -}}
+    },
+    translations: {
+      files: {{- _('Files') | tojson -}},
+      size: {{- _('Size') | tojson -}},
+      sizeGib: {{- _('Size (GiB)') | tojson -}}
+    }
+  };
 </script>
+<div
+  x-data="StatsPeriod"
+  x-init="init()"
+>
+  <div class="row mb-5">
+    <div class="col-6">
+      <h2 class="h4">{{ _('Total') }}</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ _('Number of files downloaded') }}</th>
+            <th>{{ _('Total size of files downloaded') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ stats_total.files }}</td>
+            <td>{{ stats_total.total_size }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-md-6 offset-md-6 text-end">
+          {{ macro.datepicker_range('period') }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5 justify-content-around">
+    <div class="col-3">
+      <h2 class="h4">{{ _('Files by MIME type') }}</h2>
+      <canvas id="filesByMimeType"></canvas>
+    </div>
+    <div class="col-3">
+      <h2 class="h4">{{ _('Size by MIME type') }}</h2>
+      <canvas id="sizeByMimeType"></canvas>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-6">
+      <h2 class="h4">{{ _('Downloads by year') }}</h2>
+      <canvas id="statsByYear"></canvas>
+    </div>
+    <div class="col-6">
+      <h2 class="h4">{{ _('Downloads by month') }}</h2>
+      <canvas id="statsByMonth"></canvas>
+    </div>
+  </div>
+</div>
 {% endblock %}

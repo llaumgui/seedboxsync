@@ -7,7 +7,10 @@
 {% if toasts %}
 <script>document.addEventListener("DOMContentLoaded", () => {
   {% for category, message in all_messages if category.startswith('toast-') %}
-    Toast({ message: {{ message | tojson }}, type: {{ category.replace('toast-', '') | tojson }} });
+    window.dispatchEvent(new CustomEvent("show-toast", { detail: {
+      message: {{ message | tojson }},
+      type: {{ category.replace('toast-', '') | tojson }}
+    } }));
   {% endfor %}
 });</script>
 {% endif %}

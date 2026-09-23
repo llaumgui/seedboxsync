@@ -4,18 +4,26 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 import Chart from "chart.js/auto";
 
 /**
  * Create a bar chart.
+ *
+ * @param {HTMLCanvasElement} ctx
+ * @param {Array} data
+ * @param {string} labelFiles
+ * @param {string} labelSize
+ * @param {string} labelField
+ * @returns {Chart}
  */
-export function createBarChart(
-  ctx,
-  data,
-  labelFiles,
-  labelSize,
-  labelField
-) {
+export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
+  const existingChart = Chart.getChart(ctx);
+
+  if (existingChart) {
+    existingChart.destroy();
+  }
+
   const labels = data.map((d) => d[labelField]);
   const dataFiles = data.map((d) => d.files);
   const dataSize = data.map((d) => Number.parseFloat(d.total_size));
@@ -23,7 +31,7 @@ export function createBarChart(
   return new Chart(ctx, {
     type: "bar",
     data: {
-      labels: labels,
+      labels,
       datasets: [
         {
           label: labelFiles,
@@ -43,23 +51,47 @@ export function createBarChart(
     },
     options: {
       responsive: true,
-      interaction: { mode: "index", intersect: false },
-      scales: { y: { beginAtZero: true } },
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
     },
   });
 }
 
 /**
  * Load chart data from a URL and create a bar chart.
- * @param {*} ctx
- * @param {*} url
- * @param {*} labelField
+ *
+ * @param {HTMLCanvasElement} ctx
+ * @param {string} url
+ * @param {string} labelFiles
+ * @param {string} labelSize
+ * @param {string} labelField
+ * @param {AbortSignal} signal
+ * @returns {Promise<Chart>}
  */
-export function loadChart(ctx, url, label_file, label_size, labelField) {
-  fetch(url)
-    .then((res) => res.json())
-    .then((json) =>
-      createBarChart(ctx, json.data, label_file, label_size, labelField),
-    )
-    .catch((err) => console.error("Error loading chart:", err));
+export async function loadChart(
+  ctx,
+  url,
+  labelFiles,
+  labelSize,
+  labelField,
+  signal,
+) {
+  const response = await fetch(url, { signal });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load chart data: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const json = await response.json();
+
+  return createBarChart(ctx, json.data, labelFiles, labelSize, labelField);
 }

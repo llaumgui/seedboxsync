@@ -9,24 +9,13 @@ vi.mock("bootstrap", () => ({
   Toast: { getOrCreateInstance: vi.fn(() => bootstrapToast) },
 }));
 
-import { Toast, ToastManager } from "@seedboxsync/alpine/toast.js";
+import { ToastManager } from "@seedboxsync/alpine/toast.js";
 
 describe("toast helpers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal("crypto", { randomUUID });
     globalThis.window = { dispatchEvent: vi.fn() };
-  });
-
-  it("dispatches a toast event with its message and type", () => {
-    Toast({ message: "Saved", type: "success" });
-
-    expect(window.dispatchEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: "show-toast",
-        detail: { message: "Saved", type: "success" },
-      }),
-    );
   });
 
   it("adds a toast and removes it after Bootstrap hides it", async () => {

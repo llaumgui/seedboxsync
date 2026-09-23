@@ -7,3 +7,6 @@
 import "../bootstrap";
 import "../alpine";
 import "../chart";
+import { DatePicker } from "vanilla-ui-kit";
+
+window.DatePicker = DatePicker;

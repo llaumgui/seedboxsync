@@ -4,22 +4,35 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 import Chart from "chart.js/auto";
 
 /**
- * Create a bar chart.
+ * Create a doughnut chart.
+ *
+ * @param {HTMLCanvasElement} ctx
+ * @param {Array} data
+ * @param {string} element
+ * @param {string} label
+ * @returns {Chart}
  */
 export function createDoughnutChart(ctx, data, element, label = "count") {
+  const existingChart = Chart.getChart(ctx);
+
+  if (existingChart) {
+    existingChart.destroy();
+  }
+
   const labels = data.map((d) => d.mime_type);
   const total = data.map((d) => d[element]);
 
   return new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: labels,
+      labels,
       datasets: [
         {
-          label: label,
+          label,
           data: total,
           backgroundColor: [
             "rgb(191, 97, 106)",
@@ -40,7 +53,7 @@ export function createDoughnutChart(ctx, data, element, label = "count") {
         },
         tooltip: {
           callbacks: {
-            label: function (context) {
+            label(context) {
               const item = data[context.dataIndex];
               const humanizedKey = `human_${element}`;
 
@@ -58,17 +71,41 @@ export function createDoughnutChart(ctx, data, element, label = "count") {
 }
 
 /**
- * Load chart data from a URL and create a bar chart.
- * @param {*} ctx
- * @param {*} url
- * @param {*} label
+ * Load doughnut chart data from a URL and create two doughnut charts.
+ *
+ * @param {HTMLCanvasElement} ctx1
+ * @param {string} field1
+ * @param {string} label1
+ * @param {HTMLCanvasElement} ctx2
+ * @param {string} field2
+ * @param {string} label2
+ * @param {string} url
+ * @param {AbortSignal} signal
+ * @returns {Promise<[Chart, Chart]>}
  */
-export function loadChart(ctx1, field1, label1, ctx2, field2, label2, url) {
-  fetch(url)
-    .then((res) => res.json())
-    .then((json) => {
-      createDoughnutChart(ctx1, json.data, field1, label1)
-      createDoughnutChart(ctx2, json.data, field2, label2)
-    })
-    .catch((err) => console.error("Error loading chart:", err));
+export async function loadChart(
+  ctx1,
+  field1,
+  label1,
+  ctx2,
+  field2,
+  label2,
+  url,
+  signal,
+) {
+  const response = await fetch(url, { signal });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to load chart data: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const json = await response.json();
+
+  const chart1 = createDoughnutChart(ctx1, json.data, field1, label1);
+
+  const chart2 = createDoughnutChart(ctx2, json.data, field2, label2);
+
+  return [chart1, chart2];
 }

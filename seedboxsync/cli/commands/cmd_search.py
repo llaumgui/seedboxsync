@@ -37,10 +37,17 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
         search (str): An optional search term to filter torrent names.
     """
     # Build "where" expression
-    where = Torrent.name.contains(search) if search else ~Torrent.id.contains("not_a_int")
+    conditions = []
+    if search:
+        conditions.append(Torrent.name.contains(search))
 
     # DB query
-    data = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(where).limit(number).order_by(Torrent.sent.desc()).dicts()
+    query = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).limit(number).order_by(Torrent.sent.desc())
+
+    # if "where" expression
+    if conditions:
+        query = query.where(*conditions)
+    data = query.dicts()
 
     click.echo(
         ctx.render(

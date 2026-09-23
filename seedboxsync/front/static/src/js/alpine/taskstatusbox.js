@@ -5,8 +5,6 @@
  * file that was distributed with this source code.
  */
 
-import { Toast } from "./toast";
-
 /**
  * Build AlpineJS taskstatus box components.
  * @param {string} urlInfo API url call
@@ -78,7 +76,7 @@ export function TaskStatusBoxComponent(urlInfo, urlLaunch, title, refreshMs = 30
         this.taskStatusMessage !== "" &&
         this.taskStatusMessage !== newMessage
       ) {
-        Toast({
+        this.$dispatch("show-toast", {
           message: `<strong>${this.taskStatusTitle}</strong>\n<br>${newMessage}`,
           type: "info",
         });
@@ -92,12 +90,12 @@ export function TaskStatusBoxComponent(urlInfo, urlLaunch, title, refreshMs = 30
         this.tasking = true;
         const res = await fetch(urlLaunch, { method: "POST" });
         if (res.status === 202) {
-        Toast({
+        this.$dispatch("show-toast", {
           message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_scheduled}`,
           type: "success",
         });
         } else {
-         Toast({
+         this.$dispatch("show-toast", {
            message: `<strong>${this.taskStatusTitle}</strong>\n<br>${Translations.task_not_scheduled}`,
            type: "danger",
          });

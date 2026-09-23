@@ -22,16 +22,13 @@
 {% endmacro %}
 
 {% macro render_search() %}
-<div class="mb-4">
-  <label for="search" class="visually-hidden">{{ _('Search') }}</label>
+<label for="search" class="visually-hidden">{{ _('Search') }}</label>
+<div class="input-group">
+  <span class="input-group-text"><i class="fas fa-search"></i></span>
 
-  <div class="input-group">
-    <span class="input-group-text"><i class="fas fa-search"></i></span>
-
-    <input id="search" class="form-control" type="text" placeholder="{{ _('Search') }}"
-      x-model="search"
-      @input.debounce.300ms="load()" />
-  </div>
+  <input id="search" class="form-control" type="text" placeholder="{{ _('Search') }}"
+    x-model="search"
+    @input.debounce.300ms="load()" />
 </div>
 {% endmacro %}
 
@@ -84,4 +81,41 @@
     {% endfor %}
   </ol>
 </nav>
+{% endmacro %}
+
+{% macro datepicker_range(x_ref, label = True) %}
+{% set labels = {
+  'previous': _('Previous'),
+  'next': _('Next'),
+  'today': _('Today'),
+  'clear': _('Clear'),
+  'dialog': _('Choose date'),
+  'switchView': _('Switch calendar view'),
+  'presets': _('Choose date'),
+  'weekAbbr': _('Wk'),
+}
+%}
+
+<label {% if not label %}class="visually-hidden"{% endif %} for="datepicker-range">{{ _('Period') }}</label>
+<div class="input-group">
+  <span class="input-group-text">
+    <i class="fas fa-calendar"></i>
+  </span>
+  <input class="form-control" id="datepicker-range" x-ref="{{ x_ref }}" />
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new DatePicker('#datepicker-range', {
+      range: true,
+      panes: 2,
+      presets: "today, yesterday, last7, last30, thisMonth, lastMonth, thisYear",
+      locale: "{{- lang -}}",
+      theme: "{{- theme -}}",
+      styles: true,
+      todayButton: true,
+      clearButton: true,
+      labels: {{- labels | tojson -}}
+    })
+  });
+</script>
 {% endmacro %}

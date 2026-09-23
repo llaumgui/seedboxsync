@@ -1,11 +1,16 @@
 @use "nord/src/sass/nord" as nord;
 @use "sass:color";
 
+
+$tertiary-dark: color.adjust(nord.$nord0, $lightness: -13%);
+
 @include color-mode(dark) {
   // base colors
-  --bs-body-bg: #{color.adjust(nord.$nord0, $lightness: -10%)};
-  --bs-body-color: #{nord.$nord4};
-  --bs-box-shadow: 0 .5rem 1rem #{nord.$nord0};
+  --bs-body-bg:         #{color.adjust(nord.$nord0, $lightness: -10%)};
+  --bs-body-color:      #{nord.$nord4};
+  --bs-tertiary-bg:     #{$tertiary-dark};
+  --bs-tertiary-bg-rgb: #{to-rgb($tertiary-dark)};
+  --bs-box-shadow:      0 .5rem 1rem #{nord.$nord0};
 
   .breadcrumb {
     --bs-breadcrumb-divider-color: #{nord.$nord6};
@@ -13,6 +18,7 @@
   }
   .card {
     --bs-card-cap-bg: #{color.adjust(nord.$nord0, $lightness: 5%)};
+    --bs-card-cap-color: #{nord.$nord4};
   }
   .table thead {
     --bs-table-accent-bg: #{color.adjust(nord.$nord0, $lightness: 5%)};

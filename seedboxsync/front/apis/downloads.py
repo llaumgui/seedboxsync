@@ -6,6 +6,7 @@
 #
 """SeedboxSync api error module."""
 
+from datetime import date
 from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
@@ -182,7 +183,33 @@ parser.add_argument(
     location="args",
     help="Filter only completed downloads (true) or in-progress downloads (false)",
 )
+parser.add_argument(
+    "start_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
+parser.add_argument(
+    "end_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
+
+parser_period = reqparse.RequestParser()
+parser_period.add_argument(
+    "start_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
+parser_period.add_argument(
+    "end_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
 
 
 # ==========================
@@ -215,6 +242,8 @@ class DownloadsList(Resource):
         limit = self.set_limit(args.get("limit", 50))
         search = args.get("search")
         finished = args.get("finished")
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
 
         count = Download.select()
         select = (
@@ -252,6 +281,14 @@ class DownloadsList(Resource):
             else:
                 count = count.where(Download.finished == 0)
                 select = select.where(Download.finished == 0)
+
+        if start_date:
+            count = count.where(Download.finished >= start_date)
+            select = select.where(Download.finished >= start_date)
+
+        if end_date:
+            count = count.where(Download.finished <= end_date)
+            select = select.where(Download.finished <= end_date)
 
         return self.build_envelope(list(select.dicts()), data_total=count.count(), type="Download")
 
@@ -347,6 +384,7 @@ class DownloadsStatsByMonth(Resource):
 
     @api.doc("stats_downloads_by_month")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_month_envelope, code=200, description="Download statistics aggregated by month")  # type: ignore[untyped-decorator]
+    @api.expect(parser_period)  # type: ignore[untyped-decorator]
     @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
@@ -354,7 +392,12 @@ class DownloadsStatsByMonth(Resource):
 
         Returns the number of files downloaded and total size per month.
         """
-        stats = stats_by_period("month")
+        args = parser_period.parse_args()
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
+
+        stats = stats_by_period("month", start_date, end_date)
+
         return self.build_envelope(stats, data_total=len(stats), type="StatsMonth")
 
 
@@ -372,6 +415,7 @@ class DownloadsStatsByYear(Resource):
         Returns the number of files downloaded and total size per year.
         """
         stats = stats_by_period("year")
+
         return self.build_envelope(stats, data_total=len(stats), type="StatsYear")
 
 
@@ -381,6 +425,7 @@ class DownloadsStatsByMimeType(Resource):
 
     @api.doc("stats_downloads_by_mimetype")  # type: ignore[untyped-decorator]
     @api.marshal_with(stats_mimetype_envelope, code=200, description="Download statistics aggregated by mimetype")  # type: ignore[untyped-decorator]
+    @api.expect(parser_period)  # type: ignore[untyped-decorator]
     @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
@@ -393,7 +438,12 @@ class DownloadsStatsByMimeType(Resource):
             dict[str, Any]: Envelope containing MIME type statistics, metadata,
                 and total element count.
         """
-        stats = _get_stats_by_mime_type()
+        args = parser_period.parse_args()
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
+
+        stats = _get_stats_by_mime_type(start_date, end_date)
+
         return self.build_envelope(stats, data_total=len(stats), type="StatsMimeType")
 
 
@@ -401,18 +451,27 @@ class DownloadsStatsByMimeType(Resource):
 # Utility functions
 # ==========================
 @cache.memoize(timeout=300)
-def stats_by_period(period: str) -> list[dict[str, str | float]]:
+def stats_by_period(period: str, start_date: date | None = None, end_date: date | None = None) -> list[dict[str, str | float]]:
     """
     Compute aggregated download statistics by period (month or year).
 
     Args:
         period (str): Aggregation period, either 'month' or 'year'.
+        start_date (datetime.date | None): Optional start date filter.
+        end_date (datetime.date | None): Optional end date filter.
 
     Returns:
         list[dict[str, str | float]]: List of statistics including period, number of files,
                                       and total size.
     """
     strftime_format = "%Y-%m" if period == "month" else "%Y"
+    # Build "where" expression
+    conditions = []
+    conditions.append(Download.finished != 0)
+    if start_date:
+        conditions.append(Download.finished >= start_date)
+    if end_date:
+        conditions.append(Download.finished <= end_date)
 
     data = typed_peewee_dicts(
         Download.select(
@@ -421,7 +480,7 @@ def stats_by_period(period: str) -> list[dict[str, str | float]]:
             fn.strftime(strftime_format, Download.finished).alias(period),
             Download.seedbox_size,
         )
-        .where(Download.finished != 0)
+        .where(*conditions)
         .order_by(Download.finished.desc())
         .dicts()
     )
@@ -446,16 +505,21 @@ def stats_by_period(period: str) -> list[dict[str, str | float]]:
         for key in sorted(tmp)
     ]
 
+
 @cache.memoize(timeout=300)
-def _get_stats_by_mime_type() -> list[dict[str, object]]:
+def _get_stats_by_mime_type(start_date: date | None, end_date: date | None) -> list[dict[str, object]]:
     """
     Fetch file download counts and total sizes grouped by MIME type.
 
     Executes the database query to aggregate finished downloads count and sum up
     their local sizes by MIME type, then caches the result using Flask-Caching memoization[cite: 3].
 
+    Args:
+        start_date (datetime.date | None): Optional start date filter.
+        end_date (datetime.date | None): Optional end date filter.
+
     Returns:
         list[dict[str, object]]: A list of dictionaries containing MIME types,
             their associated total file counts, and total sizes in bytes[cite: 3].
     """
-    return Download.get_stats_by_mime_type()
+    return Download.get_stats_by_mime_type(start_date, end_date)
