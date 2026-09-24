@@ -6,11 +6,12 @@
 #
 """Peewee DAO model for Torrent."""
 
+from collections.abc import Iterable
 import datetime
 from os import PathLike
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlparse
-from peewee import AutoField, BooleanField, DateTimeField, IntegerField, TextField
+from peewee import AutoField, BooleanField, DateTimeField, IntegerField, TextField, fn
 import tldextract
 from seedboxsync.core import utils
 from seedboxsync.core.database.models import SeedboxSyncModel
@@ -114,3 +115,40 @@ class Torrent(SeedboxSyncModel):
             return
 
         self.announcer = f"{extracted.domain}.{extracted.suffix}"
+
+    @classmethod
+    def get_stats_by_announcer(cls, start_date: datetime.date | None = None, end_date: datetime.date | None = None) -> list[dict[str, Any]]:
+        """
+        Get the total count and total size of downloaded files grouped by MIME type.
+
+        Args:
+            start_date (datetime.date | None): Optional start date filter.
+            end_date (datetime.date | None): Optional end date filter.
+
+        Returns:
+            list[dict[str, Any]]: A list of dicts containing mime_type, total count, and total_size.
+        """
+        # Build "where" expression
+        conditions = []
+        if start_date:
+            conditions.append(cls.sent >= start_date)
+        if end_date:
+            conditions.append(cls.sent <= end_date)
+
+        query = (
+            cls.select(
+                cls.announcer,
+                fn.COUNT(cls.id).alias("total"),
+                fn.SUM(cls.total_size).alias("total_size"),
+                fn.humanize(fn.SUM(cls.total_size)).alias("human_total_size"),
+            )
+            .group_by(cls.announcer)
+            .order_by(fn.SUM(cls.total_size).desc())
+        )
+
+        # if "where" expression
+        if conditions:
+            query = query.where(*conditions)
+        data = query.dicts()
+
+        return list(cast(Iterable[dict[str, Any]], data))

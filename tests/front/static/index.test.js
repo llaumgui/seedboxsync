@@ -19,7 +19,7 @@ describe("frontend entry points", () => {
     expect(window.createBarChart).toBeTypeOf("function");
     expect(window.loadBarChart).toBeTypeOf("function");
     expect(window.createDoughnutChart).toBeTypeOf("function");
-    expect(window.loadDoughnutChart).toBeTypeOf("function");
+    expect(window.load2DoughnutChart).toBeTypeOf("function");
   });
 
   it("registers Alpine components and validators globally", async () => {

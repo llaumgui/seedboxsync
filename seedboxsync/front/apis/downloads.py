@@ -12,7 +12,7 @@ from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core import utils
 from seedboxsync.core.database.models import Download, typed_peewee_dicts
-from seedboxsync.front.apis import DateTimeOrZero, Resource
+from seedboxsync.front.apis import DateTimeOrZero, Resource, parser_period
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
 
@@ -196,20 +196,6 @@ parser.add_argument(
     help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
 )
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
-
-parser_period = reqparse.RequestParser()
-parser_period.add_argument(
-    "start_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
-parser_period.add_argument(
-    "end_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
 
 
 # ==========================

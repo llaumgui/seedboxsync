@@ -16,15 +16,15 @@ import Chart from "chart.js/auto";
  * @param {string} label
  * @returns {Chart}
  */
-export function createDoughnutChart(ctx, data, element, label = "count") {
+export function createDoughnutChart(ctx, data, field_name, field_total, label = "count") {
   const existingChart = Chart.getChart(ctx);
 
   if (existingChart) {
     existingChart.destroy();
   }
 
-  const labels = data.map((d) => d.mime_type);
-  const total = data.map((d) => d[element]);
+  const labels = data.map((d) => d[field_name]);
+  const total = data.map((d) => d[field_total]);
 
   return new Chart(ctx, {
     type: "doughnut",
@@ -55,7 +55,7 @@ export function createDoughnutChart(ctx, data, element, label = "count") {
           callbacks: {
             label(context) {
               const item = data[context.dataIndex];
-              const humanizedKey = `human_${element}`;
+              const humanizedKey = `human_${field_total}`;
 
               if (item[humanizedKey] !== undefined) {
                 return ` ${context.dataset.label}: ${item[humanizedKey]}`;
@@ -83,12 +83,14 @@ export function createDoughnutChart(ctx, data, element, label = "count") {
  * @param {AbortSignal} signal
  * @returns {Promise<[Chart, Chart]>}
  */
-export async function loadChart(
+export async function load2Chart(
   ctx1,
-  field1,
+  field_name1,
+  field_total1,
   label1,
   ctx2,
-  field2,
+  field_name2,
+  field_total2,
   label2,
   url,
   signal,
@@ -103,9 +105,8 @@ export async function loadChart(
 
   const json = await response.json();
 
-  const chart1 = createDoughnutChart(ctx1, json.data, field1, label1);
-
-  const chart2 = createDoughnutChart(ctx2, json.data, field2, label2);
+  const chart1 = createDoughnutChart(ctx1, json.data, field_name1, field_total1, label1);
+  const chart2 = createDoughnutChart(ctx2, json.data, field_name2, field_total2, label2);
 
   return [chart1, chart2];
 }

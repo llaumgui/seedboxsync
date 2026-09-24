@@ -5,8 +5,8 @@
  * file that was distributed with this source code.
  */
 
-import { loadChart as loadBarChart } from "../chart/create_bar";
-import { loadChart as loadDoughnutChart } from "../chart/create_doughnut";
+import { loadChart as loadBarChart } from "../chart/bar";
+import { load2Chart as load2DoughnutChart } from "../chart/doughnut";
 
 /**
  * Create the statistics period Alpine.js component.
@@ -111,14 +111,28 @@ export function StatsPeriod() {
         "year",
       );
 
-      loadDoughnutChart(
+      load2DoughnutChart(
         document.getElementById("filesByMimeType"),
+        "mime_type",
         "total",
         config.translations.files,
         document.getElementById("sizeByMimeType"),
+        "mime_type",
         "total_size",
         config.translations.size,
         this.buildUrl(config.urls.mimeType),
+      );
+
+      load2DoughnutChart(
+        document.getElementById("torrentByAnnouncer"),
+        "announcer",
+        "total",
+        config.translations.files,
+        document.getElementById("sizeByAnnouncer"),
+        "announcer",
+        "total_size",
+        config.translations.size,
+        this.buildUrl(config.urls.announcer),
       );
     },
   };

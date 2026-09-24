@@ -9,7 +9,7 @@
 from datetime import datetime
 from typing import Any
 import uuid
-from flask_restx import Model, Namespace, OrderedModel, Resource as RestXResource, fields
+from flask_restx import Model, Namespace, OrderedModel, Resource as RestXResource, fields, inputs, reqparse
 
 
 class Resource(RestXResource):  # type: ignore[misc]
@@ -156,3 +156,21 @@ class DateTimeOrZero(fields.DateTime):  # type: ignore[misc]
         if value == 0:
             return 0
         return super().format(value)
+
+
+#
+# Global parsers
+#
+parser_period = reqparse.RequestParser()
+parser_period.add_argument(
+    "start_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)
+parser_period.add_argument(
+    "end_date",
+    type=inputs.date_from_iso8601,
+    location="args",
+    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
+)

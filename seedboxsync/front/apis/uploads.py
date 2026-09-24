@@ -6,11 +6,13 @@
 #
 """SeedboxSync api uploads view."""
 
+from datetime import date
 from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Torrent
-from seedboxsync.front.apis import Resource
+from seedboxsync.front.apis import Resource, parser_period
+from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
 
 api = Namespace("uploads", description="Operations related to uploaded torrents management")
@@ -69,6 +71,33 @@ upload_model = api.model(
 upload_list_envelope = Resource.build_envelope_model(api, "UploadList", nested_model=upload_model)
 upload_envelope = Resource.build_envelope_model(api, "Upload", nested_model=upload_model, as_list=False)
 upload_message_envelope = Resource.build_envelope_model(api, "UploadMessage", as_message=True)
+
+stats_announcer_model = api.model(
+    "StatsAnnouncer",
+    {
+        "announcer": fields.String(
+            required=True,
+            description="Announcer of the torrent",
+            example="torrenter",
+        ),
+        "total": fields.Integer(
+            required=True,
+            description="Number or size of files for this announcer",
+            example=4989,
+        ),
+        "total_size": fields.Integer(
+            required=True,
+            description="Size of files for this announcer",
+            example=21678643250867,
+        ),
+        "human_total_size": fields.String(
+            required=True,
+            description="Total size of files with related announcer",
+            example="19.7 Tio",
+        ),
+    },
+)
+stats_announcer_envelope = Resource.build_envelope_model(api, "StatsMimeType", nested_model=stats_announcer_model)
 
 
 # ==========================
@@ -235,3 +264,50 @@ class Uploads(Resource):
             api.abort(404, f"Upload {id} doesn't exist")
 
         return self.build_envelope(None, type="Upload", message=f"Upload {id} deleted.")
+
+
+@api.route("/stats/announcer")
+class UploadsStatsByAnnouncer(Resource):
+    """Resource endpoint to retrieve torrent announcer statistics."""
+
+    @api.doc("stats_uploads_by_announcer")  # type: ignore[untyped-decorator]
+    @api.marshal_with(stats_announcer_envelope, code=200, description="Upload statistics aggregated by announcer")  # type: ignore[untyped-decorator]
+    @api.expect(parser_period)  # type: ignore[untyped-decorator]
+    @login_required  # type: ignore[untyped-decorator]
+    def get(self) -> dict[str, Any]:
+        """
+        Retrieve torrent statistics grouped by announcer.
+
+        Fetches aggregated file counts and total sizes per announcer from the cache
+        or database, then wraps the dataset into a standard API response envelope.
+
+        Returns:
+            dict[str, Any]: Envelope containing announcer statistics, metadata,
+                and total element count.
+        """
+        args = parser_period.parse_args()
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
+
+        stats = _get_stats_by_announcer(start_date, end_date)
+
+        return self.build_envelope(stats, data_total=len(stats), type="StatsMimeType")
+
+
+@cache.memoize(timeout=300)
+def _get_stats_by_announcer(start_date: date | None, end_date: date | None) -> list[dict[str, object]]:
+    """
+    Fetch torrent statistics grouped by announcer within an optional date range.
+
+    Executes the database query to aggregate torrent statistics by announcer domain
+    filtered by date boundaries if provided, then caches the result using Flask-Caching memoization[cite: 2].
+
+    Args:
+        start_date (date | None, optional): Optional lower date boundary for filtering. Defaults to None.
+        end_date (date | None, optional): Optional upper date boundary for filtering. Defaults to None.
+
+    Returns:
+        list[dict[str, object]]: A list of dictionaries containing announcer statistics,
+            including total counts and associated sizes[cite: 2].
+    """
+    return Torrent.get_stats_by_announcer(start_date, end_date)

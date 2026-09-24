@@ -17,8 +17,8 @@ vi.mock("chart.js/auto", () => ({
 
 import {
   createDoughnutChart,
-  loadChart,
-} from "@seedboxsync/chart/create_doughnut.js";
+  load2Chart,
+} from "@seedboxsync/chart/doughnut.js";
 
 describe("doughnut chart helpers", () => {
   beforeEach(() => {
@@ -30,6 +30,7 @@ describe("doughnut chart helpers", () => {
     const chart = createDoughnutChart(
       "canvas",
       [{ mime_type: "video/mp4", downloads: 4 }],
+      "mime_type",
       "downloads",
       "Downloads",
     );
@@ -51,6 +52,7 @@ describe("doughnut chart helpers", () => {
     const chart = createDoughnutChart(
       "canvas",
       [{ mime_type: "application/pdf", files: 2 }],
+      "mime_type",
       "files",
     );
 
@@ -65,6 +67,7 @@ describe("doughnut chart helpers", () => {
         { mime_type: "video/mp4", downloads: 4, human_downloads: "4 GiB" },
         { mime_type: "application/pdf", downloads: 2 },
       ],
+      "mime_type",
       "downloads",
       "Downloads",
     );
@@ -85,11 +88,13 @@ describe("doughnut chart helpers", () => {
         data: [{ mime_type: "video/mp4", downloads: 4, size: 10 }],
       }),
     });
-    await loadChart(
+    await load2Chart(
       "downloads-canvas",
+      "mime_type",
       "downloads",
       "Downloads",
       "size-canvas",
+      "mime_type",
       "size",
       "Size",
       "/stats",
@@ -104,11 +109,13 @@ describe("doughnut chart helpers", () => {
 
     fetch.mockRejectedValue(new Error("network"));
     await expect(
-      loadChart(
+      load2Chart(
         "downloads-canvas",
+        "mime_type",
         "downloads",
         "Downloads",
         "size-canvas",
+        "mime_type",
         "size",
         "Size",
         "/stats",

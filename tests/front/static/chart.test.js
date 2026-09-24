@@ -15,7 +15,7 @@ vi.mock("chart.js/auto", () => ({
   },
 }));
 
-import { createBarChart, loadChart } from "@seedboxsync/chart/create_bar.js";
+import { createBarChart, loadChart } from "@seedboxsync/chart/bar.js";
 
 describe("bar chart helpers", () => {
   beforeEach(() => {
