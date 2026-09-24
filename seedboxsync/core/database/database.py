@@ -6,6 +6,7 @@
 #
 """Database module."""
 
+from datetime import datetime
 from os import fspath
 from pathlib import Path
 from typing import ClassVar, cast
@@ -112,14 +113,23 @@ class Database:
             return utils.byte_to_gi(num, suffix)
 
         @self.db.func("humanize")
-        def db_humanize(num: float) -> str:  # pyright: ignore [reportUnusedFunction]
+        def db_humanize(num: float | None) -> str:  # pyright: ignore [reportUnusedFunction]
             """Format file size numbers into human-readable representations."""
+            if (num is None):
+                return ""
             try:
                 # Treat None or invalid type as 0
                 num = float(num or 0)
             except (ValueError, TypeError):
-                num = 0.0
+                return ""
             return filesize.naturalsize(num, True)
+
+        @self.db.func("short_datetime")
+        def db_short_datetime(value: str | None) -> str | None:  # pyright: ignore[reportUnusedFunction]
+            """Format a datetime without microseconds."""
+            if value is None:
+                return None
+            return datetime.fromisoformat(value).strftime("%Y-%m-%d %H:%M:%S")
 
         @self.db.func("naturaldelta")
         def db_naturaldelta(num: float) -> str:  # pyright: ignore [reportUnusedFunction]

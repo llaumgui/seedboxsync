@@ -46,8 +46,9 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
         Torrent.select(
             Torrent.id,
             Torrent.name,
-            Torrent.sent,
-            fn.humanize(Torrent.total_size).alias("size"),
+            fn.coalesce(fn.humanize(Torrent.total_size), "").alias("total_size"),
+            fn.coalesce(Torrent.total_files, "").alias("total_files"),
+            fn.short_datetime(Torrent.sent),
         )
         .limit(number)
         .order_by(Torrent.sent.desc())
@@ -61,7 +62,7 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
     click.echo(
         ctx.render(
             reversed(data),
-            headers={"id": "Id", "name": "Name", "size": "Size", "sent": "Sent datetime"},
+            headers={"id": "Id", "name": "Name", "total_files": "File(s)", "total_size": "Size", "sent": "Sent datetime"},
         )
     )
 
@@ -92,7 +93,7 @@ def downloaded(ctx: Context, number: int, search: str) -> None:
         Download.select(
             Download.id,
             fn.SUBSTR(Download.path, -100).alias("path"),
-            Download.finished,
+            fn.short_datetime(Download.finished),
             fn.humanize(Download.local_size).alias("size"),
         )
         .where(where)
@@ -106,8 +107,8 @@ def downloaded(ctx: Context, number: int, search: str) -> None:
             reversed(data),
             headers={
                 "id": "Id",
-                "finished": "Finished",
                 "path": "Path",
+                "finished": "Finished",
                 "size": "Size",
             },
         )
@@ -145,7 +146,7 @@ def progress(ctx: Context, number: int, search: str) -> None:
         Download.select(
             Download.id,
             fn.SUBSTR(Download.path, -100).alias("path"),
-            Download.started,
+            fn.short_datetime(Download.started),
             fn.ROUND(progress_expr, 0).cast("INTEGER").concat("%").alias("progress"),
             fn.naturaldelta(eta_expr).alias("eta"),
             fn.humanize(Download.seedbox_size).alias("size"),

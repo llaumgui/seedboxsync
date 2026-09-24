@@ -12,7 +12,7 @@ def test_registered_database_functions_handle_valid_and_invalid_values(app):
     with app.app_context():
         row = database.execute_sql("SELECT byte_to_gi(1073741824, 'B'), humanize('invalid'), naturaldelta('invalid')").fetchone()
 
-    assert row == ("1.0GiB", "0 Bytes", "a moment")
+    assert row == ("1.0GiB", "", "a moment")
 
 
 def test_new_database_is_created_with_current_model_schema(new_database_app):

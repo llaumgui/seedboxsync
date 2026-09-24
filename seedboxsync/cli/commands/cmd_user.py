@@ -7,6 +7,7 @@
 """All commands related to the users operations & management."""
 
 import click
+from peewee import fn
 from werkzeug.security import generate_password_hash
 from seedboxsync.cli import Context, group, pass_context
 from seedboxsync.core.database.models import User
@@ -46,8 +47,8 @@ def list_user(ctx: Context, number: int, search: str) -> None:
             User.username,
             User.email,
             User.origin,
-            User.created,
-            User.last_login,
+            fn.short_datetime(User.created),
+            fn.short_datetime(User.last_login),
         )
         .limit(number)
         .order_by(User.id.desc())
