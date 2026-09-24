@@ -9,7 +9,7 @@
 from os import fspath
 from pathlib import Path
 from paramiko import SSHException
-from seedboxsync.core import current_app as app, utils
+from seedboxsync.core import current_app as app
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.core.taskmanager import track_taskstatus
 
@@ -84,10 +84,8 @@ def blackhole(dry_run: bool, ping: bool) -> None:
             )
 
             # Store torrent info in database
-            torrent_info = utils.get_torrent_infos(torrent_file)
             torrent = Torrent.create(name=torrent_name)
-            if torrent_info is not None and isinstance(torrent_info, dict):
-                torrent.announce = torrent_info.get("announce")
+            if torrent.set_from_file(torrent_file):
                 torrent.save()
 
                 # Remove local torrent file
