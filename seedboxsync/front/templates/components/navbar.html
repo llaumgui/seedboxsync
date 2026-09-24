@@ -34,12 +34,13 @@
           {{ menu_link(_('Settings'), 'settings.info') }}
         {% elif current_user.is_authenticated %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="nav-link dropdown-toggle d-flex align-items-center gap-2" type="button"  id="userDropdown"
+                  data-bs-toggle="dropdown" aria-expanded="false">
             {% if seedboxsync_config.auth_gravatar_enabled %}
               <img src="{{ gravatar(current_user.email) }}" alt="{{ current_user.username }}" width="24" height="24" class="rounded-circle">
             {% endif %}
             <span>{{ current_user.username }}</span>
-          </a>
+          </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             {{ menu_link(_('Settings'), 'settings.info', True, 'fa-gear') }}
             <li><hr class="dropdown-divider"></li>
