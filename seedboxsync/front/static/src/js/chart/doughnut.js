@@ -71,30 +71,19 @@ export function createDoughnutChart(ctx, data, field_name, field_total, label = 
 }
 
 /**
- * Load doughnut chart data from a URL and create two doughnut charts.
+ * Load doughnut chart data from a URL and create doughnut charts.
  *
- * @param {HTMLCanvasElement} ctx1
- * @param {string} field1
- * @param {string} label1
- * @param {HTMLCanvasElement} ctx2
- * @param {string} field2
- * @param {string} label2
- * @param {string} url
- * @param {AbortSignal} signal
- * @returns {Promise<[Chart, Chart]>}
+ * @param {object} config
+ * @param {Array<object>} config.charts
+ * @param {HTMLCanvasElement} config.charts[].ctx
+ * @param {string} config.charts[].fieldName
+ * @param {string} config.charts[].fieldTotal
+ * @param {string} config.charts[].label
+ * @param {string} config.url
+ * @param {AbortSignal} [config.signal]
+ * @returns {Promise<Chart[]>}
  */
-export async function load2Chart(
-  ctx1,
-  field_name1,
-  field_total1,
-  label1,
-  ctx2,
-  field_name2,
-  field_total2,
-  label2,
-  url,
-  signal,
-) {
+export async function load2Chart({ charts, url, signal }) {
   const response = await fetch(url, { signal });
 
   if (!response.ok) {
@@ -105,8 +94,7 @@ export async function load2Chart(
 
   const json = await response.json();
 
-  const chart1 = createDoughnutChart(ctx1, json.data, field_name1, field_total1, label1);
-  const chart2 = createDoughnutChart(ctx2, json.data, field_name2, field_total2, label2);
-
-  return [chart1, chart2];
+  return charts.map(({ ctx, fieldName, fieldTotal, label }) =>
+    createDoughnutChart(ctx, json.data, fieldName, fieldTotal, label),
+  );
 }

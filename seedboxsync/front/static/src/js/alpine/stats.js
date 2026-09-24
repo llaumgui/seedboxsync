@@ -112,27 +112,43 @@ export function StatsPeriod() {
       );
 
       load2DoughnutChart(
-        document.getElementById("filesByMimeType"),
-        "mime_type",
-        "total",
-        config.translations.files,
-        document.getElementById("sizeByMimeType"),
-        "mime_type",
-        "total_size",
-        config.translations.size,
-        this.buildUrl(config.urls.mimeType),
+        {
+          charts: [
+            {
+              ctx: document.getElementById("filesByMimeType"),
+              fieldName: "mime_type",
+              fieldTotal: "total",
+              label: config.translations.files,
+            },
+            {
+              ctx: document.getElementById("sizeByMimeType"),
+              fieldName: "mime_type",
+              fieldTotal: "total_size",
+              label: config.translations.size,
+            },
+          ],
+          url: this.buildUrl(config.urls.mimeType),
+        },
       );
 
       load2DoughnutChart(
-        document.getElementById("torrentByAnnouncer"),
-        "announcer",
-        "total",
-        config.translations.files,
-        document.getElementById("sizeByAnnouncer"),
-        "announcer",
-        "total_size",
-        config.translations.size,
-        this.buildUrl(config.urls.announcer),
+        {
+          charts: [
+            {
+              ctx: document.getElementById("torrentByAnnouncer"),
+              fieldName: "announcer",
+              fieldTotal: "total",
+              label: config.translations.files,
+            },
+            {
+              ctx: document.getElementById("sizeByAnnouncer"),
+              fieldName: "announcer",
+              fieldTotal: "total_size",
+              label: config.translations.size,
+            },
+          ],
+          url: this.buildUrl(config.urls.announcer),
+        },
       );
     },
   };

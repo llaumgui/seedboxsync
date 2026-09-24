@@ -89,15 +89,23 @@ describe("doughnut chart helpers", () => {
       }),
     });
     await load2Chart(
-      "downloads-canvas",
-      "mime_type",
-      "downloads",
-      "Downloads",
-      "size-canvas",
-      "mime_type",
-      "size",
-      "Size",
-      "/stats",
+      {
+        charts: [
+          {
+            ctx: "downloads-canvas",
+            fieldName: "mime_type",
+            fieldTotal: "downloads",
+            label: "Downloads",
+          },
+          {
+            ctx: "size-canvas",
+            fieldName: "mime_type",
+            fieldTotal: "size",
+            label: "Size",
+          },
+        ],
+        url: "/stats",
+      },
     );
     expect(fetch).toHaveBeenCalledWith("/stats", { signal: undefined });
     expect(instances.map(({ ctx }) => ctx)).toEqual([
@@ -110,15 +118,23 @@ describe("doughnut chart helpers", () => {
     fetch.mockRejectedValue(new Error("network"));
     await expect(
       load2Chart(
-        "downloads-canvas",
-        "mime_type",
-        "downloads",
-        "Downloads",
-        "size-canvas",
-        "mime_type",
-        "size",
-        "Size",
-        "/stats",
+        {
+          charts: [
+            {
+              ctx: "downloads-canvas",
+              fieldName: "mime_type",
+              fieldTotal: "downloads",
+              label: "Downloads",
+            },
+            {
+              ctx: "size-canvas",
+              fieldName: "mime_type",
+              fieldTotal: "size",
+              label: "Size",
+            },
+          ],
+          url: "/stats",
+        },
       ),
     ).rejects.toThrow("network");
   });
