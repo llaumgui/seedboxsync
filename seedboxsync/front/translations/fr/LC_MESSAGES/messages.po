@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-23 14:00+0200\n"
+"POT-Creation-Date: 2026-09-24 15:01+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -286,74 +286,77 @@ msgstr "Derniers fichiers téléchargés"
 msgid "List of last files downloaded from the seedbox to the NAS."
 msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 
-#: seedboxsync/front/templates/components/macros.html:54
-#: seedboxsync/front/templates/components/macros.html:59
-#: seedboxsync/front/templates/downloaded.html:18
+#: seedboxsync/front/templates/components/macros.html:51
+#: seedboxsync/front/templates/components/macros.html:56
+#: seedboxsync/front/templates/downloaded.html:25
 #: seedboxsync/front/templates/homepage.html:45
 #: seedboxsync/front/templates/homepage.html:78
 #: seedboxsync/front/templates/homepage.html:106
-#: seedboxsync/front/templates/uploaded.html:18
+#: seedboxsync/front/templates/uploaded.html:25
 msgid "Loading..."
 msgstr "Chargement..."
 
-#: seedboxsync/front/templates/components/modal.html:25
-#: seedboxsync/front/templates/downloaded.html:19
+#: seedboxsync/front/templates/components/modal.html:31
+#: seedboxsync/front/templates/downloaded.html:26
 #: seedboxsync/front/templates/homepage.html:46
 #: seedboxsync/front/templates/homepage.html:79
 #: seedboxsync/front/templates/homepage.html:107
-#: seedboxsync/front/templates/uploaded.html:19
+#: seedboxsync/front/templates/uploaded.html:26
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
 
-#: seedboxsync/front/templates/downloaded.html:20
+#: seedboxsync/front/templates/downloaded.html:27
 #: seedboxsync/front/templates/homepage.html:80
 msgid "No files downloaded yet..."
 msgstr "Aucun fichier téléchargé pour le moment..."
 
-#: seedboxsync/front/templates/downloaded.html:26
+#: seedboxsync/front/templates/downloaded.html:33
 #: seedboxsync/front/templates/homepage.html:51
 #: seedboxsync/front/templates/homepage.html:84
 #: seedboxsync/front/templates/homepage.html:112
 #: seedboxsync/front/templates/settings/apikeys.html:38
-#: seedboxsync/front/templates/uploaded.html:26
+#: seedboxsync/front/templates/uploaded.html:33
 msgid "Name"
 msgstr "Nom"
 
-#: seedboxsync/front/templates/downloaded.html:27
+#: seedboxsync/front/templates/downloaded.html:34
 #: seedboxsync/front/templates/homepage.html:85
 msgid "Finished"
 msgstr "Terminé"
 
-#: seedboxsync/front/templates/downloaded.html:28
+#: seedboxsync/front/templates/downloaded.html:35
 #: seedboxsync/front/templates/homepage.html:86
-#: seedboxsync/front/templates/stats.html:29
+#: seedboxsync/front/templates/stats.html:19
+#: seedboxsync/front/templates/uploaded.html:35
 msgid "Size"
 msgstr "Taille"
 
-#: seedboxsync/front/templates/downloaded.html:45
-#: seedboxsync/front/templates/uploaded.html:44
-msgid "Delete?"
-msgstr "Supprimer ?"
-
-#: seedboxsync/front/templates/downloaded.html:46
-msgid "Do you want to delete this download?"
-msgstr "Voulez-vous supprimer ce téléchargement ?"
-
-#: seedboxsync/front/templates/downloaded.html:47
-#: seedboxsync/front/templates/uploaded.html:46
-msgid "has been deleted"
-msgstr "a été effacé"
-
 #: seedboxsync/front/templates/downloaded.html:49
+#: seedboxsync/front/templates/downloaded.html:50
 #: seedboxsync/front/templates/settings/apikeys.html:52
 #: seedboxsync/front/templates/settings/apikeys_delete.html:8
 #: seedboxsync/front/templates/settings/apikeys_delete.html:44
 #: seedboxsync/front/templates/settings/users.html:53
 #: seedboxsync/front/templates/settings/users_delete.html:48
-#: seedboxsync/front/templates/uploaded.html:48
+#: seedboxsync/front/templates/uploaded.html:52
+#: seedboxsync/front/templates/uploaded.html:53
 #: seedboxsync/front/views/settings/users.py:163
 msgid "Delete"
 msgstr "Supprimer"
+
+#: seedboxsync/front/templates/downloaded.html:55
+#: seedboxsync/front/templates/uploaded.html:58
+msgid "Delete?"
+msgstr "Supprimer ?"
+
+#: seedboxsync/front/templates/downloaded.html:56
+msgid "Do you want to delete this download?"
+msgstr "Voulez-vous supprimer ce téléchargement ?"
+
+#: seedboxsync/front/templates/downloaded.html:57
+#: seedboxsync/front/templates/uploaded.html:60
+msgid "has been deleted"
+msgstr "a été effacé"
 
 #: seedboxsync/front/templates/components/navbar.html:25
 #: seedboxsync/front/templates/homepage.html:6
@@ -425,7 +428,7 @@ msgid "No torrent downloaded yet..."
 msgstr "Pas encore de torrent téléchargé..."
 
 #: seedboxsync/front/templates/homepage.html:113
-#: seedboxsync/front/templates/uploaded.html:27
+#: seedboxsync/front/templates/uploaded.html:36
 msgid "Sent"
 msgstr "Envoyé"
 
@@ -444,94 +447,63 @@ msgid "Log in"
 msgstr "Se connecter"
 
 #: seedboxsync/front/templates/settings/info.html:43
-#: seedboxsync/front/templates/stats.html:4
+#: seedboxsync/front/templates/stats.html:6
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/components/macros.html:6
-#: seedboxsync/front/templates/stats.html:8
-msgid "Previous"
-msgstr "Précédent"
-
-#: seedboxsync/front/templates/components/macros.html:18
-#: seedboxsync/front/templates/stats.html:9
-msgid "Next"
-msgstr "Suivant"
-
-#: seedboxsync/front/templates/stats.html:10
-msgid "Today"
-msgstr "Aujourd’hui"
-
-#: seedboxsync/front/templates/stats.html:11
-msgid "Clear"
-msgstr "Réinitialiser"
-
-#: seedboxsync/front/templates/stats.html:12
-#: seedboxsync/front/templates/stats.html:14
-msgid "Choose date"
-msgstr "Choisir une date"
-
-#: seedboxsync/front/templates/stats.html:13
-msgid "Switch calendar view"
-msgstr "Changer de vue"
-
-#: seedboxsync/front/templates/stats.html:15
-msgid "Wk"
-msgstr "S"
-
-#: seedboxsync/front/templates/stats.html:28
+#: seedboxsync/front/templates/stats.html:18
 msgid "Files"
 msgstr "Fichiers"
 
-#: seedboxsync/front/templates/stats.html:30
+#: seedboxsync/front/templates/stats.html:20
 msgid "Size (GiB)"
 msgstr "Taille (GiB)"
 
-#: seedboxsync/front/templates/stats.html:54
+#: seedboxsync/front/templates/stats.html:30
 msgid "Total"
 msgstr "Total"
 
 #: seedboxsync/front/templates/settings/info.html:45
-#: seedboxsync/front/templates/stats.html:58
+#: seedboxsync/front/templates/stats.html:34
 msgid "Number of files downloaded"
 msgstr "Nombre de fichiers téléchargés"
 
 #: seedboxsync/front/templates/settings/info.html:49
-#: seedboxsync/front/templates/stats.html:59
+#: seedboxsync/front/templates/stats.html:35
 msgid "Total size of files downloaded"
 msgstr "Taille totale des fichiers téléchargés"
 
-#: seedboxsync/front/templates/stats.html:73
-msgid "Period"
-msgstr "Période"
-
-#: seedboxsync/front/templates/stats.html:87
+#: seedboxsync/front/templates/stats.html:57
 msgid "Files by MIME type"
 msgstr "Fichiers par type MIME"
 
-#: seedboxsync/front/templates/stats.html:91
+#: seedboxsync/front/templates/stats.html:61
 msgid "Size by MIME type"
 msgstr "Taille par type MIME"
 
-#: seedboxsync/front/templates/stats.html:98
-msgid "Downloads by month"
-msgstr "Téléchargements par mois"
-
-#: seedboxsync/front/templates/stats.html:102
+#: seedboxsync/front/templates/stats.html:68
 msgid "Downloads by year"
 msgstr "Téléchargements par années"
 
-#: seedboxsync/front/templates/uploaded.html:20
+#: seedboxsync/front/templates/stats.html:72
+msgid "Downloads by month"
+msgstr "Téléchargements par mois"
+
+#: seedboxsync/front/templates/uploaded.html:27
 msgid "No files uploaded yet..."
 msgstr "Aucun fichier envoyé pour le moment..."
 
-#: seedboxsync/front/templates/uploaded.html:45
+#: seedboxsync/front/templates/uploaded.html:34
+msgid "File(s)"
+msgstr "Fichier(s)"
+
+#: seedboxsync/front/templates/uploaded.html:59
 msgid "Do you want to delete this upload?"
 msgstr "Voulez-vous supprimer cet upload ?"
 
 #: seedboxsync/front/templates/components/flash_message.html:12
-#: seedboxsync/front/templates/components/flash_toast.html:24
-#: seedboxsync/front/templates/components/modal.html:14
+#: seedboxsync/front/templates/components/flash_toast.html:27
+#: seedboxsync/front/templates/components/modal.html:20
 msgid "Close"
 msgstr "Fermer"
 
@@ -573,18 +545,61 @@ msgstr "Erreur lors de la programmation de la tâche"
 msgid "Pagination"
 msgstr "Pagination"
 
-#: seedboxsync/front/templates/components/macros.html:26
-#: seedboxsync/front/templates/components/macros.html:31
+#: seedboxsync/front/templates/components/macros.html:6
+#: seedboxsync/front/templates/components/macros.html:96
+msgid "Previous"
+msgstr "Précédent"
+
+#: seedboxsync/front/templates/components/macros.html:18
+#: seedboxsync/front/templates/components/macros.html:97
+msgid "Next"
+msgstr "Suivant"
+
+#: seedboxsync/front/templates/components/macros.html:25
+#: seedboxsync/front/templates/components/macros.html:29
 msgid "Search"
 msgstr "Recherche"
 
-#: seedboxsync/front/templates/components/macros.html:71
+#: seedboxsync/front/templates/components/macros.html:68
 msgid "MIME type:"
 msgstr "Type MIME :"
 
-#: seedboxsync/front/templates/components/macros.html:71
+#: seedboxsync/front/templates/components/macros.html:68
 msgid "Confidence:"
 msgstr "Confiance :"
+
+#: seedboxsync/front/templates/components/macros.html:76
+msgid "Announcer:"
+msgstr "Annonceur :"
+
+#: seedboxsync/front/templates/components/macros.html:76
+msgid "Source:"
+msgstr "Source :"
+
+#: seedboxsync/front/templates/components/macros.html:98
+msgid "Today"
+msgstr "Aujourd’hui"
+
+#: seedboxsync/front/templates/components/macros.html:99
+msgid "Clear"
+msgstr "Réinitialiser"
+
+#: seedboxsync/front/templates/components/macros.html:100
+#: seedboxsync/front/templates/components/macros.html:102
+msgid "Choose date"
+msgstr "Choisir une date"
+
+#: seedboxsync/front/templates/components/macros.html:101
+msgid "Switch calendar view"
+msgstr "Changer de vue"
+
+#: seedboxsync/front/templates/components/macros.html:103
+msgid "Wk"
+msgstr "S"
+
+#: seedboxsync/front/templates/components/macros.html:107
+msgid "Period"
+msgstr "Période"
 
 #: seedboxsync/front/templates/components/menu_settings.html:9
 #: seedboxsync/front/templates/components/menu_settings.html:29
@@ -679,11 +694,11 @@ msgstr ""
 "started/configuration/\">La documentation</a> contient toutes les "
 "informations dont vous avez besoin."
 
-#: seedboxsync/front/templates/components/modal.html:32
+#: seedboxsync/front/templates/components/modal.html:38
 msgid "OK"
 msgstr "OK"
 
-#: seedboxsync/front/templates/components/modal.html:37
+#: seedboxsync/front/templates/components/modal.html:43
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -963,3 +978,4 @@ msgstr "L’utilisateur '%(username)s' a bien été supprimé."
 #: seedboxsync/front/views/settings/users.py:161
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l’utilisateur."
+

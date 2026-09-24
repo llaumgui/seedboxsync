@@ -117,7 +117,7 @@
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
           <td class="overflow-anywhere">
-            <i :class="getMimeIconClass('application/x-bittorrent')"></i>
+            {{ macro.torrent_icon() }}
             <span x-text="row.name"></span>
           </td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>

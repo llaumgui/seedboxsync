@@ -65,7 +65,16 @@
 <i :class="getMimeIconClass(row.mime_type)"
    data-bs-toggle="tooltip"
    data-bs-html="true"
-   :data-bs-title="'<strong>{{ _('MIME type:') }}</strong> ' + row.mime_type + '<br><strong>{{ _('Confidence:') }}</strong> ' + row.mime_confidence + '<br>'"
+   :data-bs-title="'<strong>{{ _('MIME type:') }}</strong> ' + row.mime_type + '<br><strong>{{ _('Confidence:') }}</strong> ' + row.mime_confidence"
+   x-init="new Tooltip($el)"></i>
+{% endmacro %}
+
+{% macro torrent_icon() %}
+<i :class="getMimeIconClass('application/x-bittorrent')"
+   data-bs-toggle="tooltip"
+   data-bs-html="true"
+   :data-bs-title="'<strong>{{ _('Announcer:') }}</strong> ' + row.announcer +
+    (row.source ? '<br><strong>{{ _('Source:') }}</strong> ' + row.source : '')"
    x-init="new Tooltip($el)"></i>
 {% endmacro %}
 
