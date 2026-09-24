@@ -93,7 +93,7 @@
             {{ macro.mime_icon() }} <span x-text="row.path"></span>
           </td>
           <td class="d-none d-md-table-cell" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
-          <td class="d-none d-md-table-cell" x-text="row.human_local_size"></td>
+          <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
         </tr>
       </template>
     </tbody>
@@ -120,7 +120,7 @@
             <i :class="getMimeIconClass('application/x-bittorrent')"></i>
             <span x-text="row.name"></span>
           </td>
-          <td class="d-none d-md-table-cell" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td class="d-none d-md-table-cell text-nowrap" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
         </tr>
       </template>
     </tbody>
