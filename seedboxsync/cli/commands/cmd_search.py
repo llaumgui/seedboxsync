@@ -9,7 +9,7 @@
 import click
 from peewee import fn
 from seedboxsync.cli import Context, group, pass_context
-from seedboxsync.core.database.models import Download, Torrent, typed_peewee_dicts
+from seedboxsync.core.database.models import Download, Torrent
 
 
 @group("search", help="Search operations.")  # type: ignore[untyped-decorator]
@@ -42,7 +42,16 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
         conditions.append(Torrent.name.contains(search))
 
     # DB query
-    query = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).limit(number).order_by(Torrent.sent.desc())
+    query = (
+        Torrent.select(
+            Torrent.id,
+            Torrent.name,
+            Torrent.sent,
+            fn.humanize(Torrent.total_size).alias("size"),
+        )
+        .limit(number)
+        .order_by(Torrent.sent.desc())
+    )
 
     # if "where" expression
     if conditions:
@@ -52,8 +61,7 @@ def uploaded(ctx: Context, number: int, search: str) -> None:
     click.echo(
         ctx.render(
             reversed(data),
-            headers={"id": "Id", "name": "Name", "sent": "Sent datetime"},
-            tablefmt="github",
+            headers={"id": "Id", "name": "Name", "size": "Size", "sent": "Sent datetime"},
         )
     )
 
@@ -102,7 +110,6 @@ def downloaded(ctx: Context, number: int, search: str) -> None:
                 "path": "Path",
                 "size": "Size",
             },
-            tablefmt="github",
         )
     )
 
@@ -134,7 +141,7 @@ def progress(ctx: Context, number: int, search: str) -> None:
     eta_expr = (fn.STRFTIME("%s", "now", "localtime") - fn.STRFTIME("%s", Download.started)) * (100.0 - progress_expr) / fn.NULLIF(progress_expr, 0)
 
     # DB query
-    data = typed_peewee_dicts(
+    data = (
         Download.select(
             Download.id,
             fn.SUBSTR(Download.path, -100).alias("path"),
@@ -149,23 +156,9 @@ def progress(ctx: Context, number: int, search: str) -> None:
         .dicts()
     )
 
-    # Define the output column order explicitly
-    rows = [
-        (
-            row["id"],
-            row["path"],
-            row["started"],
-            row["progress"],
-            row["eta"],
-            row["size"],
-        )
-        for row in reversed(list(data))
-    ]
-
     click.echo(
         ctx.render(
-            rows,
-            headers=["Id", "Path", "Started", "Progress", "ETA", "Size"],
-            tablefmt="github",
+            reversed(data),
+            headers={"id": "Id", "path": "Path", "started": "Started", "progress": "Progress", "eta": "ETA", "size": "Size"},
         )
     )

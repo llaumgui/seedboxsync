@@ -62,7 +62,6 @@ def list_user(ctx: Context, number: int, search: str) -> None:
         ctx.render(
             reversed(data),
             headers={"id": "Id", "username": "Username", "email": "Email", "origin": "Origin", "created": "Created", "last_login": "Last Login"},
-            tablefmt="github",
         )
     )
 

@@ -19,14 +19,14 @@ def test_stats_without_subcommand_shows_help_and_totals(stats_data, runner):
     assert result.exit_code == 0
     assert "Commands:" in result.output
     assert "Nb files" in result.output
-    assert "|          3 | 7.0 KiB" in result.output
+    assert "│ 3        │ 7.0 KiB    │" in result.output
 
 
 def test_stats_total_ignores_unfinished_downloads(stats_data, runner):
     result = runner.invoke(cli, ["stats", "total"])
 
     assert result.exit_code == 0
-    assert "|          3 | 7.0 KiB" in result.output
+    assert "│ 3        │ 7.0 KiB    │" in result.output
 
 
 def test_stats_by_month_aggregates_files_and_sizes(stats_data, runner):
@@ -44,5 +44,5 @@ def test_stats_by_year_aggregates_files_and_sizes(stats_data, runner):
     result = runner.invoke(cli, ["stats", "by-year"])
 
     assert result.exit_code == 0
-    assert "|   2025 |          2 | 3.0 KiB" in result.output
-    assert "|   2026 |          1 | 4.0 KiB" in result.output
+    assert "│ 2025 │ 2        │ 3.0 KiB    │" in result.output
+    assert "│ 2026 │ 1        │ 4.0 KiB    │" in result.output

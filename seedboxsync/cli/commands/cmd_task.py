@@ -20,11 +20,9 @@ def cli() -> None:
 @pass_context
 def tasks_result(ctx: Context) -> None:
     """List all_results() tasks."""
-    data = []
-    for task in ctx.app.task_manager.all_results():
-        data.append([task])
+    data = [{"key": task} for task in ctx.app.task_manager.all_results()]
 
-    click.echo(ctx.render(data, headers=["Result key"]))
+    click.echo(ctx.render(data, headers={"key": "Result key"}))
 
 
 @cli.command("pending", help="List pending tasks.")  # type: ignore[untyped-decorator]
@@ -33,11 +31,15 @@ def tasks_pending(ctx: Context) -> None:
     """List pending tasks."""
     data = []
     for task in ctx.app.task_manager.pending():
-        name = getattr(task, "name", str(task).split(": ")[0])
-        task_id = getattr(task, "id", str(task).split(": ")[-1] if ": " in str(task) else str(task))
-        data.append([name, task_id])
+        task_str = str(task)
+        data.append(
+            {
+                "name": getattr(task, "name", task_str.split(": ")[0]),
+                "task_id": getattr(task, "id", str(task).split(": ")[-1] if ": " in task_str else task_str),
+            }
+        )
 
-    click.echo(ctx.render(data, headers=["Task Name", "Task ID / UUID"]))
+    click.echo(ctx.render(data, headers={"name": "Task Name", "task_id": "Task ID / UUID"}))
 
 
 @cli.command("list", help="List registered tasks.")  # type: ignore[untyped-decorator]
@@ -45,11 +47,9 @@ def tasks_pending(ctx: Context) -> None:
 def tasks_list(ctx: Context) -> None:
     """List registered tasks."""
     load_task_modules()
-    data = []
-    for task in ctx.app.task_manager._registry._registry:
-        data.append([task])
+    data = [{"class": task} for task in ctx.app.task_manager._registry._registry]
 
-    click.echo(ctx.render(data, headers=["Class"]))
+    click.echo(ctx.render(data, headers={"class": "Class"}))
 
 
 @cli.command("flush", help="Remove all data from the queue, schedule, and result store.")  # type: ignore[untyped-decorator]

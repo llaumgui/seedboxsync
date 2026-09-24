@@ -41,7 +41,6 @@ dependencies = [
   "paramiko>=5.0.0",
   "peewee>=4.3.0",
   "python-slugify>=8.0.4",
-  "tabulate>=0.10.0",
   "typing-extensions>=4.16.0",
   "flask-login>=0.6.3",
   "wtforms>=3.2.2",
@@ -52,6 +51,7 @@ dependencies = [
   "requests>=2.34.2",
   "puremagic>=1.30",
   "tldextract>=5.3.2",
+  "rich>=15.0.0",
 ]
 
 [project.urls]
