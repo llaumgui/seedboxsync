@@ -115,7 +115,7 @@ class Database:
         @self.db.func("humanize")
         def db_humanize(num: float | None) -> str:  # pyright: ignore [reportUnusedFunction]
             """Format file size numbers into human-readable representations."""
-            if (num is None):
+            if num is None:
                 return ""
             try:
                 # Treat None or invalid type as 0

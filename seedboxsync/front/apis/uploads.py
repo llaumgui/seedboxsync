@@ -8,6 +8,7 @@
 
 from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
+from peewee import fn
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource
 from seedboxsync.front.login_manager import login_required
@@ -21,16 +22,42 @@ api = Namespace("uploads", description="Operations related to uploaded torrents 
 upload_model = api.model(
     "Upload",
     {
-        "id": fields.Integer(
-            required=True,
-            description="Unique identifier of the uploaded torrent",
-            example=99,
-        ),
+        "id": fields.Integer(required=True, description="Unique identifier of the uploaded torrent", example=99),
         "name": fields.String(required=True, description="Torrent file name", example="Justo.torrent"),
         "announce": fields.String(
             required=False,
             description="Announce URL or tracker information from the torrent file",
             example="https://serversecret.com/anounce",
+        ),
+        "announcer": fields.String(
+            required=False,
+            description="Tracker announce domain of the torrent",
+            example="serversecret.com",
+        ),
+        "source": fields.String(
+            required=False,
+            description="Source or provenance of the torrent file",
+            example="serversecret",
+        ),
+        "files": fields.Integer(
+            required=False,
+            description="Total number of files contained in the torrent",
+            example=2,
+        ),
+        "size": fields.Integer(
+            required=False,
+            description="Total size of all files in bytes",
+            example=3337353289,
+        ),
+        "human_size": fields.String(
+            required=False,
+            description="Total size of all files in with related humanization",
+            example="3.1 GiB",
+        ),
+        "private": fields.Boolean(
+            required=False,
+            description="Flag indicating if the torrent is private",
+            example=True,
         ),
         "sent": fields.DateTime(
             dt_format="iso8601",
@@ -109,7 +136,23 @@ class UploadsList(Resource):
         end_date = args.get("end_date")
 
         count = Torrent.select()
-        select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).limit(limit).offset(offset).order_by(Torrent.sent.desc())
+        select = (
+            Torrent.select(
+                Torrent.id,
+                Torrent.name,
+                Torrent.announce,
+                Torrent.announcer,
+                Torrent.source,
+                fn.coalesce(Torrent.total_files, None).alias("files"),
+                fn.coalesce(Torrent.total_size, None).alias("size"),
+                fn.humanize(Torrent.total_size).alias("human_size"),
+                Torrent.private,
+                Torrent.sent,
+            )
+            .limit(limit)
+            .offset(offset)
+            .order_by(Torrent.sent.desc())
+        )
 
         if search:
             count = count.where(Torrent.name.contains(search))
@@ -151,7 +194,24 @@ class Uploads(Resource):
         """
         select: Torrent | None = None
         try:
-            select = Torrent.select(Torrent.id, Torrent.name, Torrent.sent).where(Torrent.id == id).dicts().get()
+            select = (
+                Torrent.select(
+                    Torrent.id,
+                    Torrent.name,
+                    Torrent.announce,
+                    Torrent.announcer,
+                    Torrent.source,
+                    fn.coalesce(Torrent.total_files, None).alias("files"),
+                    fn.coalesce(Torrent.total_size, None).alias("size"),
+                    fn.humanize(Torrent.total_size).alias("human_size"),
+                    Torrent.private,
+                    Torrent.sent,
+                )
+                .where(Torrent.id == id)
+                .dicts()
+                .get()
+            )
+
         except Torrent.DoesNotExist:  # type: ignore[attr-defined]
             api.abort(404, f"Upload {id} doesn't exist")
 
