@@ -34,44 +34,69 @@
 
 ## Screenshots
 
-<div align="center">
-    <table>
-    <tr>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage.png"><img alt="Main page" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage.png" width="300"/></a>
-            <br><em>Main page</em>
-        </td>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded.png"><img alt="Downloaded files" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded.png" width="300"/></a>
-            <br><em>Downloaded files</em>
-        </td>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/uploaded.png"><img alt="Uploaded torrents" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/uploaded.png" width="300"/></a>
-            <br><em>Uploaded torrents</em>
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/info.png"><img alt="Informations" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/info.png" width="300"/></a>
-            <br><em>info</em>
-        </td>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/stats.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/stats.png" width="300"/></a>
-            <br><em>Statistics</em>
-        </td>
-        <td align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings.png" width="300"/></a>
-            <br><em>Settings</em>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3" align="center">
-            <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/api-spec.png"><img alt="API SPEC" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/api-spec.png" width="300"/></a>
-            <br><em>API</em>
-        </td>
-    </tr>
-    </table>
-</div>
+<details>
+    <summary>All screenshots</summary>
+    <div align="center">
+        <table>
+            <tr>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/login.png"><img alt="Main page" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/login.png" width="300"/></a>
+                    <br><em>Login page (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage.png"><img alt="Main page" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage.png" width="300"/></a>
+                    <br><em>Main page (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage_light.png"><img alt="Main page" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/homepage_light.png" width="300"/></a>
+                    <br><em>Main page (light mode)</em>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded.png"><img alt="Downloaded files" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded.png" width="300"/></a>
+                    <br><em>Downloaded files (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded_period.png"><img alt="Downloaded files" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/downloaded_period.png" width="300"/></a>
+                    <br><em>Downloaded files with date range filter (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/uploaded.png"><img alt="Uploaded torrents" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/uploaded.png" width="300"/></a>
+                    <br><em>Uploaded torrents (light mode)</em>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/stats.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/stats.png" width="300"/></a>
+                    <br><em>Statistics (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/info.png"><img alt="Informations" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/info.png" width="300"/></a>
+                    <br><em>info (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings.png" width="300"/></a>
+                    <br><em>Settings for SeedboxSync (light mode)</em>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings_seedbox.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/settings_seedbox.png" width="300"/></a>
+                    <br><em>Settings for Seedbox (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/users_list.png"><img alt="Statistics" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/users_list.png" width="300"/></a>
+                    <br><em>Users list (dark mode)</em>
+                </td>
+                <td align="center">
+                    <a href="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/api-spec.png"><img alt="API SPEC" src="https://raw.githubusercontent.com/llaumgui/seedboxsync/refs/heads/main/docs/images/screenshots/api-spec.png" width="300"/></a>
+                    <br><em>API</em>
+                </td>
+            </tr>
+        </table>
+    </div>
+</details>
 
 ## Full documentation
 
