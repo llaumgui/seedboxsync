@@ -11,7 +11,7 @@ from flask import render_template
 from humanize import filesize, precisedelta
 from peewee import fn
 from seedboxsync.__version__ import __version__ as version
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 from seedboxsync.core.database.models import Download, TaskStatus
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
@@ -73,7 +73,7 @@ def _get_info_data() -> dict[str, object]:
         "stats_first": first_date,
         "stats_first_delta": first_delta,
         "version": version,
-        "last_migration": app.config.get("LAST_MIGRATION"),
+        "last_migration": current_app.config.get("LAST_MIGRATION"),
         "sync_blackhole": sync_blackhole,
         "sync_seedbox": sync_seedbox,
         "heartbeat": heartbeat,

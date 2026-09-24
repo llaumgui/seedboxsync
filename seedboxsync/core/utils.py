@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 from bcoding import bdecode
-from flask import current_app as app
+from flask import current_app
 import puremagic
 
 
@@ -70,7 +70,7 @@ def get_torrent_infos(torrent_path: str | PathLike[str]) -> Any | None:
         try:
             torrent_info = bdecode(torrent.read())
         except Exception:
-            app.logger.exception("Not valid torrent")
+            current_app.logger.exception("Not valid torrent")
         finally:
             torrent.close()
 
@@ -156,11 +156,11 @@ def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
         tuple[str, str, str]: (mime_type, mime_extension, confidence)
     """
     # Initialize local file path
-    local_filepath = Path(app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filename  # type: ignore[attr-defined]
+    local_filepath = Path(current_app.seedboxsync_config.get("local_download_path", "")).expanduser().resolve() / filename  # type: ignore[attr-defined]
 
     # Use first magic_file
     try:
-        app.logger.debug(f"Attempting MIME detection via puremagic header analysis for: {local_filepath}")
+        current_app.logger.debug(f"Attempting MIME detection via puremagic header analysis for: {local_filepath}")
         results = puremagic.magic_file(local_filepath)
         if results:
             match = results[0]
@@ -168,7 +168,7 @@ def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
             mime_extension = match.extension.lstrip(".")
             mime_type = match.mime_type
             mime_confidence = f"puremagic (confidence: {match.confidence})"
-            app.logger.debug(f"Successfully detected MIME via puremagic: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
+            current_app.logger.debug(f"Successfully detected MIME via puremagic: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
 
             return mime_type, mime_extension, mime_confidence
 
@@ -176,7 +176,7 @@ def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
         pass
 
     # Fallback with mimetypes
-    app.logger.debug(f"Attempting MIME detection fallback via mimetypes for: {local_filepath}")
+    current_app.logger.debug(f"Attempting MIME detection fallback via mimetypes for: {local_filepath}")
     mime_type, _ = mimetypes.guess_type(local_filepath)
 
     if mime_type:
@@ -184,7 +184,7 @@ def get_mime_type_from_file(filename: str) -> tuple[str, str, str]:
         mime_extension = extension.lstrip(".")
         mime_confidence = "mimetypes (path_fallback)"
 
-        app.logger.debug(f"MIME detection completed using fallback: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
+        current_app.logger.debug(f"MIME detection completed using fallback: type={mime_type}, ext={mime_extension}, confidence={mime_confidence}")
 
         return mime_type, mime_extension, "mimetypes (path_fallback)"
 

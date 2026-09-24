@@ -54,7 +54,8 @@
                   method: 'DELETE',
                   title: '{{ _('Delete?') }}',
                   content: `{{ _('Do you want to delete this download?') }}<br><em>${row.path}</em>`,
-                  toastMessage: `<em>${row.path}</em> {{ _('has been deleted') }}.`
+                  toastMessage: `<em>${row.path}</em> {{ _('has been deleted') }}.`,
+                  toastTitle: `{{ _('Deleted') }}.`
                 })">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </button>

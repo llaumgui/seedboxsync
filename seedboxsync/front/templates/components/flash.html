@@ -1,8 +1,5 @@
-{% set all_messages = get_flashed_messages(with_categories=true) %}
-{% set messages = [] %}
-{% for cat, msg in all_messages if not cat.startswith('toast-') %}
-  {% set _ = messages.append((cat, msg)) %}
-{% endfor %}
+{% set messages = get_flashed_messages(with_categories=true) %}
+
 {% if messages %}
   {% for category, message in messages %}
   <div class="container">
@@ -10,9 +7,7 @@
          class="alert alert-{{ category }} alert-dismissible mt-4">
       <button type="button"  class="btn-close"
               aria-label="{{ _('Close') }}" @click="show = false"></button>
-      <ul>
-        <li>{{ message }}</li>
-      </ul>
+        {{ message }}
     </div>
   </div>
   {% endfor %}

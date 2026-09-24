@@ -9,7 +9,7 @@
 from typing import cast
 from flask import request
 from flask_babel import Babel, lazy_gettext
-from seedboxsync.core import Config, current_app as app
+from seedboxsync.core import Config, current_app
 
 babel = Babel()
 ALLOWED_LANGUAGES = ["fr_FR", "en_US"]
@@ -32,7 +32,7 @@ def get_locale() -> str | None:
     Returns:
         str: The local.
     """
-    locale = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_LANGUAGE", "auto")
+    locale = current_app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_LANGUAGE", "auto")
     if locale != "auto":
         return str(locale)
     return request.accept_languages.best_match(ALLOWED_LANGUAGES)

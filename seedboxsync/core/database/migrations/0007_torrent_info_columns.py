@@ -1,7 +1,7 @@
 # Generated from a schema diff on 2026-09-24 07:59.
 # ruff: noqa: ANN001, ANN201, D100, D103, F403, F405
 # type: ignore
-from flask import current_app as app
+from flask import current_app
 from peewee import *
 from seedboxsync.core.database.models import Torrent
 
@@ -14,7 +14,7 @@ def up(migrator, db):
     migrator.migrate(migrator.add_column("torrent", "private", BooleanField(default=False)))
 
     # Update database
-    with app.app_context():
+    with current_app.app_context():
         torrents = Torrent.select().where((Torrent.announcer == "") | (Torrent.announcer.is_null()))
         for torrent in torrents:
             torrent.save()

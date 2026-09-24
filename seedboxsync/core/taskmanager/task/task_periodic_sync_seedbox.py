@@ -8,15 +8,15 @@
 
 import os
 from huey import crontab
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 from seedboxsync.core.sync.services import (
     SEEDBOX_LOCK_NAME as LOCK_NAME,
     SEEDBOX_PRIORITY as PRIORITY,
     seedbox as seedbox_service,
 )
 
-task_manager = app.task_manager
-ctx = app.app_context()
+task_manager = current_app.task_manager
+ctx = current_app.app_context()
 minute = os.getenv("SYNC_SEEDBOX_MINUTE", "*/15")
 
 

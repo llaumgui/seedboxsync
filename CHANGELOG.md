@@ -3,11 +3,13 @@
 ## 4.2.0 - xxx xx, 2026
 
 * 🚚 [Issue #222](https://github.com/llaumgui/seedboxsync/issues/222): Switch from Bulma CSS framework to Bootstrap.
-  * Add tooltip.
-  * Add calendar filter on *Downloaded*, *uploaded* and *statitics* views.
-* 🚚 Move from Python [tabulate](https://pypi.org/project/tabulate/) to [rich.table](https://rich.readthedocs.io/en/latest/tables.html).
-* ✨ Add few columns in Download and Torrent to allow more stats.
-* ✨ [Issue #192](https://github.com/llaumgui/seedboxsync/issues/192): Better statistics page with more informations.
+  * Add tooltips.
+  * Add calendar filter on *Downloaded*, *Uploaded*, and *Statistics* views.
+* 🚚 Move from Python [`tabulate`](https://pypi.org/project/tabulate/) to [`rich.table`](https://rich.readthedocs.io/en/latest/tables.html).
+* ✨ Add a few columns in `Download` and `Torrent` models to allow more stats.
+* ✨ [Issue #192](https://github.com/llaumgui/seedboxsync/issues/192): Better statistics page with more information.
+* ♻️ Rework flash message implementation to handle toast notifications.
+* 🐛 Fix minor bug fixes and UI issues.
 * 📝 Update documentation.
 
 ## 4.1.0 - Sep 13, 2026

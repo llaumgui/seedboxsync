@@ -34,11 +34,23 @@ describe("toast helpers", () => {
     await Promise.resolve();
 
     expect(manager.toasts).toEqual([
-      { id: "toast-id", message: "Saved", type: "success" },
+      { id: "toast-id", message: "Saved", type: "success", title: "" },
     ]);
     expect(bootstrapToast.show).toHaveBeenCalledOnce();
     hidden();
     expect(manager.toasts).toEqual([]);
+  });
+
+  it("stores a provided title when one is supplied", () => {
+    const manager = ToastManager();
+    manager.$root = { querySelector: vi.fn(() => null) };
+    manager.$nextTick = (callback) => callback();
+
+    manager.show({ message: "Saved", type: "success", title: "Success" });
+
+    expect(manager.toasts).toEqual([
+      { id: "toast-id", message: "Saved", type: "success", title: "Success" },
+    ]);
   });
 
   it("ignores a missing rendered toast element", () => {

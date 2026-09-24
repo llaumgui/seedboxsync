@@ -10,13 +10,13 @@
 </head>
 <body>
   {% include 'components/navbar.html' %}
-  {% include 'components/flash_message.html' %}
+  {% include 'components/flash.html' %}
   <div class="container py-5">
     {% block header %}{% endblock %}
     {% block content %}{% endblock %}
   </div>
   {% include 'components/footer.html' %}
   {% include 'components/modal.html' %}
-  {% include 'components/flash_toast.html' %}
+  {% include 'components/toast.html' %}
 </body>
 </html>

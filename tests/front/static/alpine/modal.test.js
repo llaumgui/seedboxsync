@@ -63,7 +63,7 @@ describe("modal components", () => {
     expect(window.dispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "show-toast",
-        detail: { message: "Done", type: "success" },
+        detail: { message: "Done", type: "success", title: "" },
       }),
     );
     expect(window.dispatchEvent).toHaveBeenCalledWith(expect.objectContaining({ type: "force-refresh" }));
@@ -81,7 +81,7 @@ describe("modal components", () => {
     expect(window.dispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "show-toast",
-        detail: { message: "API call failed", type: "danger" },
+        detail: { message: "API call failed", type: "danger", title: "" },
       }),
     );
     expect(modal.loading).toBe(false);

@@ -6,11 +6,11 @@
 #
 """The SeedboxSync main package."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from flask import Response, flash, request, send_from_directory
+from flask import Response, flash, g, request, send_from_directory, session
 from flask_babel import format_datetime, get_locale as get_babel_locale
 from humanize import i18n as humanize_i18n
 from libgravatar import Gravatar
@@ -48,6 +48,49 @@ def __handle_http_exception(
     if request.path.startswith(f"/api/{api_path_version}") or request.blueprint == "api":
         return error_api.error(e)
     return error_front.error(e)
+
+
+def __gravatar(email: str) -> str:
+    """
+    Generate the Gravatar image URL for a given email address.
+
+    Args:
+        email (str): The target user's email address.
+
+    Returns:
+        str: The fully qualified URL pointing to the user's Gravatar profile image.
+    """
+    return str(Gravatar(email).get_image())
+
+
+def __get_toasted_messages(with_categories: bool = False, category_filter: Iterable[str] = ()) -> list[str] | list[tuple[str, str]]:
+    """
+    Retrieve and clear pending toast notifications from the Flask session.
+
+    Acts as a specialized alternative to Flask's ``get_flashed_messages()`` specifically
+    tailored for toast notifications, pulling messages from ``g`` or removing them
+    from the user session[cite: 1, 5].
+
+    Args:
+        with_categories (bool, optional): If True, returns tuples of ``(category, message)``.
+            If False, returns only the message strings. Defaults to False.
+        category_filter (Iterable[str], optional): An iterable of category names used to
+            filter the returned toasts[cite: 1]. Defaults to ().
+
+    Returns:
+        list[str] | list[tuple[str, str]]: A list of toast message strings if ``with_categories``
+            is False, or a list of ``(category, message)`` tuples if ``with_categories`` is True.
+    """
+    toasts = getattr(g, "_toasts", None)
+    if toasts is None:
+        toasts = g._toasts = session.pop("_toasts", [])
+    if category_filter:
+        toasts = [toast for toast in toasts if toast[0] in category_filter]
+
+    if with_categories:
+        return toasts
+
+    return [toast[1] for toast in toasts]
 
 
 def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
@@ -160,6 +203,11 @@ def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     @app.template_global()
     def gravatar(email: str) -> str:  # pyright: ignore [reportUnusedFunction]
         """Return the Gravatar image URL for an email address."""
-        return str(Gravatar(email).get_image())
+        return __gravatar(email)
+
+    @app.template_global()
+    def get_toasted_messages(with_categories: bool = False, category_filter: Iterable[str] = ()) -> list[str] | list[tuple[str, str]]:
+        """Like a flash but for toast."""
+        return __get_toasted_messages(with_categories, category_filter)
 
     return app

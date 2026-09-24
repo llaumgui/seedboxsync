@@ -11,7 +11,7 @@ from typing import Any
 from flask import request, session
 from flask_caching import Cache
 from flask_login import current_user
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 
 # Global Flask-Caching instance
 cache = Cache()
@@ -27,7 +27,7 @@ def make_user_cache_key() -> str:
     Returns:
         str: Generated cache key combining the request path and user status.
     """
-    if app.config["LOGIN_DISABLED"]:
+    if current_app.config["LOGIN_DISABLED"]:
         return f"{request.path}_login_disabled"
 
     user_status = f"user_{current_user.id}" if current_user.is_authenticated else "anonymous"

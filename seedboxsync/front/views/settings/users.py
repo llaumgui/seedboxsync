@@ -6,14 +6,15 @@
 #
 """SeedboxSync Flask view for users management."""
 
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import abort, redirect, render_template, request, url_for
 from werkzeug.security import generate_password_hash
 from werkzeug.wrappers.response import Response
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 from seedboxsync.core.database.models import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
 from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.utils import toast
 from seedboxsync.front.views import bp_settings as bp
 
 settings_users_url = "settings.users"
@@ -64,11 +65,11 @@ def users_create() -> str | Response:
                 if form.password.data:
                     user.password = generate_password_hash(form.password.data)
                 user.save()
-                flash(msg_flash_success, "toast-success")
+                toast(msg_flash_success, _("Users"), "success")
                 return redirect(url_for(settings_users_url))
             except Exception as e:
-                app.logger.exception(msg_logger_error, exc_info=e)
-                flash(msg_flash_error, "toast-danger")
+                current_app.logger.exception(msg_logger_error, exc_info=e)
+                toast(msg_flash_error, _("Users"), "danger")
 
     return render_template("settings/users_edit.html", form=form, action=_("Create"))
 
@@ -117,11 +118,11 @@ def users_edit(user_id: int) -> str | Response:
                     user.password = db_user.password
 
                 user.save()
-                flash(msg_flash_success, "toast-success")
+                toast(msg_flash_success, _("Users"), "success")
                 return redirect(url_for(settings_users_url))
             except Exception as e:
-                app.logger.exception(msg_logger_error, exc_info=e)
-                flash(msg_flash_error, "toast-danger")
+                current_app.logger.exception(msg_logger_error, exc_info=e)
+                toast(msg_flash_error, _("Users"), "danger")
 
     return render_template("settings/users_edit.html", form=form, action=_("Edit"))
 
@@ -154,10 +155,10 @@ def users_delete(user_id: int) -> str | Response:
         try:
             username = user.username
             user.delete_instance()
-            flash(_("User '%(username)s' deleted successfully.") % {"username": username}, "toast-success")
+            toast(_("User '%(username)s' deleted successfully.") % {"username": username}, _("Users"), "success")
             return redirect(url_for(settings_users_url))
         except Exception as e:
-            app.logger.exception(msg_logger_error, exc_info=e)
-            flash(_("Failed to delete user."), "toast-danger")
+            current_app.logger.exception(msg_logger_error, exc_info=e)
+            toast(_("Failed to delete user."), _("Users"), "danger")
 
     return render_template("settings/users_delete.html", form=form, user=user, action=_("Delete"))

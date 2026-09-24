@@ -10,11 +10,12 @@ from typing import cast
 from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user
 from werkzeug.wrappers.response import Response
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 from seedboxsync.core.database.models import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import ApiKeyForm, EmptyCSRFForm
 from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.utils import toast
 from seedboxsync.front.views import bp_settings as bp
 
 
@@ -56,7 +57,7 @@ def apikeys_create() -> str | Response:
             apikey_name = form.name.data or ""
             user_instance = cast(User, current_user)
             _apikey, apikey_raw = apikey.generate(user_instance, name=apikey_name)
-            flash(_("API key created successfully."), "toast-success")
+            toast(_("API key created successfully."), _("API key"), "success")
             flash(
                 _("API key '%(apikey_name)s' created successfully. Copy it now, as it will not be displayed again: '%(apikey_raw)s'")
                 % {"apikey_name": apikey_name, "apikey_raw": apikey_raw},
@@ -64,8 +65,8 @@ def apikeys_create() -> str | Response:
             )
             return redirect(url_for("settings.apikeys"))
         except Exception as e:
-            app.logger.exception("Failed to save apikey.", exc_info=e)
-            flash(_("Failed to save apikey."), "danger")
+            current_app.logger.exception("Failed to save apikey.", exc_info=e)
+            toast(_("Failed to save apikey."), _("API key"), "danger")
     return render_template("settings/apikeys_create.html", form=form)
 
 
@@ -97,10 +98,10 @@ def apikeys_delete(apikey_id: int) -> str | Response:
         try:
             apikey_name = apikey.name
             apikey.delete_instance()
-            flash(_("API key '%(apikey_name)s' deleted successfully.") % {"apikey_name": apikey_name}, "toast-success")
+            toast(_("API key '%(apikey_name)s' deleted successfully.") % {"apikey_name": apikey_name}, _("API key"), "success")
             return redirect(url_for("settings.apikeys"))
         except Exception as e:
-            app.logger.exception("Failed to delete API key.", exc_info=e)
-            flash(_("Failed to delete API key."), "toast-danger")
+            current_app.logger.exception("Failed to delete API key.", exc_info=e)
+            toast(_("Failed to delete API key."), _("API key"), "danger")
 
     return render_template("settings/apikeys_delete.html", form=form, apikey=apikey)

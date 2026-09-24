@@ -8,11 +8,41 @@
 
 from typing import Any
 from urllib.parse import urlsplit
-from flask import request
+from flask import request, session
+from flask.signals import message_flashed
 from flask_wtf import FlaskForm
-from seedboxsync.core import Config, current_app as app
+from seedboxsync.core import Config, current_app
 from seedboxsync.core.database.models import SeedboxSync
 from seedboxsync.front.cache import cache
+
+
+def toast(message: str, title: str = "", category: str = "message") -> None:
+    """Flashes a message to the next request.  In order to remove the
+    flashed message from the session and to display it to the user,
+    the template has to call :func:`get_flashed_messages`.
+
+    .. versionchanged:: 0.3
+       `category` parameter added.
+
+    :param message: the message to be flashed.
+    :param title: the message's title to be flashed.
+    :param category: the category for the message.  The following values
+                     are recommended: ``'message'`` for any kind of message,
+                     ``'error'`` for errors, ``'info'`` for information
+                     messages and ``'warning'`` for warnings.  However any
+                     kind of string can be used as category.
+    """
+    toasts = session.get("_toasts", [])
+    toasts.append((category, message, title))
+    session["_toasts"] = toasts
+    app = current_app._get_current_object()  # type: ignore
+    message_flashed.send(
+        app,
+        _async_wrapper=current_app.ensure_sync,
+        message=message,
+        title=title,
+        category=category,
+    )
 
 
 def is_safe_redirect_url(target: str) -> bool:
@@ -73,18 +103,18 @@ def save_settings_form(form: FlaskForm) -> None:
             value = field.data
             db_value = field.data
 
-        app.logger.debug(f"Updated config[{Config.CONFIG_NAMESPACE}{key.upper()}] = {value}")
+        current_app.logger.debug(f"Updated config[{Config.CONFIG_NAMESPACE}{key.upper()}] = {value}")
         config_to_update[f"{Config.CONFIG_NAMESPACE}{key.upper()}"] = value
         config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}{key}", "value": str(db_value)})
 
     # Override seedbox_timeout & seedbox_chmod
     if "seedbox_timeout" in form and not seedbox_timeout_enabled:
-        app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT] = False")
+        current_app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT] = False")
         config_to_update[f"{Config.CONFIG_NAMESPACE}SEEDBOX_TIMEOUT"] = False
         config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}seedbox_timeout", "value": "0"})
         form["seedbox_timeout"].data = "0"
     if "seedbox_chmod" in form and not seedbox_chmod_enabled:
-        app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD] = False")
+        current_app.logger.debug(f"Override config[{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD] = False")
         config_to_update[f"{Config.CONFIG_NAMESPACE}SEEDBOX_CHMOD"] = False
         config_to_db.append({"key": f"{Config.DB_CONFIG_PREFIX}seedbox_chmod", "value": "0"})
         form["seedbox_chmod"].data = "0"
@@ -92,13 +122,13 @@ def save_settings_form(form: FlaskForm) -> None:
     # Synchronize core Flask-Login & Flask-Wtf configuration flags
     login_disabled_key = f"{Config.CONFIG_NAMESPACE}LOGIN_DISABLED"
     if login_disabled_key in config_to_update:
-        app.config["LOGIN_DISABLED"] = config_to_update[login_disabled_key]
+        current_app.config["LOGIN_DISABLED"] = config_to_update[login_disabled_key]
     wtf_csrt_disabled_key = f"{Config.CONFIG_NAMESPACE}WTF_CSRF_ENABLED"
     if wtf_csrt_disabled_key in config_to_update:
-        app.config["WTF_CSRF_ENABLED"] = config_to_update[wtf_csrt_disabled_key]
+        current_app.config["WTF_CSRF_ENABLED"] = config_to_update[wtf_csrt_disabled_key]
 
     # Update config in Flask app
-    app.config.from_mapping(config_to_update)
+    current_app.config.from_mapping(config_to_update)
 
     # Save in database
     SeedboxSync.replace_many(config_to_db).execute()  # type: ignore[no-untyped-call]

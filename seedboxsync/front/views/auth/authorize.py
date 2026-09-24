@@ -12,10 +12,11 @@ from flask_login import login_user
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 from werkzeug.wrappers.response import Response
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 from seedboxsync.core.database.models.user import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.oauth2 import oauth
+from seedboxsync.front.utils import toast
 from seedboxsync.front.views import bp_auth as bp
 
 view_login = "auth.login"
@@ -34,7 +35,7 @@ def authorize() -> Response:
     """
     try:
         # Get client name from configuration and create OAuth client
-        oauth_name = app.seedboxsync_config.get("oauth_name")
+        oauth_name = current_app.seedboxsync_config.get("oauth_name")
         client = oauth.create_client(oauth_name)
         if client is None:
             flash(_("OAuth provider is not properly configured."), "danger")
@@ -43,7 +44,7 @@ def authorize() -> Response:
         # Get token and user info from OAuth provider
         token = client.authorize_access_token()
         user_info = client.userinfo(token=token)
-        app.logger.debug("OAuth user info retrieved: %s", user_info)
+        current_app.logger.debug("OAuth user info retrieved: %s", user_info)
         email = user_info.get("email")
         username = user_info.get("preferred_username") or user_info.get("name") or email
         if not email:
@@ -51,7 +52,7 @@ def authorize() -> Response:
             return redirect(url_for(view_login))
 
         # Check if user exists or create a new one based on configuration
-        if app.seedboxsync_config.get("oauth_auto_create_user_enabled"):
+        if current_app.seedboxsync_config.get("oauth_auto_create_user_enabled"):
             random_password = secrets.token_urlsafe(32)
             user, _created = User.get_or_create(
                 email=email,
@@ -70,7 +71,7 @@ def authorize() -> Response:
 
         # Connect user with Flask-Login
         login_user(user)
-        flash(_("Logged in successfully."), "toast-success")
+        toast(_("Logged in successfully."), _("Login"), "success")
 
         # Update last login timestamp
         user.update_last_login()
@@ -78,9 +79,9 @@ def authorize() -> Response:
         return redirect(url_for("frontend.homepage"))
 
     except HTTPException as e:
-        app.logger.error("Authentication failed: %s", str(e))
+        current_app.logger.error("Authentication failed: %s", str(e))
         raise
     except Exception as e:
-        app.logger.error("Authentication failed: %s", str(e))
-        flash(_("Authentication failed. Please try again."), "toast-danger")
+        current_app.logger.error("Authentication failed: %s", str(e))
+        toast(_("Authentication failed. Please try again."), _("Login"), "danger")
         return redirect(url_for(view_login))

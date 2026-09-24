@@ -9,7 +9,7 @@
 import importlib
 import pkgutil
 from types import ModuleType
-from seedboxsync.core import current_app as app
+from seedboxsync.core import current_app
 import seedboxsync.core.taskmanager.task as task_package
 
 
@@ -30,7 +30,7 @@ def load_task_modules() -> list[ModuleType]:
             continue
 
         module_name = f"{task_package.__name__}.{module_info.name}"
-        app.logger.debug("Register task on %s", module_name)
+        current_app.logger.debug("Register task on %s", module_name)
 
         module = importlib.import_module(module_name)
         imported_modules.append(module)
