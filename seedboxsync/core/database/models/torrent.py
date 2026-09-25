@@ -135,14 +135,15 @@ class Torrent(SeedboxSyncModel):
         if end_date:
             conditions.append(cls.sent <= end_date)
 
+        announcer_expr = fn.COALESCE(fn.NULLIF(cls.source, None), cls.announcer)
         query = (
             cls.select(
-                cls.announcer,
+                announcer_expr.alias("announcer"),
                 fn.COUNT(cls.id).alias("total"),
                 fn.SUM(cls.total_size).alias("total_size"),
                 fn.humanize(fn.SUM(cls.total_size)).alias("human_total_size"),
             )
-            .group_by(cls.announcer)
+            .group_by(announcer_expr)
             .order_by(fn.SUM(cls.total_size).desc())
         )
 
