@@ -12,11 +12,11 @@
 <div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true', 20, 'downloaded')">
 
   {# Filters #}
-  <div class="row mb-4">
-    <div class="col-12 col-md-8">
+  <div class="row mb-2">
+    <div class="col-12 col-md-8  mb-2">
       {{ macro.render_search() }}
     </div>
-    <div class="col-4 d-none d-md-block text-end">
+    <div class="col-12 col-md-4 text-end  mb-2">
       {{ macro.datepicker_range('downloaded', False) }}
     </div>
   </div>
@@ -39,10 +39,10 @@
     <tbody>
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <td>
-            {{ macro.mime_icon() }} <span class="overflow-anywhere" x-text="row.path"></span>
+          <td class="overflow-anywhere">
+            <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
           </td>
-          <td class="text-nowrap" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td  x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
           <td class="text-end">
             <button type="button" class="btn btn-outline-danger btn-sm text-nowrap"

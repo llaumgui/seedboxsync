@@ -26,8 +26,8 @@
   x-data="StatsPeriod"
   x-init="init()"
 >
-  <div class="row mb-5">
-    <div class="col-6">
+  <div class="row mb-3">
+    <div class="cold-12 col-md-12 col-lg-6 mb-2">
       <h2 class="h4">{{ _('Total') }}</h2>
       <table class="table">
         <thead>
@@ -44,7 +44,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-6">
+    <div class="cold-12 col-md-12 col-lg-6 mb-2">
       <div class="row">
         <div class="col-md-6 offset-md-6 text-end">
           {{ macro.datepicker_range('period') }}

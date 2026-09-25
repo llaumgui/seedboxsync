@@ -44,6 +44,10 @@
 .overflow-anywhere {
   overflow-wrap: anywhere;
 }
+.text-nowrap {
+  white-space: nowrap;
+}
+
 .table .narrow {
   width: 1%;
   white-space: nowrap;

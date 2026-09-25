@@ -12,12 +12,12 @@
 <div x-data="TablePaginedComponent('{{ url_for('api.uploads_uploads_list') }}?limit=1000', 20, 'uploaded')">
 
   {# Filters #}
-  <div class="row mb-4">
-    <div class="col-12 col-md-8">
+  <div class="row mb-2">
+    <div class="col-12 col-md-8  mb-2">
       {{ macro.render_search() }}
     </div>
-    <div class="col-4 d-none d-md-block">
-      {{ macro.datepicker_range('uploaded', False) }}
+    <div class="col-12 col-md-4 text-end  mb-2">
+      {{ macro.datepicker_range('downloaded', False) }}
     </div>
   </div>
 
@@ -40,9 +40,8 @@
     <tbody>
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <td>
-            {{ macro.torrent_icon() }}
-            <span class="overflow-anywhere" x-text="row.name"></span>
+          <td class="overflow-anywhere">
+            <span class="text-nowrap">{{- macro.torrent_icon() -}}</span><span x-text="row.name"></span>
           </td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.files"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_size"></td>

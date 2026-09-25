@@ -57,7 +57,7 @@
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
           <td class="overflow-anywhere">
-            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+            <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
           </td>
           <td class="d-none d-md-table-cell" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
           <td>
@@ -90,7 +90,7 @@
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
           <td class="overflow-anywhere">
-            {{ macro.mime_icon() }} <span x-text="row.path"></span>
+            <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
           </td>
           <td class="d-none d-md-table-cell" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
@@ -117,8 +117,7 @@
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
           <td class="overflow-anywhere">
-            {{ macro.torrent_icon() }}
-            <span x-text="row.name"></span>
+              <span class="text-nowrap">{{- macro.torrent_icon() -}}</span><span x-text="row.name"></span>
           </td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
         </tr>
