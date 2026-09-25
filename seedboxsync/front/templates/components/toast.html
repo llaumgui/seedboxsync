@@ -1,6 +1,6 @@
 {% set toasts = get_toasted_messages(with_categories=true) %}
 
-{% if toasts %}{{toasts}}
+{% if toasts %}
 <script>document.addEventListener("DOMContentLoaded", () => {
   {% for category, message, title in toasts %}
     window.dispatchEvent(new CustomEvent("show-toast", { detail: {
