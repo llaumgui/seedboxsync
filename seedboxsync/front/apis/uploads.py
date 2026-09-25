@@ -72,32 +72,32 @@ upload_list_envelope = Resource.build_envelope_model(api, "UploadList", nested_m
 upload_envelope = Resource.build_envelope_model(api, "Upload", nested_model=upload_model, as_list=False)
 upload_message_envelope = Resource.build_envelope_model(api, "UploadMessage", as_message=True)
 
-stats_announcer_model = api.model(
-    "StatsAnnouncer",
+stats_source_model = api.model(
+    "StatsSource",
     {
-        "announcer": fields.String(
+        "source": fields.String(
             required=True,
-            description="Announcer of the torrent",
+            description="Source of the torrent, falback based on announcer",
             example="torrenter",
         ),
         "total": fields.Integer(
             required=True,
-            description="Number or size of files for this announcer",
+            description="Number or size of files for this source",
             example=4989,
         ),
         "total_size": fields.Integer(
             required=True,
-            description="Size of files for this announcer",
+            description="Size of files for this source",
             example=21678643250867,
         ),
         "human_total_size": fields.String(
             required=True,
-            description="Total size of files with related announcer",
+            description="Total size of files with related source",
             example="19.7 Tio",
         ),
     },
 )
-stats_announcer_envelope = Resource.build_envelope_model(api, "StatsMimeType", nested_model=stats_announcer_model)
+stats_source_envelope = Resource.build_envelope_model(api, "StatsSource", nested_model=stats_source_model)
 
 
 # ==========================
@@ -266,40 +266,40 @@ class Uploads(Resource):
         return self.build_envelope(None, type="Upload", message=f"Upload {id} deleted.")
 
 
-@api.route("/stats/announcer")
-class UploadsStatsByAnnouncer(Resource):
-    """Resource endpoint to retrieve torrent announcer statistics."""
+@api.route("/stats/source")
+class UploadsStatsBySource(Resource):
+    """Resource endpoint to retrieve torrent source statistics."""
 
-    @api.doc("stats_uploads_by_announcer")  # type: ignore[untyped-decorator]
-    @api.marshal_with(stats_announcer_envelope, code=200, description="Upload statistics aggregated by announcer")  # type: ignore[untyped-decorator]
+    @api.doc("stats_uploads_by_source")  # type: ignore[untyped-decorator]
+    @api.marshal_with(stats_source_envelope, code=200, description="Upload statistics aggregated by source")  # type: ignore[untyped-decorator]
     @api.expect(parser_period)  # type: ignore[untyped-decorator]
     @login_required  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any]:
         """
-        Retrieve torrent statistics grouped by announcer.
+        Retrieve torrent statistics grouped by source.
 
-        Fetches aggregated file counts and total sizes per announcer from the cache
+        Fetches aggregated file counts and total sizes per source from the cache
         or database, then wraps the dataset into a standard API response envelope.
 
         Returns:
-            dict[str, Any]: Envelope containing announcer statistics, metadata,
+            dict[str, Any]: Envelope containing source statistics, metadata,
                 and total element count.
         """
         args = parser_period.parse_args()
         start_date = args.get("start_date")
         end_date = args.get("end_date")
 
-        stats = _get_stats_by_announcer(start_date, end_date)
+        stats = _get_stats_by_source(start_date, end_date)
 
-        return self.build_envelope(stats, data_total=len(stats), type="StatsMimeType")
+        return self.build_envelope(stats, data_total=len(stats), type="StatsSource")
 
 
 @cache.memoize(timeout=300)
-def _get_stats_by_announcer(start_date: date | None, end_date: date | None) -> list[dict[str, object]]:
+def _get_stats_by_source(start_date: date | None, end_date: date | None) -> list[dict[str, object]]:
     """
-    Fetch torrent statistics grouped by announcer within an optional date range.
+    Fetch torrent statistics grouped by source within an optional date range.
 
-    Executes the database query to aggregate torrent statistics by announcer domain
+    Executes the database query to aggregate torrent statistics by source domain
     filtered by date boundaries if provided, then caches the result using Flask-Caching memoization[cite: 2].
 
     Args:
@@ -307,7 +307,7 @@ def _get_stats_by_announcer(start_date: date | None, end_date: date | None) -> l
         end_date (date | None, optional): Optional upper date boundary for filtering. Defaults to None.
 
     Returns:
-        list[dict[str, object]]: A list of dictionaries containing announcer statistics,
+        list[dict[str, object]]: A list of dictionaries containing source statistics,
             including total counts and associated sizes[cite: 2].
     """
-    return Torrent.get_stats_by_announcer(start_date, end_date)
+    return Torrent.get_stats_by_source(start_date, end_date)

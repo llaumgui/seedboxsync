@@ -135,19 +135,19 @@ export function StatsPeriod() {
         {
           charts: [
             {
-              ctx: document.getElementById("torrentByAnnouncer"),
-              fieldName: "announcer",
+              ctx: document.getElementById("torrentBySource"),
+              fieldName: "source",
               fieldTotal: "total",
               label: config.translations.files,
             },
             {
-              ctx: document.getElementById("sizeByAnnouncer"),
-              fieldName: "announcer",
+              ctx: document.getElementById("sizeBySource"),
+              fieldName: "source",
               fieldTotal: "total_size",
               label: config.translations.size,
             },
           ],
-          url: this.buildUrl(config.urls.announcer),
+          url: this.buildUrl(config.urls.source),
         },
       );
     },

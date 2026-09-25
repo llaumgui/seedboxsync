@@ -13,7 +13,7 @@
       month: {{- url_for('api.downloads_downloads_stats_by_month') | tojson -}},
       year: {{- url_for('api.downloads_downloads_stats_by_year') | tojson -}},
       mimeType: {{- url_for('api.downloads_downloads_stats_by_mime_type') | tojson -}},
-      announcer: {{- url_for('api.uploads_uploads_stats_by_announcer') | tojson -}}
+      source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
     },
     translations: {
       files: {{- _('Files') | tojson -}},
@@ -65,12 +65,12 @@
   </div>
   <div class="row mb-5 justify-content-around">
     <div class="col-12 col-md-4">
-      <h2 class="h4">{{ _('Torrents by announcer') }}</h2>
-      <canvas id="torrentByAnnouncer"></canvas>
+      <h2 class="h4">{{ _('Torrents by source') }}</h2>
+      <canvas id="torrentBySource"></canvas>
     </div>
     <div class="col-12 col-md-4">
-      <h2 class="h4">{{ _('Size by announcer') }}</h2>
-      <canvas id="sizeByAnnouncer"></canvas>
+      <h2 class="h4">{{ _('Size by source') }}</h2>
+      <canvas id="sizeBySource"></canvas>
     </div>
   </div>
 

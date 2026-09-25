@@ -117,9 +117,9 @@ class Torrent(SeedboxSyncModel):
         self.announcer = f"{extracted.domain}.{extracted.suffix}"
 
     @classmethod
-    def get_stats_by_announcer(cls, start_date: datetime.date | None = None, end_date: datetime.date | None = None) -> list[dict[str, Any]]:
+    def get_stats_by_source(cls, start_date: datetime.date | None = None, end_date: datetime.date | None = None) -> list[dict[str, Any]]:
         """
-        Get the total count and total size of downloaded files grouped by MIME type.
+        Get the total count and total size of torrents grouped by source.
 
         Args:
             start_date (datetime.date | None): Optional start date filter.
@@ -135,15 +135,15 @@ class Torrent(SeedboxSyncModel):
         if end_date:
             conditions.append(cls.sent <= end_date)
 
-        announcer_expr = fn.COALESCE(fn.NULLIF(cls.source, None), cls.announcer)
+        source_expr = fn.COALESCE(fn.NULLIF(cls.source, None), cls.announcer)
         query = (
             cls.select(
-                announcer_expr.alias("announcer"),
+                source_expr.alias("source"),
                 fn.COUNT(cls.id).alias("total"),
                 fn.SUM(cls.total_size).alias("total_size"),
                 fn.humanize(fn.SUM(cls.total_size)).alias("human_total_size"),
             )
-            .group_by(announcer_expr)
+            .group_by(source_expr)
             .order_by(fn.SUM(cls.total_size).desc())
         )
 
