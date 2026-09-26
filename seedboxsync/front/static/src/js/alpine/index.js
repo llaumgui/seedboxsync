@@ -24,8 +24,8 @@ Alpine.data("ModalConfirmCallComponent", ModalConfirmCallComponent);
 Alpine.data("StatsPeriod", StatsPeriod);
 Alpine.data("ToastManager", ToastManager);
 
-Alpine.start();
-
 // Attach to window object
 window.getMimeIconClass = getMimeIconClass;
 window.validators = validators;
+
+Alpine.start();
