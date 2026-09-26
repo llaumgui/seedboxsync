@@ -66,6 +66,28 @@
             </div>
           </div>
 
+
+          <h3 class="h4">{{ _('Stats') }}</h3>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div x-data="{
+                webui_doughnut_legend: '{{ form.webui_doughnut_legend.data }}',
+                touched: false
+              }">
+                {{ render_field(form.webui_doughnut_legend) }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div x-data="{
+                webui_doughnut_legend_limit: '{{ form.webui_doughnut_legend_limit.data }}',
+                touched: false,
+                isValid() { return validators.isInRange(this.touched , 0, 999, this.webui_doughnut_legend_limit) }
+              }">
+                {{ render_field(form.webui_doughnut_legend_limit) }}
+              </div>
+            </div>
+          </div>
+
           <h3 class="h4 pt-4">{{ _('Security') }}</h3>
           <div class="row">
             <div class="col-md-6 mb-3" x-data="{

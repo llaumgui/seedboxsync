@@ -7,7 +7,8 @@
 """SeedboxSync WTForms form for settings SeedboxSync."""
 
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, SelectField
+from wtforms import BooleanField, IntegerField, SelectField
+from wtforms.validators import InputRequired, NumberRange
 from seedboxsync.front.babel import ALLOWED_LANGUAGES, gettext as _
 
 
@@ -29,10 +30,29 @@ class SettingsSeedboxSyncForm(FlaskForm):  # type: ignore[misc]
             ("light", _("Light")),
         ],
         default="auto",
+        render_kw={"icon": "fa-sun"},
     )
     webui_language = SelectField(
         _("Language of the WebUI"),
         choices=[("auto", _("Automatic"))] + [(lang, lang) for lang in ALLOWED_LANGUAGES],
         default="auto",
+        render_kw={"icon": "fa-language"},
+    )
+    webui_doughnut_legend = SelectField(
+        _("Doughnut chart legend position"),
+        choices=[
+            ("top", _("Top")),
+            ("left", _("left")),
+            ("bottom", _("Bottom")),
+            ("right", _("Right")),
+            ("hidden", _("Hidden")),
+        ],
+        default="hidden",
+        render_kw={"icon": "fa-up-down-left-right"},
+    )
+    webui_doughnut_legend_limit = IntegerField(
+        _("Maximum number of items in the legend (0 = no limit)"),
+        validators=[InputRequired(), NumberRange(min=0, max=999)],
+        render_kw={"placeholder": "0", "icon": "fa-list-ol"},
     )
     wtf_csrf_enabled = BooleanField(_("Enable CSRF protection for all forms?"))

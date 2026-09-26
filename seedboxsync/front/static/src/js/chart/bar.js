@@ -51,6 +51,12 @@ export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
     },
     options: {
       responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+        },
+      },
       interaction: {
         mode: "index",
         intersect: false,

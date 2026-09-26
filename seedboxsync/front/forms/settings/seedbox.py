@@ -36,6 +36,7 @@ class SettingsSeedboxForm(FlaskForm):  # type: ignore[misc]
             ("ftp", _("FTP")),
         ],
         default="sftp",
+        render_kw={"icon": "fa-network-wired"},
     )
     seedbox_chmod = StringField(
         _("chmod (in octal notation)"),

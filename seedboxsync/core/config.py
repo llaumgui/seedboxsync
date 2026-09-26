@@ -51,6 +51,8 @@ class Config:
         CONFIG_NAMESPACE + "HEALTHCHECKS_SYNC_BLACKHOLE_PING_URL": "",
         CONFIG_NAMESPACE + "WEBUI_THEME": "auto",
         CONFIG_NAMESPACE + "WEBUI_LANGUAGE": "auto",
+        CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND": "hidden",
+        CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND_LIMIT": "0",
     }
 
     def __init__(self, app: Flask, test_config: dict[str, str] | None = None) -> None:

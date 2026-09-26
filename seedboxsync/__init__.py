@@ -93,6 +93,42 @@ def __get_toasted_messages(with_categories: bool = False, category_filter: Itera
     return [toast[1] for toast in toasts]
 
 
+def __inject_globals(app: Flask) -> dict[str, Any]:  # pyright: ignore [reportUnusedFunction]
+    """
+    Build the global template context variables for the Flask application.
+
+    Resolves the current locale and language, retrieves the configured web UI
+    theme, and exposes application metadata and configuration to all templates.
+
+    Args:
+        app: Flask application instance used to retrieve configuration and
+            application-specific settings.
+
+    Returns:
+        A dictionary containing the API version, current language and locale,
+        SeedboxSync configuration, selected UI theme, and application version.
+    """
+    locale = str(get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en_US"))
+    lang = locale.split("_")[0].split("-")[0]
+    theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
+    doughnut_legend_position = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND", "hidden")
+    doughnut_legend_display = doughnut_legend_position != "hidden"
+    doughnut_legend_position = doughnut_legend_position if doughnut_legend_position != "hidden" else "top"
+    doughnut_legend_limit = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND_LIMIT", "0")
+    doughnut_legend_limit = "999999" if doughnut_legend_limit == "0" else doughnut_legend_limit
+    return {
+        "api_version": api_version,
+        "lang": lang,
+        "locale": locale,
+        "seedboxsync_config": app.seedboxsync_config,
+        "theme": theme,
+        "version": version,
+        "doughnut_legend_position": doughnut_legend_position,
+        "doughnut_legend_display": doughnut_legend_display,
+        "doughnut_legend_limit": doughnut_legend_limit,
+    }
+
+
 def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     """
     Create and configure the SeedboxSync Flask application.
@@ -186,18 +222,7 @@ def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     @app.context_processor
     def inject_globals() -> dict[str, Any]:  # pyright: ignore [reportUnusedFunction]
         """Inject global variables into the template context."""
-        locale = str(get_babel_locale() or app.config.get("BABEL_DEFAULT_LOCALE", "en_US"))
-        lang = locale.split("_")[0].split("-")[0]
-        theme = app.config.get(Config.CONFIG_NAMESPACE + "WEBUI_THEME", "auto")
-
-        return {
-            "api_version": api_version,
-            "lang": lang,
-            "locale": locale,
-            "seedboxsync_config": app.seedboxsync_config,
-            "theme": theme,
-            "version": version,
-        }
+        return __inject_globals(app)
 
     # Template global
     @app.template_global()

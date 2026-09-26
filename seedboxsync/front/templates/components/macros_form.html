@@ -30,8 +30,8 @@
 
 
 {% macro render_field_text(field) %}
-<label class="label" for="{{ field.id }}">
-  {{ field.label }}
+<label class="form-label" for="{{ field.id }}">
+  {{ field.label.text }}
   {% if field.render_kw['help'] %}
     <a href="#" class="text-body-info ms-1" @click.prevent
        data-bs-toggle="tooltip"
@@ -63,21 +63,24 @@
          @click="touched = true"
          x-model="enabled"
          x-effect="setFieldState('{{ field.id }}', true, touched)" />
-  <label class="form-check-label" for="{{ field.id }}">{{ field.label }}</label>
+  <label class="form-check-label" for="{{ field.id }}">{{ field.label.text }}</label>
 </div>
 {% endmacro %}
 
 {% macro render_field_select(field) %}
-  <label class="form-label" for="{{ field.id }}">{{ field.label }}</label>
-  <div class="control select">
-    <select id="{{ field.id }}" name="{{ field.name }}" class="form-select"
-            @click="touched = true"
-            x-model="{{ field.id }}"
-            x-effect="setFieldState('{{ field.id }}', true, touched)">
-      {% for value, label in field.choices %}
-        <option value="{{ value }}">{{ label }}</option>
-      {% endfor %}
-    </select>
-  </div>
+<label class="form-label" for="{{ field.id }}">{{ field.label.text }}</label>
+<div class="input-group">
+  <span class="input-group-text">
+    <i class="fas {{ field.render_kw['icon'] }}"></i>
+  </span>
+  <select id="{{ field.id }}" name="{{ field.name }}" class="form-select"
+          @click="touched = true"
+          x-model="{{ field.id }}"
+          x-effect="setFieldState('{{ field.id }}', true, touched)">
+    {% for value, label in field.choices %}
+      <option value="{{ value }}">{{ label }}</option>
+    {% endfor %}
+  </select>
   <input type="hidden" name="{{ field.name }}" :value="{{ field.id }}">
+</div>
 {% endmacro %}

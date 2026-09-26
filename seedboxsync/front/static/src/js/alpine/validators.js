@@ -40,6 +40,19 @@ export function isValidPort(touched, port) {
 }
 
 /**
+ * Validate is a valid port number
+ * @param {boolean} touched
+ * @param {min} min
+ * @param {max} max
+ * @param {int} number
+ * @returns {boolean}
+ */
+export function isInRange(touched, min, max, number) {
+  if (!touched) return true;
+  return number >= min && number <= max;
+}
+
+/**
  * Validate is a valid max concurrent prefetch requests number
  * @param {boolean} touched
  * @param {int} max

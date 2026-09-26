@@ -48,22 +48,23 @@
     </div>
   </div>
 
+  {% set col_class = 'col-12 col-md-6' if doughnut_legend_display else 'col-12 col-md-4' %}
   <div class="row mb-5 justify-content-around">
-    <div class="col-12 col-md-4">
+    <div class="{{ col_class }}">
       <h2 class="h4">{{ _('Files by MIME type') }}</h2>
       <canvas id="filesByMimeType"></canvas>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="{{ col_class }}">
       <h2 class="h4">{{ _('Size by MIME type') }}</h2>
       <canvas id="sizeByMimeType"></canvas>
     </div>
   </div>
   <div class="row mb-5 justify-content-around">
-    <div class="col-12 col-md-4">
+    <div class="{{ col_class }}">
       <h2 class="h4">{{ _('Torrents by source') }}</h2>
       <canvas id="torrentBySource"></canvas>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="{{ col_class }}">
       <h2 class="h4">{{ _('Size by source') }}</h2>
       <canvas id="sizeBySource"></canvas>
     </div>

@@ -52,6 +52,8 @@ def test_settings_views_are_reachable(client, path, title):
                 "sync_blackhole_enabled": "1",
                 "webui_theme": "dark",
                 "webui_language": "fr_FR",
+                "webui_doughnut_legend": "hidden",
+                "webui_doughnut_legend_limit": 0,
             },
             {"SEEDBOXSYNC_SYNC_BLACKHOLE_ENABLED": True, "SEEDBOXSYNC_SYNC_SEEDBOX_ENABLED": False},
             {"config_sync_blackhole_enabled": "1", "config_sync_seedbox_enabled": "0"},
@@ -216,7 +218,13 @@ def test_logout_view_redirects_to_frontpage(app):
     [
         (
             "/settings/seedboxsync",
-            {"sync_blackhole_enabled": "1", "webui_theme": "dark", "webui_language": "auto"},
+            {
+                "sync_blackhole_enabled": "1",
+                "webui_theme": "dark",
+                "webui_language": "auto",
+                "webui_doughnut_legend": "hidden",
+                "webui_doughnut_legend_limit": 0,
+            },
             "seedboxsync.front.views.settings.seedboxsync.save_settings_form",
         ),
         (

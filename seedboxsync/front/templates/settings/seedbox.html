@@ -82,10 +82,10 @@
                        @click="touched = true"
                        x-model="enabled"
                        x-effect="setFieldState('{{ form.seedbox_timeout.id }}_enabled', true, touched)" />
-                <label class="form-check-label" for="{{ form.seedbox_timeout.id }}_enabled">{{ form.seedbox_timeout.label }}</label>
+                <label class="form-check-label" for="{{ form.seedbox_timeout.id }}_enabled">{{ form.seedbox_timeout.label.text }}</label>
               </div>
 
-              <label class="visually-hidden " for="{{ form.seedbox_timeout.id }}">{{ form.seedbox_timeout.label }}</label>
+              <label class="visually-hidden " for="{{ form.seedbox_timeout.id }}">{{ form.seedbox_timeout.label.text }}</label>
               <div class="input-group w-50" x-show="enabled" x-transition>
                 <span class="input-group-text">
                   <i class="fas {{ form.seedbox_timeout.render_kw['icon'] }}"></i>
@@ -122,7 +122,7 @@
                        x-model="enabled"
                        x-effect="setFieldState('{{ form.seedbox_chmod.id }}_enabled', true, touched)" />
                 <label class="form-check-label" for="{{ form.seedbox_chmod.id }}_enabled">
-                  {{ form.seedbox_chmod.label }}
+                  {{ form.seedbox_chmod.label.text }}
                   <a href="#" class="text-body-info ms-1" @click.prevent
                       data-bs-toggle="tooltip"
                       data-bs-title="{{ form.seedbox_chmod.render_kw['help'] }}"
@@ -132,7 +132,7 @@
                 </label>
               </div>
 
-              <label class="visually-hidden " for="{{ form.seedbox_chmod.id }}">{{ form.seedbox_chmod.label }}</label>
+              <label class="visually-hidden " for="{{ form.seedbox_chmod.id }}">{{ form.seedbox_chmod.label.text }}</label>
               <div class="input-group w-50" x-show="enabled" x-transition>
                 <span class="input-group-text">
                   <i class="fas {{ form.seedbox_chmod.render_kw['icon'] }}"></i>
