@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.2.0 - xxx xx, 2026
+## 4.2.0 - Sep 26, 2026
 
 * 🚚 [Issue #222](https://github.com/llaumgui/seedboxsync/issues/222): Switch from Bulma CSS framework to Bootstrap.
   * Add tooltips.
