@@ -114,7 +114,12 @@ class Torrent(SeedboxSyncModel):
             self.announcer = hostname
             return
 
+        # Set announcer
         self.announcer = f"{extracted.domain}.{extracted.suffix}"
+
+        # Source fallback
+        if self.source == "" or self.source is None:
+            self.source = self.announcer
 
     @classmethod
     def get_stats_by_source(cls, start_date: datetime.date | None = None, end_date: datetime.date | None = None) -> list[dict[str, Any]]:
@@ -135,15 +140,14 @@ class Torrent(SeedboxSyncModel):
         if end_date:
             conditions.append(cls.sent <= end_date)
 
-        source_expr = fn.COALESCE(fn.NULLIF(cls.source, None), cls.announcer)
         query = (
             cls.select(
-                source_expr.alias("source"),
+                cls.source,
                 fn.COUNT(cls.id).alias("total"),
                 fn.SUM(cls.total_size).alias("total_size"),
                 fn.humanize(fn.SUM(cls.total_size)).alias("human_total_size"),
             )
-            .group_by(source_expr)
+            .group_by(cls.source)
             .order_by(fn.SUM(cls.total_size).desc())
         )
 

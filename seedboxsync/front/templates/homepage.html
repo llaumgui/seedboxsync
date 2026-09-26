@@ -56,9 +56,7 @@
     <tbody>
       <template x-for="row in data" :key="row.id || row.key">
         <tr>
-          <td class="overflow-anywhere">
-            <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
-          </td>
+          <td class="overflow-anywhere" x-text="row.path"></td>
           <td class="d-none d-md-table-cell" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
           <td>
             <div class="d-none d-md-block progress" role="progressbar" :aria-label="row.progress + '%'" :aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
