@@ -14,11 +14,6 @@
       year: {{- url_for('api.downloads_downloads_stats_by_year') | tojson -}},
       mimeType: {{- url_for('api.downloads_downloads_stats_by_mime_type') | tojson -}},
       source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
-    },
-    translations: {
-      files: {{- _('Files') | tojson -}},
-      size: {{- _('Size') | tojson -}},
-      sizeGib: {{- _('Size (GiB)') | tojson -}}
     }
   };
 </script>

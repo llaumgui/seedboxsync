@@ -98,38 +98,36 @@ export function StatsPeriod() {
       loadBarChart(
         document.getElementById("statsByMonth"),
         this.buildUrl(config.urls.month),
-        config.translations.files,
-        config.translations.sizeGib,
+        Translations.files,
+        Translations.sizeGib,
         "month",
       );
 
       loadBarChart(
         document.getElementById("statsByYear"),
         config.urls.year,
-        config.translations.files,
-        config.translations.sizeGib,
+        Translations.files,
+        Translations.sizeGib,
         "year",
       );
 
-      load2DoughnutChart(
-        {
-          charts: [
-            {
-              ctx: document.getElementById("filesByMimeType"),
-              fieldName: "mime_type",
-              fieldTotal: "total",
-              label: config.translations.files,
-            },
-            {
-              ctx: document.getElementById("sizeByMimeType"),
-              fieldName: "mime_type",
-              fieldTotal: "total_size",
-              label: config.translations.size,
-            },
-          ],
-          url: this.buildUrl(config.urls.mimeType),
-        },
-      );
+      load2DoughnutChart({
+        charts: [
+          {
+            ctx: document.getElementById("filesByMimeType"),
+            fieldName: "mime_type",
+            fieldTotal: "total",
+            label: Translations.files,
+          },
+          {
+            ctx: document.getElementById("sizeByMimeType"),
+            fieldName: "mime_type",
+            fieldTotal: "total_size",
+            label: Translations.size,
+          },
+        ],
+        url: this.buildUrl(config.urls.mimeType),
+      });
 
       load2DoughnutChart(
         {
@@ -138,13 +136,13 @@ export function StatsPeriod() {
               ctx: document.getElementById("torrentBySource"),
               fieldName: "source",
               fieldTotal: "total",
-              label: config.translations.files,
+              label: Translations.files,
             },
             {
               ctx: document.getElementById("sizeBySource"),
               fieldName: "source",
               fieldTotal: "total_size",
-              label: config.translations.size,
+              label: Translations.size,
             },
           ],
           url: this.buildUrl(config.urls.source),

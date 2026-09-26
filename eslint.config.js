@@ -8,7 +8,7 @@ export default defineConfig([
   {
     files: [
       "seedboxsync/front/static/src/**/*.{js,mjs,cjs}",
-      "tests/front/static/**/*.{js,mjs,cjs}"
+      "tests/front/static/**/*.{js,mjs,cjs}",
     ],
     languageOptions: {
       ecmaVersion: "latest",
@@ -18,6 +18,7 @@ export default defineConfig([
         ...globals.es2021,
         Translations: "readonly",
         dateTimeOption: "readonly",
+        DoughnutLegend: "readonly",
       },
     },
     rules: {
