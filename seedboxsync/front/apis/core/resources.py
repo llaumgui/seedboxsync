@@ -99,10 +99,11 @@ class Resource(RestXResource):  # type: ignore[misc]
         """
         if as_message is False:
             if as_list:
+                nested_name = getattr(nested_model, "name", "item")
                 data_field = fields.List(
                     fields.Nested(nested_model),
                     required=True,
-                    description=f"List of {name} objects",
+                    description=f"List of {nested_name} objects",
                 )
             else:
                 data_field = fields.Nested(nested_model, required=True, description=f"The {name} object")

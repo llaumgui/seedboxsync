@@ -16,6 +16,7 @@ from seedboxsync.core import Flask
 
 from seedboxsync.front.apis.core.resources import parser_period, DateTimeOrZero, Resource  # isort: skip
 from seedboxsync.front.apis.downloads import api as nsDownloads
+from seedboxsync.front.apis.downloads_stats import api as nsDownloadsStats
 from seedboxsync.front.apis.tasks import api as nsTasks
 from seedboxsync.front.apis.taskstatus import api as nsTaskStatus
 from seedboxsync.front.apis.uploads import api as nsUploads
@@ -32,6 +33,7 @@ api = Api(
 
 # Add namespaces
 api.add_namespace(nsDownloads)
+api.add_namespace(nsDownloadsStats)
 api.add_namespace(nsUploads)
 api.add_namespace(nsTasks)
 api.add_namespace(nsTaskStatus)

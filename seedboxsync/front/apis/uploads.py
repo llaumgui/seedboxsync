@@ -97,7 +97,7 @@ stats_source_model = api.model(
         ),
     },
 )
-stats_source_envelope = Resource.build_envelope_model(api, "StatsSource", nested_model=stats_source_model)
+stats_source_envelope = Resource.build_envelope_model(api, "StatsSourceList", nested_model=stats_source_model)
 
 
 # ==========================
@@ -195,7 +195,7 @@ class UploadsList(Resource):
             count = count.where(Torrent.sent <= end_date)
             select = select.where(Torrent.sent <= end_date)
 
-        return self.build_envelope(list(select.dicts()), data_total=count.count(), type="Upload")
+        return self.build_envelope(list(select.dicts()), data_total=count.count(), type="UploadList")
 
 
 @api.route("/<int:id>")
@@ -291,7 +291,7 @@ class UploadsStatsBySource(Resource):
 
         stats = _get_stats_by_source(start_date, end_date)
 
-        return self.build_envelope(stats, data_total=len(stats), type="StatsSource")
+        return self.build_envelope(stats, data_total=len(stats), type="StatsSourceList")
 
 
 @cache.memoize(timeout=300)

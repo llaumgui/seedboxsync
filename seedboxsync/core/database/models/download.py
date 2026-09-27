@@ -100,3 +100,51 @@ class Download(SeedboxSyncModel):
         data = query.dicts()
 
         return list(cast(Iterable[dict[str, Any]], data))
+
+    @classmethod
+    def get_stats(cls) -> list[dict[str, object]]:
+        """
+        Calculate summary download statistics across predefined time periods.
+
+        Queries finished downloads to calculate total count, total byte size,
+        and human-readable file sizes across preset ranges: current calendar day,
+        current week, past 7 rolling days, current month, and current calendar year[cite: 6].
+
+        Returns:
+            dict[str, dict[str, Any]]: A dictionary mapping each period name
+            ("day", "week", "last7", "month", "year") to a dictionary containing:
+                - total (int): Total count of finished downloads in the period.
+                - size (int | None): Total size in bytes.
+                - human_size (str | None): Formatted size string (e.g., "1.2 GB").
+        """
+        now = datetime.datetime.now()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week = today - datetime.timedelta(days=today.weekday())
+        last7 = today - datetime.timedelta(days=6)
+        month = today.replace(day=1)
+        year = today.replace(month=1, day=1)
+
+        periods = {
+            "day": today,
+            "week": week,
+            "last7": last7,
+            "month": month,
+            "year": year,
+        }
+
+        data = {}
+
+        for name, start in periods.items():
+            row = (
+                cls.select(
+                    fn.COUNT(cls.id).alias("total"),
+                    fn.SUM(cls.local_size).alias("size"),
+                    fn.humanize(fn.SUM(cls.local_size)).alias("human_size"),
+                )
+                .where(cls.finished >= start)
+                .dicts()
+                .get()
+            )
+            data[name] = row
+
+        return list(cast(Iterable[dict[str, Any]], data))
