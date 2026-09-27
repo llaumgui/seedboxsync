@@ -2,6 +2,8 @@
 
 ## 4.3.0 - Xxx yy, 20zz
 
+* ✨ [Issue #138](https://github.com/llaumgui/seedboxsync/issues/138): API & documentation for an Homepage widget.
+
 ## 4.2.0 - Sep 26, 2026
 
 * 🚚 [Issue #222](https://github.com/llaumgui/seedboxsync/issues/222): Switch from Bulma CSS framework to Bootstrap.
