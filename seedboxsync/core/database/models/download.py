@@ -102,7 +102,7 @@ class Download(SeedboxSyncModel):
         return list(cast(Iterable[dict[str, Any]], data))
 
     @classmethod
-    def get_stats(cls) -> list[dict[str, object]]:
+    def get_stats(cls) -> dict[str, object]:
         """
         Calculate summary download statistics across predefined time periods.
 
@@ -147,4 +147,4 @@ class Download(SeedboxSyncModel):
             )
             data[name] = row
 
-        return list(cast(Iterable[dict[str, Any]], data))
+        return cast(dict[str, Any], data)

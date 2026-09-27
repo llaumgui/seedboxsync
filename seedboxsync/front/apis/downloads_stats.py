@@ -138,7 +138,7 @@ stats_model = api.model(
         ),
     },
 )
-stats_envelope = Resource.build_envelope_model(api, "DownloadStats", nested_model=stats_model)
+stats_envelope = Resource.build_envelope_model(api, "DownloadStats", nested_model=stats_model, as_list=False)
 
 
 # ==========================
@@ -313,7 +313,7 @@ def _get_stats_by_mime_type(start_date: date | None, end_date: date | None) -> l
 
 
 @cache.memoize(timeout=300)
-def _get_stats() -> list[dict[str, object]]:
+def _get_stats() -> dict[str, object]:
     """
     Fetch raw download statistics within an optional date range from the database.
 
