@@ -2,28 +2,32 @@
 
 ## 4.3.0 - Xxx yy, 20zz
 
-* ✨ [Issue #138](https://github.com/llaumgui/seedboxsync/issues/138): API & documentation for an Homepage widget.
+* ✨ [[#138]](https://github.com/llaumgui/seedboxsync/issues/138) API & documentation for an Homepage widget.
+
+## 4.2.1 - Sep 28, 2026
+
+* 🐛 [[#232]](https://github.com/llaumgui/seedboxsync/issues/232) Flash and toast in cache.
 
 ## 4.2.0 - Sep 26, 2026
 
-* 🚚 [Issue #222](https://github.com/llaumgui/seedboxsync/issues/222): Switch from Bulma CSS framework to Bootstrap.
+* 🚚 [[#222]](https://github.com/llaumgui/seedboxsync/issues/222) Switch from Bulma CSS framework to Bootstrap.
   * Add tooltips.
   * Add calendar filter on *Downloaded*, *Uploaded*, and *Statistics* views.
 * 🚚 Move from Python [`tabulate`](https://pypi.org/project/tabulate/) to [`rich.table`](https://rich.readthedocs.io/en/latest/tables.html).
 * ✨ Add a few columns in `Download` and `Torrent` models to allow more stats.
-* ✨ [Issue #192](https://github.com/llaumgui/seedboxsync/issues/192): Better statistics page with more information.
+* ✨ [[#192]](https://github.com/llaumgui/seedboxsync/issues/192) Better statistics page with more information.
 * ♻️ Rework flash message implementation to handle toast notifications.
 * 🐛 Fix minor bug fixes and UI issues.
 * 📝 Update documentation.
 
 ## 4.1.0 - Sep 13, 2026
 
-* ✨ [Issue #127](https://github.com/llaumgui/seedboxsync/issues/127): **Authentication**: User management and authentication features powered by [Flask-Login](https://flask-login.readthedocs.io/en/latest/).
-  * ✨ [Issue #128](https://github.com/llaumgui/seedboxsync/issues/128): OAuth2 / OIDC support for web login.
-  * ✨ [Issue #206](https://github.com/llaumgui/seedboxsync/issues/206): API key support for API usage.
-  * ✨ [Issue #198](https://github.com/llaumgui/seedboxsync/issues/198): Gravatar support for user profile.
-  * ✨ [Issue #191](https://github.com/llaumgui/seedboxsync/issues/191): User management from CLI.
-* ♻️ [Issue #213](https://github.com/llaumgui/seedboxsync/issues/213): **Database**: New migration system, more Peewee compliant.
+* ✨ [[#127]](https://github.com/llaumgui/seedboxsync/issues/127) **Authentication**: User management and authentication features powered by [Flask-Login](https://flask-login.readthedocs.io/en/latest/).
+  * ✨ [[#128]](https://github.com/llaumgui/seedboxsync/issues/128) OAuth2 / OIDC support for web login.
+  * ✨ [[#206]](https://github.com/llaumgui/seedboxsync/issues/206) API key support for API usage.
+  * ✨ [[#198]](https://github.com/llaumgui/seedboxsync/issues/198) Gravatar support for user profile.
+  * ✨ [[#191]](https://github.com/llaumgui/seedboxsync/issues/191) User management from CLI.
+* ♻️ [[#213]](https://github.com/llaumgui/seedboxsync/issues/213) **Database**: New migration system, more Peewee compliant.
 * ♻️ **Configuration**: Rewrote settings handling across multiple pages using [WTForms](https://wtforms.readthedocs.io/) and [Flask-WTF](https://flask-wtf.readthedocs.io/en/1.2.x/).
 
 ## 4.0.0 - Aug 16, 2026
@@ -33,14 +37,14 @@
 **⚠️ Configuration is now stored in the database. You must reconfigure the application.**
 
 * Major code rewrite and structural changes:
-  * ♻️ [Issue #114](https://github.com/llaumgui/seedboxsync/issues/114): SeedboxSync and SeedboxSyncFront in a single application.
-  * ♻️ [Issue #124](https://github.com/llaumgui/seedboxsync/issues/124): Add a python task manager instead of cron.
-  * ♻️ [Issue #115](https://github.com/llaumgui/seedboxsync/issues/115): Move config from yaml to DB.
-  * ✨ [Issue #108](https://github.com/llaumgui/seedboxsync/issues/108): Add a new all services healthcheck to the Docker image.
+  * ♻️ [[#114]](https://github.com/llaumgui/seedboxsync/issues/114) SeedboxSync and SeedboxSyncFront in a single application.
+  * ♻️ [[#124]](https://github.com/llaumgui/seedboxsync/issues/124) Add a python task manager instead of cron.
+  * ♻️ [[#115]](https://github.com/llaumgui/seedboxsync/issues/115) Move config from yaml to DB.
+  * ✨ [[#108]](https://github.com/llaumgui/seedboxsync/issues/108) Add a new all services healthcheck to the Docker image.
   * ⚡️ Enable SQLite WAL mode to improve concurrent reads and writes.
 * New user-facing features:
-  * ✨ [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93):  Support for custom sync time.
-  * ✨ [Issue #116](https://github.com/llaumgui/seedboxsync/issues/116): Allow disabling sync.
+  * ✨ [[#93]](https://github.com/llaumgui/seedboxsync/issues/93)  Support for custom sync time.
+  * ✨ [[#116]](https://github.com/llaumgui/seedboxsync/issues/116) Allow disabling sync.
   * ✨ Allow launching tasks from the web UI.
   * ✨ Allow configuring the theme and language in the web UI.
 * Documentation:
@@ -50,9 +54,9 @@
   * ✨ Add API reference in documentation.
   * ✨ Add code coverage in documentation.
 * CI/CD and quality features:
-  * 🚚 [Issue #132](https://github.com/llaumgui/seedboxsync/issues/132): Replace Make with Just for task automation.
-  * 🚚 [Issue #134](https://github.com/llaumgui/seedboxsync/issues/134): Replace Flake8 with Ruff.
-  * 🧪 [Issue #133](https://github.com/llaumgui/seedboxsync/issues/133): Add basedpyright in complemnt of mypy.
+  * 🚚 [[#132]](https://github.com/llaumgui/seedboxsync/issues/132) Replace Make with Just for task automation.
+  * 🚚 [[#134]](https://github.com/llaumgui/seedboxsync/issues/134) Replace Flake8 with Ruff.
+  * 🧪 [[#133]](https://github.com/llaumgui/seedboxsync/issues/133) Add basedpyright in complemnt of mypy.
   * 🧪 Use isort in ruff.
   * 👷 Use `ruff check --fix`.
 
@@ -62,12 +66,12 @@
 
 ## 3.4.0 - Jun 07, 2026
 
-* ✨ [Issue #86](https://github.com/llaumgui/seedboxsync/issues/86): Save local size during download.
-* ✨ [Issue #11](https://github.com/llaumgui/seedboxsync/issues/11): Add FTP support through a new client based on [ftputil](https://ftputil.sschwarzer.net/).
-* ⚡️ [Issue #106](https://github.com/llaumgui/seedboxsync/issues/106): Improve SFTP client performance for large file transfers.
-* 🐛 [PR #102](https://github.com/llaumgui/seedboxsync/pull/102): Fix torrent ingestion crash due to NOT NULL announce constraint (Thx @Monkee-code).
+* ✨ [[#86]](https://github.com/llaumgui/seedboxsync/issues/86) Save local size during download.
+* ✨ [[#11]](https://github.com/llaumgui/seedboxsync/issues/11) Add FTP support through a new client based on [ftputil](https://ftputil.sschwarzer.net/).
+* ⚡️ [[#106]](https://github.com/llaumgui/seedboxsync/issues/106) Improve SFTP client performance for large file transfers.
+* 🐛 [PR #102](https://github.com/llaumgui/seedboxsync/pull/102) Fix torrent ingestion crash due to NOT NULL announce constraint (Thx @Monkee-code).
 * ♻️ Replace custom formatting utilities with [humanize](https://pypi.org/project/humanize/).
-* 📝 [Issue #93](https://github.com/llaumgui/seedboxsync/issues/93): Add documentation about overriding the cron schedule.
+* 📝 [[#93]](https://github.com/llaumgui/seedboxsync/issues/93) Add documentation about overriding the cron schedule.
 
 ## 3.3.0 - Oct 18, 2025
 
@@ -205,9 +209,9 @@ Important: update your seedboxsync.ini and replace wath_path by watch_path.
 
 ## 1.1.0 - Feb 4, 2016
 
-* [Enhancement #10](https://github.com/llaumgui/seedboxsync/issues/10): Make code documentation: <https://llaumgui.github.io/seedboxsync>.
-* [Enhancement #9](https://github.com/llaumgui/seedboxsync/issues/9): Check if the process inside the PID lock file is still running (thanks @johanndt).
-* [Enhancement #3](https://github.com/llaumgui/seedboxsync/issues3): Use a transport interface: you can now make a PR for FTP support ;-).
+* [Enhancement #10](https://github.com/llaumgui/seedboxsync/issues/10) Make code documentation: <https://llaumgui.github.io/seedboxsync>.
+* [Enhancement #9](https://github.com/llaumgui/seedboxsync/issues/9) Check if the process inside the PID lock file is still running (thanks @johanndt).
+* [Enhancement #3](https://github.com/llaumgui/seedboxsync/issues3) Use a transport interface: you can now make a PR for FTP support ;-).
 
 ## 1.0.0 - Oct 13, 2015
 
@@ -217,10 +221,10 @@ First stable version.
 
 First version avalaible from Pypi.
 
-* [enhancement #1](https://github.com/llaumgui/seedboxsync/issues/1): Install seedboxsync with a setup.py.
-* [enhancement #2](https://github.com/llaumgui/seedboxsync/issues/2): Check size after download.
-* [enhancement #4](https://github.com/llaumgui/seedboxsync/issues/4): Allow shorts arguments.
-* [Bug #5](https://github.com/llaumgui/seedboxsync/issues/5): Download fail: cannot concatenate 'str' and 'int' objects.
+* [enhancement #1](https://github.com/llaumgui/seedboxsync/issues/1) Install seedboxsync with a setup.py.
+* [enhancement #2](https://github.com/llaumgui/seedboxsync/issues/2) Check size after download.
+* [enhancement #4](https://github.com/llaumgui/seedboxsync/issues/4) Allow shorts arguments.
+* [Bug #5](https://github.com/llaumgui/seedboxsync/issues/5) Download fail: cannot concatenate 'str' and 'int' objects.
 
 ## 0.5.0 (Full rewrite) - Aug 14, 2015
 
