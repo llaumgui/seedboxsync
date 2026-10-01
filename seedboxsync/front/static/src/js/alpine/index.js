@@ -6,23 +6,31 @@
  */
 import Alpine from "alpinejs";
 import * as validators from "./validators";
+import { CardsStats } from "./cards_stats";
 import { ModalConfirmCallComponent } from "./modal";
 import { TableComponent } from "./table";
 import { TablePaginedComponent } from "./table_pagined";
-import { TaskStatusBoxComponent } from "./taskstatusbox";
+import { TaskStatusComponent } from "./taskstatus";
 import { ToastManager } from "./toast";
 import { StatsPeriod } from "./stats";
 import { getMimeIconClass } from "./mimeicon"
+import { formatRelativeTime } from "../utils/date.js";
 
 // Tables
 Alpine.data("TableComponent", TableComponent);
 Alpine.data("TablePaginedComponent", TablePaginedComponent);
-Alpine.data("TaskStatusBoxComponent", TaskStatusBoxComponent);
+Alpine.data("TaskStatusComponent", TaskStatusComponent);
 
 // Others elements / helpers
+Alpine.data("CardsStats", CardsStats)
 Alpine.data("ModalConfirmCallComponent", ModalConfirmCallComponent);
 Alpine.data("StatsPeriod", StatsPeriod);
 Alpine.data("ToastManager", ToastManager);
+
+Alpine.magic(
+  "relativeTime",
+  () => (date) => formatRelativeTime(new Date(date)),
+);
 
 // Attach to window object
 window.getMimeIconClass = getMimeIconClass;

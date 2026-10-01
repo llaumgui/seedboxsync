@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-09-27 11:44+0200\n"
+"POT-Creation-Date: 2026-09-30 21:53+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -309,56 +309,57 @@ msgid "Enable CSRF protection for all forms?"
 msgstr "Activer la protection CSRF pour tous les formulaires"
 
 #: seedboxsync/front/templates/downloaded.html:6
-#: seedboxsync/front/templates/homepage.html:73
+#: seedboxsync/front/templates/homepage.html:103
 msgid "Last files downloaded"
 msgstr "Derniers fichiers téléchargés"
 
 #: seedboxsync/front/templates/downloaded.html:10
-#: seedboxsync/front/templates/homepage.html:75
+#: seedboxsync/front/templates/homepage.html:105
 msgid "List of last files downloaded from the seedbox to the NAS."
 msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 
-#: seedboxsync/front/templates/components/macros.html:51
-#: seedboxsync/front/templates/components/macros.html:56
+#: seedboxsync/front/templates/components/macros.html:49
+#: seedboxsync/front/templates/components/macros.html:62
+#: seedboxsync/front/templates/components/macros.html:85
 #: seedboxsync/front/templates/downloaded.html:25
-#: seedboxsync/front/templates/homepage.html:45
-#: seedboxsync/front/templates/homepage.html:76
-#: seedboxsync/front/templates/homepage.html:104
+#: seedboxsync/front/templates/homepage.html:75
+#: seedboxsync/front/templates/homepage.html:106
+#: seedboxsync/front/templates/homepage.html:134
 #: seedboxsync/front/templates/uploaded.html:25
 msgid "Loading..."
 msgstr "Chargement..."
 
 #: seedboxsync/front/templates/components/modal.html:32
 #: seedboxsync/front/templates/downloaded.html:26
-#: seedboxsync/front/templates/homepage.html:46
-#: seedboxsync/front/templates/homepage.html:77
-#: seedboxsync/front/templates/homepage.html:105
+#: seedboxsync/front/templates/homepage.html:76
+#: seedboxsync/front/templates/homepage.html:107
+#: seedboxsync/front/templates/homepage.html:135
 #: seedboxsync/front/templates/uploaded.html:26
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
 
 #: seedboxsync/front/templates/downloaded.html:27
-#: seedboxsync/front/templates/homepage.html:78
+#: seedboxsync/front/templates/homepage.html:108
 msgid "No files downloaded yet..."
 msgstr "Aucun fichier téléchargé pour le moment..."
 
 #: seedboxsync/front/templates/downloaded.html:33
-#: seedboxsync/front/templates/homepage.html:51
-#: seedboxsync/front/templates/homepage.html:82
-#: seedboxsync/front/templates/homepage.html:110
+#: seedboxsync/front/templates/homepage.html:81
+#: seedboxsync/front/templates/homepage.html:112
+#: seedboxsync/front/templates/homepage.html:140
 #: seedboxsync/front/templates/settings/apikeys.html:38
 #: seedboxsync/front/templates/uploaded.html:33
 msgid "Name"
 msgstr "Nom"
 
 #: seedboxsync/front/templates/downloaded.html:34
-#: seedboxsync/front/templates/homepage.html:83
+#: seedboxsync/front/templates/homepage.html:113
 msgid "Finished"
 msgstr "Terminé"
 
 #: seedboxsync/front/templates/components/javascripts.html:2
 #: seedboxsync/front/templates/downloaded.html:35
-#: seedboxsync/front/templates/homepage.html:84
+#: seedboxsync/front/templates/homepage.html:114
 #: seedboxsync/front/templates/uploaded.html:35
 msgid "Size"
 msgstr "Taille"
@@ -395,77 +396,106 @@ msgid "Deleted"
 msgstr "Suppression"
 
 #: seedboxsync/front/templates/components/navbar.html:25
-#: seedboxsync/front/templates/homepage.html:6
+#: seedboxsync/front/templates/homepage.html:8
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: seedboxsync/front/templates/homepage.html:13
+#: seedboxsync/front/templates/homepage.html:10
+msgid "Seedbox activity overview"
+msgstr "Vue d'ensemble de l'activité de la seedbox"
+
+#: seedboxsync/front/templates/homepage.html:18
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+#: seedboxsync/front/templates/homepage.html:28
+#: seedboxsync/front/templates/homepage.html:33
+#: seedboxsync/front/templates/homepage.html:38
+#: seedboxsync/front/templates/homepage.html:43
+msgid "Downloads"
+msgstr "Téléchargements"
+
+#: seedboxsync/front/templates/homepage.html:28
+#, python-format
+msgid "Last %(hours)s hours"
+msgstr "Dernières %(hours)sH  "
+
+#: seedboxsync/front/templates/homepage.html:33
+#: seedboxsync/front/templates/homepage.html:38
+#, python-format
+msgid "Last %(days)s days"
+msgstr "Derniers %(days)s jours"
+
+#: seedboxsync/front/templates/homepage.html:43
+msgid "This year"
+msgstr "Cette année"
+
+#: seedboxsync/front/templates/homepage.html:50
+msgid "Services"
+msgstr "Services"
+
+#: seedboxsync/front/templates/homepage.html:52
 msgid "Blackhole"
 msgstr "Blackhole"
 
 #: seedboxsync/front/templates/components/menu_settings.html:22
-#: seedboxsync/front/templates/homepage.html:18
+#: seedboxsync/front/templates/homepage.html:54
 #: seedboxsync/front/templates/settings/seedbox.html:7
 #: seedboxsync/front/views/settings/seedbox.py:35
 #: seedboxsync/front/views/settings/seedbox.py:38
 msgid "Seedbox"
 msgstr "Seedbox"
 
-#: seedboxsync/front/templates/homepage.html:26
-msgid "Refresh"
-msgstr "Rafraîchir"
-
-#: seedboxsync/front/templates/homepage.html:30
+#: seedboxsync/front/templates/homepage.html:60
 msgid "Download in progress"
 msgstr "Téléchargement en cours"
 
-#: seedboxsync/front/templates/homepage.html:33
+#: seedboxsync/front/templates/homepage.html:63
 msgid "List of downloads in progress from the seedbox to the NAS."
 msgstr "Liste des téléchargements en cours de la seedbox vers le NAS."
 
-#: seedboxsync/front/templates/homepage.html:38
+#: seedboxsync/front/templates/homepage.html:68
 msgid "Purge?"
 msgstr "Purger ?"
 
-#: seedboxsync/front/templates/homepage.html:39
+#: seedboxsync/front/templates/homepage.html:69
 msgid "Do you want to purge all in-progress downloads?"
 msgstr "Voulez-vous purger tous les téléchargements en cours ?"
 
-#: seedboxsync/front/templates/homepage.html:40
+#: seedboxsync/front/templates/homepage.html:70
 msgid "In-progress has been purged"
 msgstr "En cours purgés"
 
-#: seedboxsync/front/templates/homepage.html:42
+#: seedboxsync/front/templates/homepage.html:72
 msgid "Purge"
 msgstr "Purger"
 
-#: seedboxsync/front/templates/homepage.html:47
+#: seedboxsync/front/templates/homepage.html:77
 msgid "No download in progress now..."
 msgstr "Aucun téléchargement en cours pour le moment..."
 
-#: seedboxsync/front/templates/homepage.html:52
+#: seedboxsync/front/templates/homepage.html:82
 msgid "Started"
 msgstr "Démarré"
 
-#: seedboxsync/front/templates/homepage.html:53
+#: seedboxsync/front/templates/homepage.html:83
 msgid "Progress"
-msgstr "Progression"
 
-#: seedboxsync/front/templates/homepage.html:101
+#: seedboxsync/front/templates/homepage.html:131
 #: seedboxsync/front/templates/uploaded.html:6
 msgid "Last torrents uploaded"
 msgstr "Derniers torrents envoyés"
 
-#: seedboxsync/front/templates/homepage.html:103
+#: seedboxsync/front/templates/homepage.html:133
 #: seedboxsync/front/templates/uploaded.html:10
 msgid "List of last torrents uploaded from the NAS to the seedbox."
 msgstr "Liste des derniers torrents envoyés du NAS vers la seedbox."
 
-#: seedboxsync/front/templates/homepage.html:106
+#: seedboxsync/front/templates/homepage.html:136
 msgid "No torrent downloaded yet..."
 msgstr "Pas encore de torrent téléchargé..."
 
-#: seedboxsync/front/templates/homepage.html:111
+#: seedboxsync/front/templates/homepage.html:141
 #: seedboxsync/front/templates/uploaded.html:36
 msgid "Sent"
 msgstr "Envoyé"
@@ -555,12 +585,12 @@ msgid "SeedboxSync API v%(api_version)s"
 msgstr "API SeedboxSync v%(api_version)s"
 
 #: seedboxsync/front/templates/components/javascripts.html:2
-msgid "In progress since"
-msgstr "En cours depuis le"
+msgid "In progress"
+msgstr "En cours"
 
 #: seedboxsync/front/templates/components/javascripts.html:2
-msgid "Completed since"
-msgstr "Terminé depuis le"
+msgid "Completed"
+msgstr "Terminé"
 
 #: seedboxsync/front/templates/components/javascripts.html:2
 msgid "Never launched"
@@ -586,63 +616,63 @@ msgstr "Fichiers"
 msgid "Size (GiB)"
 msgstr "Taille (GiB)"
 
-#: seedboxsync/front/templates/components/macros.html:3
+#: seedboxsync/front/templates/components/macros.html:5
 msgid "Pagination"
 msgstr "Pagination"
 
-#: seedboxsync/front/templates/components/macros.html:6
-#: seedboxsync/front/templates/components/macros.html:97
+#: seedboxsync/front/templates/components/macros.html:8
+#: seedboxsync/front/templates/components/macros.html:135
 msgid "Previous"
 msgstr "Précédent"
 
-#: seedboxsync/front/templates/components/macros.html:18
-#: seedboxsync/front/templates/components/macros.html:98
+#: seedboxsync/front/templates/components/macros.html:20
+#: seedboxsync/front/templates/components/macros.html:136
 msgid "Next"
 msgstr "Suivant"
 
-#: seedboxsync/front/templates/components/macros.html:25
-#: seedboxsync/front/templates/components/macros.html:29
+#: seedboxsync/front/templates/components/macros.html:27
+#: seedboxsync/front/templates/components/macros.html:31
 msgid "Search"
 msgstr "Recherche"
 
-#: seedboxsync/front/templates/components/macros.html:68
+#: seedboxsync/front/templates/components/macros.html:106
 msgid "MIME type:"
 msgstr "Type MIME :"
 
-#: seedboxsync/front/templates/components/macros.html:68
+#: seedboxsync/front/templates/components/macros.html:106
 msgid "Confidence:"
 msgstr "Confiance :"
 
-#: seedboxsync/front/templates/components/macros.html:76
+#: seedboxsync/front/templates/components/macros.html:114
 msgid "Announcer:"
 msgstr "Annonceur :"
 
-#: seedboxsync/front/templates/components/macros.html:77
+#: seedboxsync/front/templates/components/macros.html:115
 msgid "Source:"
 msgstr "Source :"
 
-#: seedboxsync/front/templates/components/macros.html:99
+#: seedboxsync/front/templates/components/macros.html:137
 msgid "Today"
 msgstr "Aujourd’hui"
 
-#: seedboxsync/front/templates/components/macros.html:100
+#: seedboxsync/front/templates/components/macros.html:138
 msgid "Clear"
 msgstr "Réinitialiser"
 
-#: seedboxsync/front/templates/components/macros.html:101
-#: seedboxsync/front/templates/components/macros.html:103
+#: seedboxsync/front/templates/components/macros.html:139
+#: seedboxsync/front/templates/components/macros.html:141
 msgid "Choose date"
 msgstr "Choisir une date"
 
-#: seedboxsync/front/templates/components/macros.html:102
+#: seedboxsync/front/templates/components/macros.html:140
 msgid "Switch calendar view"
 msgstr "Changer de vue"
 
-#: seedboxsync/front/templates/components/macros.html:104
+#: seedboxsync/front/templates/components/macros.html:142
 msgid "Wk"
 msgstr "S"
 
-#: seedboxsync/front/templates/components/macros.html:108
+#: seedboxsync/front/templates/components/macros.html:146
 msgid "Period"
 msgstr "Période"
 
@@ -1045,4 +1075,3 @@ msgstr "L’utilisateur '%(username)s' a bien été supprimé."
 #: seedboxsync/front/views/settings/users.py:162
 msgid "Failed to delete user."
 msgstr "Échec de la suppression de l’utilisateur."
-

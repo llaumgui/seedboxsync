@@ -3,124 +3,198 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="visually-hidden">{% block title %}{{ _('Dashboard') }}{% endblock %}</h1>
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h1 class="mb-0">{% block title %}{{ _('Dashboard') }}{% endblock %}</h1>
+    <p class="text-body-secondary mb-0">
+      {{ _("Seedbox activity overview") }}
+    </p>
+  </div>
+
+  <div class="text-end">
+    <button x-data
+            class="btn btn-info btn-sm"
+            @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
+      <i class="fa fa-refresh"></i> {{ _('Refresh') }}
+    </button>
+  </div>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  {% if seedboxsync_config.get('sync_blackhole_enabled') %}
-    <div class="col-md-4">
-      {{ macro.task_box(_('Blackhole'), 'sync-blackhole', 'blackhole') }}
+<div x-data="CardsStats('{{ url_for('api.downloads_stats_downloads_stats') }}')"
+     class="row g-3">
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(hours)s hours', hours=24),
+    'download', 'text-primary',
+    'data?.last24h'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(days)s days', days=7),
+    'download', 'text-primary',
+    'data?.last7d'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(days)s days', days=30),
+    'download', 'text-primary',
+    'data?.last30d'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('This year'),
+    'download', 'text-secondary',
+    'data?.year'
+  )}}
+  <div class="col-6 col-xl-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="text-body-primary fw-semibold mb-2 fs-5">{{ _('Services') }}</div>
+        {% if seedboxsync_config.get('sync_blackhole_enabled') %}
+          <div class="mb-2">{{ macro.task_box(_('Blackhole'), 'bolt', 'sync-blackhole', 'blackhole') }}</div>
+        {% endif %}
+        {{ macro.task_box(_('Seedbox'), 'server', 'sync-seedbox', 'seedbox') }}
+      </div>
     </div>
-  {% endif %}
-  {% set seedbox_offset = 'ms-auto' if seedboxsync_config.get('sync_blackhole_enabled') else '' %}
-  <div class="col-md-4 {{ seedbox_offset }}">
-    {{ macro.task_box(_('Seedbox'), 'sync-seedbox', 'seedbox') }}
   </div>
 </div>
 
-<div class="mt-2 text-end">
-  <button x-data
-          class="btn btn-info btn-sm"
-          @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
-    <i class="fa fa-refresh"></i> {{ _('Refresh') }}
-  </button>
-</div>
 
-<h2>{{ _('Download in progress') }}</h2>
-<div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false')">
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <p class="fst-italic">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
-    <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
-            @click="$dispatch('open-modal-confirm-call', {
-              url: '{{ url_for('api.downloads_downloads_progress') }}',
-              method: 'DELETE',
-              title: '{{ _('Purge?') }}',
-              content: '{{ _('Do you want to purge all in-progress downloads?') }}',
-              toastMessage: '{{ _('In-progress has been purged') }}'
-            })">
-      <i class="fa fa-trash"></i>{{ _('Purge') }}
-    </button>
+<div class="mt-4 card bg-body-tertiary shadow"
+     x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false')">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <h2 class="card-title fs-3">{{ _('Download in progress') }}</h2>
+        <p class="card-subtitle mb-2 text-body-secondary">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
+      </div>
+      <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
+        @click="$dispatch('open-modal-confirm-call', {
+          url: '{{ url_for('api.downloads_downloads_progress') }}',
+          method: 'DELETE',
+          title: '{{ _('Purge?') }}',
+          content: '{{ _('Do you want to purge all in-progress downloads?') }}',
+          toastMessage: '{{ _('In-progress has been purged') }}'
+        })">
+        <i class="fa fa-trash"></i>{{ _('Purge') }}
+      </button>
+    </div>
+    <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+    <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+    <div x-show="!loading && !error && data.length === 0" class="alert alert-info"><i class="fas fa-inbox"></i> {{ _('No download in progress now...') }}</div>
+    <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th class="d-sm-none d-md-table-cell">{{ _('Started') }}</th>
+          <th>{{ _('Progress') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in data" :key="row.id || row.key">
+          <tr>
+            <td class="filename-cell">
+              <span class="filename cursor-pointer"
+                    data-bs-toggle="tooltip" :data-bs-title="row.path"
+                    x-init="new Tooltip($el)" x-text="row.path"></span>
+            </td>
+            <td class="d-none d-md-table-cell">
+              <span class="cursor-pointer"
+                    data-bs-toggle="tooltip" :data-bs-title="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"
+                    x-init="new Tooltip($el)" x-text="row.started ? $relativeTime(row.started) : ''"></span>
+            </td>
+            <td>
+              <div class="d-none d-md-block progress" role="progressbar" :aria-label="row.progress + '%'" :aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
+              </div>
+              <span class="d-none d-sm-block d-md-none" x-text="row.progress + '%'"></span>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
   </div>
-  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
-  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-  <div x-show="!loading && !error && data.length === 0" class="alert alert-info"><i class="fas fa-inbox"></i> {{ _('No download in progress now...') }}</div>
-  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>{{ _('Name') }}</th>
-        <th class="d-sm-none d-md-table-cell">{{ _('Started') }}</th>
-        <th>{{ _('Progress') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="row in data" :key="row.id || row.key">
-        <tr>
-          <td class="overflow-anywhere" x-text="row.path"></td>
-          <td class="d-none d-md-table-cell" x-text="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"></td>
-          <td>
-            <div class="d-none d-md-block progress" role="progressbar" :aria-label="row.progress + '%'" :aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
-            </div>
-            <span class="d-none d-sm-block d-md-none" x-text="row.progress + '%'"></span>
-          </td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
 </div>
 
-<h2 class="mt-5">{{ _('Last files downloaded') }}</h2>
-<div x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=true')">
-  <p class="fst-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
-  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
-  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-  <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
-  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>{{ _('Name') }}</th>
-        <th class="d-none d-md-table-cell">{{ _('Finished') }}</th>
-        <th class="d-none d-md-table-cell">{{ _('Size') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="row in data" :key="row.id || row.key">
-        <tr>
-          <td class="overflow-anywhere">
-            <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
-          </td>
-          <td class="d-none d-md-table-cell" x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
-          <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
-</div>
+<div class="row g-3">
+  <div class="col-12 col-xl-6">
+    <div class="mt-4 card bg-body-tertiary shadow"
+         x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=true')">
+      <div class="card-body">
+        <h2 class="card-title fs-3">{{ _('Last files downloaded') }}</h2>
+        <p class="card-subtitle mb-2 text-body-secondary">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
 
-<h2 class="mt-5">{{ _('Last torrents uploaded') }}</h2>
-<div x-data="TableComponent('{{ url_for('api.uploads_uploads_list') }}?limit=5')">
-  <p class="fst-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
-  <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
-  <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
-  <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No torrent downloaded yet...') }} </div>
-  <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>{{ _('Name') }}</th>
-        <th class="d-none d-md-table-cell">{{ _('Sent') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="row in data" :key="row.id || row.key">
-        <tr>
-          <td class="overflow-anywhere">
-              <span class="text-nowrap">{{- macro.torrent_icon() -}}</span><span x-text="row.name"></span>
-          </td>
-          <td class="d-none d-md-table-cell text-nowrap" x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
+        <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+        <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+        <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No files downloaded yet...') }}</div>
+          <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>{{ _('Name') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Finished') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in data" :key="row.id || row.key">
+              <tr>
+                <td class="filename-cell">
+                  <div class="d-flex align-items-center gap-2">
+                    {{- macro.mime_icon() -}}
+                    <span class="filename cursor-pointer"
+                          data-bs-toggle="tooltip" :data-bs-title="row.path"
+                          x-init="new Tooltip($el)" x-text="row.path"></span>
+                  </div>
+                </td>
+                <td class="d-none d-md-table-cell">
+                  <span class="cursor-pointer"
+                        data-bs-toggle="tooltip" :data-bs-title="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"
+                        x-init="new Tooltip($el)" x-text="row.finished ? $relativeTime(row.finished) : ''"></span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-6">
+    <div class="mt-4 card bg-body-tertiary shadow"
+         x-data="TableComponent('{{ url_for('api.uploads_uploads_list') }}?limit=5')">
+      <div class="card-body">
+        <h2 class="card-title fs-3">{{ _('Last torrents uploaded') }}</h2>
+        <p class="card-subtitle mb-2 text-body-secondary">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
+
+        <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+        <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+        <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No torrent downloaded yet...') }} </div>
+        <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>{{ _('Name') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Sent') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in data" :key="row.id || row.key">
+              <tr>
+                <td class="filename-cell">
+                  <div class="d-flex align-items-center gap-2">
+                    {{- macro.torrent_icon() -}}
+                    <span class="filename cursor-pointer"
+                          data-bs-toggle="tooltip" :data-bs-title="row.name"
+                          x-init="new Tooltip($el)" x-text="row.name"></span>
+                  </div>
+                </td>
+                <td class="d-none d-md-table-cell text-nowrap" >
+                    <span class="cursor-pointer"
+                          data-bs-toggle="tooltip" :data-bs-title="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"
+                          x-init="new Tooltip($el)" x-text="row.sent ? $relativeTime(row.sent) : ''"></span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

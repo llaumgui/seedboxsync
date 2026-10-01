@@ -44,8 +44,4 @@ def cached(timeout: int = 300) -> Callable[..., Any]:
     Returns:
         Callable[..., Any]: Flask-Caching cached decorator configured with make_user_cache_key.
     """
-    return cache.cached(
-        make_cache_key=make_user_cache_key,
-        timeout=timeout,
-        unless=lambda: bool(session.get("_flashes") or session.get("_toasts"))
-    )
+    return cache.cached(make_cache_key=make_user_cache_key, timeout=timeout, unless=lambda: bool(session.get("_flashes") or session.get("_toasts")))

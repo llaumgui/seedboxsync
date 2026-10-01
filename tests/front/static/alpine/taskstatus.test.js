@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("bootstrap", () => ({ Toast: { getOrCreateInstance: vi.fn() } }));
 
-import { TaskStatusBoxComponent } from "@seedboxsync/alpine/taskstatusbox.js";
+import { TaskStatusComponent } from "@seedboxsync/alpine/taskstatus.js";
 
-describe("TaskStatusBoxComponent", () => {
+describe("TaskStatusComponent", () => {
   function createComponent() {
-    const component = TaskStatusBoxComponent("/info", "/launch", "Sync");
+    const component = TaskStatusComponent("/info", "/launch", "Sync");
     component.$dispatch = (type, detail) => {
       window.dispatchEvent({ type, detail });
     };
@@ -18,8 +18,8 @@ describe("TaskStatusBoxComponent", () => {
     globalThis.fetch = vi.fn();
     globalThis.Translations = {
       never_launched: "Never launched",
-      in_progress_since: "In progress since",
-      completed_since: "Completed since",
+      in_progress: "In progress",
+      completed: "Completed",
       error_loading_lock_status: "Unable to load",
       task_scheduled: "Scheduled",
       task_not_scheduled: "Not scheduled",
@@ -36,11 +36,11 @@ describe("TaskStatusBoxComponent", () => {
 
     fetch.mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ data: { running: true, started: "2025-01-01T00:00:00Z" } }) });
     await component.loadTaskStatus();
-    expect(component.taskStatusMessage).toContain("In progress since");
+    expect(component.taskStatusMessage).toContain("In progress");
 
     fetch.mockResolvedValueOnce({ ok: true, status: 200, json: async () => ({ data: { running: false, finished: "2025-01-02T00:00:00Z" } }) });
     await component.loadTaskStatus();
-    expect(component.taskStatusMessage).toContain("Completed since");
+    expect(component.taskStatusMessage).toContain("Completed");
     expect(window.dispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "show-toast",
@@ -89,7 +89,7 @@ describe("TaskStatusBoxComponent", () => {
   it("loads immediately and registers periodic refresh", async () => {
     vi.useFakeTimers();
     fetch.mockResolvedValue({ status: 404 });
-    const component = TaskStatusBoxComponent("/info", "/launch", "Sync", 1000);
+    const component = TaskStatusComponent("/info", "/launch", "Sync", 1000);
     const load = vi.spyOn(component, "loadTaskStatus");
 
     await component.init();

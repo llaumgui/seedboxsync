@@ -12,6 +12,7 @@ class FormAccessibilityParser(HTMLParser):
         super().__init__()
         self.control_ids = []
         self.label_targets = set()
+        self._label_stack = []
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
@@ -71,17 +72,17 @@ def test_translation_uses_accepted_language_in_auto_mode(client):
     # Uses the default language when none is requested.
     response = client.get("/")
     assert b'<html lang="en"' in response.data
-    assert b'<h1 class="visually-hidden">Dashboard</h1>' in response.data
+    assert b'<h1 class="mb-0">Dashboard</h1>' in response.data
 
     # Falls back to the default language when the requested one is unsupported.
     response = client.get("/", headers={"Accept-Language": "zz"})
     assert b'<html lang="en"' in response.data
-    assert b'<h1 class="visually-hidden">Dashboard</h1>' in response.data
+    assert b'<h1 class="mb-0">Dashboard</h1>' in response.data
 
     # Uses a supported requested language.
     response = client.get("/", headers={"Accept-Language": "fr"})
     assert b'<html lang="fr"' in response.data
-    assert b'<h1 class="visually-hidden">Tableau de bord</h1>' in response.data
+    assert b'<h1 class="mb-0">Tableau de bord</h1>' in response.data
 
 
 def test_translation_uses_configured_language(app, client):
@@ -90,7 +91,7 @@ def test_translation_uses_configured_language(app, client):
     response = client.get("/", headers={"Accept-Language": "en"})
 
     assert b'<html lang="fr"' in response.data
-    assert b'<h1 class="visually-hidden">Tableau de bord</h1>' in response.data
+    assert b'<h1 class="mb-0">Tableau de bord</h1>' in response.data
 
 
 def test_flash(app, client):

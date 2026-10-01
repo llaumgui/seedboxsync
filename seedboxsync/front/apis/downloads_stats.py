@@ -111,6 +111,14 @@ stats_item_model = api.model(
             description="Human-readable total size of downloads",
             example="117.74 MB",
         ),
+        "trend_total": fields.String(
+            description="Trends vs. prior period for number of downloads",
+            example="+10.0",
+        ),
+        "trend_size": fields.String(
+            description="Trends vs. prior period for size of downloads",
+            example="+15.2",
+        ),
     },
 )
 stats_model = api.model(
@@ -124,10 +132,6 @@ stats_model = api.model(
             stats_item_model,
             description="Statistics for the current calendar week",
         ),
-        "last7": fields.Nested(
-            stats_item_model,
-            description="Statistics for the last 7 calendar days",
-        ),
         "month": fields.Nested(
             stats_item_model,
             description="Statistics for the current month",
@@ -135,6 +139,18 @@ stats_model = api.model(
         "year": fields.Nested(
             stats_item_model,
             description="Statistics for the current year",
+        ),
+        "last24h": fields.Nested(
+            stats_item_model,
+            description="Statistics for the last 24 hours",
+        ),
+        "last7d": fields.Nested(
+            stats_item_model,
+            description="Statistics for the last 7 days",
+        ),
+        "last30d": fields.Nested(
+            stats_item_model,
+            description="Statistics for the last 30 days",
         ),
     },
 )

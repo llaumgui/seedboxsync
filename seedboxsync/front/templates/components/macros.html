@@ -1,4 +1,6 @@
-{# Used in Downloaded / Uploaded pages #}
+{# -----------------------------------------------------------------------------
+ # Used in Downloaded / Uploaded pages #}
+ #--------------------------------------------------------------------------- #}
 {% macro render_pagination() %}
 <nav class="mt-4" aria-label="{{ _('Pagination') }}">
   <ul class="pagination justify-content-end">
@@ -32,18 +34,27 @@
 </div>
 {% endmacro %}
 
-{# Used in homepage #}
-{% macro task_box(title, status_key, task_key) %}
-<div class="card fs-8 mb-3" x-data="TaskStatusBoxComponent(
+
+{# -----------------------------------------------------------------------------
+ # Used homepage
+ #--------------------------------------------------------------------------- #}
+{% macro task_box(title, icon, status_key, task_key) %}
+<div class="d-flex align-items-center" x-data="TaskStatusComponent(
   '{{ url_for('api.taskstatuses_task_statuses', key=status_key) }}',
   '{{ url_for('api.tasks_tasks', key=task_key) }}',
   '{{ title }}')">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    {{ title }}
-    <button
-      class="btn btn-xs btn-outline-secondary rounded-pill"
-      :disabled="tasking"
-      @click="taskLaunch()">
+  <div class="border rounded-3 p-2 me-3"><i class="fa-solid fa-{{ icon }} fs-4"></i></div>
+  <div class="flex-grow-1">
+    <div class="fw-semibold">{{ title }}</div>
+    <div class="small text-body-secondary" x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+    <div class="small text-body-secondary" x-show="!loading && !error" x-text="taskStatusMessage"></div>
+    <div class="small text-danger" x-show="error" x-text="error"></div>
+  </div>
+  <div class="d-flex align-items-center gap-3 ms-3">
+    <i class="fa-solid fa-circle" :class="taskStatusIndicatorClass"></i>
+    <button class="btn btn-xs btn-outline-secondary rounded-pill"
+            :disabled="tasking"
+            @click="taskLaunch()">
       <template x-if="!tasking">
         <i class="fas fa-play"></i>
       </template>
@@ -52,15 +63,42 @@
       </template>
     </button>
   </div>
-  <div class="card-body">
-    <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
-    <div x-show="!loading && !error" x-text="taskStatusMessage"></div>
-    <div x-show="error" class="has-text-danger" x-text="error"></div>
+</div>
+{% endmacro %}
+
+{% macro card_stats(title, subtitle, icon, icon_color, field_data) %}
+<div class="col-6 col-xl-2">
+  <div class="card h-100">
+    <div class="card-body">
+      <div class="d-flex align-items-center gap-3">
+        <div class="border rounded-3 p-2"><i class="fa-solid {{ icon_color }} fa-{{ icon }} fs-5"></i></div>
+        <div>
+          <div class="fw-semibold fs-7">{{ title }}</div>
+          <div class="text-body-secondary fs-7">{{ subtitle }}</div>
+        </div>
+      </div>
+
+      <div class="fs-2 fw-semibold mt-3" x-show="loading"><div class="spinner-border spinner-border-sm"></div></div>
+      <div class="fs-2 fw-semibold mt-3" x-show="!loading && !error" x-text="{{field_data}}?.human_size"></div>
+      <div class="small text-danger" x-show="error" x-text="error"></div>
+
+      <div class="small" x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+      <div class="small"
+           :class="{'text-success': {{field_data}}?.trend_size?.startsWith('+'), 'text-danger': {{field_data}}?.trend_size?.startsWith('-')}"
+           x-show="!loading && !error">
+        <i class="fa-solid" :class="{'fa-arrow-up': {{field_data}}?.trend_size?.startsWith('+'), 'fa-arrow-down': {{field_data}}?.trend_size?.startsWith('-')}"></i>
+        <span x-text="{{field_data}}?.trend_size"></span>
+      </div>
+      <div class="small text-danger" x-show="error" x-text="error"></div>
+    </div>
   </div>
 </div>
 {% endmacro %}
 
-{# Used in several page #}
+
+{# -----------------------------------------------------------------------------
+ # Used in several page
+ #--------------------------------------------------------------------------- #}
 {% macro mime_icon() %}
 <i :class="getMimeIconClass(row.mime_type)"
    data-bs-toggle="tooltip"

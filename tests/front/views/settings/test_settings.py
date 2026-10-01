@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import pytest
 from werkzeug.security import generate_password_hash
 from seedboxsync.core.database.models import ApiKey, SeedboxSync, User
@@ -202,6 +202,66 @@ def test_api_key_generation_and_authentication(app):
         refreshed = ApiKey.get_by_id(api_key.id)
         assert refreshed is not None
         assert refreshed.last_used is not None
+
+
+def test_apikey_creation_does_not_generate_key_for_invalid_form(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with (
+        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "x"}),
+        patch("seedboxsync.front.views.settings.apikeys.current_user", MagicMock(is_authenticated=True)),
+        patch.object(ApiKey, "generate") as generate,
+    ):
+        response = apikeys_create()
+
+    assert isinstance(response, str)
+    generate.assert_not_called()
+
+
+def test_apikey_creation_reports_generation_errors(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with (
+        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "homeassistant"}),
+        patch("seedboxsync.front.views.settings.apikeys.current_user", MagicMock(is_authenticated=True)),
+        patch.object(ApiKey, "generate", side_effect=RuntimeError("database unavailable")),
+        patch("seedboxsync.front.views.settings.apikeys.toast") as toast_mock,
+    ):
+        response = apikeys_create()
+
+    assert isinstance(response, str)
+    toast_mock.assert_called_once()
+
+
+def test_apikey_delete_returns_404_for_unknown_key(app):
+    from werkzeug.exceptions import NotFound
+
+    app.config["WTF_CSRF_ENABLED"] = False
+    with app.test_request_context("/settings/apikeys/999/delete"), pytest.raises(NotFound):
+        apikeys_delete(999)
+
+
+def test_apikey_delete_renders_form_and_reports_delete_errors(app):
+    app.config["WTF_CSRF_ENABLED"] = False
+    with app.app_context():
+        user = User.create(username="delete-user", password=generate_password_hash("secret"), email="delete@example.com")
+        apikey = ApiKey.create(user=user, name="delete-me", key_hash="test-delete-hash")
+
+    with (
+        app.test_request_context(f"/settings/apikeys/{apikey.id}/delete"),
+        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+    ):
+        response = apikeys_delete(apikey.id)
+    assert isinstance(response, str)
+
+    with (
+        app.test_request_context(f"/settings/apikeys/{apikey.id}/delete", method="POST"),
+        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+        patch.object(ApiKey, "delete_instance", side_effect=RuntimeError("database unavailable")),
+        patch("seedboxsync.front.views.settings.apikeys.toast") as toast_mock,
+    ):
+        response = apikeys_delete(apikey.id)
+
+    assert isinstance(response, str)
+    toast_mock.assert_called_once()
 
 
 def test_logout_view_redirects_to_frontpage(app):

@@ -24,7 +24,8 @@ describe("frontend entry points", () => {
 
   it("registers Alpine components and validators globally", async () => {
     const start = vi.fn();
-    vi.doMock("alpinejs", () => ({ default: { data: vi.fn(), start } }));
+    const magic = vi.fn();
+    vi.doMock("alpinejs", () => ({ default: { data: vi.fn(), magic, start } }));
     vi.doMock("bootstrap", () => ({
       Modal: { getOrCreateInstance: vi.fn() },
       Toast: { getOrCreateInstance: vi.fn() },
@@ -32,6 +33,7 @@ describe("frontend entry points", () => {
     await import("@seedboxsync/alpine/index.js");
 
     expect(start).toHaveBeenCalledOnce();
+  expect(magic).toHaveBeenCalledWith("relativeTime", expect.any(Function));
     expect(window.validators).toBeTypeOf("object");
     expect(window.validators.isValidUrl).toBeTypeOf("function");
   });

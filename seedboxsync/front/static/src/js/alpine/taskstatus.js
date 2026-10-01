@@ -4,6 +4,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+import { formatRelativeTime } from "../utils/date";
 
 /**
  * Create an Alpine.js component for monitoring and launching a task.
@@ -19,7 +20,7 @@
  *   Set to 0 or a negative value to disable automatic refresh.
  * @returns {object} Alpine.js component state and methods.
  */
-export function TaskStatusBoxComponent(
+export function TaskStatusComponent(
   urlInfo,
   urlLaunch,
   title,
@@ -46,6 +47,27 @@ export function TaskStatusBoxComponent(
 
     /** @type {string} Previous task status message. */
     previousLockMessage: "",
+
+    /**
+     * @type {string}
+     * CSS class applied to the task status indicator based on the freshness
+     * of the last completed execution.
+     */
+    get taskStatusIndicatorClass() {
+      // No task status or completion date means the task has never been completed.
+      if (!this.taskStatusData?.finished) {
+        return "text-body-secondary";
+      }
+
+      const finished = new Date(this.taskStatusData.finished).getTime();
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000;
+
+      // Mark the task as successful when it completed within the last five minutes.
+      return now - finished < fiveMinutes
+        ? "text-success"
+        : "text-danger";
+    },
 
     /**
      * Initialize the component and start automatic status refreshes.
@@ -100,15 +122,11 @@ export function TaskStatusBoxComponent(
 
         if (this.taskStatusData.running) {
           this.updateLockMessage(
-            `${Translations.in_progress_since} ${new Date(
-              this.taskStatusData.started,
-            ).toLocaleString(undefined, dateTimeOption)}`,
+            `${Translations.in_progress} ${formatRelativeTime(new Date(this.taskStatusData.started))}`,
           );
         } else {
           this.updateLockMessage(
-            `${Translations.completed_since} ${new Date(
-              this.taskStatusData.finished,
-            ).toLocaleString(undefined, dateTimeOption)}`,
+            `${Translations.completed} ${formatRelativeTime(new Date(this.taskStatusData.started))}`,
           );
         }
       } catch (e) {

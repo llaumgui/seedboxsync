@@ -215,4 +215,5 @@ max-line-length = 160
 omit = [
     "*/templates/*",
     "*/static/*",
+    "*/database/migrations/*",
 ]
