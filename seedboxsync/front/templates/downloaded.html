@@ -3,12 +3,15 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1 class="h2">{% block title %}{{ _('Last files downloaded') }}{% endblock %}</h1>
+<div class="mb-3">
+  <h1 class="mb-0">{% block title %}{{ _('Last files downloaded') }}{% endblock %}</h1>
+  <p class="text-body-secondary mb-0">
+    {{ _('List of last files downloaded from the seedbox to the NAS.') }}
+  </p>
+</div>
 {% endblock %}
 
 {% block content %}
-<p class="fst-italic">{{ _('List of last files downloaded from the seedbox to the NAS.') }}</p>
-
 <div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true', 20, 'downloaded')">
 
   {# Filters #}

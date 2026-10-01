@@ -3,12 +3,15 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1 class="h2">{% block title %}{{ _('Last torrents uploaded') }}{% endblock %}</h1>
+<div class="mb-3">
+  <h1 class="mb-0">{% block title %}{{ _('Last torrents uploaded') }}{% endblock %}</h1>
+  <p class="text-body-secondary mb-0">
+    {{ _('List of last torrents uploaded from the NAS to the seedbox.') }}
+  </p>
+</div>
 {% endblock %}
 
 {% block content %}
-<p class="fst-italic">{{ _('List of last torrents uploaded from the NAS to the seedbox.') }}</p>
-
 <div x-data="TablePaginedComponent('{{ url_for('api.uploads_uploads_list') }}?limit=1000', 20, 'uploaded')">
 
   {# Filters #}
@@ -31,6 +34,7 @@
     <thead>
       <tr>
         <th>{{ _('Name') }}</th>
+        <th class="d-none d-md-table-cell">{{ _('Source') }}</th>
         <th class="d-none d-md-table-cell">{{ _('File(s)') }}</th>
         <th class="d-none d-md-table-cell">{{ _('Size') }}</th>
         <th>{{ _('Sent') }}</th>
@@ -43,6 +47,7 @@
           <td class="overflow-anywhere">
             <span class="text-nowrap">{{- macro.torrent_icon() -}}</span><span x-text="row.name"></span>
           </td>
+          <td class="d-none d-md-table-cell text-nowrap" x-text="row.source"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.files"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_size"></td>
           <td x-text="row.sent ? $localeDateString(row.sent) : ''"></td>
