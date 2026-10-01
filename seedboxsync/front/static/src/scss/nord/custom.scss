@@ -41,6 +41,17 @@
 
 
 /* --------------------------------------------------------------------- Misc */
+.logo {
+  display: inline-block;
+  height: 28px;
+}
+
+.logo svg {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
 .overflow-anywhere {
   overflow-wrap: anywhere;
 }

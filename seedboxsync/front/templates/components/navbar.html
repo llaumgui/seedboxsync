@@ -12,7 +12,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary p-0" role="navigation" aria-label="{{ _('Main navigation') }}" data-bs-theme="dark">
   <div class="container-md">
     <a class="navbar-brand" href="{{ url_for('frontend.homepage') }}">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="28" class="d-inline-block align-text-top">
+      <span class="d-inline-block align-text-top logo">{% include "components/logo.svg" %}</span>
       {{ _('SeedboxSync') }}
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
