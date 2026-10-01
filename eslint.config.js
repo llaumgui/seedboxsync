@@ -17,7 +17,6 @@ export default defineConfig([
         ...globals.browser,
         ...globals.es2021,
         Translations: "readonly",
-        dateTimeOption: "readonly",
         DoughnutLegend: "readonly",
       },
     },
