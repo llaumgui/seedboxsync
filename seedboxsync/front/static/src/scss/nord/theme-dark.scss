@@ -2,12 +2,16 @@
 @use "sass:color";
 
 
+$secondary-dark: color.adjust(nord.$nord1, $lightness: -13%);
 $tertiary-dark: color.adjust(nord.$nord0, $lightness: -13%);
 
 @include color-mode(dark) {
   // base colors
   --bs-body-bg:         #{color.adjust(nord.$nord0, $lightness: -10%)};
   --bs-body-color:      #{nord.$nord4};
+  --bs-secondary-bg:    #{$secondary-dark};
+  --bs-secondary-bg-rgb:#{to-rgb($secondary-dark)};
+  --bs-secondary-color: #{color.adjust(nord.$nord3, $lightness: 13%)};
   --bs-tertiary-bg:     #{$tertiary-dark};
   --bs-tertiary-bg-rgb: #{to-rgb($tertiary-dark)};
   --bs-box-shadow:      0 .5rem 1rem #{nord.$nord0};
