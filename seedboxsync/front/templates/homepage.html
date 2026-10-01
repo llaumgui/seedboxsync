@@ -17,7 +17,7 @@
             @click="window.dispatchEvent(new CustomEvent('force-refresh'))">
       <i class="fa fa-refresh"></i> {{ _('Refresh') }}
     </button>
-    <div class="small text-body-secondary mt-2">{{ _('Last update:') }} <span x-text="lastRefresh.toLocaleString(undefined, dateTimeOption)"></span></div>
+    <div class="small text-body-secondary mt-2">{{ _('Last update:') }} <span x-text="$localeDateString(lastRefresh)"></span></div>
   </div>
 </div>
 {% endblock %}
@@ -99,7 +99,7 @@
             </td>
             <td class="d-none d-md-table-cell">
               <span class="cursor-pointer"
-                    data-bs-toggle="tooltip" :data-bs-title="row.started ? new Date(row.started).toLocaleString(undefined, dateTimeOption) : ''"
+                    data-bs-toggle="tooltip" :data-bs-title="row.started ? $localeDateString(row.started) : ''"
                     x-init="new Tooltip($el)" x-text="row.started ? $relativeTime(row.started) : ''"></span>
             </td>
             <td>
@@ -150,7 +150,7 @@
                 </td>
                 <td class="d-none d-md-table-cell">
                   <span class="cursor-pointer"
-                        data-bs-toggle="tooltip" :data-bs-title="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"
+                        data-bs-toggle="tooltip" :data-bs-title="row.finished ? $localeDateString(row.finished) : ''"
                         x-init="new Tooltip($el)" x-text="row.finished ? $relativeTime(row.finished) : ''"></span>
                 </td>
               </tr>
@@ -195,7 +195,7 @@
                 </td>
                 <td class="d-none d-md-table-cell text-nowrap" >
                     <span class="cursor-pointer"
-                          data-bs-toggle="tooltip" :data-bs-title="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"
+                          data-bs-toggle="tooltip" :data-bs-title="row.sent ? $localeDateString(row.sent) : ''"
                           x-init="new Tooltip($el)" x-text="row.sent ? $relativeTime(row.sent) : ''"></span>
                 </td>
               </tr>

@@ -5,13 +5,42 @@
  * file that was distributed with this source code.
  */
 
+
+/**
+ * Return the application locale from the HTML document.
+ *
+ * @returns {string|undefined} Application locale when available.
+ */
+function _getLocale() {
+  if (typeof document === "undefined") {
+    return undefined;
+  }
+
+  return document.documentElement?.lang || undefined;
+}
+
+/**
+ * Date and time formatting options used by the application.
+ *
+ * @type {Intl.DateTimeFormatOptions}
+ */
+export const dateTimeOption = {
+  weekday: "short",
+  year: "numeric",
+  month: "short",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
+
 /**
  * Format dates as localized relative time values.
  *
  * Uses the browser locale and automatically selects the most relevant
  * time unit between days, hours, minutes, and seconds.
  */
-const relativeTimeFormatter = new Intl.RelativeTimeFormat(undefined, {
+const relativeTimeFormatter = new Intl.RelativeTimeFormat(_getLocale(), {
   numeric: "auto",
 });
 
@@ -41,4 +70,17 @@ export function formatRelativeTime(date) {
 
   // Handle differences smaller than one second.
   return relativeTimeFormatter.format(0, "second");
+}
+
+
+/**
+ * Format a date using the application locale.
+ *
+ * @param {Date} date - Date to format.
+ * @param {Intl.DateTimeFormatOptions} [options=dateTimeOption]
+ *   Date and time formatting options.
+ * @returns {string} Localized date and time string.
+ */
+export function localeDateString(date, options = dateTimeOption) {
+  return date.toLocaleString(_getLocale(), options);
 }

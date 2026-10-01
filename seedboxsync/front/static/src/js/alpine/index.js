@@ -14,7 +14,7 @@ import { TaskStatusComponent } from "./taskstatus";
 import { ToastManager } from "./toast";
 import { StatsPeriod } from "./stats";
 import { getMimeIconClass } from "./mimeicon"
-import { formatRelativeTime } from "../utils/date.js";
+import { formatRelativeTime, localeDateString } from "../utils/date.js";
 import { LastRefresh } from "../utils/last_refresh.js";
 
 // Tables
@@ -37,6 +37,10 @@ Alpine.magic(
 Alpine.magic(
   "getMimeIconClass",
   () => (mime_type) => getMimeIconClass(mime_type),
+);
+Alpine.magic(
+  "localeDateString",
+  () => (date, options) => localeDateString(new Date(date), options),
 );
 Alpine.magic("validators", () => validators);
 

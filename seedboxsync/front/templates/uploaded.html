@@ -45,7 +45,7 @@
           </td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.files"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_size"></td>
-          <td x-text="row.sent ? new Date(row.sent).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td x-text="row.sent ? $localeDateString(row.sent) : ''"></td>
           <td class="text-end">
             <button class="btn btn-outline-danger btn-sm text-nowrap"
                 aria-label="{{ _('Delete') }}"

@@ -42,7 +42,7 @@
           <td class="overflow-anywhere">
             <span class="text-nowrap">{{- macro.mime_icon() -}}</span><span x-text="row.path"></span>
           </td>
-          <td  x-text="row.finished ? new Date(row.finished).toLocaleString(undefined, dateTimeOption) : ''"></td>
+          <td  x-text="row.finished ? $localeDateString(row.finished) : ''"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
           <td class="text-end">
             <button type="button" class="btn btn-outline-danger btn-sm text-nowrap"
