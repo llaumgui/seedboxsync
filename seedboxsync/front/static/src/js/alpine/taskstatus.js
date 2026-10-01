@@ -53,7 +53,13 @@ export function TaskStatusComponent(
      * CSS class applied to the task status indicator based on the freshness
      * of the last completed execution.
      */
-    get taskStatusIndicatorClass() {
+    /**
+     * Get the indicator class using a freshness threshold in minutes.
+     *
+     * @param {number} statusTime Minutes before a completed task is considered stale.
+     * @returns {string} CSS class for the status indicator.
+     */
+    taskStatusIndicatorClass(statusTime) {
       // No task status or completion date means the task has never been completed.
       if (!this.taskStatusData?.finished) {
         return "text-body-secondary";
@@ -61,10 +67,10 @@ export function TaskStatusComponent(
 
       const finished = new Date(this.taskStatusData.finished).getTime();
       const now = Date.now();
-      const fiveMinutes = 5 * 60 * 1000;
+      const threshold = statusTime * 60 * 1000;
 
-      // Mark the task as successful when it completed within the last five minutes.
-      return now - finished < fiveMinutes
+      // Mark the task as successful when it completed within the configured threshold.
+      return now - finished < threshold
         ? "text-success"
         : "text-danger";
     },

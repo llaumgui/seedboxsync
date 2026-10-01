@@ -38,7 +38,7 @@
 {# -----------------------------------------------------------------------------
  # Used homepage
  #--------------------------------------------------------------------------- #}
-{% macro task_box(title, icon, status_key, task_key) %}
+{% macro task_box(title, icon, status_key, task_key, status_time) %}
 <div class="d-flex align-items-center" x-data="TaskStatusComponent(
   '{{ url_for('api.taskstatuses_task_statuses', key=status_key) }}',
   '{{ url_for('api.tasks_tasks', key=task_key) }}',
@@ -51,7 +51,7 @@
     <div class="small text-danger" x-show="error" x-text="error"></div>
   </div>
   <div class="d-flex align-items-center gap-3 ms-3">
-    <i class="fa-solid fa-circle" :class="taskStatusIndicatorClass"></i>
+    <i class="fa-solid fa-circle" :class="taskStatusIndicatorClass({{- status_time -}})"></i>
     <button class="btn btn-xs btn-outline-secondary rounded-pill"
             :disabled="tasking"
             @click="taskLaunch()">

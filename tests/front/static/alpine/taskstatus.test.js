@@ -49,6 +49,19 @@ describe("TaskStatusComponent", () => {
     );
   });
 
+  it("uses the supplied freshness threshold for the status indicator", () => {
+    const component = createComponent();
+    component.taskStatusData = {
+      finished: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    };
+
+    expect(component.taskStatusIndicatorClass(15)).toBe("text-success");
+    expect(component.taskStatusIndicatorClass(5)).toBe("text-danger");
+
+    component.taskStatusData = null;
+    expect(component.taskStatusIndicatorClass(15)).toBe("text-body-secondary");
+  });
+
   it("reports status errors and task launch outcomes", async () => {
     const component = createComponent();
     fetch.mockResolvedValueOnce({ ok: false, status: 500 });

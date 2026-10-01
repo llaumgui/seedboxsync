@@ -49,9 +49,9 @@
       <div class="card-body">
         <div class="text-body-primary fw-semibold mb-2 fs-5">{{ _('Services') }}</div>
         {% if seedboxsync_config.get('sync_blackhole_enabled') %}
-          <div class="mb-2">{{ macro.task_box(_('Blackhole'), 'bolt', 'sync-blackhole', 'blackhole') }}</div>
+          <div class="mb-2">{{ macro.task_box(_('Blackhole'), 'bolt', 'sync-blackhole', 'blackhole', 5) }}</div>
         {% endif %}
-        {{ macro.task_box(_('Seedbox'), 'server', 'sync-seedbox', 'seedbox') }}
+        {{ macro.task_box(_('Seedbox'), 'server', 'sync-seedbox', 'seedbox', 30) }}
       </div>
     </div>
   </div>
