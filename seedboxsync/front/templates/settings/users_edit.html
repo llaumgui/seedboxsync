@@ -24,7 +24,7 @@
     <div class="content">
       {{ macro.breadcrumb(breadcrumb_items) }}
 
-      <form method="post" x-data="validators.form()">
+      <form method="post" x-data="$validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
@@ -35,7 +35,7 @@
               <div class="col-md-6 mb-3" x-data="{
                 username: '{{ form.username.data or '' }}',
                 touched: false,
-                isValid() { return validators.Length(this.touched, this.username, 4, 25) && validators.isRequired(this.touched, this.username) }
+                isValid() { return $validators.Length(this.touched, this.username, 4, 25) && $validators.isRequired(this.touched, this.username) }
               }">
                 {{ render_field(form.username) }}
               </div>
@@ -43,7 +43,7 @@
               <div class="col-md-6 mb-3" x-data="{
                 email: '{{ form.email.data or '' }}',
                 touched: false,
-                isValid() { return validators.Length(this.touched, this.email, 8, 35) && validators.isRequired(this.touched, this.email) }
+                isValid() { return $validators.Length(this.touched, this.email, 8, 35) && $validators.isRequired(this.touched, this.email) }
               }">
                 {{ render_field(form.email) }}
               </div>
@@ -54,9 +54,9 @@
               password2: '{{ form.password.data or '' }}',
               touched: false,
               {% if form.password.flags.required %}
-              isValid() { return (validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) && validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
+              isValid() { return ($validators.Length(this.touched, this.password, 8, 128) && $validators.isRequired(this.touched, this.password) && $validators.isRequired(this.touched, this.password2) && this.password === this.password2) }
               {% else %}
-              isValid() { return (validators.Length(this.touched, this.password, 8, 128) && this.password === this.password2) }
+              isValid() { return ($validators.Length(this.touched, this.password, 8, 128) && this.password === this.password2) }
               {% endif %}
             }">
               <div class="col-md-6 mb-3">

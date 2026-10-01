@@ -53,6 +53,8 @@ class Config:
         CONFIG_NAMESPACE + "WEBUI_LANGUAGE": "auto",
         CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND": "hidden",
         CONFIG_NAMESPACE + "WEBUI_DOUGHNUT_LEGEND_LIMIT": "0",
+        CONFIG_NAMESPACE + "WEBUI_DASHBOARD_REFRESH": "60",
+        CONFIG_NAMESPACE + "WEBUI_DASHBOARD_NB_ELEMENTS": "5",
     }
 
     def __init__(self, app: Flask, test_config: dict[str, str] | None = None) -> None:

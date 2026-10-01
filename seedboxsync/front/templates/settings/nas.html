@@ -22,7 +22,7 @@
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
-    <form method="post" x-data="validators.form()">
+    <form method="post" x-data="$validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
@@ -34,7 +34,7 @@
             <div class="col-md-6 mb-3" x-data="{
               local_watch_path: '{{ form.local_watch_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.local_watch_path) }
+              isValid() { return $validators.isRequired(this.touched, this.local_watch_path) }
             }">
               {{ render_field(form.local_watch_path) }}
             </div>
@@ -42,7 +42,7 @@
             <div class="col-md-6 mb-3" x-data="{
               local_download_path: '{{ form.local_download_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.local_download_path) }
+              isValid() { return $validators.isRequired(this.touched, this.local_download_path) }
             }">
               {{ render_field(form.local_download_path) }}
             </div>

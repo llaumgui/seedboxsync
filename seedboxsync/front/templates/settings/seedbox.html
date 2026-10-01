@@ -22,7 +22,7 @@
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
-    <form method="post" x-data="validators.form()">
+    <form method="post" x-data="$validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 
@@ -36,7 +36,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_host: '{{ form.seedbox_host.data }}',
               touched: false,
-              isValid() { return validators.isValidHost(this.touched , this.seedbox_host) }
+              isValid() { return $validators.isValidHost(this.touched , this.seedbox_host) }
             }">
               {{ render_field(form.seedbox_host) }}
             </div>
@@ -44,7 +44,7 @@
             <div class="col-md-3 mb-3" x-data="{
               seedbox_port: '{{ form.seedbox_port.data }}',
               touched: false,
-              isValid() { return validators.isValidPort(this.touched , this.seedbox_port) }
+              isValid() { return $validators.isValidPort(this.touched , this.seedbox_port) }
             }">
               {{ render_field(form.seedbox_port) }}
             </div>
@@ -54,7 +54,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_login: '{{ form.seedbox_login.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_login) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_login) }
             }">
               {{ render_field(form.seedbox_login) }}
             </div>
@@ -62,7 +62,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_password: '{{ form.seedbox_password.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_password) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_password) }
             }">
               {{ render_field(form.seedbox_password) }}
             </div>
@@ -73,7 +73,7 @@
               seedbox_timeout: '{{ form.seedbox_timeout.data }}',
               enabled: {{ 'true' if (form.seedbox_timeout.data | int(default=0)) != 0 else 'false' }},
               touched: false,
-              isValid() { return validators.isValidTimeout(this.touched, this.seedbox_timeout) }
+              isValid() { return $validators.isValidTimeout(this.touched, this.seedbox_timeout) }
             }">
               <div class="form-check">
                 <input class="form-check-input "type="checkbox"
@@ -112,7 +112,7 @@
               seedbox_chmod: '{{ form.seedbox_chmod.data }}',
               enabled: {{ 'true' if (form.seedbox_chmod.data | string) not in ['0', 'False'] else 'false' }},
               touched: false,
-              isValid() { return validators.isOctalChmod(this.touched, this.seedbox_chmod) }
+              isValid() { return $validators.isOctalChmod(this.touched, this.seedbox_chmod) }
             }">
               <div class="form-check">
                 <input class="form-check-input "type="checkbox"
@@ -149,7 +149,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_max_concurrent_prefetch_requests: '{{ form.seedbox_max_concurrent_prefetch_requests.data }}',
               touched: false,
-              isValid() { return validators.isValidMaxConcPrefetchReq(this.touched, this.seedbox_max_concurrent_prefetch_requests) }
+              isValid() { return $validators.isValidMaxConcPrefetchReq(this.touched, this.seedbox_max_concurrent_prefetch_requests) }
             }">
               {{ render_field(form.seedbox_max_concurrent_prefetch_requests) }}
             </div>
@@ -162,7 +162,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_tmp_path: '{{ form.seedbox_tmp_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_tmp_path) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_tmp_path) }
             }">
               {{ render_field(form.seedbox_tmp_path) }}
             </div>
@@ -170,7 +170,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_watch_path: '{{ form.seedbox_watch_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_watch_path) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_watch_path) }
             }">
               {{ render_field(form.seedbox_watch_path) }}
             </div>
@@ -180,7 +180,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_finished_path: '{{ form.seedbox_finished_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_finished_path) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_finished_path) }
             }">
               {{ render_field(form.seedbox_finished_path) }}
             </div>
@@ -188,7 +188,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_prefixed_path: '{{ form.seedbox_prefixed_path.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_prefixed_path) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_prefixed_path) }
             }">
               {{ render_field(form.seedbox_prefixed_path) }}
             </div>
@@ -198,7 +198,7 @@
             <div class="col-md-6 mb-3" x-data="{
               seedbox_part_suffix: '{{ form.seedbox_part_suffix.data }}',
               touched: false,
-              isValid() { return validators.isRequired(this.touched, this.seedbox_part_suffix) }
+              isValid() { return $validators.isRequired(this.touched, this.seedbox_part_suffix) }
             }">
               {{ render_field(form.seedbox_part_suffix) }}
             </div>

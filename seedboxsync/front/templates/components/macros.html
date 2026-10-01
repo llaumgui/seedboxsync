@@ -100,7 +100,7 @@
  # Used in several page
  #--------------------------------------------------------------------------- #}
 {% macro mime_icon() %}
-<i :class="getMimeIconClass(row.mime_type)"
+<i :class="$getMimeIconClass(row.mime_type)"
    data-bs-toggle="tooltip"
    data-bs-html="true"
    :data-bs-title="'<strong>{{ _('MIME type:') }}</strong> ' + row.mime_type + '<br><strong>{{ _('Confidence:') }}</strong> ' + row.mime_confidence"
@@ -108,7 +108,7 @@
 {% endmacro %}
 
 {% macro torrent_icon() %}
-<i :class="getMimeIconClass('application/x-bittorrent')"
+<i :class="$getMimeIconClass('application/x-bittorrent')"
    data-bs-toggle="tooltip"
    data-bs-html="true"
    :data-bs-title="'<strong>{{ _('Announcer:') }}</strong> ' + row.announcer +

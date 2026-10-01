@@ -22,7 +22,7 @@
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
-    <form method="post" x-data="validators.form()">
+    <form method="post" x-data="$validators.form()">
         {{ form.csrf_token }}
         {{ form_error(form) }}
 
@@ -35,7 +35,7 @@
               enabled: {{ 'true' if form.healthchecks_sync_blackhole_enabled.data else 'false' }},
               healthchecks_sync_blackhole_ping_url: '{{ form.healthchecks_sync_blackhole_ping_url.data }}',
               touched: false,
-              isValid() { return validators.isValidUrl(this.touched, this.healthchecks_sync_blackhole_ping_url.data, this.enabled) }
+              isValid() { return $validators.isValidUrl(this.touched, this.healthchecks_sync_blackhole_ping_url.data, this.enabled) }
             }">
             <div class="col-md-6 mb-3">
               <div class="field">
@@ -55,7 +55,7 @@
             enabled: {{ 'true' if form.healthchecks_sync_seedbox_enabled.data else 'false' }},
             healthchecks_sync_seedbox_ping_url: '{{ form.healthchecks_sync_seedbox_ping_url.data }}',
             touched: false,
-            isValid() { return validators.isValidUrl(this.touched, this.healthchecks_sync_seedbox_ping_url.data, this.enabled) }
+            isValid() { return $validators.isValidUrl(this.touched, this.healthchecks_sync_seedbox_ping_url.data, this.enabled) }
           }">
             <div class="col-md-6 mb-3">
               <div class="field">

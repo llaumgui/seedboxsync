@@ -22,7 +22,7 @@
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
-    <form method="post" x-data="validators.form()">
+    <form method="post" x-data="$validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 
@@ -94,7 +94,7 @@
                 <div class="col-md-6 mb-3" x-data="{
                   oauth_name: '{{ form.oauth_name.data }}',
                   touched: false,
-                  isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_name) }
+                  isValid() { return !oauthEnabled || $validators.isRequired(this.touched, this.oauth_name) }
                 }">
                   {{ render_field(form.oauth_name) }}
                 </div>
@@ -104,14 +104,14 @@
                 <div class="col-md-6 mb-3" x-data="{
                   oauth_client_id: '{{ form.oauth_client_id.data }}',
                   touched: false,
-                  isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_client_id) }
+                  isValid() { return !oauthEnabled || $validators.isRequired(this.touched, this.oauth_client_id) }
                 }">
                   {{ render_field(form.oauth_client_id) }}
                 </div>
                 <div class="col-md-6 mb-3" x-data="{
                   oauth_client_secret: '{{ form.oauth_client_secret.data }}',
                   touched: false,
-                  isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_client_secret) }
+                  isValid() { return !oauthEnabled || $validators.isRequired(this.touched, this.oauth_client_secret) }
                 }">
                   {{ render_field(form.oauth_client_secret) }}
                 </div>
@@ -121,7 +121,7 @@
                 <div class="col-md-6 mb-3" x-data="{
                 oauth_server_metadata_url: '{{ form.oauth_server_metadata_url.data }}',
                 touched: false,
-                isValid() { return !oauthEnabled || validators.isRequired(this.touched, this.oauth_server_metadata_url) }
+                isValid() { return !oauthEnabled || $validators.isRequired(this.touched, this.oauth_server_metadata_url) }
                 }">
                   {{ render_field(form.oauth_server_metadata_url) }}
                 </div>

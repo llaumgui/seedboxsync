@@ -55,4 +55,14 @@ class SettingsSeedboxSyncForm(FlaskForm):  # type: ignore[misc]
         validators=[InputRequired(), NumberRange(min=0, max=999)],
         render_kw={"placeholder": "0", "icon": "fa-list-ol"},
     )
+    webui_dashboard_refresh = IntegerField(
+        _("Dashboard refresh interval (in seconds)"),
+        validators=[InputRequired(), NumberRange(min=30, max=300)],
+        render_kw={"placeholder": "60", "icon": "fa-rotate"},
+    )
+    webui_dashboard_nb_elements = IntegerField(
+        _("Max dashboard items"),
+        validators=[InputRequired(), NumberRange(min=3, max=100)],
+        render_kw={"placeholder": "5", "icon": "fa-cubes"},
+    )
     wtf_csrf_enabled = BooleanField(_("Enable CSRF protection for all forms?"))

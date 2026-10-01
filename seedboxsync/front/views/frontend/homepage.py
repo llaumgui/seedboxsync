@@ -7,6 +7,7 @@
 """SeedboxSync Flask view for homepage."""
 
 from flask import render_template
+from seedboxsync.core import current_app
 from seedboxsync.front.cache import cached
 from seedboxsync.front.login_manager import login_required
 from seedboxsync.front.views import bp_frontend as bp
@@ -24,4 +25,6 @@ def homepage() -> str:
     Returns:
         str: Rendered HTML template for the home page.
     """
-    return render_template("homepage.html")
+    webui_dashboard_refresh = int(current_app.seedboxsync_config.get("webui_dashboard_refresh", "60")) * 1000
+    webui_dashboard_nb_elements = int(current_app.seedboxsync_config.get("webui_dashboard_nb_elements", "5"))
+    return render_template("homepage.html", webui_dashboard_refresh=webui_dashboard_refresh, webui_dashboard_nb_elements=webui_dashboard_nb_elements)

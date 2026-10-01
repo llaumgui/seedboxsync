@@ -33,8 +33,7 @@ describe("frontend entry points", () => {
     await import("@seedboxsync/alpine/index.js");
 
     expect(start).toHaveBeenCalledOnce();
-  expect(magic).toHaveBeenCalledWith("relativeTime", expect.any(Function));
-    expect(window.validators).toBeTypeOf("object");
-    expect(window.validators.isValidUrl).toBeTypeOf("function");
+    expect(magic).toHaveBeenCalledWith("relativeTime", expect.any(Function));
+    expect(magic).toHaveBeenCalledWith("validators", expect.any(Function));
   });
 });

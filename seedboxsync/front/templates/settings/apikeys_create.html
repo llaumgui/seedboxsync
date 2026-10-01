@@ -23,7 +23,7 @@
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
-    <form method="post" x-data="validators.form()">
+    <form method="post" x-data="$validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 
@@ -34,7 +34,7 @@
             <div class="col-md-6 md-3"  x-data="{
               name: '{{ form.name.data or '' }}',
               touched: false,
-              isValid() { return validators.Length(this.touched, this.name, 4, 32) && validators.isRequired(this.touched, this.name) }
+              isValid() { return $validators.Length(this.touched, this.name, 4, 32) && $validators.isRequired(this.touched, this.name) }
             }">
               {{ render_field(form.name) }}
             </div>

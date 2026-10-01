@@ -8,7 +8,7 @@
 <div class="card w-50 mx-auto my-5 text-bg-dark shadow">
   <div class="card-body">
 
-    {% if not seedboxsync_config.get('oauth_builtin_authentication_disabled') %}<form method="post" x-data="validators.form()">
+    {% if not seedboxsync_config.get('oauth_builtin_authentication_disabled') %}<form method="post" x-data="$validators.form()">
       {{ form.csrf_token }}
       {{ form_error(form) }}
 
@@ -17,7 +17,7 @@
       <div class="mb-3" x-data="{
           login: '{{ form.login.data or "" }}',
           touched: false,
-          isValid() { return validators.Length(this.touched, this.login, 4, 35) }
+          isValid() { return $validators.Length(this.touched, this.login, 4, 35) }
         }">
         {{ render_field(form.login) }}
       </div>
@@ -25,7 +25,7 @@
       <div class="mb-3" x-data="{
           password: '{{ form.password.data or "" }}',
           touched: false,
-          isValid() { return validators.Length(this.touched, this.password, 8, 128) && validators.isRequired(this.touched, this.password) }
+          isValid() { return $validators.Length(this.touched, this.password, 8, 128) && $validators.isRequired(this.touched, this.password) }
         }">
         {{ render_field(form.password) }}
       </div>

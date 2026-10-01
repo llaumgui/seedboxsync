@@ -15,6 +15,7 @@ import { ToastManager } from "./toast";
 import { StatsPeriod } from "./stats";
 import { getMimeIconClass } from "./mimeicon"
 import { formatRelativeTime } from "../utils/date.js";
+import { LastRefresh } from "../utils/last_refresh.js";
 
 // Tables
 Alpine.data("TableComponent", TableComponent);
@@ -26,14 +27,18 @@ Alpine.data("CardsStats", CardsStats)
 Alpine.data("ModalConfirmCallComponent", ModalConfirmCallComponent);
 Alpine.data("StatsPeriod", StatsPeriod);
 Alpine.data("ToastManager", ToastManager);
+Alpine.data("LastRefresh", LastRefresh);
 
+// Alpine magics
 Alpine.magic(
   "relativeTime",
   () => (date) => formatRelativeTime(new Date(date)),
 );
+Alpine.magic(
+  "getMimeIconClass",
+  () => (mime_type) => getMimeIconClass(mime_type),
+);
+Alpine.magic("validators", () => validators);
 
-// Attach to window object
-window.getMimeIconClass = getMimeIconClass;
-window.validators = validators;
-
+// Start !!!
 Alpine.start();
