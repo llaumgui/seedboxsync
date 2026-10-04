@@ -103,8 +103,10 @@
                     x-init="new Tooltip($el)" x-text="row.started ? $relativeTime(row.started) : ''"></span>
             </td>
             <td>
-              <div class="d-none d-md-block progress" role="progressbar" :aria-label="row.progress + '%'" :aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
+              <div class="d-none d-md-block progress" role="progressbar" style="height: 25px;"
+                   :aria-label="row.progress + '%'" aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary fs-6 fw-bold overflow-visible"
+                     :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
               </div>
               <span class="d-none d-sm-block d-md-none" x-text="row.progress + '%'"></span>
             </td>
