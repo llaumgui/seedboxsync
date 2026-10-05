@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-10-01 20:26+0200\n"
+"POT-Creation-Date: 2026-10-05 20:20+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -317,12 +317,12 @@ msgid "Enable CSRF protection for all forms?"
 msgstr "Activer la protection CSRF pour tous les formulaires"
 
 #: seedboxsync/front/templates/downloaded.html:7
-#: seedboxsync/front/templates/homepage.html:125
+#: seedboxsync/front/templates/homepage.html:127
 msgid "Last files downloaded"
 msgstr "Derniers fichiers téléchargés"
 
 #: seedboxsync/front/templates/downloaded.html:9
-#: seedboxsync/front/templates/homepage.html:126
+#: seedboxsync/front/templates/homepage.html:128
 msgid "List of last files downloaded from the seedbox to the NAS."
 msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 
@@ -331,8 +331,8 @@ msgstr "Liste des derniers fichiers téléchargés de la seedbox vers le NAS."
 #: seedboxsync/front/templates/components/macros.html:85
 #: seedboxsync/front/templates/downloaded.html:28
 #: seedboxsync/front/templates/homepage.html:81
-#: seedboxsync/front/templates/homepage.html:130
-#: seedboxsync/front/templates/homepage.html:175
+#: seedboxsync/front/templates/homepage.html:132
+#: seedboxsync/front/templates/homepage.html:177
 #: seedboxsync/front/templates/uploaded.html:28
 msgid "Loading..."
 msgstr "Chargement..."
@@ -340,28 +340,28 @@ msgstr "Chargement..."
 #: seedboxsync/front/templates/components/modal.html:32
 #: seedboxsync/front/templates/downloaded.html:29
 #: seedboxsync/front/templates/homepage.html:82
-#: seedboxsync/front/templates/homepage.html:131
-#: seedboxsync/front/templates/homepage.html:176
+#: seedboxsync/front/templates/homepage.html:133
+#: seedboxsync/front/templates/homepage.html:178
 #: seedboxsync/front/templates/uploaded.html:29
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
 
 #: seedboxsync/front/templates/downloaded.html:30
-#: seedboxsync/front/templates/homepage.html:132
+#: seedboxsync/front/templates/homepage.html:134
 msgid "No files downloaded yet..."
 msgstr "Aucun fichier téléchargé pour le moment..."
 
 #: seedboxsync/front/templates/downloaded.html:36
 #: seedboxsync/front/templates/homepage.html:87
-#: seedboxsync/front/templates/homepage.html:136
-#: seedboxsync/front/templates/homepage.html:181
+#: seedboxsync/front/templates/homepage.html:138
+#: seedboxsync/front/templates/homepage.html:183
 #: seedboxsync/front/templates/settings/apikeys.html:38
 #: seedboxsync/front/templates/uploaded.html:36
 msgid "Name"
 msgstr "Nom"
 
 #: seedboxsync/front/templates/downloaded.html:37
-#: seedboxsync/front/templates/homepage.html:137
+#: seedboxsync/front/templates/homepage.html:139
 msgid "Finished"
 msgstr "Terminé"
 
@@ -424,21 +424,31 @@ msgstr "Dernière mise à jour :"
 #: seedboxsync/front/templates/homepage.html:34
 #: seedboxsync/front/templates/homepage.html:39
 #: seedboxsync/front/templates/homepage.html:44
+#: seedboxsync/front/templates/stats.html:23
+#: seedboxsync/front/templates/stats.html:28
+#: seedboxsync/front/templates/stats.html:33
+#: seedboxsync/front/templates/stats.html:38
+#: seedboxsync/front/templates/stats.html:48
+#: seedboxsync/front/templates/stats.html:62
 msgid "Downloads"
 msgstr "Téléchargements"
 
 #: seedboxsync/front/templates/homepage.html:29
+#: seedboxsync/front/templates/stats.html:23
 #, python-format
 msgid "Last %(hours)s hours"
 msgstr "Dernières %(hours)sH"
 
 #: seedboxsync/front/templates/homepage.html:34
 #: seedboxsync/front/templates/homepage.html:39
+#: seedboxsync/front/templates/stats.html:28
+#: seedboxsync/front/templates/stats.html:33
 #, python-format
 msgid "Last %(days)s days"
 msgstr "Derniers %(days)s jours"
 
 #: seedboxsync/front/templates/homepage.html:44
+#: seedboxsync/front/templates/stats.html:38
 msgid "This year"
 msgstr "Cette année"
 
@@ -494,21 +504,21 @@ msgstr "Démarré"
 msgid "Progress"
 msgstr "Progression"
 
-#: seedboxsync/front/templates/homepage.html:170
+#: seedboxsync/front/templates/homepage.html:172
 #: seedboxsync/front/templates/uploaded.html:7
 msgid "Last torrents uploaded"
 msgstr "Derniers torrents envoyés"
 
-#: seedboxsync/front/templates/homepage.html:171
+#: seedboxsync/front/templates/homepage.html:173
 #: seedboxsync/front/templates/uploaded.html:9
 msgid "List of last torrents uploaded from the NAS to the seedbox."
 msgstr "Liste des derniers torrents envoyés du NAS vers la seedbox."
 
-#: seedboxsync/front/templates/homepage.html:177
+#: seedboxsync/front/templates/homepage.html:179
 msgid "No torrent downloaded yet..."
 msgstr "Pas encore de torrent téléchargé..."
 
-#: seedboxsync/front/templates/homepage.html:182
+#: seedboxsync/front/templates/homepage.html:184
 #: seedboxsync/front/templates/uploaded.html:40
 msgid "Sent"
 msgstr "Envoyé"
@@ -532,41 +542,32 @@ msgstr "Se connecter"
 msgid "Statistics"
 msgstr "Statistiques"
 
-#: seedboxsync/front/templates/stats.html:28
+#: seedboxsync/front/templates/stats.html:49
+#: seedboxsync/front/templates/stats.html:63
 msgid "Total"
 msgstr "Total"
 
-#: seedboxsync/front/templates/settings/info.html:45
-#: seedboxsync/front/templates/stats.html:32
-msgid "Number of files downloaded"
-msgstr "Nombre de fichiers téléchargés"
-
-#: seedboxsync/front/templates/settings/info.html:49
-#: seedboxsync/front/templates/stats.html:33
-msgid "Total size of files downloaded"
-msgstr "Taille totale des fichiers téléchargés"
-
-#: seedboxsync/front/templates/stats.html:56
+#: seedboxsync/front/templates/stats.html:82
 msgid "Files by MIME type"
 msgstr "Fichiers par type MIME"
 
-#: seedboxsync/front/templates/stats.html:60
+#: seedboxsync/front/templates/stats.html:86
 msgid "Size by MIME type"
 msgstr "Taille par type MIME"
 
-#: seedboxsync/front/templates/stats.html:66
+#: seedboxsync/front/templates/stats.html:92
 msgid "Torrents by source"
 msgstr "Torrents par source"
 
-#: seedboxsync/front/templates/stats.html:70
+#: seedboxsync/front/templates/stats.html:96
 msgid "Size by source"
 msgstr "Taille par source"
 
-#: seedboxsync/front/templates/stats.html:77
+#: seedboxsync/front/templates/stats.html:103
 msgid "Downloads by year"
 msgstr "Téléchargements par années"
 
-#: seedboxsync/front/templates/stats.html:81
+#: seedboxsync/front/templates/stats.html:107
 msgid "Downloads by month"
 msgstr "Téléchargements par mois"
 
@@ -689,7 +690,7 @@ msgstr "Changer de vue"
 msgid "Wk"
 msgstr "S"
 
-#: seedboxsync/front/templates/components/macros.html:146
+#: seedboxsync/front/templates/components/macros.html:145
 msgid "Period"
 msgstr "Période"
 
@@ -906,6 +907,14 @@ msgstr "En cours depuis %(since)s"
 #, python-format
 msgid "Finished since %(since)s"
 msgstr "Terminé depuis %(since)s"
+
+#: seedboxsync/front/templates/settings/info.html:45
+msgid "Number of files downloaded"
+msgstr "Nombre de fichiers téléchargés"
+
+#: seedboxsync/front/templates/settings/info.html:49
+msgid "Total size of files downloaded"
+msgstr "Taille totale des fichiers téléchargés"
 
 #: seedboxsync/front/templates/settings/info.html:53
 msgid "Since"

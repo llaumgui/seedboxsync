@@ -9,48 +9,74 @@
 {% endblock %}
 
 {% block content %}
-<script>
-  window.StatsConfig = {
-    urls: {
-      month: {{- url_for('api.downloads_stats_downloads_stats_by_month') | tojson -}},
-      year: {{- url_for('api.downloads_stats_downloads_stats_by_year') | tojson -}},
-      mimeType: {{- url_for('api.downloads_stats_downloads_stats_by_mime_type') | tojson -}},
-      source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
-    }
-  };
-</script>
-<div
-  x-data="StatsPeriod"
-  x-init="init()"
->
-  <div class="row mb-3">
-    <div class="cold-12 col-md-12 col-lg-6 mb-2">
-      <h2 class="h4">{{ _('Total') }}</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ _('Number of files downloaded') }}</th>
-            <th>{{ _('Total size of files downloaded') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ stats_total.files }}</td>
-            <td>{{ stats_total.total_size }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cold-12 col-md-12 col-lg-6 mb-2">
-      <div class="row">
-        <div class="col-md-6 offset-md-6 text-end">
-          {{ macro.datepicker_range('period') }}
+<script>window.StatsConfig = { urls: {
+month: {{- url_for('api.downloads_stats_downloads_stats_by_month') | tojson -}},
+year: {{- url_for('api.downloads_stats_downloads_stats_by_year') | tojson -}},
+mimeType: {{- url_for('api.downloads_stats_downloads_stats_by_mime_type') | tojson -}},
+source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
+}};</script>
+
+
+<div x-data="CardsStats('{{ url_for('api.downloads_stats_downloads_stats') }}', {{ webui_dashboard_refresh }})"
+     class="row g-3">
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(hours)s hours', hours=24),
+    'download', 'text-primary',
+    'data?.last24h'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(days)s days', days=7),
+    'download', 'text-primary',
+    'data?.last7d'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('Last %(days)s days', days=30),
+    'download', 'text-primary',
+    'data?.last30d'
+  )}}
+  {{macro.card_stats(
+    _('Downloads'), _('This year'),
+    'download', 'text-secondary',
+    'data?.year'
+  )}}
+  <div class="col-6 col-xl-2">
+    <div class="card h-100 bg-body-secondary">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3">
+          <div class="border rounded-3 p-2"><i class="fa-solid text-secondary fa-calculator fs-5"></i></div>
+          <div>
+            <div class="fw-semibold fs-7">{{ _('Downloads') }}</div>
+            <div class="text-body-secondary fs-7">{{ _('Total') }}</div>
+          </div>
         </div>
+        <div class="fs-2 fw-semibold mt-3">{{ stats_total.total_size }}</div>
       </div>
     </div>
   </div>
+  <div class="col-6 col-xl-2">
+    <div class="card h-100 bg-body-secondary">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3">
+          <div class="border rounded-3 p-2"><i class="fa-solid text-secondary fa-calculator fs-5"></i></div>
+          <div>
+            <div class="fw-semibold fs-7">{{ _('Downloads') }}</div>
+            <div class="text-body-secondary fs-7">{{ _('Total') }}</div>
+          </div>
+        </div>
+        <div class="fs-2 fw-semibold mt-3">{{ stats_total.files }}</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  {% set col_class = 'col-12 col-md-6' if doughnut_legend_display else 'col-12 col-md-4' %}
+<div class="mt-4" x-data="StatsPeriod" x-init="init()">
+  <div class="mb-5 d-flex justify-content-end">
+    <div class="input-group input-group-sm w-auto">
+      {{ macro.datepicker_range('period') }}
+    </div>
+  </div>
+
+  {% set col_class = 'col-12 col-md-5' if doughnut_legend_display else 'col-12 col-md-4' %}
   <div class="row mb-5 justify-content-around">
     <div class="{{ col_class }}">
       <h2 class="h4">{{ _('Files by MIME type') }}</h2>
