@@ -138,10 +138,10 @@
                   <i class="fas {{ form.seedbox_chmod.render_kw['icon'] }}"></i>
                 </span>
                 <input type="text" class="form-control"
-                       id="{{ form.seedbox_chmod.id }}" name="{{ form.seedbox_timeout.name }}"
+                       id="{{ form.seedbox_chmod.id }}" name="{{ form.seedbox_chmod.name }}"
                        placeholder="{{ form.seedbox_chmod.render_kw['placeholder'] }}"
                        @click="touched = true"
-                       x-model="{{ form.seedbox_timeout.id }}"
+                       x-model="{{ form.seedbox_chmod.id }}"
                        x-bind:class="isValid() ? 'is-valid' : 'is-invalid'"/>
               </div>
             </div>
