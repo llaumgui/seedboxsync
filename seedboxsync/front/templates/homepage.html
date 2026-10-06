@@ -49,15 +49,22 @@
     <div class="card h-100 bg-body-secondary">
       <div class="card-body">
         <div class="text-body-primary fw-semibold mb-2 fs-5">{{ _('Services') }}</div>
-        {% if seedboxsync_config.get('sync_blackhole_enabled') %}
+        {% set sync_blackhole_enabled = seedboxsync_config.get('sync_blackhole_enabled') %}
+        {% set sync_seedbox_enabled = seedboxsync_config.get('sync_seedbox_enabled') %}
+        {% set services_enabled = sync_blackhole_enabled or sync_seedbox_enabled %}
+        {% if sync_blackhole_enabled %}
           <div class="mb-2">{{ macro.task_box(_('Blackhole'), 'bolt', 'sync-blackhole', 'blackhole', 5) }}</div>
         {% endif %}
-        {{ macro.task_box(_('Seedbox'), 'server', 'sync-seedbox', 'seedbox', 30) }}
+        {% if sync_seedbox_enabled%}
+          {{ macro.task_box(_('Seedbox'), 'server', 'sync-seedbox', 'seedbox', 30) }}
+        {% endif %}
+        {% if not services_enabled %}
+          {{ _('No service is enabled.')}}
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
-
 
 <div class="mt-4 card bg-body-tertiary shadow"
      x-data="TableComponent('{{ url_for('api.downloads_downloads_list') }}?limit=5&finished=false', {{ webui_dashboard_refresh }})">
