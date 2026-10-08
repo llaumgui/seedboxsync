@@ -45,7 +45,7 @@
     'download', 'text-secondary',
     'data?.year'
   )}}
-  <div class="col-6 col-xl-4">
+  <div class="col-12 col-sm-12 col-md-8  col-xl-6 col-xxl-4">
     <div class="card h-100 bg-body-secondary">
       <div class="card-body">
         <div class="text-body-primary fw-semibold mb-2 fs-5">{{ _('Services') }}</div>
@@ -92,8 +92,8 @@
       <thead>
         <tr>
           <th>{{ _('Name') }}</th>
-          <th class="d-sm-none d-md-table-cell">{{ _('Started') }}</th>
-          <th>{{ _('Progress') }}</th>
+          <th class="d-none d-md-table-cell">{{ _('Started') }}</th>
+          <th class="d-none d-md-table-cell">{{ _('Progress') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -103,19 +103,19 @@
               <span class="filename cursor-pointer"
                     data-bs-toggle="tooltip" :data-bs-title="row.path"
                     x-init="new Tooltip($el)" x-text="row.path"></span>
+              <span class="d-md-none" x-text="' - ' + row.progress + '%'"></span>
             </td>
             <td class="d-none d-md-table-cell">
               <span class="cursor-pointer"
                     data-bs-toggle="tooltip" :data-bs-title="row.started ? $localeDateString(row.started) : ''"
                     x-init="new Tooltip($el)" x-text="row.started ? $relativeTime(row.started) : ''"></span>
             </td>
-            <td>
+            <td class="d-none d-md-table-cell">
               <div class="d-none d-md-block progress" role="progressbar" style="height: 25px;"
                    :aria-label="row.progress + '%'" aria-valuenow="row.progress" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary fs-6 fw-bold overflow-visible"
                      :style="{width: row.progress + '%'}" x-text="row.progress + '%'"></div>
               </div>
-              <span class="d-none d-sm-block d-md-none" x-text="row.progress + '%'"></span>
             </td>
           </tr>
         </template>
