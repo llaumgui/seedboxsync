@@ -3,6 +3,20 @@
 ## 4.3.0 - Xxx yy, 20zz
 
 * ✨ [[#138]](https://github.com/llaumgui/seedboxsync/issues/138) API & documentation for an Homepage widget.
+* 🚀 [[#233]](https://github.com/llaumgui/seedboxsync/issues/233) UI Improvements:
+  * [[#234]](https://github.com/llaumgui/seedboxsync/issues/234) Dashboard
+    * UI Improvements.
+    * Add quick statistics for 24 hours, 1 week, and 1 month periods.
+    * Display relative dates (e.g., 2 hours ago) with full absolute timestamps in tooltips on hover.
+    * Simplify overall layout to reduce visual noise (remove redundant helper texts).
+    * [[#230]](https://github.com/llaumgui/seedboxsync/issues/230) Setup number of element on main page
+  * [[#235]](https://github.com/llaumgui/seedboxsync/issues/235) Downloads & Uploads
+    * UI Improvements.
+    * Add the source field on the upload interface.
+
+  * [[#242]](https://github.com/llaumgui/seedboxsync/issues/242) Stats
+    * UI Improvements
+    * [[#236]](https://github.com/llaumgui/seedboxsync/issues/236) Add trend in /stats
 
 ## 4.2.1 - Sep 28, 2026
 
