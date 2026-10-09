@@ -4,7 +4,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import Chart from "chart.js/auto";
+import { BaseChart, SeriesChart } from "./base.js";
 
 /**
  * Create a bar chart.
@@ -17,56 +17,27 @@ import Chart from "chart.js/auto";
  * @returns {Chart}
  */
 export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
-  const existingChart = Chart.getChart(ctx);
-
-  if (existingChart) {
-    existingChart.destroy();
-  }
-
-  const labels = data.map((d) => d[labelField]);
-  const dataFiles = data.map((d) => d.files);
-  const dataSize = data.map((d) => Number.parseFloat(d.total_size));
-
-  return new Chart(ctx, {
+  return SeriesChart.create({
+    ctx,
     type: "bar",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: labelFiles,
-          data: dataFiles,
-          backgroundColor: "#b48ead",
-          borderWidth: 1,
-          borderColor: "#a27f9b",
-        },
-        {
-          label: labelSize,
-          data: dataSize,
-          backgroundColor: "#a3be8c",
-          borderWidth: 1,
-          borderColor: "#92ab7e",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'bottom',
-        },
+    data,
+    labelField,
+    datasets: [
+      {
+        label: labelFiles,
+        value: (d) => d.files,
+        backgroundColor: "#b48ead",
+        borderWidth: 1,
+        borderColor: "#a27f9b",
       },
-      interaction: {
-        mode: "index",
-        intersect: false,
+      {
+        label: labelSize,
+        value: (d) => Number.parseFloat(d.total_size),
+        backgroundColor: "#a3be8c",
+        borderWidth: 1,
+        borderColor: "#92ab7e",
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
+    ],
   });
 }
 
@@ -89,15 +60,7 @@ export async function loadChart(
   labelField,
   signal,
 ) {
-  const response = await fetch(url, { signal });
+  const data = await BaseChart.loadData(url, signal);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to load chart data: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const json = await response.json();
-
-  return createBarChart(ctx, json.data, labelFiles, labelSize, labelField);
+  return createBarChart(ctx, data, labelFiles, labelSize, labelField);
 }

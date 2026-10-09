@@ -5,6 +5,7 @@
  * file that was distributed with this source code.
  */
 import Chart from "chart.js/auto";
+import { BaseChart } from "./base.js";
 import { FormatAxisValue } from "../utils/format.js";
 
 /**
@@ -17,14 +18,11 @@ import { FormatAxisValue } from "../utils/format.js";
  * @returns {Chart}
  */
 export function createBarYChart(ctx, data, field_name, field_total, label = "count") {
-  const existingChart = Chart.getChart(ctx);
   const seedboxSyncConfig = globalThis.SeedboxSyncConfig ?? {
     stats_bar_y_limit: Number.POSITIVE_INFINITY,
   };
 
-  if (existingChart) {
-    existingChart.destroy();
-  }
+  BaseChart.destroy(ctx);
 
   const topn = [...data]
     .sort((a, b) => b[field_total] - a[field_total])
@@ -106,7 +104,7 @@ export function createBarYChart(ctx, data, field_name, field_total, label = "cou
         tooltip: {
           callbacks: {
             label(context) {
-              const item = data[context.dataIndex];
+              const item = topn[context.dataIndex];
               const humanizedKey = `human_${field_total}`;
 
               if (item[humanizedKey] !== undefined) {
@@ -136,17 +134,9 @@ export function createBarYChart(ctx, data, field_name, field_total, label = "cou
  * @returns {Promise<Chart[]>}
  */
 export async function load2Chart({ charts, url, signal }) {
-  const response = await fetch(url, { signal });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to load chart data: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const json = await response.json();
+  const data = await BaseChart.loadData(url, signal);
 
   return charts.map(({ ctx, fieldName, fieldTotal, label }) =>
-    createBarYChart(ctx, json.data, fieldName, fieldTotal, label),
+    createBarYChart(ctx, data, fieldName, fieldTotal, label),
   );
 }
