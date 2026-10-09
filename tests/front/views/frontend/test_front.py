@@ -16,10 +16,24 @@ class FormAccessibilityParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
-        if tag == "label" and attributes.get("for"):
-            self.label_targets.add(attributes["for"])
-        if tag in ("input", "select") and attributes.get("type") != "hidden":
-            self.control_ids.append(attributes.get("id"))
+
+        if tag == "label":
+            self._label_stack.append(attributes.get("for"))
+            if attributes.get("for"):
+                self.label_targets.add(attributes["for"])
+            return
+
+        if tag in ("input", "select", "textarea") and attributes.get("type") != "hidden":
+            if attributes.get("id") is None:
+                if self._label_stack:
+                    return
+                self.control_ids.append(None)
+                return
+            self.control_ids.append(attributes["id"])
+
+    def handle_endtag(self, tag):
+        if tag == "label" and self._label_stack:
+            self._label_stack.pop()
 
 
 def test_404(client):

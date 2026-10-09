@@ -10,7 +10,7 @@ from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Download
-from seedboxsync.front.apis import DateTimeOrZero, Resource
+from seedboxsync.front.apis import DateTimeOrZero, Resource, parser_period
 from seedboxsync.front.login_manager import login_required
 
 api = Namespace("downloads", description="Operations related to download management")
@@ -106,19 +106,8 @@ parser.add_argument(
     location="args",
     help="Filter only completed downloads (true) or in-progress downloads (false)",
 )
-parser.add_argument(
-    "start_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
-parser.add_argument(
-    "end_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
+parser.args.extend(parser_period.args)
 
 
 # ==========================

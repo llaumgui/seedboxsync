@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from peewee import AutoField, BooleanField, DateTimeField, IntegerField, TextField, fn
 import tldextract
 from seedboxsync.core import utils
-from seedboxsync.core.database.models import SeedboxSyncModel
+from seedboxsync.core.database.models import SeedboxSyncWithStatsModel as SeedboxSyncModel
 
 
 class Torrent(SeedboxSyncModel):
@@ -157,3 +157,26 @@ class Torrent(SeedboxSyncModel):
         data = query.dicts()
 
         return list(cast(Iterable[dict[str, Any]], data))
+
+    @classmethod
+    def _get_period_stats(cls, start: datetime.datetime, end: datetime.datetime | None = None) -> dict[str, Any]:
+        """
+        Calculate statistics for a given period.
+
+        Args:
+            start: Start of the period, inclusive.
+            end: End of the period, exclusive.
+
+        Returns:
+            Dictionary containing total count, total size, and human-readable size.
+        """
+        query = cls.select(
+            fn.COUNT(cls.id).alias("total"),
+            fn.SUM(cls.total_size).alias("size"),
+            fn.humanize(fn.SUM(cls.total_size)).alias("human_size"),
+        ).where(cls.sent >= start)
+
+        if end is not None:
+            query = query.where(cls.sent < end)
+
+        return cast(dict[str, object], query.dicts().get())

@@ -20,6 +20,7 @@ from seedboxsync.front.apis.downloads_stats import api as nsDownloadsStats
 from seedboxsync.front.apis.tasks import api as nsTasks
 from seedboxsync.front.apis.taskstatus import api as nsTaskStatus
 from seedboxsync.front.apis.uploads import api as nsUploads
+from seedboxsync.front.apis.uploads_stats import api as nsUploadsStats
 from seedboxsync.front.apis.users import api as nsUsers
 
 bp = Blueprint("api", __name__, url_prefix=f"/api/{api_path_version}")
@@ -35,6 +36,7 @@ api = Api(
 api.add_namespace(nsDownloads)
 api.add_namespace(nsDownloadsStats)
 api.add_namespace(nsUploads)
+api.add_namespace(nsUploadsStats)
 api.add_namespace(nsTasks)
 api.add_namespace(nsTaskStatus)
 api.add_namespace(nsUsers)

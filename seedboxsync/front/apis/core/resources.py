@@ -159,9 +159,9 @@ class DateTimeOrZero(fields.DateTime):  # type: ignore[misc]
         return super().format(value)
 
 
-#
+# ==========================
 # Global parsers
-#
+# ==========================
 parser_period = reqparse.RequestParser()
 parser_period.add_argument(
     "start_date",

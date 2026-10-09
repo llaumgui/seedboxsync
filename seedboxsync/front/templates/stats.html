@@ -5,6 +5,9 @@
 {% block header %}
 <div class="mb-3">
   <h1 class="mb-0">{% block title %}{{ _('Statistics') }}{% endblock %}</h1>
+  <p class="text-body-secondary mb-0">
+    {{ _('All statistics transfert statistics in one place.') }}
+  </p>
 </div>
 {% endblock %}
 
@@ -13,7 +16,7 @@
 month: {{- url_for('api.downloads_stats_downloads_stats_by_month') | tojson -}},
 year: {{- url_for('api.downloads_stats_downloads_stats_by_year') | tojson -}},
 mimeType: {{- url_for('api.downloads_stats_downloads_stats_by_mime_type') | tojson -}},
-source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
+source: {{- url_for('api.uploads_stats_uploads_stats_by_source') | tojson -}}
 }};</script>
 
 
@@ -36,10 +39,10 @@ source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
   )}}
   {{macro.card_stats(
     _('Downloads'), _('This year'),
-    'download', 'text-secondary',
+    'download', 'text-primary',
     'data?.year'
   )}}
-  <div class="col-6 col-xl-2">
+  <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
     <div class="card h-100 bg-body-secondary">
       <div class="card-body">
         <div class="d-flex align-items-center gap-3">
@@ -53,7 +56,7 @@ source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
       </div>
     </div>
   </div>
-  <div class="col-6 col-xl-2">
+  <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
     <div class="card h-100 bg-body-secondary">
       <div class="card-body">
         <div class="d-flex align-items-center gap-3">
@@ -68,6 +71,30 @@ source: {{- url_for('api.uploads_uploads_stats_by_source') | tojson -}}
     </div>
   </div>
 </div>
+<div x-data="CardsStats('{{ url_for('api.uploads_stats_uploads_stats') }}', {{ webui_dashboard_refresh }})"
+     class="row g-3 mt-1">
+  {{macro.card_stats(
+    _('Torrents'), _('Last %(hours)s hours', hours=24),
+    'download', 'text-info',
+    'data?.last24h', 'total', 'trend_total'
+  )}}
+  {{macro.card_stats(
+    _('Torrents'), _('Last %(days)s days', days=7),
+    'download', 'text-info',
+    'data?.last7d', 'total', 'trend_total'
+  )}}
+  {{macro.card_stats(
+    _('Torrents'), _('Last %(days)s days', days=30),
+    'download', 'text-info',
+    'data?.last30d', 'total', 'trend_total'
+  )}}
+  {{macro.card_stats(
+    _('Torrents'), _('This year'),
+    'download', 'text-info',
+    'data?.year', 'total', 'trend_total'
+  )}}
+</div>
+
 
 <div class="mt-4" x-data="StatsPeriod" x-init="init()">
   <div class="mb-5 d-flex justify-content-end">

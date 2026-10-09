@@ -66,7 +66,7 @@
 </div>
 {% endmacro %}
 
-{% macro card_stats(title, subtitle, icon, icon_color, field_data) %}
+{% macro card_stats(title, subtitle, icon, icon_color, field_period, field_data="human_size", field_trend="trend_size") %}
 <div class="col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
   <div class="card h-100 bg-body-secondary">
     <div class="card-body">
@@ -79,15 +79,15 @@
       </div>
 
       <div class="fs-2 fw-semibold mt-3" x-show="loading"><div class="spinner-border spinner-border-sm"></div></div>
-      <div class="fs-2 fw-semibold mt-3" x-show="!loading && !error" x-text="{{field_data}}?.human_size"></div>
+      <div class="fs-2 fw-semibold mt-3" x-show="!loading && !error" x-text="{{field_period}}?.{{field_data}}"></div>
       <div class="small text-danger" x-show="error" x-text="error"></div>
 
       <div class="small" x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
       <div class="small"
-           :class="{'text-success': {{field_data}}?.trend_size?.startsWith('+'), 'text-danger': {{field_data}}?.trend_size?.startsWith('-')}"
+           :class="{'text-success': {{field_period}}?.{{field_trend}}?.startsWith('+'), 'text-danger': {{field_period}}?.{{field_trend}}?.startsWith('-')}"
            x-show="!loading && !error">
-        <i class="fa-solid" :class="{'fa-arrow-up': {{field_data}}?.trend_size?.startsWith('+'), 'fa-arrow-down': {{field_data}}?.trend_size?.startsWith('-')}"></i>
-        <span x-text="{{field_data}}?.trend_size"></span>
+        <i class="fa-solid" :class="{'fa-arrow-up': {{field_period}}?.{{field_trend}}?.startsWith('+'), 'fa-arrow-down': {{field_period}}?.{{field_trend}}?.startsWith('-')}"></i>
+        <span x-text="{{field_period}}?.{{field_trend}}"></span>
       </div>
       <div class="small text-danger" x-show="error" x-text="error"></div>
     </div>

@@ -6,13 +6,11 @@
 #
 """SeedboxSync api uploads view."""
 
-from datetime import date
 from typing import Any
-from flask_restx import Namespace, fields, inputs, reqparse
+from flask_restx import Namespace, fields, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource, parser_period
-from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_required
 
 api = Namespace("uploads", description="Operations related to uploaded torrents management")
@@ -72,33 +70,6 @@ upload_list_envelope = Resource.build_envelope_model(api, "UploadList", nested_m
 upload_envelope = Resource.build_envelope_model(api, "Upload", nested_model=upload_model, as_list=False)
 upload_message_envelope = Resource.build_envelope_model(api, "UploadMessage", as_message=True)
 
-stats_source_model = api.model(
-    "StatsSource",
-    {
-        "source": fields.String(
-            required=True,
-            description="Source of the torrent, falback based on announcer",
-            example="torrenter",
-        ),
-        "total": fields.Integer(
-            required=True,
-            description="Number or size of files for this source",
-            example=4989,
-        ),
-        "total_size": fields.Integer(
-            required=True,
-            description="Size of files for this source",
-            example=21678643250867,
-        ),
-        "human_total_size": fields.String(
-            required=True,
-            description="Total size of files with related source",
-            example="19.7 Tio",
-        ),
-    },
-)
-stats_source_envelope = Resource.build_envelope_model(api, "StatsSourceList", nested_model=stats_source_model)
-
 
 # ==========================
 # Request parser
@@ -118,19 +89,8 @@ parser.add_argument(
     location="args",
     help="Maximum number of items to return (min=5, max=1000)",
 )
-parser.add_argument(
-    "start_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="Start date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
-parser.add_argument(
-    "end_date",
-    type=inputs.date_from_iso8601,
-    location="args",
-    help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
-)
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
+parser.args.extend(parser_period.args)
 
 
 # ==========================
@@ -264,50 +224,3 @@ class Uploads(Resource):
             api.abort(404, f"Upload {id} doesn't exist")
 
         return self.build_envelope(None, type="Upload", message=f"Upload {id} deleted.")
-
-
-@api.route("/stats/source")
-class UploadsStatsBySource(Resource):
-    """Resource endpoint to retrieve torrent source statistics."""
-
-    @api.doc("stats_uploads_by_source")  # type: ignore[untyped-decorator]
-    @api.marshal_with(stats_source_envelope, code=200, description="Upload statistics aggregated by source")  # type: ignore[untyped-decorator]
-    @api.expect(parser_period)  # type: ignore[untyped-decorator]
-    @login_required  # type: ignore[untyped-decorator]
-    def get(self) -> dict[str, Any]:
-        """
-        Retrieve torrent statistics grouped by source.
-
-        Fetches aggregated file counts and total sizes per source from the cache
-        or database, then wraps the dataset into a standard API response envelope.
-
-        Returns:
-            dict[str, Any]: Envelope containing source statistics, metadata,
-                and total element count.
-        """
-        args = parser_period.parse_args()
-        start_date = args.get("start_date")
-        end_date = args.get("end_date")
-
-        stats = _get_stats_by_source(start_date, end_date)
-
-        return self.build_envelope(stats, data_total=len(stats), type="StatsSourceList")
-
-
-@cache.memoize(timeout=300)
-def _get_stats_by_source(start_date: date | None, end_date: date | None) -> list[dict[str, object]]:
-    """
-    Fetch torrent statistics grouped by source within an optional date range.
-
-    Executes the database query to aggregate torrent statistics by source domain
-    filtered by date boundaries if provided, then caches the result using Flask-Caching memoization[cite: 2].
-
-    Args:
-        start_date (date | None, optional): Optional lower date boundary for filtering. Defaults to None.
-        end_date (date | None, optional): Optional upper date boundary for filtering. Defaults to None.
-
-    Returns:
-        list[dict[str, object]]: A list of dictionaries containing source statistics,
-            including total counts and associated sizes[cite: 2].
-    """
-    return Torrent.get_stats_by_source(start_date, end_date)

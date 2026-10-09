@@ -9,7 +9,7 @@
 from collections.abc import Iterable
 from typing import Any, cast
 
-from seedboxsync.core.database.models.model import SeedboxSyncModel  # isort: skip
+from seedboxsync.core.database.models.model import SeedboxSyncModel, SeedboxSyncWithStatsModel  # isort: skip
 from seedboxsync.core.database.models.download import Download
 from seedboxsync.core.database.models.seedboxsync import SeedboxSync
 from seedboxsync.core.database.models.taskstatus import TaskStatus
@@ -18,7 +18,7 @@ from seedboxsync.core.database.models.user import User
 
 from seedboxsync.core.database.models.apikey import ApiKey  # isort: skip
 
-__all__ = ["ApiKey", "Download", "SeedboxSync", "SeedboxSyncModel", "TaskStatus", "Torrent", "User"]
+__all__ = ["ApiKey", "Download", "SeedboxSync", "SeedboxSyncModel", "SeedboxSyncWithStatsModel", "TaskStatus", "Torrent", "User"]
 
 
 def typed_peewee_dicts(query: Any) -> Iterable[dict[str, Any]]:
