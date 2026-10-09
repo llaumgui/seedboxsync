@@ -97,6 +97,20 @@
 
 
 {# -----------------------------------------------------------------------------
+ # Used in stats page
+ #--------------------------------------------------------------------------- #}
+{% macro stats_chart(title, canvas_id, class="col-12 col-md-6") %}
+<div class="{{ class }}">
+  <div class="card bg-body-tertiary shadow">
+    <div class="card-body">
+      <h2 class="h4 card-title">{{ title }}</h2>
+      <canvas id="{{ canvas_id }}"></canvas>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{# -----------------------------------------------------------------------------
  # Used in several page
  #--------------------------------------------------------------------------- #}
 {% macro mime_icon() %}

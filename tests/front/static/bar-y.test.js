@@ -16,18 +16,18 @@ vi.mock("chart.js/auto", () => ({
 }));
 
 import {
-  createDoughnutChart,
+  createBarYChart,
   load2Chart,
-} from "@seedboxsync/chart/doughnut.js";
+} from "@seedboxsync/chart/bar-y.js";
 
-describe("doughnut chart helpers", () => {
+describe("bar-y chart helpers", () => {
   beforeEach(() => {
     instances.length = 0;
     globalThis.fetch = vi.fn();
   });
 
-  it("creates a doughnut chart with MIME type labels and selected values", () => {
-    const chart = createDoughnutChart(
+  it("creates a bar-y chart with MIME type labels and selected values", () => {
+    const chart = createBarYChart(
       "canvas",
       [{ mime_type: "video/mp4", downloads: 4 }],
       "mime_type",
@@ -37,7 +37,7 @@ describe("doughnut chart helpers", () => {
 
     expect(chart.ctx).toBe("canvas");
     expect(chart.config).toMatchObject({
-      type: "doughnut",
+      type: "bar",
       data: {
         labels: ["video/mp4"],
         datasets: [{ label: "Downloads", data: [4] }],
@@ -49,7 +49,7 @@ describe("doughnut chart helpers", () => {
   });
 
   it("uses count as the default dataset label", () => {
-    const chart = createDoughnutChart(
+    const chart = createBarYChart(
       "canvas",
       [{ mime_type: "application/pdf", files: 2 }],
       "mime_type",
@@ -61,7 +61,7 @@ describe("doughnut chart helpers", () => {
   });
 
   it("formats humanized tooltip values and falls back to raw values", () => {
-    const chart = createDoughnutChart(
+    const chart = createBarYChart(
       "canvas",
       [
         { mime_type: "video/mp4", downloads: 4, human_downloads: "4 GiB" },
@@ -81,7 +81,7 @@ describe("doughnut chart helpers", () => {
     );
   });
 
-  it("loads data into two doughnut charts and propagates request errors", async () => {
+  it("loads data into two bar-y charts and propagates request errors", async () => {
     fetch.mockResolvedValue({
       ok: true,
       json: async () => ({

@@ -38,21 +38,9 @@ class SettingsSeedboxSyncForm(FlaskForm):  # type: ignore[misc]
         default="auto",
         render_kw={"icon": "fa-language"},
     )
-    webui_doughnut_legend = SelectField(
-        _("Doughnut chart legend position"),
-        choices=[
-            ("top", _("Top")),
-            ("left", _("left")),
-            ("bottom", _("Bottom")),
-            ("right", _("Right")),
-            ("hidden", _("Hidden")),
-        ],
-        default="hidden",
-        render_kw={"icon": "fa-up-down-left-right"},
-    )
-    webui_doughnut_legend_limit = IntegerField(
-        _("Maximum number of items in the legend (0 = no limit)"),
-        validators=[InputRequired(), NumberRange(min=0, max=999)],
+    webui_stats_bar_y_limit = IntegerField(
+        _("Maximum number of items in vertical bar (0 = no limit)"),
+        validators=[InputRequired(), NumberRange(min=0, max=99)],
         render_kw={"placeholder": "0", "icon": "fa-list-ol"},
     )
     webui_dashboard_refresh = IntegerField(

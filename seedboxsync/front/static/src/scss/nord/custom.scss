@@ -99,3 +99,8 @@ td.filename-cell {
     text-decoration: none;
   }
 }
+
+#statsByYear,
+#statsByMonth {
+  max-height: 250px;
+}

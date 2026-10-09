@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@seedboxsync/chart/bar", () => ({ loadChart: vi.fn() }));
-vi.mock("@seedboxsync/chart/doughnut", () => ({ load2Chart: vi.fn() }));
+vi.mock("@seedboxsync/chart/line", () => ({ loadChart: vi.fn() }));
+vi.mock("@seedboxsync/chart/bar-y", () => ({ load2Chart: vi.fn() }));
 
 import { StatsPeriod } from "@seedboxsync/alpine/stats.js";
 import { loadChart as loadBarChart } from "@seedboxsync/chart/bar";
-import { load2Chart as loadDoughnutChart } from "@seedboxsync/chart/doughnut";
+import { loadChart as loadLineChart } from "@seedboxsync/chart/line";
+import { load2Chart as loadBarYChart } from "@seedboxsync/chart/bar-y";
 
 describe("StatsPeriod", () => {
   beforeEach(() => {
@@ -77,12 +79,35 @@ describe("StatsPeriod", () => {
 
     component.loadCharts();
 
-    expect(loadBarChart).toHaveBeenNthCalledWith(1, "statsByMonth", "http://seedboxsync.test/api/month?start_date=2025-02-03&end_date=2025-02-09", "Files", "Size (GiB)", "month");
-    expect(loadBarChart).toHaveBeenNthCalledWith(2, "statsByYear", "/api/year", "Files", "Size (GiB)", "year");
-    expect(loadDoughnutChart).toHaveBeenCalledTimes(2);
-    expect(loadDoughnutChart.mock.calls[0][0].url).toBe("http://seedboxsync.test/api/mime?start_date=2025-02-03&end_date=2025-02-09");
-    expect(loadDoughnutChart.mock.calls[0][0].charts.map((chart) => chart.ctx)).toEqual(["filesByMimeType", "sizeByMimeType"]);
-    expect(loadDoughnutChart.mock.calls[1][0].url).toBe("http://seedboxsync.test/api/source?start_date=2025-02-03&end_date=2025-02-09");
-    expect(loadDoughnutChart.mock.calls[1][0].charts.map((chart) => chart.ctx)).toEqual(["torrentBySource", "sizeBySource"]);
+    expect(loadLineChart).toHaveBeenCalledTimes(1);
+    expect(loadLineChart.mock.calls[0][0]).toBe("statsByMonth");
+    expect(loadLineChart.mock.calls[0][1]).toContain("/api/month");
+    expect(loadLineChart.mock.calls[0][1]).toContain("start_date=2025-02-03");
+    expect(loadLineChart.mock.calls[0][1]).toContain("end_date=2025-02-09");
+    expect(loadLineChart.mock.calls[0][2]).toBe("Files");
+    expect(loadLineChart.mock.calls[0][3]).toBe("Size (GiB)");
+    expect(loadLineChart.mock.calls[0][4]).toBe("month");
+
+    expect(loadBarChart).toHaveBeenCalledTimes(1);
+    expect(loadBarChart.mock.calls[0][0]).toBe("statsByYear");
+    expect(loadBarChart.mock.calls[0][1]).toContain("/api/year");
+    expect(loadBarChart.mock.calls[0][2]).toBe("Files");
+    expect(loadBarChart.mock.calls[0][3]).toBe("Size (GiB)");
+    expect(loadBarChart.mock.calls[0][4]).toBe("year");
+
+    expect(loadBarYChart).toHaveBeenCalledTimes(2);
+    const doughnutConfigUrls = loadBarYChart.mock.calls.map(([config]) => config.url);
+    expect(doughnutConfigUrls).toEqual(expect.arrayContaining([
+      expect.stringContaining("/api/mime?"),
+      expect.stringContaining("/api/source?"),
+    ]));
+    expect(doughnutConfigUrls[0]).toContain("start_date=2025-02-03");
+    expect(doughnutConfigUrls[0]).toContain("end_date=2025-02-09");
+    expect(loadBarYChart.mock.calls.flatMap(([config]) => config.charts.map((chart) => chart.ctx))).toEqual(expect.arrayContaining([
+      "filesByMimeType",
+      "sizeByMimeType",
+      "torrentBySource",
+      "sizeBySource",
+    ]));
   });
 });

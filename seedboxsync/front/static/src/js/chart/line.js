@@ -16,7 +16,7 @@ import Chart from "chart.js/auto";
  * @param {string} labelField
  * @returns {Chart}
  */
-export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
+export function createLineChart(ctx, data, labelFiles, labelSize, labelField) {
   const existingChart = Chart.getChart(ctx);
 
   if (existingChart) {
@@ -28,7 +28,7 @@ export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
   const dataSize = data.map((d) => Number.parseFloat(d.total_size));
 
   return new Chart(ctx, {
-    type: "bar",
+    type: "line",
     data: {
       labels,
       datasets: [
@@ -36,15 +36,25 @@ export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
           label: labelFiles,
           data: dataFiles,
           backgroundColor: "#b48ead",
-          borderWidth: 1,
+          borderWidth: 2,
           borderColor: "#a27f9b",
+          tension: 0.3,
+          fill: false,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHitRadius: 10,
         },
         {
           label: labelSize,
           data: dataSize,
           backgroundColor: "#a3be8c",
-          borderWidth: 1,
+          borderWidth: 2,
           borderColor: "#92ab7e",
+          tension: 0.3,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHitRadius: 10,
         },
       ],
     },
@@ -54,7 +64,7 @@ export function createBarChart(ctx, data, labelFiles, labelSize, labelField) {
       plugins: {
         legend: {
           display: true,
-          position: 'bottom',
+          position: "bottom",
         },
       },
       interaction: {
@@ -99,5 +109,5 @@ export async function loadChart(
 
   const json = await response.json();
 
-  return createBarChart(ctx, json.data, labelFiles, labelSize, labelField);
+  return createLineChart(ctx, json.data, labelFiles, labelSize, labelField);
 }

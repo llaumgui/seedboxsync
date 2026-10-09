@@ -5,7 +5,6 @@
  * file that was distributed with this source code.
  */
 
-
 /**
  * Return the application locale from the HTML document.
  *

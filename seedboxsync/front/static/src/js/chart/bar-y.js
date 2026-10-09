@@ -4,11 +4,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 import Chart from "chart.js/auto";
+import { FormatAxisValue } from "../utils/format.js";
 
 /**
- * Create a doughnut chart.
+ * Create a vertical bar chart.
  *
  * @param {HTMLCanvasElement} ctx
  * @param {Array} data
@@ -16,23 +16,24 @@ import Chart from "chart.js/auto";
  * @param {string} label
  * @returns {Chart}
  */
-export function createDoughnutChart(ctx, data, field_name, field_total, label = "count") {
+export function createBarYChart(ctx, data, field_name, field_total, label = "count") {
   const existingChart = Chart.getChart(ctx);
-  const doughnutLegend = globalThis.DoughnutLegend ?? {
-    display: false,
-    position: "top",
-    limit: Number.POSITIVE_INFINITY,
+  const seedboxSyncConfig = globalThis.SeedboxSyncConfig ?? {
+    stats_bar_y_limit: Number.POSITIVE_INFINITY,
   };
 
   if (existingChart) {
     existingChart.destroy();
   }
 
-  const labels = data.map((d) => d[field_name]);
-  const total = data.map((d) => d[field_total]);
+  const topn = [...data]
+    .sort((a, b) => b[field_total] - a[field_total])
+    .slice(0, seedboxSyncConfig.stats_bar_y_limit);
+  const labels = topn.map((d) => d[field_name]);
+  const total = topn.map((d) => d[field_total]);
 
   return new Chart(ctx, {
-    type: "doughnut",
+    type: "bar",
     data: {
       labels,
       datasets: [
@@ -75,28 +76,32 @@ export function createDoughnutChart(ctx, data, field_name, field_total, label = 
             "rgb(95, 175, 195)", // aqua
             "rgb(165, 105, 195)", // orchid
           ],
-          hoverOffset: 4,
+          borderRadius: 4,
+          borderSkipped: false,
+          barThickness: 12,
         },
       ],
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: doughnutLegend.display,
-          position: doughnutLegend.position,
-          labels: {
-            filter(legendItem, data) {
-              const value = data.datasets[0].data[legendItem.index];
 
-              return (
-                value > 0 &&
-                data.datasets[0].data
-                  .slice(0, legendItem.index)
-                  .filter((value) => value > 0).length < doughnutLegend.limit
-              );
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: true,
+
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            callback(value) {
+              return FormatAxisValue(Number(value), field_total);
             },
           },
+        },
+      },
+
+      plugins: {
+        legend: {
+          display: false,
         },
         tooltip: {
           callbacks: {
@@ -118,7 +123,7 @@ export function createDoughnutChart(ctx, data, field_name, field_total, label = 
 }
 
 /**
- * Load doughnut chart data from a URL and create doughnut charts.
+ * Load vertical bar chart data from a URL and create vertical bar charts.
  *
  * @param {object} config
  * @param {Array<object>} config.charts
@@ -142,6 +147,6 @@ export async function load2Chart({ charts, url, signal }) {
   const json = await response.json();
 
   return charts.map(({ ctx, fieldName, fieldTotal, label }) =>
-    createDoughnutChart(ctx, json.data, fieldName, fieldTotal, label),
+    createBarYChart(ctx, json.data, fieldName, fieldTotal, label),
   );
 }

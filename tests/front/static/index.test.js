@@ -3,29 +3,32 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 describe("frontend entry points", () => {
   beforeEach(() => {
     vi.resetModules();
+    vi.clearAllMocks();
     globalThis.window = {};
     globalThis.document = {
       addEventListener: vi.fn(),
+      querySelector: vi.fn(() => null),
       querySelectorAll: vi.fn(() => []),
+      createElement: vi.fn(() => ({ getContext: vi.fn(() => ({})) })),
     };
-  });
-
-  it("registers chart helpers globally", async () => {
-    class MockChart {}
-    vi.doMock("chart.js/auto", () => ({ default: MockChart }));
-    await import("@seedboxsync/chart/index.js");
-
-    expect(window.Chart).toBe(MockChart);
-    expect(window.createBarChart).toBeTypeOf("function");
-    expect(window.loadBarChart).toBeTypeOf("function");
-    expect(window.createDoughnutChart).toBeTypeOf("function");
-    expect(window.load2DoughnutChart).toBeTypeOf("function");
+    globalThis.window = {
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      document: globalThis.document,
+    };
   });
 
   it("registers Alpine components and validators globally", async () => {
     const start = vi.fn();
     const magic = vi.fn();
-    vi.doMock("alpinejs", () => ({ default: { data: vi.fn(), magic, start } }));
+    const data = vi.fn();
+    vi.doMock("alpinejs", () => ({
+      __esModule: true,
+      default: { data, magic, start },
+      data,
+      magic,
+      start,
+    }));
     vi.doMock("bootstrap", () => ({
       Modal: { getOrCreateInstance: vi.fn() },
       Toast: { getOrCreateInstance: vi.fn() },

@@ -1,6 +1,6 @@
 <script>
 window.Translations={in_progress:{{- _('In progress') | tojson -}},completed:{{- _('Completed') | tojson -}},never_launched:{{- _('Never launched') | tojson -}},error_loading_lock_status:{{- _('Error loading task status') | tojson -}},task_scheduled:{{- _('Task scheduled') | tojson -}},task_not_scheduled:{{- _('Error in task scheduling') | tojson -}},files:{{- _('Files') | tojson -}},size:{{- _('Size') | tojson -}},sizeGib:{{- _('Size (GiB)') | tojson -}}};
-window.DoughnutLegend={position:{{- doughnut_legend_position | tojson -}},display:{{- doughnut_legend_display | tojson -}},limit:{{- doughnut_legend_limit | tojson -}}};
+window.SeedboxSyncConfig={stats_bar_y_limit:{{- stats_bar_y_limit | tojson -}}};
 </script>
 <script type="module" src="{{ url_for('static', filename='dist/main.js') }}" defer></script>
 {% block extended_javascript %}{% endblock %}

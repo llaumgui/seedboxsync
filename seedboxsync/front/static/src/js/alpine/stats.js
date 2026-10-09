@@ -4,9 +4,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 import { loadChart as loadBarChart } from "../chart/bar";
-import { load2Chart as load2DoughnutChart } from "../chart/doughnut";
+import { loadChart as loadLineChart } from "../chart/line";
+import { load2Chart as load2BarYChart } from "../chart/bar-y";
 
 /**
  * Create the statistics period Alpine.js component.
@@ -95,7 +95,7 @@ export function StatsPeriod() {
     loadCharts() {
       const config = window.StatsConfig;
 
-      loadBarChart(
+      loadLineChart(
         document.getElementById("statsByMonth"),
         this.buildUrl(config.urls.month),
         Translations.files,
@@ -111,7 +111,7 @@ export function StatsPeriod() {
         "year",
       );
 
-      load2DoughnutChart({
+      load2BarYChart({
         charts: [
           {
             ctx: document.getElementById("filesByMimeType"),
@@ -129,25 +129,23 @@ export function StatsPeriod() {
         url: this.buildUrl(config.urls.mimeType),
       });
 
-      load2DoughnutChart(
-        {
-          charts: [
-            {
-              ctx: document.getElementById("torrentBySource"),
-              fieldName: "source",
-              fieldTotal: "total",
-              label: Translations.files,
-            },
-            {
-              ctx: document.getElementById("sizeBySource"),
-              fieldName: "source",
-              fieldTotal: "total_size",
-              label: Translations.size,
-            },
-          ],
-          url: this.buildUrl(config.urls.source),
-        },
-      );
+      load2BarYChart({
+        charts: [
+          {
+            ctx: document.getElementById("torrentBySource"),
+            fieldName: "source",
+            fieldTotal: "total",
+            label: Translations.files,
+          },
+          {
+            ctx: document.getElementById("sizeBySource"),
+            fieldName: "source",
+            fieldTotal: "total_size",
+            label: Translations.size,
+          },
+        ],
+        url: this.buildUrl(config.urls.source),
+      });
     },
   };
 }

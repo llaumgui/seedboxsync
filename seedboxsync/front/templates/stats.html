@@ -103,37 +103,20 @@ source: {{- url_for('api.uploads_stats_uploads_stats_by_source') | tojson -}}
     </div>
   </div>
 
-  {% set col_class = 'col-12 col-md-5' if doughnut_legend_display else 'col-12 col-md-4' %}
-  <div class="row mb-5 justify-content-around">
-    <div class="{{ col_class }}">
-      <h2 class="h4">{{ _('Files by MIME type') }}</h2>
-      <canvas id="filesByMimeType"></canvas>
-    </div>
-    <div class="{{ col_class }}">
-      <h2 class="h4">{{ _('Size by MIME type') }}</h2>
-      <canvas id="sizeByMimeType"></canvas>
-    </div>
+  <div class="row mb-4 justify-content-around">
+    {{ macro.stats_chart(_('Top %(number)s files by MIME type', number=stats_bar_y_limit), 'filesByMimeType') }}
+    {{ macro.stats_chart(_('Top %(number)s size by MIME type', number=stats_bar_y_limit), 'sizeByMimeType') }}
   </div>
-  <div class="row mb-5 justify-content-around">
-    <div class="{{ col_class }}">
-      <h2 class="h4">{{ _('Torrents by source') }}</h2>
-      <canvas id="torrentBySource"></canvas>
-    </div>
-    <div class="{{ col_class }}">
-      <h2 class="h4">{{ _('Size by source') }}</h2>
-      <canvas id="sizeBySource"></canvas>
-    </div>
+  <div class="row mb-4 justify-content-around">
+    {{ macro.stats_chart(_('Top %(number)s torrents by source', number=stats_bar_y_limit), 'torrentBySource') }}
+    {{ macro.stats_chart(_('Top %(number)s size by source', number=stats_bar_y_limit), 'sizeBySource') }}
   </div>
 
-  <div class="row mb-5">
-    <div class="col-12 col-md-6">
-      <h2 class="h4">{{ _('Downloads by year') }}</h2>
-      <canvas id="statsByYear"></canvas>
-    </div>
-    <div class="col-12 col-md-6">
-      <h2 class="h4">{{ _('Downloads by month') }}</h2>
-      <canvas id="statsByMonth"></canvas>
-    </div>
+  <div class="row mb-4">
+    {{ macro.stats_chart(_('Downloads by year'), 'statsByYear', class='col-12') }}
+  </div>
+  <div class="row mb-4">
+    {{ macro.stats_chart(_('Downloads by month'), 'statsByMonth', class='col-12') }}
   </div>
 </div>
 {% endblock %}
