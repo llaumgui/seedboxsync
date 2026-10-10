@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.3.0 - Xxx yy, 20zz
+## 4.3.0 - Oct 10, 2026
 
 * ✨ [[#138]](https://github.com/llaumgui/seedboxsync/issues/138) API & documentation for an Homepage widget.
 * 🚀 [[#233]](https://github.com/llaumgui/seedboxsync/issues/233) UI Improvements:
