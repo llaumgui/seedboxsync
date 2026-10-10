@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 4.4.0 - Xxx yy, 20zz
+
+* 🗑️ [[#214]](https://github.com/llaumgui/seedboxsync/issues/214) Remove legacy migration system.
+
 ## 4.3.0 - Oct 10, 2026
 
 * ✨ [[#138]](https://github.com/llaumgui/seedboxsync/issues/138) API & documentation for an Homepage widget.
