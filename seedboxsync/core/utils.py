@@ -48,7 +48,7 @@ def ensure_dir_exists(path: str | PathLike[str]) -> None:
     if path.exists() and not path.is_dir():
         raise AssertionError(f"Path `{path}` exists but is not a directory!")
     if not path.exists():
-        path.mkdir()
+        path.mkdir(parents=True, exist_ok=True)
 
 
 def get_torrent_infos(torrent_path: str | PathLike[str]) -> Any | None:

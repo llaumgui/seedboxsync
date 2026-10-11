@@ -10,6 +10,14 @@ def test_ensure_dir_exists_creates_missing_directory(tmp_path):
     assert directory.is_dir()
 
 
+def test_ensure_dir_exists_creates_missing_parent_directories(tmp_path):
+    directory = tmp_path / "series" / "season" / "episode"
+
+    utils.ensure_dir_exists(directory)
+
+    assert directory.is_dir()
+
+
 def test_ensure_dir_exists_rejects_existing_file(tmp_path):
     filepath = tmp_path / "file"
     filepath.write_text("content")
