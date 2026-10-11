@@ -106,7 +106,8 @@ class Config:
 
             app.logger.debug(f"Loading config from database: {config_key} = {display_value}")
             if config_key not in Config.DEFAULT_CONFIG:
-                app.logger.warning("Ignoring unknown configuration key: %s", conf["key"])
+                app.logger.warning("Cleaning unknown configuration key: %s", conf["key"])
+                SeedboxSync.delete().where(SeedboxSync.key == conf["key"]).execute()
                 continue
             config[config_key] = value
 
