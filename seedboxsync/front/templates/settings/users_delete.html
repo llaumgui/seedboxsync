@@ -40,6 +40,11 @@
                 <strong>{{ _('Email:') }}</strong> {{ user.email }}
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <strong>{{ _('Is admin:') }}</strong> {{ _('Yes') if user.is_admin else _('No') }}
+              </div>
+            </div>
           </div>
         </div>
 

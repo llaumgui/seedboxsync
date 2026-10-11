@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-10-09 13:50+0200\n"
+"POT-Creation-Date: 2026-10-11 12:22+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -32,7 +32,7 @@ msgstr "Nom d’utilisateur ou e-mail"
 
 #: seedboxsync/front/forms/login.py:23
 #: seedboxsync/front/forms/settings/seedbox.py:30
-#: seedboxsync/front/forms/user.py:35 seedboxsync/front/forms/user.py:46
+#: seedboxsync/front/forms/user.py:36 seedboxsync/front/forms/user.py:47
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -49,6 +49,11 @@ msgstr "Nom d’utilisateur"
 #: seedboxsync/front/templates/settings/users.html:32
 msgid "Email"
 msgstr "E-mail"
+
+#: seedboxsync/front/forms/user.py:25
+#: seedboxsync/front/templates/settings/users.html:34
+msgid "Is admin?"
+msgstr "Est admin ?"
 
 #: seedboxsync/front/forms/settings/apikey.py:22
 msgid "API key Name"
@@ -278,7 +283,7 @@ msgstr "Langue de l’interface web"
 
 #: seedboxsync/front/forms/settings/seedboxsync.py:42
 msgid "Maximum number of items in vertical bar (0 = no limit)"
-msgstr "Nombre maximal d'éléments dans la barre verticale (0 = aucune limite)"
+msgstr "Nombre maximal d’éléments dans la barre verticale (0 = aucune limite)"
 
 #: seedboxsync/front/forms/settings/seedboxsync.py:47
 msgid "Dashboard refresh interval (in seconds)"
@@ -286,7 +291,7 @@ msgstr "Intervalle de rafraîchissement du tableau de bord (en secondes)"
 
 #: seedboxsync/front/forms/settings/seedboxsync.py:52
 msgid "Max dashboard items"
-msgstr "Limite d'éléments du tableau de bord"
+msgstr "Limite d’éléments du tableau de bord"
 
 #: seedboxsync/front/forms/settings/seedboxsync.py:56
 msgid "Enable CSRF protection for all forms?"
@@ -352,8 +357,8 @@ msgstr "Taille"
 #: seedboxsync/front/templates/settings/apikeys.html:52
 #: seedboxsync/front/templates/settings/apikeys_delete.html:8
 #: seedboxsync/front/templates/settings/apikeys_delete.html:44
-#: seedboxsync/front/templates/settings/users.html:53
-#: seedboxsync/front/templates/settings/users_delete.html:48
+#: seedboxsync/front/templates/settings/users.html:67
+#: seedboxsync/front/templates/settings/users_delete.html:53
 #: seedboxsync/front/templates/uploaded.html:56
 #: seedboxsync/front/templates/uploaded.html:57
 #: seedboxsync/front/views/settings/users.py:164
@@ -386,7 +391,7 @@ msgstr "Tableau de bord"
 
 #: seedboxsync/front/templates/homepage.html:10
 msgid "Seedbox activity overview"
-msgstr "Vue d'ensemble de l'activité de la seedbox"
+msgstr "Vue d’ensemble de l’activité de la seedbox"
 
 #: seedboxsync/front/templates/homepage.html:18
 msgid "Refresh"
@@ -834,7 +839,7 @@ msgid "Logout"
 msgstr "Déconnexion"
 
 #: seedboxsync/front/templates/settings/apikeys.html:39
-#: seedboxsync/front/templates/settings/users.html:34
+#: seedboxsync/front/templates/settings/users.html:35
 msgid "Created"
 msgstr "Date de création"
 
@@ -843,12 +848,12 @@ msgid "Last used"
 msgstr "Dernier usage"
 
 #: seedboxsync/front/templates/settings/apikeys.html:49
-#: seedboxsync/front/templates/settings/users.html:47
+#: seedboxsync/front/templates/settings/users.html:61
 msgid "Never"
 msgstr "Jamais"
 
 #: seedboxsync/front/templates/settings/apikeys.html:67
-#: seedboxsync/front/templates/settings/users.html:68
+#: seedboxsync/front/templates/settings/users.html:82
 msgid "Add"
 msgstr "Ajouter"
 
@@ -863,7 +868,7 @@ msgstr "Créer"
 #: seedboxsync/front/templates/settings/ping.html:77
 #: seedboxsync/front/templates/settings/seedbox.html:219
 #: seedboxsync/front/templates/settings/seedboxsync.html:119
-#: seedboxsync/front/templates/settings/users_edit.html:82
+#: seedboxsync/front/templates/settings/users_edit.html:92
 msgid "Save"
 msgstr "Sauver"
 
@@ -987,11 +992,19 @@ msgstr "Utilisateurs"
 msgid "Origin"
 msgstr "Origine"
 
-#: seedboxsync/front/templates/settings/users.html:35
+#: seedboxsync/front/templates/settings/users.html:36
 msgid "Last login"
 msgstr "Dernière connexion"
 
-#: seedboxsync/front/templates/settings/users.html:50
+#: seedboxsync/front/templates/settings/users.html:51
+msgid "This user has admin privileges."
+msgstr "Cet utilisateur a les privilèges d’admin"
+
+#: seedboxsync/front/templates/settings/users.html:56
+msgid "This user does not have admin privileges."
+msgstr "Cet utilisateur n’a pas les privilèges d’admin"
+
+#: seedboxsync/front/templates/settings/users.html:64
 #: seedboxsync/front/views/settings/users.py:127
 msgid "Edit"
 msgstr "Éditer"
@@ -1003,6 +1016,18 @@ msgstr "Nom d’utilisateur :"
 #: seedboxsync/front/templates/settings/users_delete.html:40
 msgid "Email:"
 msgstr "E-mail :"
+
+#: seedboxsync/front/templates/settings/users_delete.html:45
+msgid "Is admin:"
+msgstr "Est admin :"
+
+#: seedboxsync/front/templates/settings/users_delete.html:45
+msgid "Yes"
+msgstr "Oui"
+
+#: seedboxsync/front/templates/settings/users_delete.html:45
+msgid "No"
+msgstr "Non"
 
 #: seedboxsync/front/templates/settings/users_edit.html:67
 msgid "Confirm password"

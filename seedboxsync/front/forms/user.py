@@ -7,7 +7,7 @@
 """SeedboxSync WTForms form for user management."""
 
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, StringField
+from wtforms import BooleanField, EmailField, PasswordField, StringField
 from wtforms.validators import DataRequired, Length, Optional
 from seedboxsync.front.babel import gettext as _
 
@@ -22,6 +22,7 @@ class UserBaseForm(FlaskForm):  # type: ignore[misc]
 
     username = StringField(_("Username"), validators=[DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "admin", "icon": "fa-user"})
     email = EmailField(_("Email"), validators=[DataRequired(), Length(min=8, max=35)], render_kw={"placeholder": "admin", "icon": "fa-user"})
+    is_admin = BooleanField(_("Is admin?"), default=False, render_kw={"icon": "fa-user-shield"})
 
 
 class UserEditForm(UserBaseForm):

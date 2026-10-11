@@ -31,6 +31,7 @@
               <th>{{ _('Username') }}</th>
               <th class="d-none d-md-table-cell">{{ _('Email') }}</th>
               <th>{{ _('Origin') }}</th>
+              <th>{{ _('Is admin?') }}</th>
               <th class="d-none d-md-table-cell">{{ _('Created') }}</th>
               <th>{{ _('Last login') }}</th>
               <th class="narrow"></th>
@@ -43,6 +44,19 @@
                 <td>{{ user.username }}</td>
                 <td class="d-none d-md-table-cell">{{ user.email }}</td>
                 <td>{{ user.origin }}</td>
+                <td class="text-center">
+                  {% if user.is_admin %}
+                    <i class="fa-solid text-warning fa-circle-check"
+                       data-bs-toggle="tooltip"
+                       data-bs-title="{{ _('This user has admin privileges.') }}"
+                    ></i>
+                  {% else %}
+                    <i class="fa-solid text-success fa-circle-xmark"
+                       data-bs-toggle="tooltip"
+                       data-bs-title="{{ _('This user does not have admin privileges.') }}"
+                    ></i>
+                  {% endif %}
+                </td>
                 <td class="d-none d-md-table-cell">{{ format_datetime(user.created) }}</td>
                 <td>{{ format_datetime(user.last_login) if user.last_login is not none else _('Never') }}</td>
                 <td class="text-end">

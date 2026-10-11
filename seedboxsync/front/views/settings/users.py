@@ -35,7 +35,7 @@ def users() -> str | Response:
     Returns:
         str | Response: Rendered HTML template containing the users list.
     """
-    users = User.select(User.id, User.username, User.email, User.origin, User.created, User.last_login)
+    users = User.select(User.id, User.username, User.email, User.origin, User.is_admin, User.created, User.last_login)
 
     return render_template("settings/users.html", users=users)
 

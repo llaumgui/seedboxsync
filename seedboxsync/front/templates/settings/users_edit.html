@@ -64,7 +64,7 @@
               </div>
 
               <div class="col-md-6 mb-3">
-                <label class="label" for="{{ form.password.id }}2">{{ _('Confirm password') }}</label>
+                <label class="form-label" for="{{ form.password.id }}2">{{ _('Confirm password') }}</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas {{ form.password.render_kw['icon'] }}"></i></span>
                   <input id="{{ form.password.id }}2" class="form-control" type="{{ form.password.widget.input_type }}"
@@ -74,6 +74,16 @@
                 </div>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3" x-data="{
+                enabled: {{ 'true' if form.is_admin.data else 'false' }},
+                touched: false
+              }">
+                {{ render_field(form.is_admin) }}
+              </div>
+            </div>
+
           </div>
         </div>
 

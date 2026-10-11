@@ -9,7 +9,7 @@
 import datetime
 from typing import Self
 from flask_login import UserMixin
-from peewee import AutoField, CharField, DateTimeField
+from peewee import AutoField, BooleanField, CharField, DateTimeField
 from werkzeug.security import check_password_hash
 from seedboxsync.core.database.models import SeedboxSyncModel
 
@@ -26,6 +26,7 @@ class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]
         username (str): Unique username of the user.
         password (str): Hashed password of the user.
         email (str): Unique email address of the user.
+        is_admin (bool): Indicates if the user has administrator privileges.
         created (datetime): Timestamp when the user account was created.
         last_login (datetime): Timestamp when the user last logged in.
     """
@@ -42,6 +43,7 @@ class User(SeedboxSyncModel, UserMixin):  # type: ignore[misc]
     password = CharField(help_text="Salted password of the user")
     origin = CharField(choices=ORIGIN_CHOICES, default=ORIGIN_LOCAL, max_length=10, help_text="Origin of the user account (local or oidc)")
     email = CharField(unique=True, help_text="Email address of the user")
+    is_admin = BooleanField(default=False, help_text="Indicates if the user has administrator privileges")
     created = DateTimeField(default=datetime.datetime.now, help_text="Timestamp when the user was created")
     last_login = DateTimeField(null=True, help_text="Timestamp when the user last logged in")
 
