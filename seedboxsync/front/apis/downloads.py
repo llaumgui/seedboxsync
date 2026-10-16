@@ -11,7 +11,7 @@ from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Download
 from seedboxsync.front.apis import DateTimeOrZero, Resource, parser_period
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required, login_required
 
 api = Namespace("downloads", description="Operations related to download management")
 
@@ -197,7 +197,7 @@ class DownloadsProgress(Resource):
 
     @api.doc("delete_downloads_progress")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Downloads in progress deleted")  # type: ignore[untyped-decorator]
-    @login_required  # type: ignore[untyped-decorator]
+    @is_admin_required
     def delete(self) -> dict[str, Any]:
         """Delete progress downloads."""
         count = Download.delete().where(Download.finished == 0).execute()
@@ -258,7 +258,7 @@ class Downloads(Resource):
 
     @api.doc("delete_download")  # type: ignore[untyped-decorator]
     @api.marshal_with(download_message_envelope, code=200, description="Delete download element")  # type: ignore[untyped-decorator]
-    @login_required  # type: ignore[untyped-decorator]
+    @is_admin_required
     def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete a download.

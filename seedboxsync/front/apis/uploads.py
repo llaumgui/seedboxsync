@@ -11,7 +11,7 @@ from flask_restx import Namespace, fields, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource, parser_period
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required, login_required
 
 api = Namespace("uploads", description="Operations related to uploaded torrents management")
 
@@ -208,7 +208,7 @@ class Uploads(Resource):
 
     @api.doc("delete_upload")  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_message_envelope, code=200, description="Delete upload element")  # type: ignore[untyped-decorator]
-    @login_required  # type: ignore[untyped-decorator]
+    @is_admin_required
     def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete an uploaded torrent.

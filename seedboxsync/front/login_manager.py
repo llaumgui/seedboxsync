@@ -6,9 +6,11 @@
 #
 """SeedboxSync login manager module using Flask-Login."""
 
+from collections.abc import Callable
+from functools import wraps
 from typing import Any
-from flask import Request, Response, abort, redirect, request, session, url_for
-from flask_login import LoginManager, login_required as flask_login_required
+from flask import Request, Response, abort, current_app, redirect, request, session, url_for
+from flask_login import LoginManager, current_user, login_required as flask_login_required
 from seedboxsync.core.database.models import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 
@@ -118,6 +120,49 @@ def load_user_from_request(request: Request) -> User | None:
             return None
 
     return None
+
+
+def is_admin_required(func: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    Restrict access to authenticated administrators.
+
+    Unauthenticated users are handled by Flask-Login's unauthorized callback.
+    Authenticated users whose is_admin attribute is false receive HTTP 403.
+
+    Args:
+        func: The view function to decorate.
+
+    Returns:
+        The view function wrapped with authentication and administrator checks.
+    """
+
+    @wraps(func)
+    def decorated_view(*args: Any, **kwargs: Any) -> Any:
+        """
+        Check access permissions and execute the protected view.
+
+        Args:
+            *args: Positional arguments forwarded to the view.
+            **kwargs: Keyword arguments forwarded to the view.
+
+        Returns:
+            The view's result or the unauthorized callback's response.
+
+        Raises:
+            Forbidden: If the authenticated user is not an administrator.
+        """
+        # Delegate unauthenticated access to Flask-Login.
+        if not current_app.config.get("LOGIN_DISABLED") and not current_user.is_authenticated:
+            return login_manager.unauthorized()
+
+        # Deny access to authenticated users without administrator privileges.
+        if not current_app.config.get("LOGIN_DISABLED") and not current_user.is_admin:
+            abort(403)
+
+        # Support both synchronous and asynchronous views.
+        return current_app.ensure_sync(func)(*args, **kwargs)
+
+    return decorated_view
 
 
 login_required = flask_login_required

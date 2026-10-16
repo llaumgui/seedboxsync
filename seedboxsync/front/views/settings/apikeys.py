@@ -14,13 +14,13 @@ from seedboxsync.core import current_app
 from seedboxsync.core.database.models import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import ApiKeyForm, EmptyCSRFForm
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required
 from seedboxsync.front.utils import toast
 from seedboxsync.front.views import bp_settings as bp
 
 
 @bp.route("/apikeys", methods=["GET"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def apikeys() -> str | Response:
     """
     Render the API keys management page and handle key creation.
@@ -39,7 +39,7 @@ def apikeys() -> str | Response:
 
 
 @bp.route("/apikeys/create", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def apikeys_create() -> str | Response:
     """
     Render and process the user creation view.
@@ -71,7 +71,7 @@ def apikeys_create() -> str | Response:
 
 
 @bp.route("/apikeys/<int:apikey_id>/delete", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def apikeys_delete(apikey_id: int) -> str | Response:
     """
     Render and process the apikey delete view.

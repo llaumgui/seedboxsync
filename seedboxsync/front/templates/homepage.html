@@ -1,4 +1,4 @@
-{% import 'components/macros.html' as macro %}
+{% import 'components/macros.html' as macro with context %}
 
 {% extends 'base.html' %}
 
@@ -74,16 +74,18 @@
         <h2 class="card-title fs-3">{{ _('Download in progress') }}</h2>
         <p class="card-subtitle mb-2 text-body-secondary">{{ _('List of downloads in progress from the seedbox to the NAS.') }}</p>
       </div>
-      <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
-        @click="$dispatch('open-modal-confirm-call', {
-          url: '{{ url_for('api.downloads_downloads_progress') }}',
-          method: 'DELETE',
-          title: '{{ _('Purge?') }}',
-          content: '{{ _('Do you want to purge all in-progress downloads?') }}',
-          toastMessage: '{{ _('In-progress has been purged') }}'
-        })">
-        <i class="fa fa-trash"></i>{{ _('Purge') }}
-      </button>
+      {% if config.LOGIN_DISABLED or current_user.is_admin %}
+        <button x-show="data.length > 0" class="btn btn-danger btn-sm js-modal-trigger"
+                @click="$dispatch('open-modal-confirm-call', {
+                  url: '{{ url_for('api.downloads_downloads_progress') }}',
+                  method: 'DELETE',
+                  title: '{{ _('Purge?') }}',
+                  content: '{{ _('Do you want to purge all in-progress downloads?') }}',
+                  toastMessage: '{{ _('In-progress has been purged') }}'
+                })">
+          <i class="fa fa-trash"></i>{{ _('Purge') }}
+        </button>
+      {% endif %}
     </div>
     <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
     <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>

@@ -9,7 +9,7 @@
 from typing import Any
 from flask_restx import Namespace
 from seedboxsync.front.apis import Resource
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required
 
 api = Namespace("tasks", description="Operations related to task lauching")
 
@@ -28,7 +28,7 @@ class Tasks(Resource):
 
     @api.doc("post_task")  # type: ignore[untyped-decorator]
     @api.response(202, "Task launched")  # type: ignore[untyped-decorator]
-    @login_required  # type: ignore[untyped-decorator]
+    @is_admin_required
     def post(self, key: str) -> tuple[dict[str, Any], int]:
         """
         Launch a task associated with a task key.

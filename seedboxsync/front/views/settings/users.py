@@ -13,7 +13,7 @@ from seedboxsync.core import current_app
 from seedboxsync.core.database.models import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required
 from seedboxsync.front.utils import toast
 from seedboxsync.front.views import bp_settings as bp
 
@@ -24,7 +24,7 @@ msg_flash_success = _("User saved successfully.")
 
 
 @bp.route("/users")
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def users() -> str | Response:
     """
     Render the users management settings page.
@@ -41,7 +41,7 @@ def users() -> str | Response:
 
 
 @bp.route("/users/create", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def users_create() -> str | Response:
     """
     Render and process the user creation view.
@@ -75,7 +75,7 @@ def users_create() -> str | Response:
 
 
 @bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def users_edit(user_id: int) -> str | Response:
     """
     Render and process the user edition view.
@@ -128,7 +128,7 @@ def users_edit(user_id: int) -> str | Response:
 
 
 @bp.route("/users/<int:user_id>/delete", methods=["GET", "POST"])
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def users_delete(user_id: int) -> str | Response:
     """
     Render and process the user delete view.

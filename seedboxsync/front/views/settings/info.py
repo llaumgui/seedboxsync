@@ -14,13 +14,13 @@ from seedboxsync.__version__ import __version__ as version
 from seedboxsync.core import current_app
 from seedboxsync.core.database.models import Download, TaskStatus
 from seedboxsync.front.cache import cache
-from seedboxsync.front.login_manager import login_required
+from seedboxsync.front.login_manager import is_admin_required
 from seedboxsync.front.views import bp_settings as bp
 
 
 @bp.route("/info")
 @bp.route("")
-@login_required  # type: ignore[untyped-decorator]
+@is_admin_required
 def info() -> str:
     """
     Render the system information view.
