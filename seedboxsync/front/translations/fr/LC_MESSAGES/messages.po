@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  SeedboxSyncFront\n"
 "Report-Msgid-Bugs-To: guillaume@kulakowski.fr\n"
-"POT-Creation-Date: 2026-10-17 11:36+0200\n"
+"POT-Creation-Date: 2026-10-17 12:38+0200\n"
 "PO-Revision-Date: 2025-10-03 21:41+0200\n"
 "Last-Translator: \n"
 "Language: fr\n"
@@ -292,10 +292,6 @@ msgstr "Intervalle de rafraîchissement du tableau de bord (en secondes)"
 #: seedboxsync/front/forms/settings/seedboxsync.py:52
 msgid "Max dashboard items"
 msgstr "Limite d’éléments du tableau de bord"
-
-#: seedboxsync/front/forms/settings/seedboxsync.py:56
-msgid "Enable CSRF protection for all forms?"
-msgstr "Activer la protection CSRF pour tous les formulaires"
 
 #: seedboxsync/front/templates/downloaded.html:7
 #: seedboxsync/front/templates/homepage.html:136
@@ -661,7 +657,7 @@ msgstr "Créer"
 #: seedboxsync/front/templates/admin/nas.html:55
 #: seedboxsync/front/templates/admin/ping.html:77
 #: seedboxsync/front/templates/admin/seedbox.html:219
-#: seedboxsync/front/templates/admin/seedboxsync.html:119
+#: seedboxsync/front/templates/admin/seedboxsync.html:110
 #: seedboxsync/front/templates/admin/users_edit.html:92
 msgid "Save"
 msgstr "Sauver"
@@ -847,10 +843,6 @@ msgstr "Interface"
 #: seedboxsync/front/templates/components/navbar.html:28
 msgid "Stats"
 msgstr "Statistiques"
-
-#: seedboxsync/front/templates/admin/seedboxsync.html:105
-msgid "Security"
-msgstr "Sécurité"
 
 #: seedboxsync/front/templates/admin/users.html:7
 msgid "Users list"
