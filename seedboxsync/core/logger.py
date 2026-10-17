@@ -22,8 +22,9 @@ class DatabaseLogHandler(logging.Handler):
         """Write a formatted log record to the database."""
         try:
             log_entry = Log.create(
-                level_name=record.levelname,
-                logger_name=record.name,
+                level=record.levelname,
+                logger=record.name,
+                module=record.module,
                 message=record.getMessage(),
                 timestamp=datetime.fromtimestamp(record.created),
             )

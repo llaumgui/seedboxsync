@@ -175,3 +175,20 @@ parser_period.add_argument(
     location="args",
     help="End date for filtering in ISO 8601 format (e.g. YYYY-MM-DD)",
 )
+
+
+parser_pagination = reqparse.RequestParser()
+parser_pagination.add_argument(
+    "offset",
+    type=int,
+    default=0,
+    location="args",
+    help="Number of items to skip before starting to collect the result set (default: 0)",
+)
+parser_pagination.add_argument(
+    "limit",
+    type=int,
+    default=50,
+    location="args",
+    help="Maximum number of items to return (min=5, max=1000)",
+)

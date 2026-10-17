@@ -11,7 +11,7 @@ from typing import Any
 from flask_restx import Namespace, fields, inputs, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Download
-from seedboxsync.front.apis import DateTimeOrZero, Resource, parser_period
+from seedboxsync.front.apis import DateTimeOrZero, Resource, parser_pagination, parser_period
 from seedboxsync.front.login_manager import admin_required, login_required
 
 api = Namespace("downloads", description="Operations related to download management")
@@ -87,20 +87,6 @@ download_message_envelope = Resource.build_envelope_model(api, "DownloadMessage"
 # ==========================
 parser = reqparse.RequestParser()
 parser.add_argument(
-    "offset",
-    type=int,
-    default=0,
-    location="args",
-    help="Number of items to skip before starting to collect the result set (default: 0)",
-)
-parser.add_argument(
-    "limit",
-    type=int,
-    default=50,
-    location="args",
-    help="Maximum number of items to return (min=5, max=1000)",
-)
-parser.add_argument(
     "finished",
     type=inputs.boolean,
     default=None,
@@ -109,6 +95,7 @@ parser.add_argument(
 )
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
 parser.args.extend(parser_period.args)
+parser.args.extend(parser_pagination.args)
 
 
 # ==========================

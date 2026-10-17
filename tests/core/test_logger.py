@@ -41,8 +41,8 @@ def test_database_log_handler_persists_log_record(new_database_app):
         DatabaseLogHandler().emit(record)
         stored_record = Log.get()
 
-    assert stored_record.level_name == "WARNING"
-    assert stored_record.logger_name == "seedboxsync.test"
+    assert stored_record.level == "WARNING"
+    assert stored_record.logger == "seedboxsync.test"
     assert stored_record.message == "Warning: disk full"
     assert stored_record.timestamp == datetime(2026, 1, 2, 3, 4, 5)
 
@@ -57,8 +57,9 @@ def test_database_log_handler_keeps_only_latest_max_records(new_database_app):
         Log.insert_many(
             [
                 {
-                    "level_name": "INFO",
-                    "logger_name": "test",
+                    "level": "INFO",
+                    "logger": "test",
+                    "module": "icule",
                     "message": f"seed-{index}",
                     "timestamp": datetime(2026, 1, 2, 3, 4, 5),
                 }
@@ -83,8 +84,8 @@ def test_configured_application_logger_persists_records(new_database_app):
         app.logger.warning("%s", marker)
         stored_record = Log.get(Log.message == marker)
 
-    assert stored_record.level_name == "WARNING"
-    assert stored_record.logger_name == "seedboxsync"
+    assert stored_record.level == "WARNING"
+    assert stored_record.logger == "seedboxsync"
 
 
 def test_add_database_log_handler_replaces_existing_handler():

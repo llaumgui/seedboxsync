@@ -21,15 +21,33 @@
     {{ macro.breadcrumb(breadcrumb_items) }}
 
     <div class="card bg-body-tertiary shadow">
-      <div class="card-body"x-data="TablePaginedComponent('{{ url_for('api.logs_logs') }}', 20, 'logs')">
+      <div class="card-body"x-data="TablePaginedComponent('{{ url_for('api.logs_logs') }}', 20)">
 
         {# Filters #}
         <div class="row mb-2">
-          <div class="col-12 col-md-8  mb-2">
+          <div class="col-12 col-md-2 mb-2">
+            <label class="visually-hidden" for="level_filter">{{ _('Level') }}</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-terminal }}"></i></span>
+              <select
+                id="level_filter"
+                name="level_filter"
+                class="form-select"
+                x-ref="level_filter"
+                @change="updateLevel($event.target.value)"
+              >
+                <option value="" selected>{{ _('All') }}</option>
+                {% for level in levels %}
+                  <option value="{{ level }}">{{ level }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-7 mb-2">
             {{ macro.render_search() }}
           </div>
-          <div class="col-12 col-md-4 text-end  mb-2">
-            {{ macro.datepicker_range('logs', False) }}
+          <div class="col-12 col-md-3 text-end mb-2">
+            {{ macro.datepicker_range(False) }}
           </div>
         </div>
 
@@ -44,6 +62,7 @@
             <tr>
               <th class="d-none d-md-table-cell">{{ _('Level') }}</th>
               <th class="d-none d-md-table-cell">{{ _('Logger') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Module') }}</th>
               <th>{{ _('Message') }}</th>
               <th>{{ _('Timestamp') }}</th>
             </tr>
@@ -51,8 +70,9 @@
           <tbody>
             <template x-for="row in data" :key="row.id || row.key">
               <tr>
-                <td x-text="row.level_name"></td>
-                <td x-text="row.logger_name"></td>
+                <td class="d-none d-md-table-cell" x-text="row.level"></td>
+                <td class="d-none d-md-table-cell" x-text="row.logger"></td>
+                <td class="d-none d-md-table-cell" x-text="row.module"></td>
                 <td x-text="row.message"></td>
                 <td x-text="row.timestamp ? $localeDateString(row.timestamp) : ''"></td>
               </tr>

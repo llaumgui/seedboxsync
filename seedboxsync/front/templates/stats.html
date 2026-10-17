@@ -99,7 +99,7 @@ source: {{- url_for('api.uploads_stats_uploads_stats_by_source') | tojson -}}
 <div class="mt-4" x-data="StatsPeriod" x-init="init()">
   <div class="mb-5 d-flex justify-content-end">
     <div class="input-group input-group-sm w-auto">
-      {{ macro.datepicker_range('period') }}
+      {{ macro.datepicker_range() }}
     </div>
   </div>
 

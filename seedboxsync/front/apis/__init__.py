@@ -14,7 +14,7 @@ from seedboxsync.__version__ import (
 )
 from seedboxsync.core import Flask
 
-from seedboxsync.front.apis.core.resources import parser_period, DateTimeOrZero, Resource  # isort: skip
+from seedboxsync.front.apis.core.resources import parser_pagination, parser_period, DateTimeOrZero, Resource  # isort: skip
 from seedboxsync.front.apis.downloads import api as nsDownloads
 from seedboxsync.front.apis.downloads_stats import api as nsDownloadsStats
 from seedboxsync.front.apis.logs import api as nsLogs
@@ -43,7 +43,7 @@ api.add_namespace(nsUploads)
 api.add_namespace(nsUploadsStats)
 api.add_namespace(nsUsers)
 
-__all__ = ["DateTimeOrZero", "Resource", "parser_period"]
+__all__ = ["DateTimeOrZero", "Resource", "parser_pagination", "parser_period"]
 
 
 def register_api_blueprint(app: Flask) -> None:

@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?finished=true', 20, 'downloaded')">
+<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?finished=true', 20)">
 
   {# Filters #}
   <div class="row mb-2">
@@ -20,7 +20,7 @@
       {{ macro.render_search() }}
     </div>
     <div class="col-12 col-md-4 text-end  mb-2">
-      {{ macro.datepicker_range('downloaded', False) }}
+      {{ macro.datepicker_range(False) }}
     </div>
   </div>
 

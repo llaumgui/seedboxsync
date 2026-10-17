@@ -12,7 +12,7 @@
  * @param {string|null} datePickerRef
  * @returns
  */
-export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null) {
+export function TablePaginedComponent(apiUrl, perPage = 20) {
   return {
     data: [],
     loading: true,
@@ -22,6 +22,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
     offset: 0,
     total: 0,
     search: "",
+    level: "",
     startDate: null,
     endDate: null,
 
@@ -40,6 +41,8 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
         if (this.search) url.searchParams.set("search", this.search);
         if (this.startDate) url.searchParams.set("start_date", this.startDate);
         if (this.endDate) url.searchParams.set("end_date", this.endDate);
+        if (this.$refs?.level_filter && this.level)
+          url.searchParams.set("level", this.level);
 
         const r = await fetch(url);
         if (!r.ok) throw new Error("Fetch failed");
@@ -145,6 +148,19 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
     },
 
     /**
+     * Set the level filter and reload the first page.
+     *
+     * @param {string} value Search value.
+     * @returns {void}
+     */
+    updateLevel(value) {
+      this.level = value;
+      this.page = 1;
+      this.offset = 0;
+      this.load();
+    },
+
+    /**
      * Format a date as an ISO date string using the local timezone.
      *
      * @param {Date} date Date to format.
@@ -175,15 +191,21 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
      * @returns {void}
      */
     init() {
-      if (datePickerRef && this.$refs[datePickerRef]) {
-        this.$refs[datePickerRef].addEventListener("datepicker:select", (event) => {
-          const value = event.detail.value;
-          this.updateDateRange(value?.start, value?.end);
-        });
+      if (this.$refs["datepicker_range"]) {
+        this.$refs["datepicker_range"].addEventListener(
+          "datepicker:select",
+          (event) => {
+            const value = event.detail.value;
+            this.updateDateRange(value?.start, value?.end);
+          },
+        );
 
-        this.$refs[datePickerRef].addEventListener("datepicker:clear", () => {
-          this.updateDateRange(null, null);
-        });
+        this.$refs["datepicker_range"].addEventListener(
+          "datepicker:clear",
+          () => {
+            this.updateDateRange(null, null);
+          },
+        );
       }
 
       this.load();

@@ -9,7 +9,7 @@ from datetime import timedelta
 from typing import Any
 from flask_restx import Namespace, fields, reqparse
 from seedboxsync.core.database.models import Log
-from seedboxsync.front.apis import Resource, parser_period
+from seedboxsync.front.apis import Resource, parser_pagination, parser_period
 from seedboxsync.front.login_manager import admin_required
 
 api = Namespace("logs", description="View logs information")
@@ -26,14 +26,19 @@ log_model = api.model(
             description="Unique identifier of the log record",
             example=999,
         ),
-        "level_name": fields.String(
+        "level": fields.String(
             required=True,
             description="Severity level of the record (e.g. DEBUG, INFO, WARNING, ERROR, CRITICAL)",
             example="ConvallisMorbi.doc",
         ),
-        "logger_name": fields.String(
+        "logger": fields.String(
             required=True,
             description="Name of the logger that emitted the record",
+            example="doc",
+        ),
+        "module": fields.String(
+            required=True,
+            description="Module of the logger that emitted the record",
             example="doc",
         ),
         "message": fields.String(
@@ -57,22 +62,10 @@ log_message_envelope = Resource.build_envelope_model(api, "LogMessage", as_messa
 # Request parser
 # ==========================
 parser = reqparse.RequestParser()
-parser.add_argument(
-    "offset",
-    type=int,
-    default=0,
-    location="args",
-    help="Number of items to skip before starting to collect the result set (default: 0)",
-)
-parser.add_argument(
-    "limit",
-    type=int,
-    default=50,
-    location="args",
-    help="Maximum number of items to return (min=5, max=1000)",
-)
 parser.add_argument("search", type=str, required=False, help="Optional search string to filter items")
+parser.add_argument("level", choices=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"), required=False, help="Optional level to filter items")
 parser.args.extend(parser_period.args)
+parser.args.extend(parser_pagination.args)
 
 
 # ==========================
@@ -99,6 +92,7 @@ class Logs(Resource):
         offset = args.get("offset")
         limit = self.set_limit(args.get("limit", 50))
         search = args.get("search")
+        level = args.get("level")
         start_date = args.get("start_date")
         end_date = args.get("end_date")
 
@@ -106,8 +100,9 @@ class Logs(Resource):
         select = (
             Log.select(
                 Log.id,
-                Log.level_name,
-                Log.logger_name,
+                Log.level,
+                Log.logger,
+                Log.module,
                 Log.message,
                 Log.timestamp,
             )
@@ -117,12 +112,16 @@ class Logs(Resource):
         )
 
         if search:
-            count = count.where(Log.message.contains(search) | Log.logger_name.contains(search) | Log.level_name.contains(search))
-            select = select.where(Log.message.contains(search) | Log.logger_name.contains(search) | Log.level_name.contains(search))
+            count = count.where(Log.message.contains(search) | Log.level.contains(search) | Log.module.contains(search))
+            select = select.where(Log.message.contains(search) | Log.level.contains(search) | Log.module.contains(search))
 
         if start_date:
             count = count.where(Log.timestamp >= start_date)
             select = select.where(Log.timestamp >= start_date)
+
+        if level:
+            count = count.where(Log.level == level)
+            select = select.where(Log.level == level)
 
         if end_date:
             end_exclusive = end_date + timedelta(days=1)

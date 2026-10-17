@@ -23,6 +23,5 @@ def logs() -> str:
     Returns:
         str: Rendered HTML template containing overall application information.
     """
-    return render_template(
-        "admin/logs.html",
-    )
+    LEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    return render_template("admin/logs.html", levels=LEVELS)

@@ -17,14 +17,16 @@ class Log(SeedboxSyncModel):
 
     Attributes:
         id: Auto-incremented primary key.
-        level_name: Human-readable severity, such as ``INFO`` or ``ERROR``.
-        logger_name: Name of the logger that emitted the record.
+        level: Human-readable severity, such as ``INFO`` or ``ERROR``.
+        logger: Name of the logger that emitted the record.
+        module: Module of the logger that emitted the record.
         message: Formatted log message.
         timestamp: Date and time when the record was created.
     """
 
     id = AutoField(help_text="Unique identifier of the log record")
-    level_name = CharField(max_length=20, help_text="Severity level of the record (e.g. DEBUG, INFO, WARNING, ERROR, CRITICAL)")
-    logger_name = CharField(max_length=255, help_text="Name of the logger that emitted the record")
-    message = TextField(help_text="Formatted message recorded by the logger")
+    level = CharField(max_length=20, default="", help_text="Severity level of the record (e.g. DEBUG, INFO, WARNING, ERROR, CRITICAL)")
+    logger = CharField(max_length=255, default="", help_text="Name of the logger that emitted the record")
+    module = CharField(max_length=255, default="", help_text="Module of the logger that emitted the record")
+    message = TextField(default="", help_text="Formatted message recorded by the logger")
     timestamp = DateTimeField(default=datetime.datetime.now, help_text="Date and time when the log record was created")
