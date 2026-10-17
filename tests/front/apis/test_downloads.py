@@ -48,8 +48,8 @@ def test_get_downloads_list_period(client):
     response = client.get(f"{API_PATH}/downloads?start_date=2025-05-21&end_date=2025-05-30")
 
     assert response.status_code == 200
-    assert response.json["data_total"] == 1
-    assert {download["id"] for download in response.json["data"]} == {998}
+    assert response.json["data_total"] == 2
+    assert {download["id"] for download in response.json["data"]} == {998, 1000}
 
 
 def test_delete_downloads_progress(client):

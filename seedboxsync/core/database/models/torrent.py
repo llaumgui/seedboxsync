@@ -138,7 +138,8 @@ class Torrent(SeedboxSyncModel):
         if start_date:
             conditions.append(cls.sent >= start_date)
         if end_date:
-            conditions.append(cls.sent <= end_date)
+            end_exclusive = end_date + datetime.timedelta(days=1)
+            conditions.append(cls.sent < end_exclusive)
 
         query = (
             cls.select(

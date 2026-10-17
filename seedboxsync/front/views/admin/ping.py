@@ -10,13 +10,13 @@ from flask import render_template
 from seedboxsync.core import current_app
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import SettingsPingForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.utils import save_settings_form, toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
 
 @bp.route("/ping", methods=("GET", "POST"))
-@is_admin_required
+@admin_required
 def ping() -> str:
     """
     Render and process the ping/connectivity notification settings form.
@@ -36,4 +36,4 @@ def ping() -> str:
             current_app.logger.exception("Failed to save configuration.", exc_info=e)
             toast(_("Failed to save configuration."), _("Ping"), "danger")
 
-    return render_template("settings/ping.html", form=form)
+    return render_template("admin/ping.html", form=form)

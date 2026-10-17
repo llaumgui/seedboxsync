@@ -16,7 +16,7 @@ from peewee import SqliteDatabase
 from playhouse.flask_utils import FlaskDB
 from seedboxsync.core import utils
 from seedboxsync.core.database.migration import DatabaseMigration
-from seedboxsync.core.database.models import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
+from seedboxsync.core.database.models import ApiKey, Download, Log, SeedboxSync, TaskStatus, Torrent, User
 
 
 class Database:
@@ -93,7 +93,7 @@ class Database:
         self.db.journal_mode = "wal"
         self.db.cache_size = -64000
         self.db.foreign_keys = 1
-        self.db.bind([ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User])
+        self.db.bind([ApiKey, Download, Log, SeedboxSync, TaskStatus, Torrent, User])
         self.app.logger.debug(
             "Database initialized %s / journal_mode=%s, cache_size=%s, foreign_keys=%s",
             self.app.config["DATABASE"],

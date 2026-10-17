@@ -2,9 +2,9 @@
 {% import 'components/macros.html' as macro %}
 
 {% set breadcrumb_items = [
-  (_('Settings'), url_for('settings.info')),
+  (_('Administration'), url_for('admin.info')),
   (_('Authentication'), False),
-  (_('Users'), url_for('settings.users')),
+  (_('Users'), url_for('admin.users')),
   (action, False),
 ] %}
 
@@ -18,7 +18,7 @@
 
 {% block content %}
 <div class="row">
-  {% include 'components/menu_settings.html' %}
+  {% include 'components/menu_admin.html' %}
 
   <div class="col-md-10">
     <div class="content">

@@ -31,7 +31,7 @@
 
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         {% if config.LOGIN_DISABLED %}
-          {{ menu_link(_('Settings'), 'settings.info') }}
+          {{ menu_link(_('Administration'), 'admin.info') }}
         {% elif current_user.is_authenticated %}
         <li class="nav-item dropdown">
           <button class="nav-link dropdown-toggle d-flex align-items-center gap-2" type="button"  id="userDropdown"
@@ -43,7 +43,7 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             {% if current_user.is_admin %}
-              {{ menu_link(_('Settings'), 'settings.info', True, 'fa-gear') }}
+              {{ menu_link(_('Administration'), 'admin.info', True, 'fa-gear') }}
               <li><hr class="dropdown-divider"></li>
             {% endif %}
             {{ menu_link(_('Logout'), 'auth.logout', True, 'fa-sign-out') }}

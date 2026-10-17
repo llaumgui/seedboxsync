@@ -10,13 +10,13 @@ from flask import render_template
 from seedboxsync.core import current_app
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import SettingsSeedboxForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.utils import save_settings_form, toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
 
 @bp.route("/seedbox", methods=("GET", "POST"))
-@is_admin_required
+@admin_required
 def seedbox() -> str:
     """
     Render and process the Seedbox connection settings form.
@@ -37,4 +37,4 @@ def seedbox() -> str:
             current_app.logger.exception("Failed to save configuration.", exc_info=e)
             toast(_("Failed to save configuration."), _("Seedbox"), "danger")
 
-    return render_template("settings/seedbox.html", form=form)
+    return render_template("admin/seedbox.html", form=form)

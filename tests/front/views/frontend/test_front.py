@@ -63,12 +63,12 @@ def test_stats(client):  # Is OK
 
 
 def test_settings(client):  # Is OK
-    response = client.get("/settings")
+    response = client.get("/admin")
     assert response.status_code == 200
 
 
 def test_settings_form_controls_have_associated_labels(client):
-    response = client.get("/settings")
+    response = client.get("/admin")
     parser = FormAccessibilityParser()
     parser.feed(response.get_data(as_text=True))
 

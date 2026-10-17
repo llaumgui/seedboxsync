@@ -1,34 +1,37 @@
 {% set current_path = request.path %}
 
 {% macro menu_link(title, link) %}
-<a class="nav-link{% if current_path == url_for(link) or (link not in ['settings.info', 'settings.seedbox'] and current_path.startswith(url_for(link))) %} active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
+<a class="nav-link{% if current_path == url_for(link) or (link not in ['admin.info', 'admin.seedbox'] and current_path.startswith(url_for(link))) %} active{% endif %}" href="{{ url_for(link) }}">{{ title }}</a>
 {% endmacro %}
 
 <div class="col-md-2 settings-sidebar">
 
-  <h1 class="h4">{{ _('Settings') }}</h1>
+  <h1 class="h4">{{ _('Administration') }}</h1>
 
   <nav class="menu">
     <ul class="nav nav-pills flex-column bg-body-tertiary">
-      <li class="nav-item">{{ menu_link( _('Informations'), 'settings.info') }}</li>
+      <li class="nav-item">{{ menu_link( _('Informations'), 'admin.info') }}</li>
+    </ul>
+    <ul class="nav nav-pills flex-column bg-body-tertiary">
+      <li class="nav-item">{{ menu_link( _('Logs'), 'admin.logs') }}</li>
     </ul>
     <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('General') }}</p>
     <ul class="nav nav-pills flex-column bg-body-tertiary">
-      <li class="nav-item">{{ menu_link( _('SeedboxSync'), 'settings.seedboxsync') }}</li>
+      <li class="nav-item">{{ menu_link( _('SeedboxSync'), 'admin.seedboxsync') }}</li>
     </ul>
 
     <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('Synchronization') }}</p>
     <ul class="nav nav-pills flex-column bg-body-tertiary">
-      <li class="nav-item">{{ menu_link( _('Seedbox'), 'settings.seedbox') }}</li>
-      <li class="nav-item">{{ menu_link( _('Local (NAS)'), 'settings.nas') }}</li>
-      <li class="nav-item">{{ menu_link( _('Ping'), 'settings.ping') }}</li>
+      <li class="nav-item">{{ menu_link( _('Seedbox'), 'admin.seedbox') }}</li>
+      <li class="nav-item">{{ menu_link( _('Local (NAS)'), 'admin.nas') }}</li>
+      <li class="nav-item">{{ menu_link( _('Ping'), 'admin.ping') }}</li>
     </ul>
 
     <p class="text-body-secondary text-uppercase small mt-4 mb-1">{{ _('Authentication') }}</p>
      <ul class="nav nav-pills flex-column bg-body-tertiary">
-      <li class="nav-item">{{ menu_link( _('Settings'), 'settings.authentication') }}</li>
-      <li class="nav-item">{{ menu_link( _('Users'), 'settings.users') }}</li>
-      <li class="nav-item">{{ menu_link( _('My API keys'), 'settings.apikeys') }}</li>
+      <li class="nav-item">{{ menu_link( _('Settings'), 'admin.authentication') }}</li>
+      <li class="nav-item">{{ menu_link( _('Users'), 'admin.users') }}</li>
+      <li class="nav-item">{{ menu_link( _('My API keys'), 'admin.apikeys') }}</li>
     </ul>
   </nav>
 

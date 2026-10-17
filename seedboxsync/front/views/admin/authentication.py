@@ -10,14 +10,14 @@ from flask import render_template
 from seedboxsync.core import current_app
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import SettingsAuthenticationForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.oauth2 import init_oauth2
 from seedboxsync.front.utils import save_settings_form, toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
 
 @bp.route("/authentication", methods=("GET", "POST"))
-@is_admin_required
+@admin_required
 def authentication() -> str:
     """
     Render and process the authentication configuration form.
@@ -39,4 +39,4 @@ def authentication() -> str:
             current_app.logger.exception("Failed to save configuration.", exc_info=e)
             toast(_("Failed to save configuration."), _("Authentication"), "danger")
 
-    return render_template("settings/authentication.html", form=form)
+    return render_template("admin/authentication.html", form=form)

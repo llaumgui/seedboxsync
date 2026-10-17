@@ -6,9 +6,9 @@ from werkzeug.security import generate_password_hash
 from seedboxsync.core.database.models import ApiKey, SeedboxSync, User
 from seedboxsync.front.forms import SettingsAuthenticationForm
 from seedboxsync.front.utils import save_settings_form
+from seedboxsync.front.views.admin.apikeys import apikeys, apikeys_create, apikeys_delete
+from seedboxsync.front.views.admin.authentication import authentication
 from seedboxsync.front.views.auth.logout import logout
-from seedboxsync.front.views.settings.apikeys import apikeys, apikeys_create, apikeys_delete
-from seedboxsync.front.views.settings.authentication import authentication
 
 
 @pytest.fixture(autouse=True)
@@ -30,13 +30,13 @@ def _post_form(client, path, form):
 @pytest.mark.parametrize(
     ("path", "title"),
     [
-        ("/settings", b"SeedboxSync"),
-        ("/settings/seedbox", b"Seedbox"),
-        ("/settings/nas", b"Local (NAS)"),
-        ("/settings/ping", b"Healthchecks"),
+        ("/admin", b"SeedboxSync"),
+        ("/admin/seedbox", b"Seedbox"),
+        ("/admin/nas", b"Local (NAS)"),
+        ("/admin/ping", b"Healthchecks"),
     ],
 )
-def test_settings_views_are_reachable(client, path, title):
+def test_admin_views_are_reachable(client, path, title):
     response = client.get(path)
 
     assert response.status_code == 200
@@ -47,7 +47,7 @@ def test_settings_views_are_reachable(client, path, title):
     ("path", "form", "config", "stored"),
     [
         (
-            "/settings/seedboxsync",
+            "/admin/seedboxsync",
             {
                 "sync_blackhole_enabled": "1",
                 "webui_theme": "dark",
@@ -60,7 +60,7 @@ def test_settings_views_are_reachable(client, path, title):
             {"config_sync_blackhole_enabled": "1", "config_sync_seedbox_enabled": "0"},
         ),
         (
-            "/settings/seedbox",
+            "/admin/seedbox",
             {
                 "seedbox_host": "storage.example",
                 "seedbox_port": "2222",
@@ -83,13 +83,13 @@ def test_settings_views_are_reachable(client, path, title):
             {"config_seedbox_host": "storage.example"},
         ),
         (
-            "/settings/nas",
+            "/admin/nas",
             {"local_watch_path": "/local/watch", "local_download_path": "/local/downloads"},
             {"SEEDBOXSYNC_LOCAL_WATCH_PATH": "/local/watch"},
             {"config_local_watch_path": "/local/watch"},
         ),
         (
-            "/settings/ping",
+            "/admin/ping",
             {
                 "healthchecks_sync_blackhole_enabled": "1",
                 "healthchecks_sync_blackhole_ping_url": "https://hc-ping.com/blackhole",
@@ -100,7 +100,7 @@ def test_settings_views_are_reachable(client, path, title):
         ),
     ],
 )
-def test_settings_views_persist_valid_form_values(app, client, path, form, config, stored):
+def test_admin_views_persist_valid_form_values(app, client, path, form, config, stored):
     response = _post_form(client, path, form)
 
     assert response.status_code == 200
@@ -114,7 +114,7 @@ def test_settings_views_persist_valid_form_values(app, client, path, form, confi
 
 def test_seedbox_settings_rejects_missing_required_fields(client):
     with patch("seedboxsync.front.utils.save_settings_form") as save_form:
-        response = _post_form(client, "/settings/seedbox", {"seedbox_host": ""})
+        response = _post_form(client, "/admin/seedbox", {"seedbox_host": ""})
 
     assert response.status_code == 200
     save_form.assert_not_called()
@@ -122,7 +122,7 @@ def test_seedbox_settings_rejects_missing_required_fields(client):
 
 def test_save_settings_form_persists_runtime_and_database_values(app):
     app.config["WTF_CSRF_ENABLED"] = False
-    with app.test_request_context("/settings", method="POST", data={"login_disabled": "1", "auth_gravatar_enabled": "1"}):
+    with app.test_request_context("/admin", method="POST", data={"login_disabled": "1", "auth_gravatar_enabled": "1"}):
         form = SettingsAuthenticationForm(meta={"csrf": False}, data={"login_disabled": True, "auth_gravatar_enabled": True})
         save_settings_form(form)
 
@@ -140,10 +140,10 @@ def test_save_settings_form_persists_runtime_and_database_values(app):
 def test_authentication_settings_page_saves_oauth_configuration(app):
     app.config["WTF_CSRF_ENABLED"] = False
     with (
-        patch("seedboxsync.front.views.settings.authentication.save_settings_form") as save_form,
-        patch("seedboxsync.front.views.settings.authentication.init_oauth2") as init_oauth2_mock,
+        patch("seedboxsync.front.views.admin.authentication.save_settings_form") as save_form,
+        patch("seedboxsync.front.views.admin.authentication.init_oauth2") as init_oauth2_mock,
         app.test_request_context(
-            "/settings/authentication",
+            "/admin/authentication",
             method="POST",
             data={"login_disabled": "1", "oauth_enabled": "1", "oauth_name": "oidc"},
         ),
@@ -161,29 +161,29 @@ def test_apikeys_list_and_create_delete_flow(app):
     with app.app_context():
         user = User.create(username="alice", password=generate_password_hash("secret"), email="alice@example.com")
 
-    with app.test_request_context("/settings/apikeys"):
-        with patch("seedboxsync.front.views.settings.apikeys.current_user", user):
+    with app.test_request_context("/admin/apikeys"):
+        with patch("seedboxsync.front.views.admin.apikeys.current_user", user):
             response = apikeys()
         assert isinstance(response, str)
 
     with (
-        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "homeassistant"}),
-        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+        app.test_request_context("/admin/apikeys/create", method="POST", data={"name": "homeassistant"}),
+        patch("seedboxsync.front.views.admin.apikeys.current_user", user),
     ):
         response = apikeys_create()
 
     assert response.status_code == 302
-    assert response.location.endswith("/settings/apikeys")
+    assert response.location.endswith("/admin/apikeys")
 
     with app.app_context():
         apikey = ApiKey.get(user=user)
         assert apikey.name == "homeassistant"
 
-    with app.test_request_context(f"/settings/apikeys/{apikey.id}/delete", method="POST"), patch("seedboxsync.front.views.settings.apikeys.current_user", user):
+    with app.test_request_context(f"/admin/apikeys/{apikey.id}/delete", method="POST"), patch("seedboxsync.front.views.admin.apikeys.current_user", user):
         response = apikeys_delete(apikey.id)
 
     assert response.status_code == 302
-    assert response.location.endswith("/settings/apikeys")
+    assert response.location.endswith("/admin/apikeys")
 
     with app.app_context():
         assert ApiKey.get_or_none(ApiKey.id == apikey.id) is None
@@ -208,8 +208,8 @@ def test_api_key_generation_and_authentication(app):
 def test_apikey_creation_does_not_generate_key_for_invalid_form(app):
     app.config["WTF_CSRF_ENABLED"] = False
     with (
-        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "x"}),
-        patch("seedboxsync.front.views.settings.apikeys.current_user", MagicMock(is_authenticated=True)),
+        app.test_request_context("/admin/apikeys/create", method="POST", data={"name": "x"}),
+        patch("seedboxsync.front.views.admin.apikeys.current_user", MagicMock(is_authenticated=True)),
         patch.object(ApiKey, "generate") as generate,
     ):
         response = apikeys_create()
@@ -221,10 +221,10 @@ def test_apikey_creation_does_not_generate_key_for_invalid_form(app):
 def test_apikey_creation_reports_generation_errors(app):
     app.config["WTF_CSRF_ENABLED"] = False
     with (
-        app.test_request_context("/settings/apikeys/create", method="POST", data={"name": "homeassistant"}),
-        patch("seedboxsync.front.views.settings.apikeys.current_user", MagicMock(is_authenticated=True)),
+        app.test_request_context("/admin/apikeys/create", method="POST", data={"name": "homeassistant"}),
+        patch("seedboxsync.front.views.admin.apikeys.current_user", MagicMock(is_authenticated=True)),
         patch.object(ApiKey, "generate", side_effect=RuntimeError("database unavailable")),
-        patch("seedboxsync.front.views.settings.apikeys.toast") as toast_mock,
+        patch("seedboxsync.front.views.admin.apikeys.toast") as toast_mock,
     ):
         response = apikeys_create()
 
@@ -236,7 +236,7 @@ def test_apikey_delete_returns_404_for_unknown_key(app):
     from werkzeug.exceptions import NotFound
 
     app.config["WTF_CSRF_ENABLED"] = False
-    with app.test_request_context("/settings/apikeys/999/delete"), pytest.raises(NotFound):
+    with app.test_request_context("/admin/apikeys/999/delete"), pytest.raises(NotFound):
         apikeys_delete(999)
 
 
@@ -247,17 +247,17 @@ def test_apikey_delete_renders_form_and_reports_delete_errors(app):
         apikey = ApiKey.create(user=user, name="delete-me", key_hash="test-delete-hash")
 
     with (
-        app.test_request_context(f"/settings/apikeys/{apikey.id}/delete"),
-        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+        app.test_request_context(f"/admin/apikeys/{apikey.id}/delete"),
+        patch("seedboxsync.front.views.admin.apikeys.current_user", user),
     ):
         response = apikeys_delete(apikey.id)
     assert isinstance(response, str)
 
     with (
-        app.test_request_context(f"/settings/apikeys/{apikey.id}/delete", method="POST"),
-        patch("seedboxsync.front.views.settings.apikeys.current_user", user),
+        app.test_request_context(f"/admin/apikeys/{apikey.id}/delete", method="POST"),
+        patch("seedboxsync.front.views.admin.apikeys.current_user", user),
         patch.object(ApiKey, "delete_instance", side_effect=RuntimeError("database unavailable")),
-        patch("seedboxsync.front.views.settings.apikeys.toast") as toast_mock,
+        patch("seedboxsync.front.views.admin.apikeys.toast") as toast_mock,
     ):
         response = apikeys_delete(apikey.id)
 
@@ -278,7 +278,7 @@ def test_logout_view_redirects_to_frontpage(app):
     ("path", "form", "save_settings_target"),
     [
         (
-            "/settings/seedboxsync",
+            "/admin/seedboxsync",
             {
                 "sync_blackhole_enabled": "1",
                 "webui_theme": "dark",
@@ -287,10 +287,10 @@ def test_logout_view_redirects_to_frontpage(app):
                 "webui_dashboard_refresh": "60",
                 "webui_dashboard_nb_elements": "5",
             },
-            "seedboxsync.front.views.settings.seedboxsync.save_settings_form",
+            "seedboxsync.front.views.admin.seedboxsync.save_settings_form",
         ),
         (
-            "/settings/seedbox",
+            "/admin/seedbox",
             {
                 "seedbox_host": "storage.example",
                 "seedbox_port": "2222",
@@ -301,21 +301,21 @@ def test_logout_view_redirects_to_frontpage(app):
                 "seedbox_watch_path": "/watch",
                 "seedbox_finished_path": "/files",
             },
-            "seedboxsync.front.views.settings.seedbox.save_settings_form",
+            "seedboxsync.front.views.admin.seedbox.save_settings_form",
         ),
         (
-            "/settings/nas",
+            "/admin/nas",
             {"local_watch_path": "/watch", "local_download_path": "/downloads"},
-            "seedboxsync.front.views.settings.nas.save_settings_form",
+            "seedboxsync.front.views.admin.nas.save_settings_form",
         ),
         (
-            "/settings/ping",
+            "/admin/ping",
             {"healthchecks_sync_blackhole_ping_url": "https://hc-ping.com/test"},
-            "seedboxsync.front.views.settings.ping.save_settings_form",
+            "seedboxsync.front.views.admin.ping.save_settings_form",
         ),
     ],
 )
-def test_settings_views_report_persistence_errors(client, path, form, save_settings_target):
+def test_admin_views_report_persistence_errors(client, path, form, save_settings_target):
     with patch(save_settings_target, side_effect=RuntimeError("database unavailable")):
         response = _post_form(client, path, form)
 
@@ -324,5 +324,5 @@ def test_settings_views_report_persistence_errors(client, path, form, save_setti
 
 
 def test_infos(client):  # Is OK
-    response = client.get("/settings/info")
+    response = client.get("/admin/info")
     assert response.status_code == 200

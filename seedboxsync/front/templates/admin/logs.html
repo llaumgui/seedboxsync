@@ -1,0 +1,70 @@
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Administration'), url_for('admin.info')),
+  (_('Logs'), False),
+] %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% include 'components/menu_admin.html' %}
+
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
+
+    <div class="card bg-body-tertiary shadow">
+      <div class="card-body"x-data="TablePaginedComponent('{{ url_for('api.logs_logs') }}', 20, 'logs')">
+
+        {# Filters #}
+        <div class="row mb-2">
+          <div class="col-12 col-md-8  mb-2">
+            {{ macro.render_search() }}
+          </div>
+          <div class="col-12 col-md-4 text-end  mb-2">
+            {{ macro.datepicker_range('logs', False) }}
+          </div>
+        </div>
+
+        {# Messages #}
+        <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+        <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+        <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No logs yet...') }}</div>
+
+        {# Table #}
+        <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="d-none d-md-table-cell">{{ _('Level') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Logger') }}</th>
+              <th>{{ _('Message') }}</th>
+              <th>{{ _('Timestamp') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in data" :key="row.id || row.key">
+              <tr>
+                <td x-text="row.level_name"></td>
+                <td x-text="row.logger_name"></td>
+                <td x-text="row.message"></td>
+                <td x-text="row.timestamp ? $localeDateString(row.timestamp) : ''"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+        {# Pagination controls #}
+        {{ macro.render_pagination() }}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

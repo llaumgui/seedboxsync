@@ -5,9 +5,33 @@
 # file that was distributed with this source code.
 """Setup logger for Flask."""
 
+from datetime import datetime
 import logging
 from typing import ClassVar
 import click
+from seedboxsync.core.database.models import Log
+
+
+class DatabaseLogHandler(logging.Handler):
+    """Persist log records using the application's Log model."""
+
+    CLEANUP_INTERVAL = 500
+    MAX_RECORDS = 1000
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """Write a formatted log record to the database."""
+        try:
+            log_entry = Log.create(
+                level_name=record.levelname,
+                logger_name=record.name,
+                message=record.getMessage(),
+                timestamp=datetime.fromtimestamp(record.created),
+            )
+            if log_entry.id % self.CLEANUP_INTERVAL == 0:
+                latest_logs = Log.select(Log.id).order_by(Log.id.desc()).limit(self.MAX_RECORDS)
+                Log.delete().where(Log.id.not_in(latest_logs)).execute()
+        except Exception:
+            self.handleError(record)
 
 
 class ColorFormatter(logging.Formatter):
@@ -54,3 +78,18 @@ def configure_logger(logger: logging.Logger) -> None:
 
     for handler in logger.handlers:
         handler.setFormatter(formatter)
+
+
+def add_database_log_handler(logger: logging.Logger) -> None:
+    """
+    Add a handler that persists records to the database.
+
+    Args:
+        logger: The logger to connect to the database log handler.
+    """
+    for handler in [handler for handler in logger.handlers if isinstance(handler, DatabaseLogHandler)]:
+        logger.removeHandler(handler)
+        handler.close()
+
+    database_handler = DatabaseLogHandler()
+    logger.addHandler(database_handler)

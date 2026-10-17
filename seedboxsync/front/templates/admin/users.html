@@ -2,7 +2,7 @@
 {% import 'components/macros.html' as macro %}
 
 {% set breadcrumb_items = [
-  (_('Settings'), url_for('settings.info')),
+  (_('Administration'), url_for('admin.info')),
   (_('Authentication'), False),
   (_('Users list'), False),
 ] %}
@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="row">
-  {% include 'components/menu_settings.html' %}
+  {% include 'components/menu_admin.html' %}
 
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
@@ -61,11 +61,11 @@
                 <td>{{ format_datetime(user.last_login) if user.last_login is not none else _('Never') }}</td>
                 <td class="text-end">
                     <div class="d-flex justify-content-end gap-2 flex-nowrap">
-                      <a class="btn btn-sm btn-outline-info" href="{{ url_for('settings.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
+                      <a class="btn btn-sm btn-outline-info" href="{{ url_for('admin.users_edit', user_id=user.id) }}" title="{{ _('Edit') }}">
                         <i class="fas fa-pen-to-square"></i>
                       </a>
                       <a class="btn btn-sm btn-outline-danger" {% if not can_delete %}disabled aria-disabled="true"{% endif %} title="{{ _('Delete') }}"
-                        {% if can_delete %}href="{{ url_for('settings.users_delete', user_id=user.id) }}"{% endif %}>
+                        {% if can_delete %}href="{{ url_for('admin.users_delete', user_id=user.id) }}"{% endif %}>
                         <i class="fas fa-times"></i>
                       </a>
                   </div>
@@ -78,7 +78,7 @@
     </div>
 
     <div class="mt-4 text-end">
-      <a class="btn btn-outline-info" href="{{ url_for('settings.users_create') }}">
+      <a class="btn btn-outline-info" href="{{ url_for('admin.users_create') }}">
         <i class="fas fa-add"></i> {{ _('Add') }}
       </a>
     </div>

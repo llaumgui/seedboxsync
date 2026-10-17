@@ -12,10 +12,10 @@ from flask import Flask
 from peewee import SqliteDatabase
 from playhouse.migrations import Runner
 from seedboxsync.core import utils
-from seedboxsync.core.database.models import ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User
+from seedboxsync.core.database.models import ApiKey, Download, Log, SeedboxSync, TaskStatus, Torrent, User
 
 database = SqliteDatabase(str(utils.get_database_path_from_paths()))
-models = [ApiKey, Download, SeedboxSync, TaskStatus, Torrent, User]
+models = [ApiKey, Download, Log, SeedboxSync, TaskStatus, Torrent, User]
 MIGRATION_PATH = str(Path(__file__).parent / "migrations")
 
 

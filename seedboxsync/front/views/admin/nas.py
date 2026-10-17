@@ -10,13 +10,13 @@ from flask import render_template
 from seedboxsync.core import current_app
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import SettingsNasForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.utils import save_settings_form, toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
 
 @bp.route("/nas", methods=("GET", "POST"))
-@is_admin_required
+@admin_required
 def nas() -> str:
     """
     Render and process the NAS storage settings form.
@@ -36,4 +36,4 @@ def nas() -> str:
             current_app.logger.exception("Failed to save configuration.", exc_info=e)
             toast(_("Failed to save configuration."), _("Local (NAS)"), "danger")
 
-    return render_template("settings/nas.html", form=form)
+    return render_template("admin/nas.html", form=form)

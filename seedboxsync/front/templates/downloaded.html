@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true', 20, 'downloaded')">
+<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?finished=true', 20, 'downloaded')">
 
   {# Filters #}
   <div class="row mb-2">

@@ -122,7 +122,7 @@ def load_user_from_request(request: Request) -> User | None:
     return None
 
 
-def is_admin_required(func: Callable[..., Any]) -> Callable[..., Any]:
+def admin_required(func: Callable[..., Any]) -> Callable[..., Any]:
     """
     Restrict access to authenticated administrators.
 

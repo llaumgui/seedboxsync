@@ -13,18 +13,18 @@ from seedboxsync.core import current_app
 from seedboxsync.core.database.models import User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import EmptyCSRFForm, UserCreateForm, UserEditForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.utils import toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
-settings_users_url = "settings.users"
+settings_users_url = "admin.users"
 msg_logger_error = "Failed to save user."
 msg_flash_error = _("Failed to save user.")
 msg_flash_success = _("User saved successfully.")
 
 
 @bp.route("/users")
-@is_admin_required
+@admin_required
 def users() -> str | Response:
     """
     Render the users management settings page.
@@ -37,11 +37,11 @@ def users() -> str | Response:
     """
     users = User.select(User.id, User.username, User.email, User.origin, User.is_admin, User.created, User.last_login)
 
-    return render_template("settings/users.html", users=users)
+    return render_template("admin/users.html", users=users)
 
 
 @bp.route("/users/create", methods=["GET", "POST"])
-@is_admin_required
+@admin_required
 def users_create() -> str | Response:
     """
     Render and process the user creation view.
@@ -71,11 +71,11 @@ def users_create() -> str | Response:
                 current_app.logger.exception(msg_logger_error, exc_info=e)
                 toast(msg_flash_error, _("Users"), "danger")
 
-    return render_template("settings/users_edit.html", form=form, action=_("Create"))
+    return render_template("admin/users_edit.html", form=form, action=_("Create"))
 
 
 @bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
-@is_admin_required
+@admin_required
 def users_edit(user_id: int) -> str | Response:
     """
     Render and process the user edition view.
@@ -124,11 +124,11 @@ def users_edit(user_id: int) -> str | Response:
                 current_app.logger.exception(msg_logger_error, exc_info=e)
                 toast(msg_flash_error, _("Users"), "danger")
 
-    return render_template("settings/users_edit.html", form=form, action=_("Edit"))
+    return render_template("admin/users_edit.html", form=form, action=_("Edit"))
 
 
 @bp.route("/users/<int:user_id>/delete", methods=["GET", "POST"])
-@is_admin_required
+@admin_required
 def users_delete(user_id: int) -> str | Response:
     """
     Render and process the user delete view.
@@ -161,4 +161,4 @@ def users_delete(user_id: int) -> str | Response:
             current_app.logger.exception(msg_logger_error, exc_info=e)
             toast(_("Failed to delete user."), _("Users"), "danger")
 
-    return render_template("settings/users_delete.html", form=form, user=user, action=_("Delete"))
+    return render_template("admin/users_delete.html", form=form, user=user, action=_("Delete"))

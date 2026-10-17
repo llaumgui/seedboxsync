@@ -28,7 +28,7 @@ from seedboxsync.front.babel import babel, get_locale
 from seedboxsync.front.cache import cache
 from seedboxsync.front.login_manager import login_manager
 from seedboxsync.front.oauth2 import init_oauth2
-from seedboxsync.front.views import bp_auth, bp_frontend, bp_settings, error as error_front
+from seedboxsync.front.views import bp_admin, bp_auth, bp_frontend, error as error_front
 
 __version__ = version
 
@@ -156,6 +156,7 @@ def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     # Initialize the database
     database = Database(app)
     app.extensions["database"] = database
+    logger.add_database_log_handler(app.logger)  # Ad DB log handler
 
     # Load config
     Config(app)
@@ -177,7 +178,7 @@ def create_app(injected_config: dict[str, str | bool] | None = None) -> Flask:
     # Register blueprint and error handler
     app.register_blueprint(bp_auth)
     app.register_blueprint(bp_frontend)
-    app.register_blueprint(bp_settings)
+    app.register_blueprint(bp_admin)
     register_api_blueprint(app)
     app.register_error_handler(Exception, __handle_http_exception)  # type: ignore[arg-type]
 

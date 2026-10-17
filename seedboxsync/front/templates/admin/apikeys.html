@@ -2,7 +2,7 @@
 {% import 'components/macros.html' as macro %}
 
 {% set breadcrumb_items = [
-  (_('Settings'), url_for('settings.info')),
+  (_('Administration'), url_for('admin.info')),
   (_('Authentication'), False),
   (_('My API keys'), False),
 ] %}
@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="row">
-  {% include 'components/menu_settings.html' %}
+  {% include 'components/menu_admin.html' %}
 
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
@@ -50,7 +50,7 @@
                   <td class="text-end">
                     <div class="d-flex justify-content-end gap-2 flex-nowrap">
                       <a class="btn btn-outline-danger btn-sm" title="{{ _('Delete') }}"
-                         href="{{ url_for('settings.apikeys_delete', apikey_id=apikey.id) }}">
+                         href="{{ url_for('admin.apikeys_delete', apikey_id=apikey.id) }}">
                         <i class="fas fa-times"></i>
                       </a>
                     </div>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="mt-4 text-end">
-        <a class="btn btn-outline-info" href="{{ url_for('settings.apikeys_create') }}">
+        <a class="btn btn-outline-info" href="{{ url_for('admin.apikeys_create') }}">
           <i class="fas fa-add"></i> {{ _('Add') }}
         </a>
       </div>

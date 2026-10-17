@@ -2,9 +2,10 @@
 {% import 'components/macros.html' as macro %}
 
 {% set breadcrumb_items = [
-    (_('Settings'), url_for('settings.info')),
-    (_('Synchronization'), False),
-    (_('Local (NAS)'), False),
+  (_('Administration'), url_for('admin.info')),
+  (_('Authentication'), False),
+  (_('My API keys'), url_for('admin.apikeys')),
+  (_('Create'), False),
 ] %}
 
 {% extends 'base.html' %}
@@ -17,36 +18,28 @@
 
 {% block content %}
 <div class="row">
-  {% include 'components/menu_settings.html' %}
+  {% include 'components/menu_admin.html' %}
 
   <div class="col-md-10">
     {{ macro.breadcrumb(breadcrumb_items) }}
 
     <form method="post" x-data="$validators.form()">
-        {{ form.csrf_token }}
-        {{ form_error(form) }}
+      {{ form.csrf_token }}
+      {{ form_error(form) }}
 
       <div class="card bg-body-tertiary shadow">
         <div class="card-body">
-          <p class="fst-italic">{{ _('Information about local environment (NAS?).') }}</p>
 
           <div class="row">
-            <div class="col-md-6 mb-3" x-data="{
-              local_watch_path: '{{ form.local_watch_path.data }}',
+            <div class="col-md-6 md-3"  x-data="{
+              name: '{{ form.name.data or '' }}',
               touched: false,
-              isValid() { return $validators.isRequired(this.touched, this.local_watch_path) }
+              isValid() { return $validators.Length(this.touched, this.name, 4, 32) && $validators.isRequired(this.touched, this.name) }
             }">
-              {{ render_field(form.local_watch_path) }}
-            </div>
-
-            <div class="col-md-6 mb-3" x-data="{
-              local_download_path: '{{ form.local_download_path.data }}',
-              touched: false,
-              isValid() { return $validators.isRequired(this.touched, this.local_download_path) }
-            }">
-              {{ render_field(form.local_download_path) }}
+              {{ render_field(form.name) }}
             </div>
           </div>
+
         </div>
       </div>
 

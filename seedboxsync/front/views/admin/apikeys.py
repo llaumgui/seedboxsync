@@ -14,13 +14,13 @@ from seedboxsync.core import current_app
 from seedboxsync.core.database.models import ApiKey, User
 from seedboxsync.front.babel import gettext as _
 from seedboxsync.front.forms import ApiKeyForm, EmptyCSRFForm
-from seedboxsync.front.login_manager import is_admin_required
+from seedboxsync.front.login_manager import admin_required
 from seedboxsync.front.utils import toast
-from seedboxsync.front.views import bp_settings as bp
+from seedboxsync.front.views import bp_admin as bp
 
 
 @bp.route("/apikeys", methods=["GET"])
-@is_admin_required
+@admin_required
 def apikeys() -> str | Response:
     """
     Render the API keys management page and handle key creation.
@@ -35,11 +35,11 @@ def apikeys() -> str | Response:
     if current_user.is_authenticated:
         apikeys = list(ApiKey.select(ApiKey.id, ApiKey.name, ApiKey.created, ApiKey.last_used))
 
-    return render_template("settings/apikeys.html", apikeys=apikeys)
+    return render_template("admin/apikeys.html", apikeys=apikeys)
 
 
 @bp.route("/apikeys/create", methods=["GET", "POST"])
-@is_admin_required
+@admin_required
 def apikeys_create() -> str | Response:
     """
     Render and process the user creation view.
@@ -63,15 +63,15 @@ def apikeys_create() -> str | Response:
                 % {"apikey_name": apikey_name, "apikey_raw": apikey_raw},
                 "info",
             )
-            return redirect(url_for("settings.apikeys"))
+            return redirect(url_for("admin.apikeys"))
         except Exception as e:
             current_app.logger.exception("Failed to save apikey.", exc_info=e)
             toast(_("Failed to save apikey."), _("API key"), "danger")
-    return render_template("settings/apikeys_create.html", form=form)
+    return render_template("admin/apikeys_create.html", form=form)
 
 
 @bp.route("/apikeys/<int:apikey_id>/delete", methods=["GET", "POST"])
-@is_admin_required
+@admin_required
 def apikeys_delete(apikey_id: int) -> str | Response:
     """
     Render and process the apikey delete view.
@@ -99,9 +99,9 @@ def apikeys_delete(apikey_id: int) -> str | Response:
             apikey_name = apikey.name
             apikey.delete_instance()
             toast(_("API key '%(apikey_name)s' deleted successfully.") % {"apikey_name": apikey_name}, _("API key"), "success")
-            return redirect(url_for("settings.apikeys"))
+            return redirect(url_for("admin.apikeys"))
         except Exception as e:
             current_app.logger.exception("Failed to delete API key.", exc_info=e)
             toast(_("Failed to delete API key."), _("API key"), "danger")
 
-    return render_template("settings/apikeys_delete.html", form=form, apikey=apikey)
+    return render_template("admin/apikeys_delete.html", form=form, apikey=apikey)

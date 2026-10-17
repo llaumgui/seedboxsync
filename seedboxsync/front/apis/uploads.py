@@ -6,12 +6,13 @@
 #
 """SeedboxSync api uploads view."""
 
+from datetime import timedelta
 from typing import Any
 from flask_restx import Namespace, fields, reqparse
 from peewee import fn
 from seedboxsync.core.database.models import Torrent
 from seedboxsync.front.apis import Resource, parser_period
-from seedboxsync.front.login_manager import is_admin_required, login_required
+from seedboxsync.front.login_manager import admin_required, login_required
 
 api = Namespace("uploads", description="Operations related to uploaded torrents management")
 
@@ -152,8 +153,9 @@ class UploadsList(Resource):
             select = select.where(Torrent.sent >= start_date)
 
         if end_date:
-            count = count.where(Torrent.sent <= end_date)
-            select = select.where(Torrent.sent <= end_date)
+            end_exclusive = end_date + timedelta(days=1)
+            count = count.where(Torrent.sent < end_exclusive)
+            select = select.where(Torrent.sent < end_exclusive)
 
         return self.build_envelope(list(select.dicts()), data_total=count.count(), type="UploadList")
 
@@ -208,7 +210,7 @@ class Uploads(Resource):
 
     @api.doc("delete_upload")  # type: ignore[untyped-decorator]
     @api.marshal_with(upload_message_envelope, code=200, description="Delete upload element")  # type: ignore[untyped-decorator]
-    @is_admin_required
+    @admin_required
     def delete(self, id: int) -> dict[str, Any]:  # noqa: A002
         """
         Delete an uploaded torrent.
