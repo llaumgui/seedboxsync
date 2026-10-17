@@ -102,15 +102,6 @@
             </div>
           </div>
 
-          <h3 class="h4 pt-4">{{ _('Security') }}</h3>
-          <div class="row">
-            <div class="col-md-6 mb-3" x-data="{
-              enabled: {{ 'true' if form.wtf_csrf_enabled.data else 'false' }},
-              touched: false
-            }">
-              {{ render_field(form.wtf_csrf_enabled) }}
-            </div>
-          </div>
         </div>
       </div>
 
