@@ -9,7 +9,6 @@
  * Build AlpineJS table pagined components.
  * @param {string} apiUrl
  * @param {number} perPage
- * @param {string|null} datePickerRef
  * @returns
  */
 export function TablePaginedComponent(apiUrl, perPage = 20) {
@@ -78,7 +77,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       if (this.page < this.totalPages) {
         this.page++;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -91,7 +90,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       if (this.page > 1) {
         this.page--;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -105,7 +104,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       if (p >= 1 && p <= this.totalPages) {
         this.page = p;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -144,7 +143,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       this.search = value;
       this.page = 1;
       this.offset = 0;
-      this.load();
+      void this.load();
     },
 
     /**
@@ -157,7 +156,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       this.level = value;
       this.page = 1;
       this.offset = 0;
-      this.load();
+      void this.load();
     },
 
     /**
@@ -182,7 +181,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
       this.endDate = endDate ? this.formatDate(endDate) : null;
       this.page = 1;
       this.offset = 0;
-      this.load();
+      void this.load();
     },
 
     /**
@@ -208,8 +207,8 @@ export function TablePaginedComponent(apiUrl, perPage = 20) {
         );
       }
 
-      this.load();
-      window.addEventListener("force-refresh", () => this.load());
+      void this.load();
+      window.addEventListener("force-refresh", () => void this.load());
     },
   };
 }
