@@ -12,8 +12,8 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1
       alpinejs:
-        specifier: ^3.17.4
-        version: 3.17.4
+        specifier: ^3.17.5
+        version: 3.17.5
       bootstrap:
         specifier: ^5.3.8
         version: 5.3.8(@popperjs/core@2.11.8)
@@ -421,8 +421,8 @@ packages:
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
-  alpinejs@3.17.4:
-    resolution: {integrity: sha512-N2gsr+58XVUt7OAPKnUGiKPDtkd+xbSGTae8C8IJxeRdkkhBJPIautkJ+qcwb7lcjJ/QK3/CPVIbN20JPvtK7A==}
+  alpinejs@3.17.5:
+    resolution: {integrity: sha512-XewMqRC6zjy8iaUPn86dxjvooAsNai3hUtQbdn0A5H2w7Jt10xHGZ1SczN5+Dvp3UKkuSEt9moy/UaUWOwKdnQ==}
 
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
@@ -937,7 +937,7 @@ packages:
     engines: {node: ^20.17.0 || >=22.9.0}
 
   vanilla-ui-kit@https://codeload.github.com/vanilla-ui-kit/components/tar.gz/979458dc59e4430121fd1b90900d09935444d0f1:
-    resolution: {tarball: https://codeload.github.com/vanilla-ui-kit/components/tar.gz/979458dc59e4430121fd1b90900d09935444d0f1}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/vanilla-ui-kit/components/tar.gz/979458dc59e4430121fd1b90900d09935444d0f1}
     version: 1.0.0
 
   verkit@0.3.2:
@@ -1317,7 +1317,7 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  alpinejs@3.17.4:
+  alpinejs@3.17.5:
     dependencies:
       '@vue/reactivity': 3.5.44
 
