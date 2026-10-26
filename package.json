@@ -25,7 +25,7 @@
     "@fortawesome/fontawesome-free": "^7.3.1",
     "alpinejs": "^3.17.5",
     "bootstrap": "^5.3.8",
-    "chart.js": "^4.5.1",
+    "chart.js": "^4.6.1",
     "nord": "^0.2.1",
     "vanilla-ui-kit": "github:vanilla-ui-kit/components"
   },
