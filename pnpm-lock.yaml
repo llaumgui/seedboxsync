@@ -37,8 +37,8 @@ importers:
         specifier: ^10.13.0
         version: 10.13.0
       eslint-plugin-package-json:
-        specifier: ^1.10.1
-        version: 1.10.1(eslint@10.13.0)
+        specifier: ^1.11.0
+        version: 1.11.0(eslint@10.13.0)
       globals:
         specifier: ^17.13.0
         version: 17.13.0
@@ -518,8 +518,8 @@ packages:
       '@eslint/json':
         optional: true
 
-  eslint-plugin-package-json@1.10.1:
-    resolution: {integrity: sha512-H/NhssfjCi0PjypHab8R1bM2NPn9FASn/MBrVf8+CmykFM+wg9Wz4XgWgtHRpbXtm3R4S5nJv0HXYeucpPRJpA==}
+  eslint-plugin-package-json@1.11.0:
+    resolution: {integrity: sha512-yGCP8hPyjpmr3qWbjCSpEnIIv2slaN77lZJXQtDPdCs7MJ0EH5XWDclk1Ly8wjKJt/NqfZj8y7iQbNxD5UXO9g==}
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@eslint/json': '>=1.0.0'
@@ -1393,7 +1393,7 @@ snapshots:
       esquery: 1.7.0
       jsonc-eslint-parser: 3.3.0
 
-  eslint-plugin-package-json@1.10.1(eslint@10.13.0):
+  eslint-plugin-package-json@1.11.0(eslint@10.13.0):
     dependencies:
       '@altano/repository-tools': 2.1.2
       '@types/estree': 1.0.9
