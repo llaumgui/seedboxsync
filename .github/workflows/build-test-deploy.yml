@@ -2,7 +2,7 @@ name: Build, Test and Deploy
 on:
   [push, pull_request]
 env:
-  pythonLastVersion: '3.14'
+  PYTHON_VERSION: '3.15'
   nodeLastVersion: '26.X'
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/seedboxsync
@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
     steps:
     - name: Git checkout
       uses: actions/checkout@v7
@@ -137,7 +137,7 @@ jobs:
     - run: rm .gitignore
     - uses: actions/download-artifact@v8
       with:
-        name: coverage-${{ env.pythonLastVersion }}
+        name: coverage-${{ env.PYTHON_VERSION }}
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v8.3.0
       env:
@@ -162,10 +162,10 @@ jobs:
     # Setup Python
     - name: Install Just
       uses: taiki-e/install-action@just
-    - name: Setup Python ${{ env.pythonLastVersion }} with uv
+    - name: Setup Python ${{ env.PYTHON_VERSION }} with uv
       uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       with:
-        python-version: ${{ env.pythonLastVersion }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
     - name: Install pnpm
@@ -335,10 +335,10 @@ jobs:
     # Setup Python
     - name: Install Just
       uses: taiki-e/install-action@just
-    - name: Setup Python ${{ env.pythonLastVersion }} with uv
+    - name: Setup Python ${{ env.PYTHON_VERSION }} with uv
       uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       with:
-        python-version: ${{ env.pythonLastVersion }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
     - name: Install pnpm
