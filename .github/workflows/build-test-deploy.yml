@@ -164,10 +164,10 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
-    - name: Setup Node ${{ matrix.NODE_VERSION }} with pnpm
+    - name: Setup Node ${{ env.NODE_VERSION }} with pnpm
       uses: pnpm/setup@v3
       with:
-        runtime: node@${{ matrix.NODE_VERSION }}
+        runtime: node@${{ env.NODE_VERSION }}
         cache: true
 
     # Instal & run task
@@ -332,10 +332,10 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
-    - name: Setup Node ${{ matrix.NODE_VERSION }} with pnpm
+    - name: Setup Node ${{ env.NODE_VERSION }} with pnpm
       uses: pnpm/setup@v3
       with:
-        runtime: node@${{ matrix.NODE_VERSION }}
+        runtime: node@${{ env.NODE_VERSION }}
         cache: true
 
     # Instal & run task
