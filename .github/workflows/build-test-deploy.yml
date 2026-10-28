@@ -3,7 +3,7 @@ on:
   [push, pull_request]
 env:
   PYTHON_VERSION: '3.15'
-  nodeLastVersion: '26.X'
+  NODE_VERSION: '26'
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/seedboxsync
 
@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22.X, 24.X, 26.X]
+        node-version: [22, 24, 26]
     steps:
     - name: Git checkout
       uses: actions/checkout@v6
@@ -60,16 +60,11 @@ jobs:
     # Setup Node.js
     - name: Install Just
       uses: taiki-e/install-action@just
-    - name: Install pnpm
-      uses: pnpm/action-setup@v6.1.0
+    - name: Setup Node ${{ matrix.node-version }} with pnpm
+      uses: pnpm/setup@v3
       with:
-        version: 10
+        runtime: node@${{ matrix.node-version }}
         cache: true
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v7
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
 
     # Instal & run tasks
     - name: Install Node.js dependencies
@@ -89,6 +84,7 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v7
+    - run: rm package.json # Fix 'Invalid name "pnpm" does not match "npm" for "packageManager"'
     # Run markdownlint-cli
     - name: Run MarkdownLint
       uses: nosborn/github-action-markdown-cli@v3.5.0
@@ -168,16 +164,11 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
-    - name: Install pnpm
-      uses: pnpm/action-setup@v6.1.0
+    - name: Setup Node ${{ matrix.NODE_VERSION }} with pnpm
+      uses: pnpm/setup@v3
       with:
-        version: 10
+        runtime: node@${{ matrix.NODE_VERSION }}
         cache: true
-    - name: Use Node.js ${{ env.nodeLastVersion }}
-      uses: actions/setup-node@v7
-      with:
-        node-version: ${{ env.nodeLastVersion }}
-        cache: 'pnpm'
 
     # Instal & run task
     - name: Install Python dependencies
@@ -341,16 +332,11 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     # Setup Node.js
-    - name: Install pnpm
-      uses: pnpm/action-setup@v6.1.0
+    - name: Setup Node ${{ matrix.NODE_VERSION }} with pnpm
+      uses: pnpm/setup@v3
       with:
-        version: 10
+        runtime: node@${{ matrix.NODE_VERSION }}
         cache: true
-    - name: Use Node.js ${{ env.nodeLastVersion }}
-      uses: actions/setup-node@v7
-      with:
-        node-version: ${{ env.nodeLastVersion }}
-        cache: 'pnpm'
 
     # Instal & run task
     - name: Install Python dependencies
