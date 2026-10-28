@@ -123,9 +123,6 @@ def save_settings_form(form: FlaskForm) -> None:
     login_disabled_key = f"{Config.CONFIG_NAMESPACE}LOGIN_DISABLED"
     if login_disabled_key in config_to_update:
         current_app.config["LOGIN_DISABLED"] = config_to_update[login_disabled_key]
-    wtf_csrt_disabled_key = f"{Config.CONFIG_NAMESPACE}WTF_CSRF_ENABLED"
-    if wtf_csrt_disabled_key in config_to_update:
-        current_app.config["WTF_CSRF_ENABLED"] = config_to_update[wtf_csrt_disabled_key]
 
     # Update config in Flask app
     current_app.config.from_mapping(config_to_update)

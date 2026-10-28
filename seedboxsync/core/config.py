@@ -18,7 +18,6 @@ class Config:
     CONFIG_NAMESPACE = "SEEDBOXSYNC_"
     DEFAULT_CONFIG: ClassVar[dict[str, Any]] = {
         CONFIG_NAMESPACE + "LOGIN_DISABLED": False,
-        CONFIG_NAMESPACE + "WTF_CSRF_ENABLED": True,
         CONFIG_NAMESPACE + "AUTH_GRAVATAR_ENABLED": False,
         CONFIG_NAMESPACE + "OAUTH_ENABLED": False,
         CONFIG_NAMESPACE + "OAUTH_AUTO_CREATE_USER_ENABLED": False,
@@ -77,7 +76,6 @@ class Config:
         self.app.config.setdefault("SWAGGER_UI_DOC_EXPANSION", "list")  # Expense swager namespaces
         self.app.config.setdefault("PROPAGATE_EXCEPTIONS", False)
         self.app.config.setdefault("LOGIN_DISABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "LOGIN_DISABLED", False))  # Disable login
-        self.app.config.setdefault("WTF_CSRF_ENABLED", self.app.config.get(Config.CONFIG_NAMESPACE + "WTF_CSRF_ENABLED", True))  # Disable CSRF
 
     def _check_config(self) -> None:
         """Check all configurations needed."""
@@ -106,7 +104,8 @@ class Config:
 
             app.logger.debug(f"Loading config from database: {config_key} = {display_value}")
             if config_key not in Config.DEFAULT_CONFIG:
-                app.logger.warning("Ignoring unknown configuration key: %s", conf["key"])
+                app.logger.warning("Cleaning unknown configuration key: %s", conf["key"])
+                SeedboxSync.delete().where(SeedboxSync.key == conf["key"]).execute()
                 continue
             config[config_key] = value
 

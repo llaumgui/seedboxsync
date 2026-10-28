@@ -1,0 +1,90 @@
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Administration'), url_for('admin.info')),
+  (_('Logs'), False),
+] %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% include 'components/menu_admin.html' %}
+
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
+
+    <div class="card bg-body-tertiary shadow">
+      <div class="card-body"x-data="TablePaginedComponent('{{ url_for('api.logs_logs') }}', 20)">
+
+        {# Filters #}
+        <div class="row mb-2">
+          <div class="col-12 col-md-2 mb-2">
+            <label class="visually-hidden" for="level_filter">{{ _('Level') }}</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-terminal }}"></i></span>
+              <select
+                id="level_filter"
+                name="level_filter"
+                class="form-select"
+                x-ref="level_filter"
+                @change="updateLevel($event.target.value)"
+              >
+                <option value="" selected>{{ _('All') }}</option>
+                {% for level in levels %}
+                  <option value="{{ level }}">{{ level }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-7 mb-2">
+            {{ macro.render_search() }}
+          </div>
+          <div class="col-12 col-md-3 text-end mb-2">
+            {{ macro.datepicker_range(False) }}
+          </div>
+        </div>
+
+        {# Messages #}
+        <div x-show="loading"><div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+        <div x-show="error" class="alert alert-danger"><i class="fas fa-triangle-exclamation"></i> {{ _('An error has occurred.') }}</div>
+        <div x-show="!loading && !error && data.length === 0" class="alert alert-warning"><i class="fas fa-inbox"></i> {{ _('No logs yet...') }}</div>
+
+        {# Table #}
+        <table x-show="data.length > 0" class="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th class="d-none d-md-table-cell">{{ _('Level') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Logger') }}</th>
+              <th class="d-none d-md-table-cell">{{ _('Module') }}</th>
+              <th>{{ _('Message') }}</th>
+              <th>{{ _('Timestamp') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in data" :key="row.id || row.key">
+              <tr>
+                <td class="d-none d-md-table-cell" x-text="row.level"></td>
+                <td class="d-none d-md-table-cell" x-text="row.logger"></td>
+                <td class="d-none d-md-table-cell" x-text="row.module"></td>
+                <td x-text="row.message"></td>
+                <td x-text="row.timestamp ? $localeDateString(row.timestamp) : ''"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+        {# Pagination controls #}
+        {{ macro.render_pagination() }}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?limit=1000&finished=true', 20, 'downloaded')">
+<div x-data="TablePaginedComponent('{{ url_for('api.downloads_downloads_list') }}?finished=true', 20)">
 
   {# Filters #}
   <div class="row mb-2">
@@ -20,7 +20,7 @@
       {{ macro.render_search() }}
     </div>
     <div class="col-12 col-md-4 text-end  mb-2">
-      {{ macro.datepicker_range('downloaded', False) }}
+      {{ macro.datepicker_range(False) }}
     </div>
   </div>
 
@@ -36,7 +36,7 @@
         <th>{{ _('Name') }}</th>
         <th>{{ _('Finished') }}</th>
         <th class="d-none d-md-table-cell">{{ _('Size') }}</th>
-        <th class="narrow"></th>
+        {% if config.LOGIN_DISABLED or current_user.is_admin %}<th class="narrow"></th>{% endif %}
       </tr>
     </thead>
     <tbody>
@@ -47,7 +47,7 @@
           </td>
           <td  x-text="row.finished ? $localeDateString(row.finished) : ''"></td>
           <td class="d-none d-md-table-cell text-nowrap" x-text="row.human_local_size"></td>
-          <td class="text-end">
+          {% if config.LOGIN_DISABLED or current_user.is_admin %}<td class="text-end">
             <button type="button" class="btn btn-outline-danger btn-sm text-nowrap"
                 aria-label="{{ _('Delete') }}"
                 data-bs-toggle="tooltip" data-bs-title="{{ _('Delete') }}"
@@ -62,7 +62,7 @@
                 })">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </button>
-          </td>
+          </td>{% endif %}
         </tr>
       </template>
     </tbody>

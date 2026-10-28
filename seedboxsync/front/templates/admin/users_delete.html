@@ -1,0 +1,62 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Administration'), url_for('admin.info')),
+  (_('Authentication'), False),
+  (_('Users'), url_for('admin.users')),
+  (action, False),
+] %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% include 'components/menu_admin.html' %}
+
+  <div class="col-md-10">
+    <div class="content">
+      {{ macro.breadcrumb(breadcrumb_items) }}
+
+      <form method="post">
+        {{ form.csrf_token }}
+        {{ form_error(form) }}
+
+        <div class="card bg-body-tertiary shadow">
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <strong>{{ _('Username:') }}</strong> {{ user.username }}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <strong>{{ _('Email:') }}</strong> {{ user.email }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <strong>{{ _('Is admin:') }}</strong> {{ _('Yes') if user.is_admin else _('No') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 text-end">
+          <button class="btn btn-danger">
+            <i class="fas fa-times"></i></span> {{ _('Delete') }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

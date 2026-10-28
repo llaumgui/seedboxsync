@@ -23,21 +23,21 @@
   "license": "GPL-3.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
-    "alpinejs": "^3.17.4",
+    "alpinejs": "^3.17.5",
     "bootstrap": "^5.3.8",
-    "chart.js": "^4.5.1",
+    "chart.js": "^4.6.1",
     "nord": "^0.2.1",
     "vanilla-ui-kit": "github:vanilla-ui-kit/components"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "5.0.3",
-    "eslint": "^10.12.0",
-    "eslint-plugin-package-json": "^1.10.1",
+    "@vitest/coverage-v8": "5.0.5",
+    "eslint": "^10.13.0",
+    "eslint-plugin-package-json": "^1.11.0",
     "globals": "^17.13.0",
-    "sass": "^1.105.1",
-    "vite": "^8.3.4",
-    "vitest": "^5.0.3"
+    "sass": "^1.106.1",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "scripts": {
     "build": "vite build",
@@ -48,5 +48,12 @@
     "test:ci": "vitest run --coverage",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=12.0.0 <13.0.0",
+      "onFail": "download"
+    }
   }
 }

@@ -27,6 +27,24 @@ describe("TablePaginedComponent", () => {
     expect(component.totalPages).toBe(3);
   });
 
+  it("adds the level parameter only when the level filter exists", async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ data: [], data_total: 0 }),
+    });
+
+    const withoutLevelFilter = TablePaginedComponent("/api/items");
+    withoutLevelFilter.level = "ERROR";
+    await withoutLevelFilter.load();
+    expect(fetch.mock.calls[0][0].searchParams.has("level")).toBe(false);
+
+    const withLevelFilter = TablePaginedComponent("/api/items");
+    withLevelFilter.$refs = { level_filter: {} };
+    withLevelFilter.level = "ERROR";
+    await withLevelFilter.load();
+    expect(fetch.mock.calls[1][0].searchParams.get("level")).toBe("ERROR");
+  });
+
   it("resets data when loading fails", async () => {
     fetch.mockRejectedValue(new Error("network"));
     const component = TablePaginedComponent("/api/items");
@@ -100,13 +118,46 @@ describe("TablePaginedComponent", () => {
     expect(load).toHaveBeenCalledOnce();
   });
 
-  it("loads on init and reacts to force-refresh", () => {
+  it("initializes without a datepicker ref and reacts to force-refresh", () => {
     const component = TablePaginedComponent("/api/items");
+    component.$refs = {};
     const load = vi.spyOn(component, "load").mockResolvedValue();
 
-    component.init();
+    expect(() => component.init()).not.toThrow();
 
     expect(load).toHaveBeenCalledOnce();
     expect(window.addEventListener).toHaveBeenCalledWith("force-refresh", expect.any(Function));
+  });
+
+  it("registers datepicker listeners when the ref exists", () => {
+    const datepicker = { addEventListener: vi.fn() };
+    const component = TablePaginedComponent("/api/items");
+    component.$refs = { datepicker_range: datepicker };
+    vi.spyOn(component, "load").mockResolvedValue();
+    const updateDateRange = vi.spyOn(component, "updateDateRange");
+
+    component.init();
+
+    expect(datepicker.addEventListener).toHaveBeenCalledTimes(2);
+    expect(datepicker.addEventListener).toHaveBeenNthCalledWith(
+      1,
+      "datepicker:select",
+      expect.any(Function),
+    );
+    expect(datepicker.addEventListener).toHaveBeenNthCalledWith(
+      2,
+      "datepicker:clear",
+      expect.any(Function),
+    );
+
+    const selectHandler = datepicker.addEventListener.mock.calls[0][1];
+    const clearHandler = datepicker.addEventListener.mock.calls[1][1];
+    const start = new Date("2026-01-01");
+    const end = new Date("2026-01-31");
+    selectHandler({ detail: { value: { start, end } } });
+    clearHandler();
+
+    expect(updateDateRange).toHaveBeenNthCalledWith(1, start, end);
+    expect(updateDateRange).toHaveBeenNthCalledWith(2, null, null);
   });
 });

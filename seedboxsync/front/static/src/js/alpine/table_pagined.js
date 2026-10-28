@@ -9,10 +9,9 @@
  * Build AlpineJS table pagined components.
  * @param {string} apiUrl
  * @param {number} perPage
- * @param {string|null} datePickerRef
  * @returns
  */
-export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null) {
+export function TablePaginedComponent(apiUrl, perPage = 20) {
   return {
     data: [],
     loading: true,
@@ -22,6 +21,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
     offset: 0,
     total: 0,
     search: "",
+    level: "",
     startDate: null,
     endDate: null,
 
@@ -40,6 +40,8 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
         if (this.search) url.searchParams.set("search", this.search);
         if (this.startDate) url.searchParams.set("start_date", this.startDate);
         if (this.endDate) url.searchParams.set("end_date", this.endDate);
+        if (this.$refs?.level_filter && this.level)
+          url.searchParams.set("level", this.level);
 
         const r = await fetch(url);
         if (!r.ok) throw new Error("Fetch failed");
@@ -75,7 +77,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
       if (this.page < this.totalPages) {
         this.page++;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -88,7 +90,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
       if (this.page > 1) {
         this.page--;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -102,7 +104,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
       if (p >= 1 && p <= this.totalPages) {
         this.page = p;
         this.offset = (this.page - 1) * this.perPage;
-        this.load();
+        void this.load();
       }
     },
 
@@ -141,7 +143,20 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
       this.search = value;
       this.page = 1;
       this.offset = 0;
-      this.load();
+      void this.load();
+    },
+
+    /**
+     * Set the level filter and reload the first page.
+     *
+     * @param {string} value Search value.
+     * @returns {void}
+     */
+    updateLevel(value) {
+      this.level = value;
+      this.page = 1;
+      this.offset = 0;
+      void this.load();
     },
 
     /**
@@ -166,7 +181,7 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
       this.endDate = endDate ? this.formatDate(endDate) : null;
       this.page = 1;
       this.offset = 0;
-      this.load();
+      void this.load();
     },
 
     /**
@@ -175,19 +190,25 @@ export function TablePaginedComponent(apiUrl, perPage = 20, datePickerRef = null
      * @returns {void}
      */
     init() {
-      if (datePickerRef && this.$refs[datePickerRef]) {
-        this.$refs[datePickerRef].addEventListener("datepicker:select", (event) => {
-          const value = event.detail.value;
-          this.updateDateRange(value?.start, value?.end);
-        });
+      if (this.$refs["datepicker_range"]) {
+        this.$refs["datepicker_range"].addEventListener(
+          "datepicker:select",
+          (event) => {
+            const value = event.detail.value;
+            this.updateDateRange(value?.start, value?.end);
+          },
+        );
 
-        this.$refs[datePickerRef].addEventListener("datepicker:clear", () => {
-          this.updateDateRange(null, null);
-        });
+        this.$refs["datepicker_range"].addEventListener(
+          "datepicker:clear",
+          () => {
+            this.updateDateRange(null, null);
+          },
+        );
       }
 
-      this.load();
-      window.addEventListener("force-refresh", () => this.load());
+      void this.load();
+      window.addEventListener("force-refresh", () => void this.load());
     },
   };
 }

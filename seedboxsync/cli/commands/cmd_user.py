@@ -47,6 +47,7 @@ def list_user(ctx: Context, number: int, search: str) -> None:
             User.username,
             User.email,
             User.origin,
+            User.is_admin,
             fn.short_datetime(User.created),
             fn.short_datetime(User.last_login),
         )
@@ -62,7 +63,15 @@ def list_user(ctx: Context, number: int, search: str) -> None:
     click.echo(
         ctx.render(
             reversed(data),
-            headers={"id": "Id", "username": "Username", "email": "Email", "origin": "Origin", "created": "Created", "last_login": "Last Login"},
+            headers={
+                "id": "Id",
+                "username": "Username",
+                "email": "Email",
+                "origin": "Origin",
+                "is_admin": "Is Admin",
+                "created": "Created",
+                "last_login": "Last Login",
+            },
         )
     )
 
@@ -102,8 +111,9 @@ def delete(ctx: Context, id: int, yes: bool) -> None:  # noqa: A002
 @click.option("-u", "--username", prompt="Username", help="Username for the new account.")
 @click.option("-e", "--email", prompt="Email address", help="Unique email address.")
 @click.option("-p", "--password", prompt=True, hide_input=True, confirmation_prompt=True, help="Password for the user account.")
+@click.option("--is-admin/--no-is-admin", "is_admin", prompt="Grant admin privileges?", is_flag=True, help="Grant admin privileges to the user.")
 @pass_context
-def add(ctx: Context, username: str, email: str, password: str) -> None:
+def add(ctx: Context, username: str, email: str, password: str, is_admin: bool) -> None:
     """
     Create a new user account in the database.
 
@@ -115,6 +125,7 @@ def add(ctx: Context, username: str, email: str, password: str) -> None:
         username (str): Unique username for the account.
         email (str): Unique email address.
         password (str): Plain-text password to hash and store.
+        is_admin (bool): Whether the user should have admin privileges.
     """
     # Verify if user already exists before attempting insertion
     if User.get_or_none((User.username == username) | (User.email == email)):
@@ -126,11 +137,7 @@ def add(ctx: Context, username: str, email: str, password: str) -> None:
         return
 
     try:
-        user = User.create(
-            username=username,
-            email=email,
-            password=generate_password_hash(password),
-        )
+        user = User.create(username=username, email=email, password=generate_password_hash(password), is_admin=is_admin)
         click.secho(f"User '{user.username}' (ID: {user.id}) created successfully.", fg="green")
     except Exception as e:
         click.secho(f"Error: Failed to create user: {e}", fg="red", err=True)
@@ -141,8 +148,9 @@ def add(ctx: Context, username: str, email: str, password: str) -> None:
 @click.option("-u", "--username", help="New username for the account.")
 @click.option("-e", "--email", help="New email address.")
 @click.option("-p", "--password", help="New password for the account.")
+@click.option("--is-admin/--no-is-admin", "is_admin", default=None, help="Grant or revoke admin privileges.")
 @pass_context
-def edit(ctx: Context, id: int, username: str | None, email: str | None, password: str | None) -> None:  # noqa: A002
+def edit(ctx: Context, id: int, username: str | None, email: str | None, password: str | None, is_admin: bool | None) -> None:  # noqa: A002
     """
     Update details for an existing user account.
 
@@ -155,6 +163,7 @@ def edit(ctx: Context, id: int, username: str | None, email: str | None, passwor
         username (str | None): New username to set.
         email (str | None): New email address to set.
         password (str | None): New plain-text password to hash and update.
+        is_admin (bool | None): Whether the user should have admin privileges.
     """
     try:
         user = User.get_by_id(id)
@@ -177,6 +186,9 @@ def edit(ctx: Context, id: int, username: str | None, email: str | None, passwor
 
     if password:
         user.password = generate_password_hash(password)
+
+    if is_admin is not None:
+        user.is_admin = is_admin
 
     try:
         user.save()

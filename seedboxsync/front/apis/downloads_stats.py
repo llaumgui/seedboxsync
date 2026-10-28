@@ -6,7 +6,7 @@
 #
 """SeedboxSync api error module."""
 
-from datetime import date
+from datetime import date, timedelta
 from typing import Any
 from flask_restx import Namespace, fields
 from peewee import fn
@@ -274,7 +274,8 @@ def stats_by_period(period: str, start_date: date | None = None, end_date: date 
     if start_date:
         conditions.append(Download.finished >= start_date)
     if end_date:
-        conditions.append(Download.finished <= end_date)
+        end_exclusive = end_date + timedelta(days=1)
+        conditions.append(Download.finished < end_exclusive)
 
     data = typed_peewee_dicts(
         Download.select(

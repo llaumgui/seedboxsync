@@ -12,8 +12,8 @@ def test_user_list_filters_and_limits_results(app, runner):
     result = runner.invoke(cli, ["user", "list", "--search", "ali", "--number", "1"])
 
     assert result.exit_code == 0
-    assert "alice@example.com" in result.output
-    assert "bob@example.com" not in result.output
+    assert "alice" in result.output
+    assert "bob" not in result.output
 
 
 def test_user_delete_reports_missing_user(runner):
@@ -53,14 +53,14 @@ def test_user_add_rejects_duplicate_username_or_email(app, runner):
     with app.app_context():
         User.create(username="alice", email="alice@example.com", password="hash")
 
-    result = runner.invoke(cli, ["user", "add", "-u", "alice", "-e", "new@example.com", "-p", "secret"])
+    result = runner.invoke(cli, ["user", "add", "-u", "alice", "-e", "new@example.com", "-p", "secret", "--no-is-admin"])
 
     assert result.exit_code == 0
     assert "already exists" in result.output
 
 
 def test_user_add_creates_hashed_user(app, runner):
-    result = runner.invoke(cli, ["user", "add", "-u", "alice", "-e", "alice@example.com", "-p", "secret"])
+    result = runner.invoke(cli, ["user", "add", "-u", "alice", "-e", "alice@example.com", "-p", "secret", "--no-is-admin"])
 
     assert result.exit_code == 0
     assert "created successfully" in result.output

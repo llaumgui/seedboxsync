@@ -1,0 +1,56 @@
+{% from 'components/macros_form.html' import form_error, render_field %}
+{% import 'components/macros.html' as macro %}
+
+{% set breadcrumb_items = [
+  (_('Administration'), url_for('admin.info')),
+  (_('Authentication'), False),
+  (_('My API keys'), url_for('admin.apikeys')),
+  (_('Create'), False),
+] %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% include 'components/menu_admin.html' %}
+
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
+
+    <form method="post" x-data="$validators.form()">
+      {{ form.csrf_token }}
+      {{ form_error(form) }}
+
+      <div class="card bg-body-tertiary shadow">
+        <div class="card-body">
+
+          <div class="row">
+            <div class="col-md-6 md-3"  x-data="{
+              name: '{{ form.name.data or '' }}',
+              touched: false,
+              isValid() { return $validators.Length(this.touched, this.name, 4, 32) && $validators.isRequired(this.touched, this.name) }
+            }">
+              {{ render_field(form.name) }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="mt-4 text-end">
+        <button class="btn btn-success" :disabled="!canSubmit()">
+          <i class="fas fa-floppy-disk "></i> {{ _('Save') }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -37,7 +37,7 @@ RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/c
 ################################################################################
 # Prod
 #
-FROM python:3.14-alpine
+FROM python:3.15-alpine
 
 # -------------------------------------------- Set environment and ARG variables
 ENV \
@@ -49,7 +49,7 @@ ENV \
     S6_VERBOSITY=1
 ARG \
     # Set version for s6 overlay \
-    S6_OVERLAY_VERSION="3.2.3.0" \
+    S6_OVERLAY_VERSION="3.2.3.2" \
     S6_OVERLAY_ARCH="x86_64"
 
 # ------------------------------------------------------------------- s6 overlay

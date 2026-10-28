@@ -72,8 +72,9 @@ nav:
   - Frontend:
     - frontend/screenshots.md
     - frontend/oidc.md
-  - Avanced:
-    - avanced/homepage.md
+  - Advanced:
+    - advanced/homepage.md
+    - advanced/manage_users.md
   - Upgrade:
     - upgrade/from_v3_to_v4.md
     - upgrade/from_v4_to_v4x.md

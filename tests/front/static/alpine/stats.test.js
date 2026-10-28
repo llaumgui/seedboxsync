@@ -33,7 +33,7 @@ describe("StatsPeriod", () => {
       addEventListener: vi.fn((eventName, handler) => listeners.set(eventName, handler)),
     };
     const component = StatsPeriod();
-    component.$refs = { period: periodElement };
+    component.$refs = { datepicker_range: periodElement };
     const loadCharts = vi.spyOn(component, "loadCharts");
 
     component.init();

@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 4.4.0 - Xxx yy, 20zz
+
+* ✨ [[#247]](https://github.com/llaumgui/seedboxsync/issues/247) Persist logs in database with admin view and automatic rotation (retention set to 1,500 entries).
+* ✨ [[#231]](https://github.com/llaumgui/seedboxsync/issues/231) Added an `is_admin` flag to restrict access to the administration interface (formerly "settings") and write/maintenance operations (purge, deletion, etc.) strictly to admin users.
+* 👷 [[#270]](https://github.com/llaumgui/seedboxsync/issues/270) Use, in Github Actions, `pnpm/setup` instead of `actions/setup-node` + `pnpm/action-setup`.
+* ⬆️ [[#257]](https://github.com/llaumgui/seedboxsync/issues/270) Build also with Python 3.15 and use Python 3.15 image by default.
+* 🗑️ [[#214]](https://github.com/llaumgui/seedboxsync/issues/214) Remove legacy migration system.
+
 ## 4.3.1 - Oct 11, 2026
 
 * 🚑 [[#246]](https://github.com/llaumgui/seedboxsync/issues/246) Sync fails with nested download directories: "No such file or directory".

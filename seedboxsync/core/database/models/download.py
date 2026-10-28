@@ -81,7 +81,8 @@ class Download(SeedboxSyncModel):
         if start_date:
             conditions.append(cls.finished >= start_date)
         if end_date:
-            conditions.append(cls.finished <= end_date)
+            end_exclusive = end_date + datetime.timedelta(days=1)
+            conditions.append(cls.finished < end_exclusive)
 
         query = (
             cls.select(

@@ -29,13 +29,16 @@ export function StatsPeriod() {
      * @returns {void}
      */
     init() {
-      this.$refs.period.addEventListener("datepicker:select", (event) => {
-        const value = event.detail.value;
+      this.$refs.datepicker_range.addEventListener(
+        "datepicker:select",
+        (event) => {
+          const value = event.detail.value;
 
-        this.setPeriod(value?.start, value?.end);
-      });
+          this.setPeriod(value?.start, value?.end);
+        },
+      );
 
-      this.$refs.period.addEventListener("datepicker:clear", () => {
+      this.$refs.datepicker_range.addEventListener("datepicker:clear", () => {
         this.setPeriod(null, null);
       });
 

@@ -52,16 +52,18 @@
   </div>
   <div class="d-flex align-items-center gap-3 ms-3">
     <i class="fa-solid fa-circle" :class="taskStatusIndicatorClass({{- status_time -}})"></i>
-    <button class="btn btn-xs btn-outline-secondary rounded-pill"
-            :disabled="tasking"
-            @click="taskLaunch()">
-      <template x-if="!tasking">
-        <i class="fas fa-play"></i>
-      </template>
-      <template x-if="tasking">
-        <div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
-      </template>
-    </button>
+    {% if config.LOGIN_DISABLED or current_user.is_admin %}
+      <button class="btn btn-xs btn-outline-secondary rounded-pill"
+              :disabled="tasking"
+              @click="taskLaunch()">
+        <template x-if="!tasking">
+          <i class="fas fa-play"></i>
+        </template>
+        <template x-if="tasking">
+          <div class="spinner-border spinner-border-sm"></div> {{ _('Loading...') }}</div>
+        </template>
+      </button>
+    {% endif %}
   </div>
 </div>
 {% endmacro %}
@@ -144,7 +146,7 @@
 </nav>
 {% endmacro %}
 
-{% macro datepicker_range(x_ref, label = True) %}
+{% macro datepicker_range(label = True) %}
 {% set labels = {
   'previous': _('Previous'),
   'next': _('Next'),
@@ -161,7 +163,7 @@
   <span class="input-group-text">
     <i class="fas fa-calendar"></i>
   </span>
-  <input class="form-control" id="datepicker-range" x-ref="{{ x_ref }}" />
+  <input class="form-control" id="datepicker-range" x-ref="datepicker_range" />
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", () => {

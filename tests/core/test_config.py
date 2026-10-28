@@ -34,7 +34,8 @@ def test_reload_config_merges_known_database_values_and_ignores_unknown_ones(app
     assert config["SEEDBOXSYNC_SEEDBOX_HOST"] == "storage.example"
     assert config["SEEDBOXSYNC_SEEDBOX_TIMEOUT"] == 45
     assert "SEEDBOXSYNC_UNKNOWN" not in config
-    warning.assert_called_once_with("Ignoring unknown configuration key: %s", "config_unknown")
+    warning.assert_called_once()
+    assert warning.call_args[0] == ("Cleaning unknown configuration key: %s", "config_unknown")
 
 
 def test_password_is_masked_when_database_configuration_is_logged(app):

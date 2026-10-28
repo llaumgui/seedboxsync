@@ -1,0 +1,84 @@
+{% import 'components/macros.html' as macro %}
+
+{% macro render_status_row(title, task) %}
+<tr>
+  <th id="{{ title | slugify }}">{{ title }}</th>
+  <td>
+    {% if not task %}
+      {{ _('Never executed.') }}
+    {% elif task.running %}
+      {{ _('Running since %(since)s', since=format_datetime(task.started)) }}
+    {% else %}
+      {{ _('Finished since %(since)s', since=format_datetime(task.finished)) }}
+    {% endif %}
+  </td>
+</tr>
+{% endmacro %}
+
+{% set breadcrumb_items = [
+  (_('Administration'), url_for('admin.info')),
+  (_('Informations'), False),
+] %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ breadcrumb_items | map(attribute=0) | join(' / ') }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% include 'components/menu_admin.html' %}
+
+  <div class="col-md-10">
+    {{ macro.breadcrumb(breadcrumb_items) }}
+
+    <div class="card bg-body-tertiary shadow">
+      <div class="card-body">
+        <table class="table table-bordered table-hover mb-0">
+          <tr>
+            <tr>
+              <th class="text-bg-primary text-center" colspan="2">{{ _('Statistics') }}</th>
+            </tr>
+            <th>{{ _('Number of files downloaded') }}</th>
+            <td>{{ info.stats_total_files }}</td>
+          </tr>
+          <tr>
+            <th>{{ _('Total size of files downloaded') }}</th>
+            <td>{{ info.stats_total_size }}</td>
+          </tr>
+          <tr>
+            <th>{{ _('Since') }}</th>
+            <td>
+              {% if info.stats_first == None %}
+                {{ _('Never executed.') }}
+              {% else %}
+                {{ format_datetime(info.stats_first) }}<br>{{ info.stats_first_delta }}
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th class="text-bg-primary text-center" colspan="2">{{ _('Versions') }}</th>
+          </tr>
+          <tr>
+            <th>{{ _('SeedboxSync version') }}</th>
+            <td>{{ info.version }}</td>
+          </tr>
+          <tr>
+            <th>{{ _('SeedboxSync database version') }}</th>
+            <td>{{ info.last_migration }}</td>
+          </tr>
+          <tr>
+            <th class="text-bg-primary text-center" colspan="2">{{ _('Tasks') }}</th>
+          </tr>
+          {{ render_status_row(_('Blackhole synchronization'), info.sync_blackhole) }}
+          {{ render_status_row(_('Seedbox synchronization'), info.sync_seedbox) }}
+          {{ render_status_row(_('Heartbeat'), info.heartbeat) }}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

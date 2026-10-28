@@ -53,4 +53,3 @@ class SettingsSeedboxSyncForm(FlaskForm):  # type: ignore[misc]
         validators=[InputRequired(), NumberRange(min=3, max=100)],
         render_kw={"placeholder": "5", "icon": "fa-cubes"},
     )
-    wtf_csrf_enabled = BooleanField(_("Enable CSRF protection for all forms?"))
