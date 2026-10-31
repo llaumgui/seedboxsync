@@ -1,52 +1,63 @@
-################################################################################
-# Build
-#
+# ══════════════════════════════════════════════════════════════════════════════
+# 📦 BUILD
+# ══════════════════════════════════════════════════════════════════════════════
 
-# ----------------------------------------------------------------- Build assets
+# --------------------------------------------------------------- 🎨 Build assets
 FROM node:lts-alpine AS builder-node
 
-WORKDIR /src
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+ENV \
+    NODE_ENV=production \
+    PNPM_VERSION=11 \
+    PNPM_HOME="/root/.local/share/pnpm" \
+    PATH="/root/.local/share/pnpm/bin/:$PATH"
 
+WORKDIR /src
 COPY . /src
+
+# Install just and pnpm, then build nodejs assets
 RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
-    corepack enable && \
+    wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - && \
+    . /root/.shrc  && \
     just nodejs-install && \
     just nodejs-build
 
 
-# ------------------------------------------------ Build python and translations
+# ---------------------------------------------- 🐍 Build python and translations
 FROM python:3.14-alpine AS builder-python
 
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PATH="/root/.local/bin/:$PATH"
 
 WORKDIR /src
 COPY . /src
 
 # Install uv
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
-RUN sh /uv-installer.sh && rm /uv-installer.sh
-ENV PATH="/root/.local/bin/:$PATH"
-
-RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
+RUN wget -qO- https://astral.sh/uv/install.sh | sh - && \
+    apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
     just python-install && \
     just i18n-compile
 
 
-################################################################################
-# Prod
-#
+# ══════════════════════════════════════════════════════════════════════════════
+# ⚙️  PROD
+# ══════════════════════════════════════════════════════════════════════════════
 FROM python:3.15-alpine
 
 # -------------------------------------------- Set environment and ARG variables
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 ENV \
     # Set default PUID / PGUID \
     PUID=1000 \
     PGID=1000 \
     # Setup s6 overlay
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
-    S6_VERBOSITY=1
+    S6_VERBOSITY=1 \
+    # Append local bin to path
+    PATH="/root/.local/bin/:$PATH"
 ARG \
     # Set version for s6 overlay \
     S6_OVERLAY_VERSION="3.2.3.2" \
@@ -72,12 +83,9 @@ RUN mkdir /config && \
     mkdir /downloads && \
     mkdir /watch && \
     mkdir /app && \
-    chown -R seedboxsync:seedboxsync /config /downloads /watch
-
-# Install uv
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
-RUN sh /uv-installer.sh && rm /uv-installer.sh
-ENV PATH="/root/.local/bin/:$PATH"
+    chown -R seedboxsync:seedboxsync /config /downloads /watch && \
+    # Install uv
+    wget -qO- https://astral.sh/uv/install.sh | sh -
 
 # Install app
 WORKDIR /app
