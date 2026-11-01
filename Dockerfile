@@ -18,7 +18,6 @@ COPY . /src
 # Install just and pnpm, then build nodejs assets
 RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community just && \
     wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - && \
-    . /root/.shrc  && \
     just nodejs-install && \
     just nodejs-build
 
