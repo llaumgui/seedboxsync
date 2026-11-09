@@ -36,7 +36,7 @@
     "eslint-plugin-package-json": "^1.14.0",
     "globals": "^17.14.0",
     "sass": "^1.107.1",
-    "vite": "^8.3.5",
+    "vite": "^8.3.6",
     "vitest": "^5.0.5"
   },
   "scripts": {
