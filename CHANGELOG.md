@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 4.4.0 - Xxx yy, 20zz
+## 4.4.0 - Nov 18, 2026
 
 * ✨ [[#247]](https://github.com/llaumgui/seedboxsync/issues/247) Persist logs in database with admin view and automatic rotation (retention set to 1,500 entries).
 * ✨ [[#231]](https://github.com/llaumgui/seedboxsync/issues/231) Added an `is_admin` flag to restrict access to the administration interface (formerly "settings") and write/maintenance operations (purge, deletion, etc.) strictly to admin users.
