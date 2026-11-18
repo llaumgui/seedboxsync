@@ -1,0 +1,25 @@
+name: Feature
+description: Something SeedboxSync should do, or do differently.
+labels: ['✨ new feature']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              A feature is agreed here before it is built. If you mean to write it yourself, say so below and wait for the `accepted` label before opening a pull request — it saves you building something that has to be redone. See CONTRIBUTING.md, "How work gets in".
+    - type: textarea
+      id: problem
+      attributes:
+          label: The problem
+          description: What you are trying to do, and what gets in the way today. The problem matters more than the solution.
+      validations:
+          required: true
+    - type: textarea
+      id: proposal
+      attributes:
+          label: What you would like
+          description: How you imagine it working. Where it lives in the app, and whether it should be a setting.
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Other ways you considered
+

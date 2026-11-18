@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Ask a question
+      url: https://github.com/llaumgui/seedboxsync/discussions
+      about: Installing, configuring or using SeedboxSync — anything that is not a bug or a feature request.
+    - name: Read the handbook
+      url: https://llaumgui.github.io/seedboxsync/
+      about: Features, installation and providers.

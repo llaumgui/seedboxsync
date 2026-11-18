@@ -1,0 +1,47 @@
+name: Bug
+description: Something that worked, or should work, does not.
+labels: ['🐛 bug']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for reporting. A bug fix may go straight to a pull request as long as it describes the bug; this form is for when you would rather somebody else fixed it, or want to check first.
+    - type: textarea
+      id: what
+      attributes:
+          label: What happened
+          description: What you did, what you expected, and what you saw instead.
+      validations:
+          required: true
+    - type: textarea
+      id: steps
+      attributes:
+          label: How to make it happen again
+          placeholder: |
+              1. Open …
+              2. Click …
+              3. …
+    - type: input
+      id: version
+      attributes:
+          label: SeedboxSync version
+          description: Shown on the bottom on main page.
+      validations:
+          required: true
+    - type: dropdown
+      id: client
+      attributes:
+          label: Sync client
+          multiple: true
+          options: [FTP, sFTP]
+    - type: dropdown
+      id: install
+      attributes:
+          label: Installed with
+          options: [Docker Compose, Other]
+    - type: textarea
+      id: logs
+      attributes:
+          label: Logs
+          description: Anything from `docker logs` around the time it happened. Remove addresses and tokens you would not want public.
+          render: text
