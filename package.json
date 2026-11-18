@@ -31,13 +31,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/coverage-v8": "5.1.1",
     "eslint": "^10.15.0",
     "eslint-plugin-package-json": "^1.14.0",
     "globals": "^17.14.0",
     "sass": "^1.108.2",
     "vite": "^8.3.8",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.1"
   },
   "scripts": {
     "build": "vite build",
